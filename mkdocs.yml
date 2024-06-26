@@ -1,0 +1,81 @@
+site_name: rich-gradient
+repo_name: rich-gradient
+repo_url: https://GitHub.com/maxludden/rich-gradient
+edit_uri: root/docs
+site_description: Document rich-gradient, a python library built on the wonderful `rich` library that makes printing gradient colored text to the console easy.
+site_author: Max Ludden
+
+nav:
+    - Getting Started: "index.md"
+    - User Guide:
+        - Gradient: "gradient.md"
+        - Color: "color.md"
+    - References:
+        - Gradient Reference: "gradient_ref.md"
+        - Color Reference: "color_ref.md"
+        - Possible Colors: "possible_colors.md"
+    - Changelog: "CHANGELOG.md"
+
+plugins:
+- mkdocstrings
+- search
+
+theme:
+    name: material
+    logo: img/rich-gradient.svg
+    favicon: img/rich-gradient-icon.svg
+    features:
+        - navigation.instant
+        - navigation.instant.prefetch
+        - navigation.tracking
+        - content.code.annotate
+        - toc.integrate
+        - toc.follow
+        - navigation.path
+        - navigation.top
+        - content.code.copy
+    font:
+        code: Fira Code
+        text: "Urbanist"
+    palette:
+        # Note: Using the system theme works with the insiders version
+        # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#automatic-light-dark-mode
+        - media: "(prefers-color-scheme)"
+          scheme: astral-dark
+          toggle:
+              icon: material/brightness-auto
+              name: Switch to light mode
+        - media: "(prefers-color-scheme: light)"
+          scheme: astral-light
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        - media: "(prefers-color-scheme: dark)"
+          scheme: astral-dark
+          toggle:
+              icon: material/brightness-4
+              name: Switch to system preference
+    
+extra_css:
+    - "styles/style.css"
+    - "styles/extra.css"
+markdown_extensions:
+    - abbr
+    - admonition
+    - attr_list
+    - def_list
+    - footnotes
+    - md_in_html
+    - toc:
+          permalink: true
+    - pymdownx.highlight:
+        anchor_linenums: true
+        line_spans: __span
+        pygments_lang_class: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+    - pymdownx.details
+    - pymdownx.emoji:
+        emoji_index: !!python/name:material.extensions.emoji.twemoji 
+        emoji_generator: !!python/name:material.extensions.emoji.to_svg

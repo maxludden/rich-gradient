@@ -1,0 +1,220 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"editor.semanticTokenColorCustomizations": {
+			"enabled": true,
+			"rules": {
+				"variable": {
+					"foreground": "#55AAFF"
+				},
+				"function": {
+					"foreground": "#99ff00"
+				},
+				"parameter": {
+					"foreground": "#00afFF"
+				},
+				"property": {
+					"foreground": "#FF0099"
+				},
+				"enumMember": {
+					"foreground": "#FFFF00"
+				},
+				"enum": {
+					"foreground": "#0099FF"
+				},
+				"keyword": {
+					"foreground": "#9900ff"
+				},
+				"operator": {
+					"foreground": "#00FF00"
+				},
+				"comment": {
+					"foreground": "#3f3e86"
+				},
+				"number": {
+					"foreground": "#FFFF00"
+				},
+				"regexp": {
+					"foreground": "#00FFFF"
+				},
+				"type": {
+					"foreground": "#afff00"
+				},
+				"namespace": {
+					"foreground": "#00FF99"
+				},
+				"interface": {
+					"foreground": "#0000FF"
+				},
+				"struct": {
+					"foreground": "#9999FF"
+				},
+				"class": {
+					"foreground": "#999FFF"
+				},
+				"functionVariable": {
+					"foreground": "#7f44b7"
+				},
+				"constant": {
+					"foreground": "#afff00"
+				},
+				"string": {
+					"foreground": "#e5da95"
+				}
+			}
+		},
+		"files.associations": {
+			"*.yaml": "home-assistant"
+		},
+		"sqltools.connections": [
+			{
+				"name": "supergene",
+				"driver": "sqlite",
+				"server": "localhost",
+				"database": "/Users/maxludden/dev/py/supergene/db/supergene.db",
+				"username": "",
+				"password": "",
+				"port": 0,
+				"multipleStatements": true,
+				"ssl": false,
+				"isGlobal": true
+			},
+			{
+				"previewLimit": 50,
+				"driver": "SQLite",
+				"name": "supergene.db",
+				"database": "/Users/maxludden/dev/py/supergene/supergene.db"
+			}
+		]
+	},
+	"editor.tokenColorCustomizations": {
+		"textMateRules": [
+			{
+				"scope": "string.quoted.double.json meta.structure.dictionary.json string.quoted.double.json jsonc.comments",
+				"settings": {
+					"foreground": "#ffffcc"
+				}
+			},
+			{
+				"scope": "meta.key.json",
+				"settings": {
+					"foreground": "#ccffcc"
+				}
+			},
+			{
+				"scope": "support.type.property-name.json.comments",
+				"settings": {
+					"foreground": "#ffffff"
+				}
+			},
+			{
+				"scope": "string.json.comments",
+				"settings": {
+					"foreground": "#6771f8"
+				}
+			},
+			{
+				"scope": "meta.structure.dictionary.jvalue.json.comments",
+				"settings": {
+					"foreground": "#636497"
+				}
+			},
+			{
+				"scope": "meta.structure.dictionary.json.comments",
+				"settings": {
+					"foreground": "#74f194"
+				}
+			},
+			{
+				"scope": "meta.structure.dictionary.json.comments",
+				"settings": {
+					"foreground": "#abc6c0"
+				}
+			},
+			{
+				"scope": "source.json.comments",
+				"settings": {
+					"foreground": "#abc6c0"
+				}
+			},
+			{
+				"scope": "punctuation.support.type.property-name.begin",
+				"settings": {
+					"foreground": "#9ebdff"
+				}
+			},
+			{
+				"scope": "punctuation.support.type.property-name.end",
+				"settings": {
+					"foreground": "#9ebdff"
+				}
+			},
+			{
+				"scope": "constant.language",
+				"settings": {
+					"foreground": "#afff00"
+				}
+			},
+			{
+				"name": "Fstring Varialbe",
+				"scope": "constant.character.format.placeholder.other.python",
+				"settings": {
+					"foreground": "#ff00ff"
+				}
+			},
+			{
+				"scope": "meta.structure.dictionary.json.comments",
+				"settings": {
+					"foreground": "#74f194"
+				}
+			},
+			{
+				"scope": "meta.structure.dictionary.value.json.comments",
+				"settings": {
+					"foreground": "#9d4edd"
+				}
+			},
+			{
+				"scope": "source.json.comments",
+				"settings": {
+					"foreground": "#abc6c0"
+				}
+			},
+			{
+				"scope": "punctuation.support.type.property-name.begin",
+				"settings": {
+					"foreground": "#9ebdff"
+				}
+			},
+			{
+				"scope": "punctuation.support.type.property-name.end",
+				"settings": {
+					"foreground": "#9ebdff"
+				}
+			},
+			{
+				"scope": "constant.language",
+				"settings": {
+					"foreground": "#afff00"
+				}
+			},
+			{
+				"name": "F-string Varialbe",
+				"scope": "constant.character.format.placeholder.other.python",
+				"settings": {
+					"foreground": "#ff00ff"
+				}
+			}
+		],
+	},
+	"workbench.colorCustomizations": {
+		"gitDecoration.modifiedResourceForeground": "#ff00ff",
+		"gitDecoration.deletedResourceForeground": "#ff0000",
+		"gitDecoration.untrackedResourceForeground": "#00ff00",
+		"sidebar.background": "#000000",
+	}
+}
