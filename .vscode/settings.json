@@ -1,0 +1,18 @@
+{
+    "search.useIgnoreFiles": false,
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": false,
+        "**/CVS": false
+    },
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedImport": false
+    },
+    "python.testing.pytestArgs": [
+        "tests",
+        "--color=yes"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+
+}
