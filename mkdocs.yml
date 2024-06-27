@@ -16,13 +16,9 @@ nav:
         - Possible Colors: "possible_colors.md"
     - Changelog: "CHANGELOG.md"
 
-plugins:
-- mkdocstrings
-- search
-
 theme:
     name: material
-    logo: img/rich-gradient.svg
+    logo: img/rich-gradient-icon.svg
     favicon: img/rich-gradient-icon.svg
     features:
         - navigation.instant
@@ -55,7 +51,11 @@ theme:
           toggle:
               icon: material/brightness-4
               name: Switch to system preference
-    
+
+plugins:
+- mkdocstrings
+- search
+
 extra_css:
     - "styles/style.css"
     - "styles/extra.css"

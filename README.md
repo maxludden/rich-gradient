@@ -19,12 +19,12 @@ Read the docs at [rich-gradient.readthedocs.io](https://rich-gradient.readthedoc
 
 ## Installation
 
-### rye
+### Rye (Recommended)
 ```bash
 rye add rich-gradient
 ```
 
-### pip
+### Pip
 ```bash
 pip install rich-gradient
 ```
