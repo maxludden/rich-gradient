@@ -1,6 +1,6 @@
 [project]
 name = "rich-gradient"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 authors = [
     { name = "Max Ludden", email = "dev@maxludden.com" }
@@ -13,6 +13,7 @@ dependencies = [
     "mkdocs-material>=9.5.27",
     "mkdocstrings>=0.25.1",
     "numpy>=2.0.0",
+    "mkdocstrings-python>=1.10.5",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

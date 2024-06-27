@@ -458,7 +458,7 @@ class Gradient(Text):
     
         Args:
             save (bool, optional): Whether to save the gradient to a file. Defaults to False.
-            filename (Optional[Path], optional): The filename to save the gradient to. Defaults \
+            path (Optional[Path], optional): The filename to save the gradient to. Defaults \
         to Path("/Users/maxludden/dev/py/MaxGradient/docs/img/named_gradient_example.svg").
                 console (Console, optional): The console to print the gradient to. Defaults to console.
         """
@@ -505,7 +505,7 @@ specified colors[/]",
     
         Args:
             save (bool, optional): Whether to save the gradient to a file. Defaults to False.
-            filename (Optional[Path], optional): The filename to save the gradient to. Defaults \
+            path (Optional[Path], optional): The filename to save the gradient to. Defaults \
         to Path("/Users/maxludden/dev/py/MaxGradient/docs/img/named_gradient_example.svg").
                 console (Console, optional): The console to print the gradient to. Defaults to console.
         """
@@ -545,7 +545,7 @@ gradient automatically.[/]",
     
         Args:
             save (bool, optional): Whether to save the gradient to a file. Defaults to False.
-            filename (Optional[Path], optional): The filename to save the gradient to. Defaults \
+            path (Optional[Path], optional): The filename to save the gradient to. Defaults \
         to Path("/Users/maxludden/dev/py/MaxGradient/docs/img/named_gradient_example.svg").
                 console (Console, optional): The console to print the gradient to. Defaults to console.
         """

@@ -10,10 +10,11 @@ nav:
     - User Guide:
         - Gradient: "gradient.md"
         - Color: "color.md"
+        - GradientRule: "gradient_rule.md"
     - References:
         - Gradient Reference: "gradient_ref.md"
         - Color Reference: "color_ref.md"
-        - Possible Colors: "possible_colors.md"
+        - GradientRule Reference: "gradient_rule_ref.md"
     - Changelog: "CHANGELOG.md"
 
 theme:

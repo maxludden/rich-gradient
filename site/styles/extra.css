@@ -1,0 +1,216 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Urbanist&display=swap");
+
+:root {
+  --black: #261230;
+  --white: #ffffff;
+  --radiate: #d7ff64;
+  --flare: #6340ac;
+  --rock: #78876e;
+  --galaxy: #261230;
+  --space: #30173d;
+  --comet: #6f5d6f;
+  --cosmic: #de5fe9;
+  --sun: #ffac2f;
+  --electron: #46ebe1;
+  --aurora: #46eb74;
+  --constellation: #5f6de9;
+  --neutron: #cff3cf;
+  --proton: #f6afbc;
+  --nebula: #cdcbfb;
+  --supernova: #f1aff6;
+  --starlight: #f4f4f1;
+  --lunar: #fbf2fc;
+  --asteroid: #e3cee3;
+  --crater: #f0dfdf;
+
+  --md-admonition-icon--note: url('data:image/svg+xml;charset=utf-8,<?xml version="1.0" encoding="UTF-8"?><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1 {stroke-width: 0px;}</style></defs><path id="gradient_icon" class="cls-1" d="m21.16.94H2.84c-1.05,0-1.9.85-1.9,1.9v18.32c0,1.05.85,1.9,1.9,1.9h18.32c1.05,0,1.9-.85,1.9-1.9V2.84c0-1.05-.85-1.9-1.9-1.9Zm1.4,18.1H1.44v-.19h21.13v.19Zm0-3.09H1.44v-.3h21.13v.3Zm0-3.1H1.44v-.5h21.13v.5Zm0-3H1.44v-.9h21.13v.9Zm0-2.9H1.44v-1.4h21.13v1.4Zm0-2.9H1.44v-1.21c0-.25.06-.48.18-.69h20.76c.12.21.18.44.18.69v1.21Z" /></svg>');
+}
+@font-face {
+  font-family: "Fira Code", monospace;
+  src: url("/Users/maxludden/Library/Fonts/FiraCode-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: "Urbanist", sans-serif;
+  src: url("/Users/maxludden/Library/Fonts/Urbanist-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: "Urbanist-Thin", sans-serif;
+  src: url("/Users/maxludden/Library/Fonts/Urbanist-Thin.ttf");
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #eeeeee;
+}
+
+table.params {
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #eeeeee;
+  width: 100%;
+  font-family: Urbanist-Black, sans-serif;
+}
+
+th {
+  color: #2d183b;
+  background: #cccccc;
+  font-size: 2.25em;
+  text-align: left;
+  padding: 10px 30px;
+}
+
+table.params td {
+  color: #cccccc;
+  background: #2d183b;
+  font-size: 2em;
+  font-family: "Urbanist", sans-serif;
+  text-align: left;
+  width: 30%;
+  padding: 10px 30px;
+}
+
+table.params th:nth-child(even) {
+  width: 30%;
+}
+
+table.params th:nth-child(even) {
+  width: 70%;
+}
+
+tr:nth-child(even) {
+  background: #321744;
+}
+
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-color: #af00ff;
+}
+.md-typeset .note > .admonition-title,
+.md-typeset .note > summary {
+  background-color: #8300da3b;
+}
+.md-typeset .note > .admonition-title::before,
+.md-typeset .note > summary::before {
+  background-color: #5f00ff;
+  -webkit-mask-image: var(--md-admonition-icon--note);
+  mask-image: var(--md-admonition-icon--note);
+}
+
+[data-md-color-scheme="astral-light"] {
+  --md-default-bg-color--dark: var(--black);
+  --md-primary-fg-color: var(--galaxy);
+  --md-typeset-a-color: var(--flare);
+  --md-accent-fg-color: var(--cosmic);
+}
+
+[data-md-color-scheme="astral-dark"] {
+  --md-default-bg-color: var(--galaxy);
+  --md-default-fg-color: var(--white);
+  --md-default-fg-color--light: var(--white);
+  --md-default-fg-color--lighter: var(--white);
+  --md-primary-fg-color: var(--space);
+  --md-primary-bg-color: var(--white);
+  --md-accent-fg-color: var(--radiate);
+
+  --md-typeset-color: var(--white);
+  --md-typeset-a-color: var(--radiate);
+  --md-typeset-mark-color: var(--sun);
+
+  --md-code-fg-color: var(--white);
+  --md-code-bg-color: var(--space);
+
+  --md-code-hl-comment-color: var(--asteroid);
+  --md-code-hl-punctuation-color: var(--asteroid);
+  --md-code-hl-generic-color: var(--supernova);
+  --md-code-hl-variable-color: var(--starlight);
+  --md-code-hl-string-color: var(--radiate);
+  --md-code-hl-keyword-color: var(--supernova);
+  --md-code-hl-operator-color: var(--supernova);
+  --md-code-hl-number-color: var(--electron);
+  --md-code-hl-special-color: var(--electron);
+  --md-code-hl-function-color: var(--neutron);
+  --md-code-hl-constant-color: var(--radiate);
+  --md-code-hl-name-color: var(--md-code-fg-color);
+
+  --md-typeset-del-color: hsla(6, 90%, 60%, 0.15);
+  --md-typeset-ins-color: hsla(150, 90%, 44%, 0.15);
+
+  --md-typeset-table-color: hsla(0, 0%, 100%, 0.12);
+  --md-typeset-table-color--light: hsla(0, 0%, 100%, 0.035);
+}
+
+[data-md-color-scheme="astral-light"] img[src$="#only-dark"],
+[data-md-color-scheme="astral-light"] img[src$="#gh-dark-mode-only"] {
+  display: none; /* Hide dark images in light mode */
+}
+
+[data-md-color-scheme="astral-light"] img[src$="#only-light"],
+[data-md-color-scheme="astral-light"] img[src$="#gh-light-mode-only"] {
+  display: inline; /* Show light images in light mode */
+}
+
+[data-md-color-scheme="astral-dark"] img[src$="#only-light"],
+[data-md-color-scheme="astral-dark"] img[src$="#gh-light-mode-only"] {
+  display: none; /* Hide light images in dark mode */
+}
+
+[data-md-color-scheme="astral-dark"] img[src$="#only-dark"],
+[data-md-color-scheme="astral-dark"] img[src$="#gh-dark-mode-only"] {
+  display: inline; /* Show dark images in dark mode */
+}
+
+/* See: https://github.com/squidfunk/mkdocs-material/issues/175#issuecomment-616694465 */
+.md-typeset__table {
+  min-width: 100%;
+}
+.md-typeset table:not([class]) {
+  display: table;
+}
+
+.invis {
+  color: #23132e;
+}
+.grey93 {
+  color: #23132e;
+  background: #eee;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.salmon1 {
+  color: #23132e;
+  background: #ff875f;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.spring_green1 {
+  color: #23132e;
+  background: #00ff87;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.off_white#eee {
+  color: #23132e;
+  background: #eeeeee;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.violet {
+  color: #eeeeee;
+  background: #af00ff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.purple {
+  color: #ffffff;
+  background: #5f00ff;
+  padding: 5px;
+  border-radius: 5px;
+}
