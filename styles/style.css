@@ -1,0 +1,1119 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Urbanist:wght@100;200;400&display=swap");
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
+
+:root {
+  --black: #261230;
+  --white: #ffffff;
+  --radiate: #d7ff64;
+  --flare: #6340ac;
+  --rock: #78876e;
+  --galaxy: #261230;
+  --space: #30173d;
+  --comet: #6f5d6f;
+  --cosmic: #de5fe9;
+  --sun: #ffac2f;
+  --electron: #46ebe1;
+  --aurora: #46eb74;
+  --constellation: #5f6de9;
+  --neutron: #cff3cf;
+  --proton: #f6afbc;
+  --nebula: #cdcbfb;
+  --supernova: #f1aff6;
+  --starlight: #f4f4f1;
+  --lunar: #fbf2fc;
+  --asteroid: #e3cee3;
+  --crater: #f0dfdf;
+
+
+  --md-admonition-icon--note: url('data:image/svg+xml;charset=utf-8,<?xml version="1.0" encoding="UTF-8"?><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1 {stroke-width: 0px;}</style></defs><path id="gradient_icon" class="cls-1" d="m21.16.94H2.84c-1.05,0-1.9.85-1.9,1.9v18.32c0,1.05.85,1.9,1.9,1.9h18.32c1.05,0,1.9-.85,1.9-1.9V2.84c0-1.05-.85-1.9-1.9-1.9Zm1.4,18.1H1.44v-.19h21.13v.19Zm0-3.09H1.44v-.3h21.13v.3Zm0-3.1H1.44v-.5h21.13v.5Zm0-3H1.44v-.9h21.13v.9Zm0-2.9H1.44v-1.4h21.13v1.4Zm0-2.9H1.44v-1.21c0-.25.06-.48.18-.69h20.76c.12.21.18.44.18.69v1.21Z" /></svg>');
+}
+[data-md-color-scheme="purple"] {
+  --md-default-fg-color:               #afbbff;
+  --md-default-fg-color--light:        #cfccff;
+  --md-default-fg-color--lighter:      #dfddff;
+  --md-default-fg-color--lightest:     #fff;
+  --md-default-bg-color:               #53008f;
+  --md-default-bg-color--light:        #7121aa;
+  --md-default-bg-color--lighter:      #9a40db;
+  --md-default-bg-color--lightest:     #e8c8ff;
+}
+
+@font-face {
+  font-family: "Fira Code", monospace;
+  src: url("/Users/maxludden/Library/Fonts/FiraCode-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: "Urbanist", sans-serif;
+  src: url("/Users/maxludden/Library/Fonts/Urbanist-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: "Urbanist-Thin", sans-serif;
+  src: url("/Users/maxludden/Library/Fonts/Urbanist-Thin.ttf");
+}
+
+code { font-family: 'Fira Code', monospace; }
+
+@supports (font-variation-settings: normal) {
+  code { font-family: 'Fira Code VF', monospace; }
+}
+/*
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: #1D1F20;
+}
+*/
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Urbanist", sans-serif;
+  padding: 25px 0px 0px 0px;
+}
+
+h2 {
+  font-size: 3em;
+  color: #eeeeee;
+  text-align: left;
+  padding: 0px 0px 0px 0px;
+  text-decoration: underline;
+  background: linear-gradient(
+    to right,
+    #ff00ff 5%,
+    #5f00ff 15%,
+    #08f 20%,
+    #0ff 25%,
+    #0f0 30%,
+    #ff0 35%,
+    #f80 40%,
+    #f00 45%,
+    #f00 55%,
+    #f80 60%,
+    #ff0 65%,
+    #0f0 70%,
+    #0ff 75%,
+    #08f 80%,
+    #5f00ff 85%,
+    #ff00ff 95%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 30s linear infinite;
+}
+
+h3 {
+  font-size: 2.5em;
+  color: #eeeeee;
+  text-align: left;
+  padding: 0px 0px 0px 0px;
+  text-decoration: underline;
+  background: linear-gradient(
+    30deg,
+    #ff00ffaf 0%,
+    #9f67ffaf 25%,
+    #af00ffaf 50%,
+    #9f67ffaf 75%,
+    #ff00ffaf 100%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+}
+pre {
+  font-family: "Fira Code", monospace;
+  font-size: 1em;
+  padding: 10px;
+  color: force #eeeeee;
+  background: #2d183b;
+}
+
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #eeeeee;
+}
+
+table.params {
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: #eeeeee;
+  width: 100%;
+  font-family: Urbanist-Black, sans-serif;
+}
+
+th {
+  color: #2d183b;
+  background: #cccccc;
+  font-size: 1.25em;
+  text-align: left;
+}
+
+table.params td {
+  color: #cccccc;
+  background: #2d183b;
+  font-size: 2em;
+  font-family: "Urbanist", sans-serif;
+  text-align: left;
+  width: 30%;
+  padding: 10px 30px;
+}
+
+table.params th:nth-child(even) {
+  width: 30%;
+}
+
+table.params th:nth-child(even) {
+  width: 70%;
+}
+
+tr:nth-child(even) {
+  background: #321744;
+}
+
+.md-ellipsis,
+.md-source__icon,
+.md-icon,
+.md-source__fact,
+.md-source__repository,
+.md-icon,
+.md-source__icon,
+.md-header__source,
+a {
+  font-weight: 400;
+  font-family: "Urbanist", sans-serif;
+  text-decoration: underline;
+  background: linear-gradient(
+    45deg,
+    #ff0 10%,
+    #ffaf00 20%,
+    #ff5f00 30%,
+    #ff0000 40%, 
+    #ff00af 45%,
+    #ff00ff 50%,
+    #ff00af 55%,
+    #ff0000 70%,
+    #ff5f00 80%,
+    #ffaf00 90%,
+    #ffff00 100%
+  );
+  background-size: 1000% auto;
+  color: #fff;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 1000% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+a:hover {
+  text-decoration: underline;
+  background: linear-gradient(
+    40deg,
+    #0f0 10%,
+    #ff0 20%,
+    #f80 30%,
+    #f00 40%, 
+    #f0f 45%,
+    #f0f 55%,
+    #f00 70%,
+    #f80 80%,
+    #ff0 90%,
+    #0f0 100%
+  );
+  background-size: 1000% auto;
+  color: #afafaf;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 400s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 1000% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+a:visited {
+  text-decoration: underline;
+  background: linear-gradient(
+    40deg,
+    #0f0 10%,
+    #ff0 15%,
+    #f80 20%,
+    #f00 25%, 
+    #f0f 30%,
+    #af00ff 35%,
+    #5f00ff 40%,
+    #00f 45%,
+    #00f 50%,
+    #5f00ff 55%,
+    #af00ff 60%,
+    #f0f 70%,
+    #f00 75%,
+    #f80 80%,
+    #ff0 85%,
+    #0f0 90%
+  );
+  background-size: 1000% auto;
+  color: #cfcfcf;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 400s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 1000% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+a:active {
+  color: var(--link-active-color);
+}
+.version{
+  color: #aaff00;
+}
+.version {
+  font-weight: 400;
+  font-family: "Urbanist", monospace;
+  background: linear-gradient(
+    to right,
+    #ff00ff 20%,
+    #af00ff 30%,
+    #9f67ff 40%,
+    #9f67ff 60%,
+    #af00ff 70%,
+    #ff00ff 80%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+}
+@keyframes shine {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+
+#title{
+  font-family: "Urbanist-Black", sans-serif;
+  font-size: 5em;
+  color: #eeeeee;
+  text-align: center;
+  padding: 0px 0px 0px 0px;
+  text-decoration: underline;
+  background: linear-gradient(
+    to right,
+    #ff00ff 10%,
+    #5f00ff 15%,
+    #08f 20%,
+    #0ff 25%,
+    #0f0 30%,
+    #ff0 35%,
+    #f80 40%,
+    #f00 45%,
+    #f00 55%,
+    #f80 60%,
+    #ff0 65%,
+    #0f0 70%,
+    #0ff 75%,
+    #08f 80%,
+    #5f00ff 85%,
+    #ff00ff 90%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+}
+@keyframes shine {
+  0% {
+    background-position: 200% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+
+#desc {
+  padding: 10px;
+  border: 10px solid #ffffff;
+  border-radius: 20px;
+  font-size: 1.25em;
+}
+#box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0px 30px;
+  /* width: 100%; */
+  /* height: 200px; */
+  color: white;
+  font-size: 1.25em;
+}
+.gradient-border {
+  --borderWidth: 10px;
+  background: #2d183b;
+  position: relative;
+  border-radius: calc(3 * var(--borderWidth));
+}
+.gradient-border:after {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--borderWidth));
+  left: calc(-1 * var(--borderWidth));
+  height: calc(100% + var(--borderWidth) * 2);
+  width: calc(100% + var(--borderWidth) * 2);
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+  border-radius: calc(3 * var(--borderWidth));
+  z-index: -1;
+  animation: animatedgradient 3s ease alternate infinite;
+  background-size: 300% 300%;
+}
+
+
+@keyframes animatedgradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+pre {
+  padding-bottom: 30px;
+}
+.magenta {
+  color: rgb(255, 0, 255);
+}
+.violet {
+  color: rgb(175, 0, 255);
+}
+.purple {
+  color: rgb(93, 0, 255);
+}
+.blue {
+  color: rgb(0, 0, 255);
+}
+.dogerblue {
+  color: rgb(0, 85, 255);
+}
+.deepskyblue {
+  color: rgb(0, 135, 255);
+}
+.lightskyblue {
+  color: rgb(0, 195, 255);
+}
+.cyan {
+  color: rgb(0, 255, 255);
+}
+.lime {
+  color: rgb(0, 255, 0);
+}
+.greenyellow{
+  color: rgb(175, 255, 0);
+}
+.yellow {
+  color: rgb(255, 255, 0);
+}
+.orange {
+  color: rgb(255,175,0)
+}
+.darkorange {
+  color: rgb(255,135,0)
+}
+.tomato {
+  color: rgb(255,75, 0)
+}
+.red {
+  color: rgb(255, 0, 0);
+}
+.deeppink {
+  color: rgb(255, 0, 95);
+}
+.hotpink{
+  color: rgb(255,0,175)
+}
+
+
+
+#spacer {
+  padding: 30px;
+}
+.vertical_spacer {
+  padding: 30px 0px 30px 0px;
+}
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-color: #af00ff;
+}
+.md-typeset .note > .admonition-title,
+.md-typeset .note > summary {
+  background-color: #8300da3b;
+}
+.md-typeset .note > .admonition-title::before,
+.md-typeset .note > summary::before {
+  background-color: #5f00ff;
+  -webkit-mask-image: var(--md-admonition-icon--note);
+  mask-image: var(--md-admonition-icon--note);
+}
+
+[data-md-color-scheme="astral-light"] {
+  --md-default-bg-color--dark: var(--black);
+  --md-primary-fg-color: var(--galaxy);
+  --md-typeset-a-color: var(--flare);
+  --md-accent-fg-color: var(--cosmic);
+}
+
+[data-md-color-scheme="astral-dark"] {
+  --md-default-bg-color: var(--galaxy);
+  --md-default-fg-color: var(--white);
+  --md-default-fg-color--light: var(--white);
+  --md-default-fg-color--lighter: var(--white);
+  --md-primary-fg-color: var(--space);
+  --md-primary-bg-color: var(--white);
+  --md-accent-fg-color: var(--radiate);
+
+  --md-typeset-color: var(--white);
+  --md-typeset-a-color: var(--radiate);
+  --md-typeset-mark-color: var(--sun);
+
+  --md-code-fg-color: var(--white);
+  --md-code-bg-color: var(--space);
+
+  --md-code-hl-comment-color: var(--asteroid);
+  --md-code-hl-punctuation-color: var(--asteroid);
+  --md-code-hl-generic-color: var(--supernova);
+  --md-code-hl-variable-color: var(--starlight);
+  --md-code-hl-string-color: var(--radiate);
+  --md-code-hl-keyword-color: var(--supernova);
+  --md-code-hl-operator-color: var(--supernova);
+  --md-code-hl-number-color: var(--electron);
+  --md-code-hl-special-color: var(--electron);
+  --md-code-hl-function-color: var(--neutron);
+  --md-code-hl-constant-color: var(--radiate);
+  --md-code-hl-name-color: var(--md-code-fg-color);
+
+  --md-typeset-del-color: hsla(6, 90%, 60%, 0.15);
+  --md-typeset-ins-color: hsla(150, 90%, 44%, 0.15);
+
+  --md-typeset-table-color: hsla(0, 0%, 100%, 0.12);
+  --md-typeset-table-color--light: hsla(0, 0%, 100%, 0.035);
+}
+
+[data-md-color-scheme="astral-light"] img[src$="#only-dark"],
+[data-md-color-scheme="astral-light"] img[src$="#gh-dark-mode-only"] {
+  display: none; /* Hide dark images in light mode */
+}
+
+[data-md-color-scheme="astral-light"] img[src$="#only-light"],
+[data-md-color-scheme="astral-light"] img[src$="#gh-light-mode-only"] {
+  display: inline; /* Show light images in light mode */
+}
+
+[data-md-color-scheme="astral-dark"] img[src$="#only-light"],
+[data-md-color-scheme="astral-dark"] img[src$="#gh-light-mode-only"] {
+  display: none; /* Hide light images in dark mode */
+}
+
+[data-md-color-scheme="astral-dark"] img[src$="#only-dark"],
+[data-md-color-scheme="astral-dark"] img[src$="#gh-dark-mode-only"] {
+  display: inline; /* Show dark images in dark mode */
+}
+.badges {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding: 0px 0px 0px 0px;
+  /* width: 200%; */
+  /* height: 200px; */
+  color: white;
+  font-size: 1.25em;
+}
+
+.badge {
+  padding: 10px;
+  font-size: 2em;
+  width: 200%;
+}
+/* See: https://github.com/squidfunk/mkdocs-material/issues/175#issuecomment-616694465 */
+.md-typeset__table {
+  min-width: 100%;
+}
+.md-typeset table:not([class]) {
+  display: table;
+}
+
+.invis {
+  color: #23132e;
+}
+.grey93 {
+  color: #23132e;
+  background: #eee;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.salmon1 {
+  color: #23132e;
+  background: #ff875f;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.spring_green1 {
+  color: #23132e;
+  background: #00ff87;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.off_white#eee {
+  color: #23132e;
+  background: #eeeeee;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.violet {
+  color: #eeeeee;
+  background: #af00ff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.purple {
+  color: #ffffff;
+  background: #5f00ff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.class-type {
+  color: #7fd6e8;
+  font-family: "Fira Code", monospace;
+}
+.classmethod {
+  color: #00d000;
+  font-family: "Fira Code", monospace;
+}
+.banner {
+  width: 100%;
+}
+
+#possible-colors {
+  font-weight: 400;
+  font-family: "Urbanist", monospace;
+  background: linear-gradient(
+    to right,
+    #ff68ff 20%,
+    #e6b0ff 30%,
+    #aa79ff 40%,
+    #aa79ff 60%,
+    #e6b0ff 70%,
+    #ff68ff 80%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 20s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+}
+#gradient-init {
+  margin: auto;
+}
+.g1 {
+  font-weight: 400;
+  font-family: "Urbanist", sans-serif;
+  text-decoration: underline;
+  background: linear-gradient(
+    60deg,
+    #ff00ff 10%,
+    #5f00ff 15%,
+    #08f 20%,
+    #0ff 25%,
+    #0f0 30%,
+    #ff0 35%,
+    #f80 40%,
+    #f00 45%,
+    #f00 55%,
+    #f80 60%,
+    #ff0 65%,
+    #0f0 70%,
+    #0ff 75%,
+    #08f 80%,
+    #5f00ff 85%,
+    #ff00ff 90%
+  );
+  background-size: 1000% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 400s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 1000% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+.g2 {
+  font-weight: 400;
+  font-family: "Urbanist", sans-serif;
+  text-decoration: underline;
+  background: linear-gradient(
+    40deg,
+    #0f0 10%,
+    #ff0 15%,
+    #f80 20%,
+    #f00 25%, 
+    #f0f 30%,
+    #af00ff 35%,
+    #5f00ff 40%,
+    #00f 45%,
+    #00f 50%,
+    #5f00ff 55%,
+    #af00ff 60%,
+    #f0f 70%,
+    #f00 75%,
+    #f80 80%,
+    #ff0 85%,
+    #0f0 90%
+  );
+  background-size: 1000% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 400s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 1000% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+.gradient-header2 {
+  font-weight: 400;
+  font-family: "Urbanist", sans-serif;
+  text-decoration: underline;
+  font-size: 7vw;
+  line-height: 5vw;
+  background: linear-gradient(
+    to right,
+    #0f0 10%,
+    #ff0 15%,
+    #f80 20%,
+    #f00 25%, 
+    #f0f 30%,
+    #af00ff 35%,
+    #5f00ff 40%,
+    #00f 45%,
+    #00f 50%,
+    #5f00ff 55%,
+    #af00ff 60%,
+    #f0f 70%,
+    #f00 75%,
+    #f80 80%,
+    #ff0 85%,
+    #0f0 90%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 200% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+.gradient-header3 {
+  font-weight: 400;
+  font-family: "Urbanist", sans-serif;
+  text-decoration: underline;
+  font-size: 7vw;
+  line-height: 5vw;
+  background: linear-gradient(
+    to right,
+    #f00 10%,
+    #f80 15%,
+    #ff0 20%,
+    #0f0 25%,
+    #0ff 30%,
+    #08f 35%,
+    #00f 40%,
+    #5f00ff 45%,
+    #af00ff 55%,
+    #5f00ff 60%,
+    #00f 65%,
+    #08f 70%,
+    #0ff 75%,
+    #0f0 80%,
+    #ff0 85%,
+    #f80 90%,
+    #f00 95%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+  @keyframes shine {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 200% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+}
+
+p.attr-line {
+  line-height: 0vw;
+}
+.red {
+  padding: 5px;
+  color: #23132e;
+  background: #ff0000;
+  border-radius: 10px;
+}
+
+.magenta {
+  padding: 5px;
+  color: #ff00ff;
+  background: #ff00ff;
+  border-radius: 10px;
+}
+
+.purple {
+  padding: 5px;
+  color: #AF00FF;
+  background: #5f00ff;
+  border-radius: 10px;
+}
+
+.blue {
+  padding: 5px;
+  color: #23132e;
+  background: #00aaff;
+  border-radius: 10px;
+}
+
+.light-green {
+  padding: 5px;
+  color: #23132e;
+  background: #aaffaa;
+  border-radius: 10px;
+}
+
+.lime {
+  padding: 5px;
+  color: #23132e;
+  background: #00ff00;
+  border-radius: 10px;
+}
+
+.class-init {
+  padding: 25px;
+  background: #47265d;
+  color: #af99ff;
+}
+
+.class {
+  color: #8be9fd;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.attr {
+  color: #50fa7b;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.white-mono {
+  color: #f8f8f2;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.basic-type {
+  color: #0ff;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.pink-brac {
+  color: #ff79c6;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+.blue-brac {
+  color: #31c2f2;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+.purple-brac {
+  color: #8080ff;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+.self {
+  color: #c779ff;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.punc {
+  color: #eeeeee;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.type {
+  color: #aaffaa;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.yellow {
+  color: #f5ffaa;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.lime-text {
+  color: #00ff00;
+  font-family: "Fira Code", monospace;
+  font-weight: 600;
+}
+
+.none {
+  color: #c779ff;
+  font-family: "Fira Code", monospace;
+  font-weight: 400;
+  font-style: none;
+}
+
+.rainbow-wipe-mono {
+  text-align: center;
+  font-size: large;
+  font-weight: 700;
+  font-family: "Fira Code", monospace;
+  background: linear-gradient(
+    to right,
+    #f0f 10%,
+    #50f 15%,
+    #08f 20%,
+    #0ff 25%,
+    #0f0 30%,
+    #ff0 35%,
+    #f80 40%,
+    #f00 45%,
+    #f00 55%,
+    #f80 60%,
+    #ff0 65%,
+    #0f0 70%,
+    #0ff 75%,
+    #08f 80%,
+    #50f 85%,
+    #f0f 90%
+  );
+  background-size: 200% auto;
+
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: shine 1s linear infinite;
+  @keyframes shine {
+    to {
+      background-position: 200% center;
+    }
+  }
+}
+.highlight1,
+.pdm-recommended {
+  font-weight: 400;
+  font-family: "Urbanist", monospace;
+  background: linear-gradient(
+    to right,
+    #ff00ff 20%,
+    #af00ff 30%,
+    #9f67ff 40%,
+    #9f67ff 60%,
+    #af00ff 70%,
+    #ff00ff 80%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+}
+@keyframes shine {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.highlight2{
+  font-weight: 400;
+  font-family: "Urbanist", monospace;
+  background: linear-gradient(
+    to right,
+    #ff00ff 0%,
+    #9f67ff 25%,
+    #af00ff 50%,
+    #9f67ff 75%,
+    #ff00ff 100%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+}
+.highlight3{
+  font-weight: 400;
+  font-family: "Urbanist", monospace;
+  background: linear-gradient(
+    to right,
+    #9f67ff 0%,
+    #af00ff 25%,
+    #ff00ff 50%,
+    #af00ff 75%,
+    #9f67ff 100%
+  );
+  background-size: 200% auto;
+  color: #000;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 40s linear infinite;
+}
+
+.md-typeset code {
+  background-color: #ffffff00;
+}
+
+.doc-children:nth-child(odd) {
+  background-color: #ffffff02;
+}
+.doc-attribute:nth-child(odd){
+  background-color: #af00ff20;
+  border: #af00ff 1px solid;
+  border-radius: 10px;
+  padding-left: 5px
+}
+.doc-attribute:nth-child(even){
+  background-color: #af00ff00;
+  border: #5f00ff 1px solid;
+  border-radius: 10px;
+  padding-left: 5px
+}
+.doc {
+  background-color: #ffffff00;
+}
+span.doc-labels{
+  background-color: #ffffff02;
+  text-decoration: underline
+}
