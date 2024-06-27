@@ -387,7 +387,8 @@ class Color(PyColor):
 
     @classmethod
     def example(cls, record: bool = False):
-        console = Console(record=True) if record else Console()
+        from rich_gradient.theme import GRADIENT_TERMINAL_THEME
+        console = Console(record=True, width=8WW0) if record else Console()
 
         def table_generator() -> Generator:
             tables: List[Tuple[str, int, int, Optional[Text]]] = [
@@ -414,7 +415,11 @@ class Color(PyColor):
 
         if record:
             try:
-                console.save_svg("docs/img/colors.svg")
+                console.save_svg(
+                    "docs/img/colors.svg",
+                    theme=GRADIENT_TERMINAL_THEME,
+                    title="Colors"
+                    )
             except TypeError:
                 pass
 

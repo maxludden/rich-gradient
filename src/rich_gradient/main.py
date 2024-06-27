@@ -492,7 +492,7 @@ specified colors[/]",
             justify="center",
         )
         if save:
-            console.save_svg(path, title="MaxGradient", theme=GRADIENT_TERMINAL_THEME)
+            console.save_svg(path, title="rich-gradient", theme=GRADIENT_TERMINAL_THEME)
 
     @classmethod
     def random_gradient_example(
@@ -532,7 +532,7 @@ gradient automatically.[/]",
         )
         console.line()
         if save:
-            console.save_svg(path, title="MaxGradient", theme=GRADIENT_TERMINAL_THEME)
+            console.save_svg(path, title="rich-gradient", theme=GRADIENT_TERMINAL_THEME)
 
     @classmethod
     def rainbow_gradient_example(
@@ -575,7 +575,7 @@ until it returns to it's starting color.",
         )
         console.line(1)
         if save:
-            console.save_svg(path, title="gradient", theme=GRADIENT_TERMINAL_THEME)
+            console.save_svg(path, title="rich-gradient", theme=GRADIENT_TERMINAL_THEME)
 
     @classmethod
     def example(cls) -> None:

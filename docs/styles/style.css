@@ -107,7 +107,7 @@ h2 {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shine 40s linear infinite;
+  animation: shine 30s linear infinite;
 }
 
 h3 {
@@ -183,6 +183,7 @@ table.params th:nth-child(even) {
 tr:nth-child(even) {
   background: #321744;
 }
+
 .md-ellipsis,
 .md-source__icon,
 .md-icon,
@@ -214,7 +215,7 @@ a {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shine 400s linear infinite;
+  animation: shine 40s linear infinite;
   @keyframes shine {
     0% {
       background-position: 0 50%;
