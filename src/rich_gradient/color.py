@@ -36,7 +36,14 @@ class ColorParsingError(Exception):
     pass
 
 class Color(PyColor):
+    """A color from which to generate a gradient."""
+
     def __init__(self, value: PyColorType) -> None:
+        """Initialize a color.
+        
+        Args:
+            value (pydantic_extra_types.color.ColorType): The color value.
+        """
         try:
             if value in self.COLORS_BY_NAME:
                 value = self.COLORS_BY_NAME[str(value)]
@@ -44,15 +51,35 @@ class Color(PyColor):
             raise ColorParsingError(f"Unable to parse color: {value}")
         super().__init__(value)
 
-    def as_rich(self) -> bool:
-        hex = self.as_hex(format="long")
-        return RichColor.parse(hex)  # type: ignore
+    def as_rich(self) -> RichColor:
+        """Convert the color to a rich color.
+        
+        Returns:
+            RichColor: The color as a rich color.
+
+        Raises:
+            ColorParsingError: If the color cannot be parsed
+        """
+        try:
+            hex = self.as_hex(format="long")
+            return RichColor.parse(hex)
+        except PydanticCustomError:
+            raise ColorParsingError(f"Unable to parse color: {self}")
 
     @property
     def rich(self) -> RichColor:
+        """The color as a rich color.
+        
+        Returns:
+            RichColor: The color as a rich color.
+        """
         return self.as_rich()  # type: ignore
 
     def __rich__(self) -> Text:
+        """Return a rich text representation of the color.
+        
+        Returns:
+            Text: The rich text representation of the color."""
         return Text.assemble(
             *[
                 Text("Color", style="bold #ffffff"),
@@ -64,6 +91,10 @@ class Color(PyColor):
 
     @property
     def style(self) -> Style:
+        """The color as a rich style.
+        
+        Returns:
+            Style: The color as a rich style."""
         return self.as_style()
 
     def as_style(
@@ -107,6 +138,9 @@ class Color(PyColor):
             encircle (bool, optional): Enable encircled text. Defaults to None.
             overline (bool, optional): Enable overlined text. Defaults to None.
             link (str, link): Link URL. Defaults to None.
+
+        Returns:
+            rich.style.Style: A rich.style.Style with the foreground set to the color.
         """
 
         return Style(
@@ -131,6 +165,11 @@ class Color(PyColor):
 
     @property
     def bg_style(self) -> Style:
+        """The color as a background style.
+        
+        Returns:
+            Style: The color as a background style.
+        """
         return self.as_bg_style()
 
     def as_bg_style(
@@ -174,6 +213,9 @@ class Color(PyColor):
             encircle (bool, optional): Enable encircled text. Defaults to None.
             overline (bool, optional): Enable overlined text. Defaults to None.
             link (str, link): Link URL. Defaults to None.
+
+        Returns:
+            Style: The style.
         """
         if color is None:
             color = self.get_contrast()
@@ -199,17 +241,32 @@ class Color(PyColor):
 
     @property
     def hex(self) -> str:
-        return self.as_hex()
+        """Return the hex value of the color.
+        
+        Returns:
+            str: The hex value of the color.
+        """
+        return self.as_hex("long")
 
     @property
     def rgb(self) -> str:
+        """Return the RGB value of the color.
+        
+        Returns:
+            str: The RGB value of the color."""
         return self.as_rgb()
 
     @property
     def triplet(self) -> ColorTriplet:
+        """The `rich.color_triplet.ColorTriplet` respresentation of the color."""
         return self.as_triplet()
 
     def as_triplet(self) -> ColorTriplet:
+        """Convert the color to a `rich.color_triplet.ColorTriplet`.
+
+        Returns:
+            ColorTriplet: The color as a color triplet.
+        """
         red = int(self._rgba.r * 255)
         green = int(self._rgba.g * 255)
         blue = int(self._rgba.b * 255)
@@ -228,12 +285,29 @@ class Color(PyColor):
         import colorsys
 
         def rgb_to_hsv(color: Color) -> Tuple[float, float, float]:
-            """Convert an RGB color to HSV."""
+            """Convert an RGB color to HSV.
+            
+            Args:
+                color (Color): The color to convert.
+
+            Returns:
+                Tuple[float, float, float]: The HSV values.
+            """
             rgba: RGBA = color._rgba
             h, s, v = colorsys.rgb_to_hsv(r=rgba.r, g=rgba.g, b=rgba.b)
             return h, s, v
 
-        def hsv_to_hsl(hue, saturation, value):
+        def hsv_to_hsl(hue, saturation, value) -> Tuple[float, float, float]:
+            """Convert an HSV color to HSL.
+            
+            Args:
+                hue (float): The hue value.
+                saturation (float): The saturation value.
+                value (float): The value value.
+
+            Returns:
+                Tuple[float, float, float]: The HSL values.
+            """
             lightness = (
                 (2 - saturation) * value / 2
                 if value <= 0.5
@@ -246,8 +320,16 @@ class Color(PyColor):
             )
             return hue, saturation, lightness
 
-        def color_distance(color1: Color, color2: Color):
-            """Calculate the distance between two colors."""
+        def color_distance(color1: Color, color2: Color) -> float:
+            """Calculate the distance between two colors.
+            
+            Args:
+                color1 (Color): The first color.
+                color2 (Color): The second color.
+            
+            Returns:
+                float: The distance between the two colors.
+            """
             h1, s1, v1 = rgb_to_hsv(color1)
             h2, s2, v2 = rgb_to_hsv(color2)
             dh: float = min(abs(h1 - h2), 1 - abs(h1 - h2))
@@ -256,8 +338,16 @@ class Color(PyColor):
             color_distance: float = dh + ds + dv
             return color_distance
 
-        def find_closest_color(color1: Color, color_list: List[Color]):
-            """Calculate the closest color in a list."""
+        def find_closest_color(color1: Color, color_list: List[Color]) -> Color:
+            """Calculate the closest color in a list.
+            
+            Args:
+                color1 (Color): The color to compare.
+                color_list (List[Color]): The list of colors to compare against.
+
+            Returns:
+                Color: The closest color.
+            """
             closest_color = None
             min_distance = float("inf")
             for color in color_list:
@@ -265,6 +355,7 @@ class Color(PyColor):
                 if distance < min_distance:
                     min_distance = distance
                     closest_color = color
+            assert closest_color is not None, "No closest color found."
             return closest_color
 
         color_list: List[Color] = [Color("#000000"), Color("#ffffff")]
@@ -279,7 +370,14 @@ class Color(PyColor):
 
     @classmethod
     def colortitle(cls, title: str) -> Text:
-        """Return the colored title."""
+        """Manually color a title.
+        
+        Args:
+            title (str): The title to style.
+            
+        Returns:
+            Text: The styled title.
+        """
         title_list: List[str] = list(title)
         length = len(title)
         COLORS = cycle(
@@ -349,6 +447,18 @@ class Color(PyColor):
         *,
         show_index: bool = False,
     ) -> Table:
+        """Generate a table of colors.
+
+        Args:
+            title (str): The title of the color table.
+            start (int): The starting index.
+            end (int): The ending index.
+            caption (Optional[Text], optional): The caption of the color table. Defaults to None.
+            show_index (bool, optional): Whether to show the index of the color. Defaults to False.
+
+        Returns:
+            Table: The color table.
+        """
         table = cls.generate_table(title, show_index, caption)
         for index, (key, _) in enumerate(cls.COLORS_BY_NAME.items()):
             if index < start:
@@ -386,11 +496,19 @@ class Color(PyColor):
         return table
 
     @classmethod
-    def example(cls, record: bool = False):
+    def example(cls, record: bool = False) -> None:
+        """Generate a example of the color class.
+        
+        Args:
+            record (bool): Whether to record the example as an svg.
+        """
+
+
         from rich_gradient.theme import GRADIENT_TERMINAL_THEME
-        console = Console(record=True, width=8WW0) if record else Console()
+        console = Console(record=True, width=80) if record else Console()
 
         def table_generator() -> Generator:
+            """Generate the tables for the example."""
             tables: List[Tuple[str, int, int, Optional[Text]]] = [
                 (
                     "Gradient Colors",

@@ -1,4 +1,4 @@
-# ![rich-gradient](docs/img/rich-gradient.svg)
+# [![rich-gradient](docs/img/rich-gradient.svg)](https://maxludden.github.io/rich-gradient/)
 
 
 [![Python](https://img.shields.io/badge/Python-3.9%2C%203.10%2C%203.11%2C%203.12-blue)](https://www.python.org/) [![Rye](https://img.shields.io/badge/Rye-1.0-green)](https://www.rye.org/) [![PyPI](https://img.shields.io/pypi/v/rich-gradient)](https://pypi.org/project/rich_gradient/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/rich-gradient)](https://pypi.org/project/rich-gradient/)
@@ -42,7 +42,7 @@ from rich_gradient import Gradient
 console = Console()
 console.print(Gradient("Hello, World!")
 ```
-![Hello, World!](docs/img/hello_world.svg)
+![Hello, World!](https://maxludden.github.io/rich-gradient/img/hello_world.svg)
 
 ---
 
@@ -54,7 +54,7 @@ If you want a bit more control of the gradient, you can specify the colors you w
 
 Color can be parsed from a variety of formats including:
 
-![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](docs/img/color_formats.svg)
+![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](https://maxludden.github.io/rich-gradient/img/color_formats.svg)
 
 #### Example Code
 
@@ -70,7 +70,7 @@ console.print(
 
 #### Specific Color Gradient Result:
 
-![specific colors](docs/img/specific_color_gradient.svg)
+![specific colors](https://maxludden.github.io/rich-gradient/img/specific_color_gradient.svg)
 
 --- 
 
@@ -89,7 +89,7 @@ console.print(
 ```
 
 
-![Rainbow Gradient](docs/img/example_rainbow_gradient.svg)
+![Rainbow Gradient](https://maxludden.github.io/rich-gradient/img/example_rainbow_gradient.svg)
 <p style="text-align:right;">*The rainbow gradient is generated randomly each time the code is run.</p>
 
 ---
@@ -118,5 +118,5 @@ console.print(
 console.line()
 ```
 
-![Still Text](docs/img/still_text.svg)
+![Still Text](https://maxludden.github.io/rich-gradient/img/still_text.svg)
 
