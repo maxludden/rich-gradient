@@ -15,8 +15,6 @@ markdown-it-py==3.0.0
     # via rich
 mdurl==0.1.2
     # via markdown-it-py
-numpy==1.25.2
-    # via rich-gradient
 pydantic==2.7.4
     # via pydantic-extra-types
     # via rich-gradient
