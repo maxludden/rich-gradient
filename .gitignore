@@ -9,3 +9,4 @@ wheels/
 # venv
 .venv
 docs/img/.DS_Store
+.DS_Store
