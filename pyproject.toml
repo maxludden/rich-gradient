@@ -1,6 +1,6 @@
 [project]
 name = "rich-gradient"
-version = "0.1.3"
+version = "0.1.4"
 description = "A gradient generator for the Rich library."
 authors = [
     { name = "Max Ludden", email = "dev@maxludden.com" }
