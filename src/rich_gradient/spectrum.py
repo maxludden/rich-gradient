@@ -109,6 +109,17 @@ class Spectrum(List[Color]):
             self.COLORS = [next(color_cycle) for _ in range(length)]
         super().__init__(self.COLORS)
 
+    @property
+    def invert(self) -> List[Color]:
+        """Returns a Spectrum object with the colors inverted.
+
+        Returns:
+            Spectrum: A Spectrum object with the colors inverted.
+
+        """
+        colors = self.COLORS[::-1]
+        return colors
+
     def __rich__(self) -> Table:
         """Returns a rich Table object representing the Spectrum colors.
 
