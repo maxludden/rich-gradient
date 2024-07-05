@@ -1,6 +1,6 @@
 # [![rich-gradient](https://maxludden.github.io/rich-gradient/img/rich-gradient.svg)](https://maxludden.github.io/rich-gradient/)
 
-[![Python](https://img.shields.io/badge/Python-3.9%2C%203.10%2C%203.11%2C%203.12-blue)](https://www.python.org/) [![Rye](https://img.shields.io/badge/Rye-1.0-green)](https://www.rye.org/) [![PyPI](https://img.shields.io/pypi/v/rich-gradient)](https://pypi.org/project/rich_gradient/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/rich-gradient)](https://pypi.org/project/rich-gradient/)
+[![Python](https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12-blue)](https://www.python.org/) [![Rye](https://img.shields.io/badge/Rye-1.0-green)](https://www.rye.org/) [![PyPI](https://img.shields.io/pypi/v/rich-gradient)](https://pypi.org/project/rich_gradient/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/rich-gradient)](https://pypi.org/project/rich-gradient/)
 
 ![gradient example](https://maxludden.github.io/rich-gradient/img/gradient.svg)
 
