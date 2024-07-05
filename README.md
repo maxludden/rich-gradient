@@ -1,13 +1,13 @@
 # [![rich-gradient](https://maxludden.github.io/rich-gradient/img/rich-gradient.svg)](https://maxludden.github.io/rich-gradient/)
 
-
 [![Python](https://img.shields.io/badge/Python-3.9%2C%203.10%2C%203.11%2C%203.12-blue)](https://www.python.org/) [![Rye](https://img.shields.io/badge/Rye-1.0-green)](https://www.rye.org/) [![PyPI](https://img.shields.io/pypi/v/rich-gradient)](https://pypi.org/project/rich_gradient/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/rich-gradient)](https://pypi.org/project/rich-gradient/)
 
 ![gradient example](https://maxludden.github.io/rich-gradient/img/gradient.svg)
 
-This library is a wrapper of the great [rich](https://GitHub.com/textualize/rich) library that extends [rich.text.Text](https://github.com/Textualize/rich/blob/master/rich/text.py) to allow for the easy generation gradient text from the user inputed colors or randomly if not colors are presented.
+This library is a wrapper of the great [rich](https://GitHub.com/textualize/rich) library that extends [rich.text.Text](https://github.com/Textualize/rich/blob/master/rich/text.py) to allow for the easy generation gradient text from either user entered colors or randomly if no colors are entered.
 
-Borrowing from [pydantic-Looextra-types](https://GitHub.com/pydantic/pydantic-extra-types)' [Color](https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py) class, rich_gradient extends the rich standard colors to include:
+Borrowing from [pydantic-extra-types](https://GitHub.com/pydantic/pydantic-extra-types)' [Color](https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py) class, rich_gradient extends the rich standard colors to include:
+
 - 3 or 6 digit hex code (e.g. `#f00` or `#ff0000`)
 - RGB color codes (e.g. `rgb(255, 0, 0)`)
 - RGB tuples   (e.g. `(255, 0, 0)`)
@@ -20,11 +20,13 @@ Read the docs at [rich-gradient.readthedocs.io](https://maxludden.github.io/rich
 ## Installation
 
 ### Rye (Recommended)
+
 ```bash
 rye add rich-gradient
 ```
 
 ### Pip
+
 ```bash
 pip install rich-gradient
 ```
@@ -42,6 +44,7 @@ from rich_gradient import Gradient
 console = Console()
 console.print(Gradient("Hello, World!")
 ```
+
 ![Hello, World!](https://maxludden.github.io/rich-gradient/img/hello_world.svg)
 
 ---
@@ -68,11 +71,11 @@ console.print(
 )
 ```
 
-#### Specific Color Gradient Result:
+#### Specific Color Gradient Result
 
 ![specific colors](https://maxludden.github.io/rich-gradient/img/specific_color_gradient.svg)
 
---- 
+---
 
 ### Rainbow Gradient Example
 
@@ -87,7 +90,6 @@ console.print(
     )
 )
 ```
-
 
 ![Rainbow Gradient](https://maxludden.github.io/rich-gradient/img/example_rainbow_gradient.svg)
 <p style="text-align:right;">*The rainbow gradient is generated randomly each time the code is run.</p>
@@ -119,4 +121,3 @@ console.line()
 ```
 
 ![Still Text](https://maxludden.github.io/rich-gradient/img/still_text.svg)
-

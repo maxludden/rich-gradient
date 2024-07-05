@@ -9,24 +9,25 @@
 
 ![gradient example](img/gradient.svg)
 
-This library is a wrapper of the great [rich](https://GitHub.com/textualize/rich) library that extends [rich.text.Text](https://github.com/Textualize/rich/blob/master/rich/text.py) to allow for the easy generation gradient text from the user inputed colors or randomly if not colors are presented.
+This library is a wrapper of the great [rich](https://GitHub.com/textualize/rich) library that extends [rich.text.Text](https://github.com/Textualize/rich/blob/master/rich/text.py) to allow for the easy generation gradient text from either user entered colors or randomly if no colors are entered.
 
-Borrowing from [pydantic-Looextra-types](https://GitHub.com/pydantic/pydantic-extra-types)' [Color](https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py) class, rich_gradient extends the rich standard colors to include:
+Borrowing from [pydantic-extra-types](https://GitHub.com/pydantic/pydantic-extra-types)' [Color](https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py) class, rich_gradient extends the rich standard colors to include:
+
 - 3 or 6 digit hex code (e.g. `#f00` or `#ff0000`)
 - RGB color codes (e.g. `rgb(255, 0, 0)`)
 - RGB tuples   (e.g. `(255, 0, 0)`)
 - CSS3 Color Names (e.g. `red`)
 
-
-
 ## Installation
 
 ### Rye (Recommended)
+
 ```bash
 rye add rich-gradient
 ```
 
 ### Pip
+
 ```bash
 pip install rich-gradient
 ```
@@ -44,6 +45,7 @@ from rich_gradient import Gradient
 console = Console()
 console.print(Gradient("Hello, World!")
 ```
+
 ![Hello, World!](img/hello_world.svg)
 
 ---
@@ -70,11 +72,11 @@ console.print(
 )
 ```
 
-#### Specific Color Gradient Result:
+#### Specific Color Gradient Result
 
 ![specific colors](img/specific_color_gradient.svg)
 
---- 
+---
 
 ### Rainbow Gradient Example
 
@@ -89,7 +91,6 @@ console.print(
     )
 )
 ```
-
 
 ![Rainbow Gradient](img/example_rainbow_gradient.svg)
 <p style="text-align:right;">*The rainbow gradient is generated randomly each time the code is run.</p>
@@ -121,4 +122,3 @@ console.line()
 ```
 
 ![Still Text](img/still_text.svg)
-
