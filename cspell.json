@@ -2,8 +2,12 @@
     "version": "0.2",
     "ignorePaths": [],
     "dictionaryDefinitions": [],
-    "dictionaries": ["Max's Dictionary"],
+    "dictionaries": [
+        "Max's Dictionary"
+    ],
     "words": [],
-    "ignoreWords": [],
+    "ignoreWords": [
+        "recognised"
+    ],
     "import": []
 }

@@ -8,7 +8,6 @@ import re
 from pathlib import Path
 from typing import List, Literal, Optional, Tuple, TypeAlias, Union
 
-import numpy as np
 from pydantic_core import PydanticCustomError
 from pydantic_extra_types.color import ColorType
 from rich.console import Console, JustifyMethod, OverflowMethod
@@ -326,22 +325,80 @@ class Gradient(Text):
         """
         self._spans = spans
 
+    @staticmethod
+    def arange(start, stop=None, step=1, dtype=None):
+        if stop is None:
+            # If only one argument is provided, it's the stop value, and start is 0
+            start, stop = 0, start
+        
+        if step == 0:
+            raise ValueError("Step must be non-zero")
+        
+        if dtype is None:
+            # Automatically detect dtype
+            if isinstance(start, int) and (isinstance(stop, float) or isinstance(step, float)):
+                dtype = float
+            else:
+                dtype = type(start)
+
+        current = start
+        result = []
+        
+        # Determine the comparison operation based on the sign of the step
+        if step > 0:
+            while current < stop:
+                result.append(dtype(current))
+                current += step
+        else:
+            while current > stop:
+                result.append(dtype(current))
+                current += step
+
+        return result
+
+    @staticmethod
+    def array_split(arr, indices_or_sections):
+        if isinstance(indices_or_sections, int):
+            if indices_or_sections <= 0:
+                raise ValueError("Number of sections must be greater than 0.")
+            
+            # Calculate the size of each section
+            section_size = len(arr) // indices_or_sections
+            remainder = len(arr) % indices_or_sections
+            
+            sections = []
+            start = 0
+            
+            for i in range(indices_or_sections):
+                end = start + section_size + (1 if i < remainder else 0)
+                sections.append(arr[start:end])
+                start = end
+            
+            return sections
+        
+        elif isinstance(indices_or_sections, (list, tuple)):
+            sections = []
+            prev_index = 0
+            
+            for index in indices_or_sections:
+                sections.append(arr[prev_index:index])
+                prev_index = index
+            
+            sections.append(arr[prev_index:])
+            
+            return sections
+        
+        else:
+            raise TypeError("indices_or_sections must be an integer or a list/tuple of integers.")
+
     def generate_indexes(self) -> List[List[int]]:
         """Chunk the text into a list of strings.
 
         Returns:
             List[str]: The list of strings.
         """
-        # if self.verbose:
-        #     console.log(f"Text: {self.text}")
-        #     console.log(f"Length: {self._length}")
-        #     console.log(f"Hues: {self.hues}")
-        result = np.array_split(np.arange(self._length), self.hues - 1)  # noqa: F722
-
-        indexes: List[List[int]] = [sublist.tolist() for sublist in result]
-        # if self.verbose:
-        #     index_text = Text(" ".join([f"{index}" for index in indexes]))
-        #     console.print(index_text)
+        result = self.array_split(self.arange(self._length), self.hues - 1)  # noqa: F722
+        indexes: List[List[int]] = [sublist for sublist in result]
         return indexes
 
     def generate_substrings(self, indexes: List[List[int]]) -> List[str]:
@@ -568,7 +625,7 @@ gradient automatically.[/]",
             justify="center",
         )
         console.print(
-            "[dim i]Rainbow gradients are also automated and will randomly\
+            "[dim i]Rainbow gradients are also automated and will randomly \
 span a gradient from one point on the spectrum (randomly) all the way around \
 until it returns to it's starting color.",
             justify="center",
@@ -588,6 +645,5 @@ if __name__ == "__main__":  # pragma: no cover
     from rich.console import Console
     from rich.traceback import install as tr_install
     from rich_gradient.theme import GRADIENT_TERMINAL_THEME
-
 
     Gradient.example()

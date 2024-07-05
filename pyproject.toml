@@ -29,6 +29,7 @@ dev-dependencies = [
     "mkdocs-material>=9.5.27",
     "mkdocstrings>=0.25.1",
     "mkdocstrings-python>=1.10.5",
+    "pytest>=8.2.2",
 ]
 
 [tool.hatch.metadata]

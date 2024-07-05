@@ -29,6 +29,8 @@ griffe==0.47.0
     # via mkdocstrings-python
 idna==3.7
     # via requests
+iniconfig==2.0.0
+    # via pytest
 jinja2==3.1.4
     # via mkdocs
     # via mkdocs-material
@@ -67,6 +69,7 @@ mkdocstrings==0.25.1
 mkdocstrings-python==1.10.5
 packaging==24.1
     # via mkdocs
+    # via pytest
 paginate==0.5.6
     # via mkdocs-material
 pathspec==0.12.1
@@ -74,6 +77,8 @@ pathspec==0.12.1
 platformdirs==4.2.2
     # via mkdocs-get-deps
     # via mkdocstrings
+pluggy==1.5.0
+    # via pytest
 pydantic==2.7.4
     # via pydantic-extra-types
     # via rich-gradient
@@ -87,6 +92,7 @@ pygments==2.18.0
 pymdown-extensions==10.8.1
     # via mkdocs-material
     # via mkdocstrings
+pytest==8.2.2
 python-dateutil==2.9.0.post0
     # via ghp-import
 pyyaml==6.0.1
