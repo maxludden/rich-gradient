@@ -397,7 +397,7 @@
           <li class="md-nav__item">
   <a href="#specific-color-gradient-result" class="md-nav__link">
     <span class="md-ellipsis">
-      Specific Color Gradient Result:
+      Specific Color Gradient Result
     </span>
   </a>
   
@@ -696,12 +696,14 @@
 <div id="spacer"></div>
 
 <p><img alt="gradient example" src="img/gradient.svg" /></p>
-<p>This library is a wrapper of the great <a href="https://GitHub.com/textualize/rich">rich</a> library that extends <a href="https://github.com/Textualize/rich/blob/master/rich/text.py">rich.text.Text</a> to allow for the easy generation gradient text from the user inputed colors or randomly if not colors are presented.</p>
-<p>Borrowing from <a href="https://GitHub.com/pydantic/pydantic-extra-types">pydantic-Looextra-types</a>' <a href="https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py">Color</a> class, rich_gradient extends the rich standard colors to include:
-- 3 or 6 digit hex code (e.g. <code>#f00</code> or <code>#ff0000</code>)
-- RGB color codes (e.g. <code>rgb(255, 0, 0)</code>)
-- RGB tuples   (e.g. <code>(255, 0, 0)</code>)
-- CSS3 Color Names (e.g. <code>red</code>)</p>
+<p>This library is a wrapper of the great <a href="https://GitHub.com/textualize/rich">rich</a> library that extends <a href="https://github.com/Textualize/rich/blob/master/rich/text.py">rich.text.Text</a> to allow for the easy generation gradient text from either user entered colors or randomly if no colors are entered.</p>
+<p>Borrowing from <a href="https://GitHub.com/pydantic/pydantic-extra-types">pydantic-extra-types</a>' <a href="https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py">Color</a> class, rich_gradient extends the rich standard colors to include:</p>
+<ul>
+<li>3 or 6 digit hex code (e.g. <code>#f00</code> or <code>#ff0000</code>)</li>
+<li>RGB color codes (e.g. <code>rgb(255, 0, 0)</code>)</li>
+<li>RGB tuples   (e.g. <code>(255, 0, 0)</code>)</li>
+<li>CSS3 Color Names (e.g. <code>red</code>)</li>
+</ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <h3 id="rye-recommended">Rye (Recommended)<a class="headerlink" href="#rye-recommended" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>rye<span class="w"> </span>add<span class="w"> </span>rich-gradient
@@ -712,13 +714,13 @@
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <h3 id="basic-gradient-example">Basic Gradient Example<a class="headerlink" href="#basic-gradient-example" title="Permanent link">&para;</a></h3>
 <p>To print a simple gradient just substitue the <code>Gradient</code> class for the <code>Text</code> class in the rich library.</p>
-<p><div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">rich_gradient</span> <span class="kn">import</span> <span class="n">Gradient</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Gradient</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<img alt="Hello, World!" src="img/hello_world.svg" /></p>
+<p><img alt="Hello, World!" src="img/hello_world.svg" /></p>
 <hr />
 <h3 id="gradient-with-specific-colors">Gradient with Specific Colors<a class="headerlink" href="#gradient-with-specific-colors" title="Permanent link">&para;</a></h3>
 <p>If you want a bit more control of the gradient, you can specify the colors you want to use in the gradient by passing them as a list of colors to the <code>colors</code> parameter.</p>
@@ -734,7 +736,7 @@
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">)</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<h4 id="specific-color-gradient-result">Specific Color Gradient Result:<a class="headerlink" href="#specific-color-gradient-result" title="Permanent link">&para;</a></h4>
+<h4 id="specific-color-gradient-result">Specific Color Gradient Result<a class="headerlink" href="#specific-color-gradient-result" title="Permanent link">&para;</a></h4>
 <p><img alt="specific colors" src="img/specific_color_gradient.svg" /></p>
 <hr />
 <h3 id="rainbow-gradient-example">Rainbow Gradient Example<a class="headerlink" href="#rainbow-gradient-example" title="Permanent link">&para;</a></h3>
