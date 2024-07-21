@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional, Any
+from typing import Dict, Optional
 
 from rich.console import Console
 from rich.style import Style, StyleType
@@ -757,21 +757,6 @@ def example(record: bool = False) -> None:
     tr_install(console=console)
 
     console.print(styles_table(), justify="center")
-
-
-def get_log(
-    console: Optional[Console] = None, width: Optional[int] = None, record: bool = False
-) -> Any:
-    """Generate a log and console."""
-    from rich_gradient.log import Log
-
-    if not width:
-        _console = Console()
-        width = _console.width
-
-    console = console or Console(theme=Theme(DEFAULT_STYLES), record=record)
-    tr_install(console=console)
-    return Log(console=console)
 
 
 if __name__ == "__main__":

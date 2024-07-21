@@ -16,10 +16,10 @@ from rich.panel import Panel
 from rich.style import Style, StyleType
 from rich.text import Span, Text, TextType
 
+from rich_gradient._simple_gradient import SimpleGradient
 from rich_gradient.color import Color
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
-from rich_gradient._simple_gradient import SimpleGradient
 
 GradientMode = Literal["default", "list", "mono", "rainbow"]
 GradientColors: TypeAlias = Union[
@@ -58,6 +58,7 @@ class Gradient(Text):
 
             .. [1] colors: List[Optional[Color|Tuple|str|int]
     """
+    
 
     __slots__ = [
         "_colors",
@@ -70,6 +71,7 @@ class Gradient(Text):
         "_no_wrap",
         "overflow",
         "_overflow",
+        "simple",
         "style",
         "_style",
         "_spans",
@@ -118,14 +120,16 @@ class Gradient(Text):
                 Defaults to None.\n
 
         """
-
+        self.simple = False
         self.verbose = verbose or False
         self.text = text  # type: ignore
         self.hues = hues
         self.justify = justify or DEFAULT_JUSTIFY
         self.overflow = overflow or DEFAULT_OVERFLOW
-        self.style = Style.parse(style) if isinstance(style, str) else style
+        self.style: StyleType = Style.parse(style) if isinstance(style, str) else style
         self.colors = self.validate_colors(colors or [], rainbow=rainbow)  # type: ignore
+        if len(self.colors) == 2:
+            self.simple = True
         if len(self.colors) > 2:
             self.hues = len(self.colors)
         else:
@@ -146,6 +150,18 @@ class Gradient(Text):
         substrings = self.generate_substrings(indexes)
         subgradients = self.generate_subgradients(substrings)
         self._spans = self.join_subgradients(subgradients).spans
+
+    def __len__(self) -> int:
+        """Return the length of the gradient text."""
+        return self._length
+
+    def __str__(self) -> str:
+        """Return the gradient text as a string."""
+        return self.text
+
+    def __int__(self) -> int:
+        """Return the number of colors in the gradient."""
+        return len(self.colors)
 
     @property
     def text(self) -> str:
@@ -330,20 +346,22 @@ class Gradient(Text):
         if stop is None:
             # If only one argument is provided, it's the stop value, and start is 0
             start, stop = 0, start
-        
+
         if step == 0:
             raise ValueError("Step must be non-zero")
-        
+
         if dtype is None:
             # Automatically detect dtype
-            if isinstance(start, int) and (isinstance(stop, float) or isinstance(step, float)):
+            if isinstance(start, int) and (
+                isinstance(stop, float) or isinstance(step, float)
+            ):
                 dtype = float
             else:
                 dtype = type(start)
 
         current = start
         result = []
-        
+
         # Determine the comparison operation based on the sign of the step
         if step > 0:
             while current < stop:
@@ -361,35 +379,37 @@ class Gradient(Text):
         if isinstance(indices_or_sections, int):
             if indices_or_sections <= 0:
                 raise ValueError("Number of sections must be greater than 0.")
-            
+
             # Calculate the size of each section
             section_size = len(arr) // indices_or_sections
             remainder = len(arr) % indices_or_sections
-            
+
             sections = []
             start = 0
-            
+
             for i in range(indices_or_sections):
                 end = start + section_size + (1 if i < remainder else 0)
                 sections.append(arr[start:end])
                 start = end
-            
+
             return sections
-        
+
         elif isinstance(indices_or_sections, (list, tuple)):
             sections = []
             prev_index = 0
-            
+
             for index in indices_or_sections:
                 sections.append(arr[prev_index:index])
                 prev_index = index
-            
+
             sections.append(arr[prev_index:])
-            
+
             return sections
-        
+
         else:
-            raise TypeError("indices_or_sections must be an integer or a list/tuple of integers.")
+            raise TypeError(
+                "indices_or_sections must be an integer or a list/tuple of integers."
+            )
 
     def generate_indexes(self) -> List[List[int]]:
         """Chunk the text into a list of strings.
@@ -444,28 +464,43 @@ class Gradient(Text):
         """
         subgradients: List[SimpleGradient] = []
 
-        for index, substring in enumerate(substrings):
-            # Get the colors for the gradient
-            color_1 = self.colors[index]
-            color_2 = self.colors[index + 1]
+        if self.simple:
+            return [
+                SimpleGradient(
+                    self.text,
+                    color1=self.colors[0].hex,
+                    color2=self.colors[1].hex,
+                    style=self.style,
+                    justify=self.justify or DEFAULT_JUSTIFY,
+                    overflow=self.overflow or DEFAULT_OVERFLOW,
+                    no_wrap=self.no_wrap or False,
+                    end=self.end or "\n",
+                    spans=self.spans,
+                )
+            ]
+        else:
+            for index, substring in enumerate(substrings):
+                # Get the colors for the gradient
+                color_1 = self.colors[index]
+                color_2 = self.colors[index + 1]
 
-            assert self.overflow is not None, "Overflow must be set."
+                assert self.overflow is not None, "Overflow must be set."
 
-            # Create a simple gradient
-            gradient = SimpleGradient(
-                substring,  # type: ignore
-                color1=color_1.hex,
-                color2=color_2.hex,
-                justify=self.justify,
-                overflow=self.overflow,
-                style=self.style,
-                no_wrap=self.no_wrap or False,
-                end=self.end or "\n",
-                spans=self.spans,
-            )
+                # Create a simple gradient
+                gradient = SimpleGradient(
+                    substring,  # type: ignore
+                    color1=color_1.hex,
+                    color2=color_2.hex,
+                    justify=self.justify,
+                    overflow=self.overflow,
+                    style=self.style,
+                    no_wrap=self.no_wrap or False,
+                    end=self.end or "\n",
+                    spans=self.spans,
+                )
 
-            subgradients.append(gradient)
-        return subgradients
+                subgradients.append(gradient)
+            return subgradients
 
     def join_subgradients(self, subgradients: List[SimpleGradient]) -> Text:
         """Join the subgradients into a single gradient.
@@ -644,6 +679,7 @@ until it returns to it's starting color.",
 if __name__ == "__main__":  # pragma: no cover
     from rich.console import Console
     from rich.traceback import install as tr_install
+
     from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
     Gradient.example()

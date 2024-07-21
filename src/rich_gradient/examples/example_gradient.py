@@ -172,9 +172,32 @@ def still_text(
         theme=GRADIENT_TERMINAL_THEME
     )
 
+
+def simple_gradient():
+    """This function prints a simple two color gradient."""
+    console = Console(record=True, width=64)
+    console.line(2)
+    console.print(
+        Gradient(
+            "This is a simple gradient two color gradient that works!",
+            colors=[
+                "red",
+                "orange"
+            ]
+        ),
+        justify="center"
+    )
+    console.line(2)
+    console.save_svg(
+        "docs/img/simple_gradient_example.svg",
+        title="Simple Two Color Gradient",
+        theme=GRADIENT_TERMINAL_THEME
+    )
+
 if __name__ == "__main__":
     # hello_world()
     # color_examples()
     # specific_color_gradient_example()
     # rainbow_gradient_example()
-    still_text()
+    # still_text()
+    simple_gradient()

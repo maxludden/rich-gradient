@@ -1,6 +1,5 @@
 """Rule class for rich-gradient package."""
 
-from pathlib import Path
 from typing import List, Literal, Optional, Union
 
 from rich.align import AlignMethod
@@ -14,11 +13,9 @@ from rich_gradient.color import Color
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.gradient import Gradient
 
-# # from rich-gradient.log import log
 Thickness = Literal["thin", "medium", "thick"]
 
 console = Console()
-
 
 class GradientRule(JupyterMixin):
     """A console renderable to draw a horizontal rule (line).
