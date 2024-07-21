@@ -21,7 +21,7 @@ console.print(
 )
 ```
 
-![GradientRule](img/rule_example1.svg)
+![GradientRule](https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/rule_example1.svg)
 
 ## Alignment
 
@@ -36,7 +36,7 @@ console.print(
 )
 ```
 
-![GradientRule Alignment](img/rule_example2.svg)
+![GradientRule Alignment](https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/rule_example2.svg)
 
 ## Thickness
 
@@ -51,4 +51,4 @@ console.print(
 )
 ```
 
-![GradientRule Thickness](img/rule_example3.svg)
+![GradientRule Thickness](https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/rule_example3.svg)
