@@ -91,13 +91,47 @@ class SimpleGradient(Text):
         self.color2 = Color(color2)
         self._spans = list(self.generate_spans())
 
+    def __len__(self) -> int:
+        """Return the length of the text.
+        
+        Returns:
+            int: The length of the text.
+        """
+        return self._length
+
     def __repr__(self) -> str:
+        """Return the string representation of the SimpleGradient.
+        
+        Returns:
+            str: The string representation of the SimpleGradient.
+        """
         return f"SimpleGradient({self.text!r}, \
             {self.color1.as_named()!r}, \
                 {self.color2.as_named()!r}"
 
     def __add__(self, other: Any) -> "Text":
-        if isinstance(other, (str, Text)):
+        """Add two Text objects together.
+
+        Args:
+            other (Any): The other object to add.
+        
+        Returns:
+            Text: The concatenated Text object.
+        """
+        if isinstance(other, str):
+            result = self.copy()
+            result._text = (" ".join(["".join(self.text), other])).split()
+            return SimpleGradient(
+               "".join(result._text),
+               color1=self.color1, 
+               color2=self.color2,
+               style=self.style,
+               justify=self.justify or DEFAULT_JUSTIFY,
+               overflow=self.overflow or DEFAULT_OVERFLOW,
+               no_wrap=self.no_wrap or False,
+               end=self.end
+            )
+        if isinstance(other, (Text)):
             result = self.copy()
             result.append(other)
             return result

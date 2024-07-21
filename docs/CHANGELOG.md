@@ -6,7 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--## [Unreleased]-->
-## v0.1.6 - 2024-9-28 | Updated Rev
+## v0.1.7 - 2024-7-16 | Added support for Two-Color Gradients
+
+### v0.1.7 Updated
+
+- Updated Gradient.generate_subgradients() to default to returning a list containing a single simple gradient to allow
+Gradients to work when only supplied with two colors.
+
+![Two Color Gradient](https://github.com/maxludden/rich-gradient/blob/main/site/img/simple_gradient_example.svg)
+
+### v0.1.7 Added
+
+- Added len, int, str, and repr dunder methods to `rich-gradient.gradient.Gradient` (will simply refer to as `Gradient` from here on out).
+- Added a tests/test_gradient.py for Gradient to test two color gradiets
+
+## v0.1.6 - 2024-6-28 | Updated Rev
 
 - Updated rev to 0.1.6.
 
