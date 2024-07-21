@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Gradient.generate_subgradients() to default to returning a list containing a single simple gradient to allow
 Gradients to work when only supplied with two colors.
 
-![Two Color Gradient](https://github.com/maxludden/rich-gradient/blob/main/site/img/simple_gradient_example.svg)
+![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/simple_gradient_example.svg)
 
 ### v0.1.7 Added
 
