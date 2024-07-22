@@ -127,7 +127,7 @@ def specific_color_gradient_example(
     )
     console.line()
     console.print(
-        "[i dim]*This gradient's colors: [dim rgb(255,0,0)]rgb(255,0,0)[/dim rgb(255,0,0)] and [dim orange]orange[/dim orange][/]",
+        "[i dim]*This gradient's colors: [dim rgb(255,0,0)]rgb(255,0,0)[/dim rgb(255,0,0)] and [dim #ff9900]orange[/dim #ff9900][/]",
         justify="center",
     )
     console.line(2)
