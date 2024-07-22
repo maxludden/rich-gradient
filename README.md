@@ -73,7 +73,7 @@ console.print(
 )
 ```
 
-![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/abd87b9116c0722dbd938b081aaa5fb846d4eb21/docs/img/specific_two_color_gradient.svg)
+![Two Color Gradient](crun)
 
 ---
 
