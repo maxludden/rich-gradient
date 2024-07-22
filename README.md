@@ -61,6 +61,8 @@ Color can be parsed from a variety of formats including:
 
 #### Example Code
 
+#### Specific Two-Color Gradient Example
+
 ```python
 console.print(
     Gradient(
@@ -71,12 +73,16 @@ console.print(
 )
 ```
 
-!
+![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/2a42b1b61ef1bb163f3b6e37412e669bffd6504b/docs/img/specific_two_color_gradient.svg)
+
+---
+
+#### Specific Four-Color Gradient Example
 
 ```python
 console.print(
     Gradient(
-        "This a gradient with three specific colors.",
+        "This a gradient uses four specific colors.",
         colors=["red", "#ff9900", "#ff0", "Lime"],
         justify="center"
     )
@@ -85,7 +91,7 @@ console.print(
 
 #### Specific Color Gradient Result
 
-![multi-color specific colors](https://maxludden.github.io/rich-gradient/img/specific_color_gradient.svg)
+![multi-color specific colors](https://raw.githubusercontent.com/maxludden/rich-gradient/2a42b1b61ef1bb163f3b6e37412e669bffd6504b/docs/img/specific_multi_color_gradient.svg)
 
 ---
 
