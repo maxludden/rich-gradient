@@ -3,6 +3,7 @@ __pycache__/
 *.py[oc]
 build/
 dist/
+examples/
 wheels/
 *.egg-info
 
@@ -10,3 +11,5 @@ wheels/
 .venv
 docs/img/.DS_Store
 .DS_Store
+src/rich_gradient/examples/example_gradient.py
+src/rich_gradient/examples/example_rule.py
