@@ -64,7 +64,19 @@ Color can be parsed from a variety of formats including:
 ```python
 console.print(
     Gradient(
-        "This a gradient with specific colors.",
+        "This a gradient with two colors.",
+        colors=["red", "orange"]
+    ),
+    justify="center"
+)
+```
+
+!
+
+```python
+console.print(
+    Gradient(
+        "This a gradient with three specific colors.",
         colors=["red", "#ff9900", "#ff0", "Lime"],
         justify="center"
     )
@@ -73,7 +85,7 @@ console.print(
 
 #### Specific Color Gradient Result
 
-![specific colors](https://maxludden.github.io/rich-gradient/img/specific_color_gradient.svg)
+![multi-color specific colors](https://maxludden.github.io/rich-gradient/img/specific_color_gradient.svg)
 
 ---
 

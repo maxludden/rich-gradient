@@ -3,6 +3,7 @@ from rich.panel import Panel
 from rich.text import Text
 
 from rich_gradient import Gradient
+from rich_gradient.color import Color
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 console = Console(width=64, record=True)
@@ -32,8 +33,8 @@ def hello_world(console: Console = console, file: str = "docs/img/hello_world.sv
 
 
 def color_examples(
-    console: Console = console, file: str = "docs/img/color_formats.svg"
-):
+    console: Console = console,
+    file: str = "docs/img/color_formats.svg") -> None:
     console.line()
     console.print(
         Panel(
@@ -112,12 +113,37 @@ colors, or Color object from pydantic_extra_types or rich.color.Color.",
 
 
 def specific_color_gradient_example(
-    console: Console = console, file: str = "docs/img/specific_color_gradient.svg"
+        console: Console = console,
+        file: str = "docs/img/specific_two_color_gradient.svg") -> None:
+    console = Console(width=64, record=True)
+    console.line()
+    console.print(
+        Gradient(
+            "This gradient uses two specific colors.",
+            colors=[Color("rgb(255,0,0)"), Color("orange")],
+            justify="center",
+        ),
+        justify="center",
+    )
+    console.line()
+    console.print(
+        "[i dim]*This gradient's colors: [dim rgb(255,0,0)]rgb(255,0,0)[/dim rgb(255,0,0)] and [dim orange]orange[/dim orange][/]",
+        justify="center",
+    )
+    console.line(2)
+    console.save_svg(
+        "docs/img/specific_two_color_gradient.svg",
+        title="Specified Two-Color Gradient",
+        theme=GRADIENT_TERMINAL_THEME,
+    )
+
+def multi_color_gradient_example(
+    console: Console = console, file: str = "docs/img/specific_multi_color_gradient.svg"
 ) -> None:
     console.line()
     console.print(
         Gradient(
-            "This gradient uses specific colors.",
+            "This gradient uses four specific colors.",
             colors=["red", "#ff9900", "#ff0", "Lime"],
             justify="center",
         ),
@@ -130,7 +156,9 @@ def specific_color_gradient_example(
     )
     console.line(2)
     console.save_svg(
-        file, title="Specific Color Gradient", theme=GRADIENT_TERMINAL_THEME
+        file,
+        title="Specified Multi-Color Gradient", 
+        theme=GRADIENT_TERMINAL_THEME
     )
 
 
@@ -197,7 +225,8 @@ def simple_gradient():
 if __name__ == "__main__":
     # hello_world()
     # color_examples()
-    # specific_color_gradient_example()
+    specific_color_gradient_example()
+    multi_color_gradient_example()
     # rainbow_gradient_example()
     # still_text()
-    simple_gradient()
+    # simple_gradient()
