@@ -5,10 +5,16 @@
     "dictionaries": [
         "Max's Dictionary"
     ],
-    "words": [],
+    "words": [
+        "colortitle",
+        "cssdarkorange",
+        "csstomato"
+    ],
     "ignoreWords": [
+        "backrefs",
         "chucknorris",
         "nosuchname",
+        "overlined",
         "recognised"
     ],
     "import": []

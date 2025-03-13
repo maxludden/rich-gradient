@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
+		"python.defaultInterpreterPath": "/Users/maxludden/dev/py/rich-gradient/.venv/bin/python",
 		"editor.semanticTokenColorCustomizations": {
 			"enabled": true,
 			"rules": {
@@ -89,8 +90,46 @@
 				"name": "supergene.db",
 				"database": "/Users/maxludden/dev/py/supergene/supergene.db"
 			}
-		]
+		],
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"__pycache__/": true,
+			".pytest_cache/": true,
+			"**/__pycache__/**": true,
+			"requirements*": true,
+			"**/*.DS_Store": true,
+			"**/*__init__.py": false,
+			"**/*py.typed": false,
+			".history": true,
+			"**/.retool_types/**": true,
+			"**/*tsconfig.json": true,
+			".cache": true,
+			"retool.config.json": true
+		}
 	},
+	"colorize.colorized_colors": [
+			"ARGB",
+			"BROWSERS_COLORS",
+			"HEXA",
+			"RGB",
+			"HSL",
+			"OKLAB",
+			"OKLCH"
+		],
+	"colorize.colorized_types": [
+			"CSS",
+			"HTML",
+			"JAVASCRIPT",
+			"JSON",
+			"MARKDOWN",
+			"PYTHON",
+			"YAML",
+			"XML"
+	],
 	"editor.tokenColorCustomizations": {
 		"textMateRules": [
 			{

@@ -1,4 +1,4 @@
-"""Gradient is the highlevel class that allows the automation of printing to the \
+"""Gradient is the high-level class that allows the automation of printing to the \
 console in gradient color."""
 
 # ruff: noqa: F401
@@ -8,8 +8,6 @@ import re
 from pathlib import Path
 from typing import List, Literal, Optional, Tuple, TypeAlias, Union
 
-from pydantic_core import PydanticCustomError
-from pydantic_extra_types.color import ColorType
 from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.control import strip_control_codes
 from rich.panel import Panel
@@ -17,6 +15,7 @@ from rich.style import Style, StyleType
 from rich.text import Span, Text, TextType
 
 from rich_gradient._simple_gradient import SimpleGradient
+from rich_gradient._base_color import ColorError, ColorType
 from rich_gradient.color import Color
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -58,7 +57,7 @@ class Gradient(Text):
 
             .. [1] colors: List[Optional[Color|Tuple|str|int]
     """
-    
+
 
     __slots__ = [
         "_colors",
@@ -278,7 +277,7 @@ class Gradient(Text):
             List[Color]: The validated colors.
 
         Raises:
-            PydanticCustomError: If any of the colors are invalid.
+            ColorError: If any of the colors are invalid.
         """
         _colors: List[Color] = []
         if colors is None or colors == []:
@@ -303,8 +302,8 @@ class Gradient(Text):
             for color in colors:
                 try:
                     color = Color(color)
-                except PydanticCustomError as pce:
-                    raise pce
+                except ColorError as ce:
+                    raise ce
                 else:
                     _colors.append(color)
             assert len(_colors) >= 2, "Gradient must have at least two colors."
@@ -313,7 +312,7 @@ class Gradient(Text):
             for color in colors:  # type: ignore
                 try:
                     color = Color(color)
-                except PydanticCustomError as pce:
+                except ColorError as pce:
                     raise pce
                 else:
                     _colors.append(color)
@@ -547,7 +546,7 @@ class Gradient(Text):
     ) -> None:
         """
         Generate an example of a gradient with defined colors.
-    
+
         Args:
             save (bool, optional): Whether to save the gradient to a file. Defaults to False.
             path (Optional[Path], optional): The filename to save the gradient to. Defaults \
@@ -594,7 +593,7 @@ specified colors[/]",
     ) -> None:
         """
         Generate an example of a gradient with random adjacent colors.
-    
+
         Args:
             save (bool, optional): Whether to save the gradient to a file. Defaults to False.
             path (Optional[Path], optional): The filename to save the gradient to. Defaults \
@@ -634,7 +633,7 @@ gradient automatically.[/]",
     ) -> None:
         """
         Generate an example of a gradient with the whole spectrum of colors.
-    
+
         Args:
             save (bool, optional): Whether to save the gradient to a file. Defaults to False.
             path (Optional[Path], optional): The filename to save the gradient to. Defaults \

@@ -1,10 +1,14 @@
-"""Generate a simple gradient"""
+"""Generate a simple gradient of text with two colors.
+
+This module provides the `SimpleGradient` class that generates a gradient of text with two colors.
+
+"""
 
 # ruff: noqa: F401
 import re
 from functools import partial
 from operator import itemgetter
-from typing import Any, Dict, Generator, Iterable, List, Literal, Optional, Tuple
+from typing import Any, Dict, Generator, Iterable, List, Literal, Optional, Tuple, Union
 
 import rich.style
 from rich._pick import pick_bool
@@ -15,10 +19,11 @@ from rich.measure import Measurement
 from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Span, Text
-from pydantic_extra_types.color import ColorType
 
 from rich_gradient import Color
+from rich_gradient._base_color import ColorType
 
+# ColorType = Union[ColorTuple, str, BaseColor, Color]
 GradientMethod = Literal["default", "list", "mono", "rainbow"]
 DEFAULT_JUSTIFY: JustifyMethod = "default"
 DEFAULT_OVERFLOW: OverflowMethod = "fold"
@@ -58,8 +63,8 @@ class SimpleGradient(Text):
         self,
         text: str | Text = "",
         *,
-        color1: ColorType,
-        color2: ColorType,
+        color1: ColorType | Color,
+        color2: ColorType | Color,
         justify: JustifyMethod = "default",
         overflow: OverflowMethod = "fold",
         no_wrap: bool = False,
@@ -93,7 +98,7 @@ class SimpleGradient(Text):
 
     def __len__(self) -> int:
         """Return the length of the text.
-        
+
         Returns:
             int: The length of the text.
         """
@@ -101,7 +106,7 @@ class SimpleGradient(Text):
 
     def __repr__(self) -> str:
         """Return the string representation of the SimpleGradient.
-        
+
         Returns:
             str: The string representation of the SimpleGradient.
         """
@@ -114,7 +119,7 @@ class SimpleGradient(Text):
 
         Args:
             other (Any): The other object to add.
-        
+
         Returns:
             Text: The concatenated Text object.
         """
@@ -122,14 +127,14 @@ class SimpleGradient(Text):
             result = self.copy()
             result._text = (" ".join(["".join(self.text), other])).split()
             return SimpleGradient(
-               "".join(result._text),
-               color1=self.color1, 
-               color2=self.color2,
-               style=self.style,
-               justify=self.justify or DEFAULT_JUSTIFY,
-               overflow=self.overflow or DEFAULT_OVERFLOW,
-               no_wrap=self.no_wrap or False,
-               end=self.end
+                "".join(result._text),
+                color1=self.color1,
+                color2=self.color2,
+                style=self.style,
+                justify=self.justify or DEFAULT_JUSTIFY,
+                overflow=self.overflow or DEFAULT_OVERFLOW,
+                no_wrap=self.no_wrap or False,
+                end=self.end,
             )
         if isinstance(other, (Text)):
             result = self.copy()
@@ -327,23 +332,29 @@ class SimpleGradient(Text):
 
 if __name__ == "__main__":  # pragma: no cover
     from rich.panel import Panel
+
     from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
     console = Console(width=64, record=True)
     sample_text = "SimpleGradient is a class that prints a `string` \nor `rich.text.Text` object as a gradient from \ncolor1 to color2 with an optional style."
-    gradient = SimpleGradient(sample_text, color1="green", color2="cyan", style="bold", justify="center")  # type: ignore
+    gradient = SimpleGradient(
+        sample_text, color1="green", color2="cyan", style="bold", justify="center"
+    )  # type: ignore
     gradient.highlight_regex(r"(`.+`)", "#af00ff")
     console.line()
     console.print(
         Panel(
             gradient,
-            padding=(1,4),
-            title=SimpleGradient("SimpleGradient", color1="#ff9900", color2="#ffff00", style="bold")
+            padding=(1, 4),
+            title=SimpleGradient(
+                "SimpleGradient", color1="#ff9900", color2="#ffff00", style="bold"
+            ),
         ),
-        justify="center"
+        justify="center",
     )
     console.line()
     console.save_svg(
         "docs/img/simple_gradient.svg",
         title="Rich Gradient",
-        theme=GRADIENT_TERMINAL_THEME)
+        theme=GRADIENT_TERMINAL_THEME,
+    )
