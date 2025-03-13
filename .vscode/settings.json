@@ -3,7 +3,22 @@
     "files.exclude": {
         "**/.git": false,
         "**/.svn": false,
-        "**/CVS": false
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "__pycache__/": true,
+        ".pytest_cache/": true,
+        "**/__pycache__/**": true,
+        "requirements*": true,
+        "**/*.DS_Store": true,
+        "**/*__init__.py": false,
+        "**/*py.typed": true,
+        ".history": true,
+        "**/CVS": false,
+        "**/.retool_types/**": true,
+        "**/*tsconfig.json": true,
+        ".cache": true,
+        "retool.config.json": true
     },
     "python.analysis.diagnosticSeverityOverrides": {
         "reportUnusedImport": false
@@ -18,5 +33,6 @@
         "default": true,
         "MD013": false,
         "MD033": false,
-       }
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

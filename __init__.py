@@ -24,5 +24,4 @@ __all__ = [
     "Spectrum",
 ]
 
-console: Console = Console()
-install(console=console)
+install()

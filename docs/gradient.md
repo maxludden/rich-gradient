@@ -22,7 +22,7 @@ The `Gradient` class is a subclass of `Text` that allows you to create gradients
 
 You can specify the colors you want to use in your gradient by passing a list of color names, hex color codes, rgb color codes, or [`rich_gradient.color.Color`](color.md)  to the `colors` parameter.
 
-### Two Color Gradint
+### Two Color Gradient
 
 ```python
     console.print(

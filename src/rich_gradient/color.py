@@ -1,8 +1,9 @@
 """
-The Color class provides a way to represent colors in a way that can be used in a terminal.
+The `Color` class provides a way to represent colors in a way that can be used in a terminal.
 
-It heavily relies on the `pydantic` library for type checking and validation. It also uses the `rich` library for terminal styling and rendering. This
-allow the user to specify colors in 3 or 6 digit hex format, RGB format, or by CSS3 color names in addition to the standard rich colors.
+This module heavily borrows from [pydantic-extra-types](https://github.com/pydantic/pydantic-extra-types).\
+[color](https://github.com/pydantic/pydantic-extra-types/blob/889319b7825331c18cedd16b80a09c29a20b7b5a/pydantic_extra_types/color.py).
+
 
 Color definitions are used as per the CSS3
 [CSS Color Module Level 3](http://www.w3.org/TR/css3-color/#svg-color) specification.
@@ -12,48 +13,65 @@ A few colors have multiple names referring to the sames colors, eg. `grey` and `
 In these cases the _last_ color when sorted alphabetically takes preferences,
 eg. `Color((0, 255, 255)).as_named() == 'cyan'` because "cyan" comes after "aqua".
 """
-
-# ruff: noqa: F401
-import math
-import re
 from itertools import cycle
 from random import randint
 from typing import Any, Dict, Generator, List, Optional, Tuple
 
-from pydantic_extra_types.color import RGBA
-from pydantic_extra_types.color import Color as PyColor
-from pydantic_extra_types.color import ColorType as PyColorType
-from pydantic_core import PydanticCustomError
 from rich.color import Color as RichColor
-from rich.color import ColorType as RichColorType
+from rich.color_triplet import ColorTriplet
 from rich.console import Console
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
-from rich.color_triplet import ColorTriplet
+
+from rich_gradient._base_color import RGBA, BaseColor, ColorError, ColorType
+
 
 class ColorParsingError(Exception):
+    """An error that occurs when a color cannot be parsed."""
     pass
 
-class Color(PyColor):
-    """A color from which to generate a gradient."""
 
-    def __init__(self, value: PyColorType) -> None:
+class Color(BaseColor):
+    """A color from which to generate a gradient.
+
+    Args:
+        value (ColorType): The color value.
+
+    Attributes:
+        COLORS_BY_NAME (Dict[str, Tuple[int, int, int]]): A dictionary of color names and their RGB values.
+
+    Methods:
+        as_rich(): Convert the color to a rich color.
+        __rich__(): Return a rich text representation of the color.
+        as_style(): Return the color as a rich style.
+        as_bg_style(): Return the color as a background style.
+        as_hex(): Return the hex value of the color.
+        as_rgb(): Return the RGB value of the color.
+        as_triplet(): Convert the color to a `rich.color_triplet.ColorTriplet`.
+        get_contrast(): Generate a foreground color for the color style.
+        colortitle(): Manually color a title.
+        generate_table(): Generate a table to display colors.
+        color_table(): Generate a table of colors.
+        example(): Generate a example of the color class.
+    """
+
+    def __init__(self, value: ColorType) -> None:
         """Initialize a color.
-        
+
         Args:
             value (pydantic_extra_types.color.ColorType): The color value.
         """
         try:
             if value in self.COLORS_BY_NAME:
                 value = self.COLORS_BY_NAME[str(value)]
-        except PydanticCustomError:
+        except ColorError:
             raise ColorParsingError(f"Unable to parse color: {value}")
         super().__init__(value)
 
     def as_rich(self) -> RichColor:
         """Convert the color to a rich color.
-        
+
         Returns:
             RichColor: The color as a rich color.
 
@@ -63,13 +81,13 @@ class Color(PyColor):
         try:
             hex = self.as_hex(format="long")
             return RichColor.parse(hex)
-        except PydanticCustomError:
+        except ColorError:
             raise ColorParsingError(f"Unable to parse color: {self}")
 
     @property
     def rich(self) -> RichColor:
         """The color as a rich color.
-        
+
         Returns:
             RichColor: The color as a rich color.
         """
@@ -77,7 +95,7 @@ class Color(PyColor):
 
     def __rich__(self) -> Text:
         """Return a rich text representation of the color.
-        
+
         Returns:
             Text: The rich text representation of the color."""
         return Text.assemble(
@@ -92,7 +110,7 @@ class Color(PyColor):
     @property
     def style(self) -> Style:
         """The color as a rich style.
-        
+
         Returns:
             Style: The color as a rich style."""
         return self.as_style()
@@ -166,7 +184,7 @@ class Color(PyColor):
     @property
     def bg_style(self) -> Style:
         """The color as a background style.
-        
+
         Returns:
             Style: The color as a background style.
         """
@@ -242,7 +260,7 @@ class Color(PyColor):
     @property
     def hex(self) -> str:
         """Return the hex value of the color.
-        
+
         Returns:
             str: The hex value of the color.
         """
@@ -251,14 +269,14 @@ class Color(PyColor):
     @property
     def rgb(self) -> str:
         """Return the RGB value of the color.
-        
+
         Returns:
             str: The RGB value of the color."""
         return self.as_rgb()
 
     @property
     def triplet(self) -> ColorTriplet:
-        """The `rich.color_triplet.ColorTriplet` respresentation of the color."""
+        """The `rich.color_triplet.ColorTriplet` representation of the color."""
         return self.as_triplet()
 
     def as_triplet(self) -> ColorTriplet:
@@ -286,7 +304,7 @@ class Color(PyColor):
 
         def rgb_to_hsv(color: Color) -> Tuple[float, float, float]:
             """Convert an RGB color to HSV.
-            
+
             Args:
                 color (Color): The color to convert.
 
@@ -299,7 +317,7 @@ class Color(PyColor):
 
         def hsv_to_hsl(hue, saturation, value) -> Tuple[float, float, float]:
             """Convert an HSV color to HSL.
-            
+
             Args:
                 hue (float): The hue value.
                 saturation (float): The saturation value.
@@ -322,11 +340,11 @@ class Color(PyColor):
 
         def color_distance(color1: Color, color2: Color) -> float:
             """Calculate the distance between two colors.
-            
+
             Args:
                 color1 (Color): The first color.
                 color2 (Color): The second color.
-            
+
             Returns:
                 float: The distance between the two colors.
             """
@@ -340,7 +358,7 @@ class Color(PyColor):
 
         def find_closest_color(color1: Color, color_list: List[Color]) -> Color:
             """Calculate the closest color in a list.
-            
+
             Args:
                 color1 (Color): The color to compare.
                 color_list (List[Color]): The list of colors to compare against.
@@ -371,10 +389,10 @@ class Color(PyColor):
     @classmethod
     def colortitle(cls, title: str) -> Text:
         """Manually color a title.
-        
+
         Args:
             title (str): The title to style.
-            
+
         Returns:
             Text: The styled title.
         """
@@ -498,13 +516,13 @@ class Color(PyColor):
     @classmethod
     def example(cls, record: bool = False) -> None:
         """Generate a example of the color class.
-        
+
         Args:
             record (bool): Whether to record the example as an svg.
         """
 
-
         from rich_gradient.theme import GRADIENT_TERMINAL_THEME
+
         console = Console(record=True, width=80) if record else Console()
 
         def table_generator() -> Generator:
@@ -534,10 +552,8 @@ class Color(PyColor):
         if record:
             try:
                 console.save_svg(
-                    "docs/img/colors.svg",
-                    theme=GRADIENT_TERMINAL_THEME,
-                    title="Colors"
-                    )
+                    "docs/img/colors.svg", theme=GRADIENT_TERMINAL_THEME, title="Colors"
+                )
             except TypeError:
                 pass
 
@@ -547,7 +563,7 @@ class Color(PyColor):
         "violet": (95, 0, 255),
         "blue": (0, 0, 255),
         "dodgerblue": (0, 85, 255),
-        "deepskyblue": (0, 135, 255),
+        "skyblue": rgb(0, 135, 255),
         "lightskyblue": (0, 195, 255),
         "cyan": (0, 255, 255),
         "springgreen": (0, 255, 175),
@@ -586,7 +602,7 @@ class Color(PyColor):
         "darkkhaki": (189, 183, 107),
         "darkmagenta": (139, 0, 139),
         "darkolivegreen": (85, 107, 47),
-        # "cssdarkorange": (255, 140, 0),
+        # "darkorange_css": (255, 140, 0),
         "darkorchid": (153, 50, 204),
         "darkred": (139, 0, 0),
         "darksalmon": (233, 150, 122),
@@ -685,7 +701,7 @@ class Color(PyColor):
         "tan": (210, 180, 140),
         "teal": (0, 128, 128),
         "thistle": (216, 191, 216),
-        # "csstomato": (255, 99, 71),
+        # "tomato_css": (255, 99, 71),
         "turquoise": (64, 224, 208),
         # "violet_css": (238, 130, 238),
         "wheat": (245, 222, 179),
@@ -872,4 +888,5 @@ COLORS_BY_VALUE = {v: k for k, v in Color.COLORS_BY_NAME.items()}
 
 
 if __name__ == "__main__":  # pragma: no cover
+    Color.example(record=True)
     Color.example(record=True)

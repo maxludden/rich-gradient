@@ -4,11 +4,12 @@ from itertools import cycle
 from random import randint
 from typing import List, Tuple
 
-from pydantic_extra_types.color import ColorType
+
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 
+from rich_gradient._base_color import ColorType
 from rich_gradient.color import Color
 
 
@@ -32,7 +33,7 @@ class Spectrum(List[Color]):
         "violet",  # 3
         "blue",  # 4
         "dodgerblue",  # 5
-        "deepskyblue",  # 6
+        "skyblue",  # 6
         "lightskyblue",  # 7
         "cyan",  # 8
         "springgreen",  # 9
@@ -54,7 +55,7 @@ class Spectrum(List[Color]):
         "#0000FF",  # 4
         "#0055FF",  # 5
         "#0087FF",  # 6
-        "#00C3FF",  # 7
+        "#00CCFF",  # 7
         "#00FFFF",  # 8
         "#00FFAF",  # 9
         "#00FF00",  # 10
