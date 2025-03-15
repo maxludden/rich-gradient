@@ -9,8 +9,8 @@ from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 
-from rich_gradient._base_color import ColorType
-from rich_gradient.color import Color
+from rich_gradient.color import ColorType, Color
+# from rich_gradient.color import Color
 
 
 class Spectrum(List[Color]):

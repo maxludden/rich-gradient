@@ -6,9 +6,14 @@
         "Max's Dictionary"
     ],
     "words": [
+        "animatedgradient",
+        "brac",
         "colortitle",
         "cssdarkorange",
-        "csstomato"
+        "csstomato",
+        "invis",
+        "punc",
+        "wght"
     ],
     "ignoreWords": [
         "backrefs",
