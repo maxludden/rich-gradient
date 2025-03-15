@@ -21,13 +21,14 @@ from rich.style import Style, StyleType
 from rich.text import Span, Text
 
 from rich_gradient import Color
-from rich_gradient._base_color import ColorType
+from rich_gradient.color import ColorType
 
 # ColorType = Union[ColorTuple, str, BaseColor, Color]
 GradientMethod = Literal["default", "list", "mono", "rainbow"]
 DEFAULT_JUSTIFY: JustifyMethod = "default"
 DEFAULT_OVERFLOW: OverflowMethod = "fold"
 WHITESPACE_REGEX = re.compile(r"^\s+$")
+ColorInput = Union[ColorType, "Color"]
 
 
 VERBOSE: bool = False
@@ -63,8 +64,8 @@ class SimpleGradient(Text):
         self,
         text: str | Text = "",
         *,
-        color1: ColorType | Color,
-        color2: ColorType | Color,
+        color1: ColorType|Color,
+        color2: ColorType|Color,
         justify: JustifyMethod = "default",
         overflow: OverflowMethod = "fold",
         no_wrap: bool = False,
@@ -87,13 +88,14 @@ class SimpleGradient(Text):
             spans=spans,
         )
 
+
         if not isinstance(color1, Color):
             color1 = Color(color1)  # type: ignore
         if not isinstance(color2, Color):
             color2 = Color(color2)  # type: ignore
 
-        self.color1 = Color(color1)
-        self.color2 = Color(color2)
+        self.color1 = Color(color1) # type: ignore
+        self.color2 = Color(color2) # type: ignore
         self._spans = list(self.generate_spans())
 
     def __len__(self) -> int:
@@ -146,6 +148,8 @@ class SimpleGradient(Text):
         if not isinstance(other, Text):
             return NotImplemented
         return self.plain == other.plain and self._spans == other._spans
+
+
 
     @property
     def text(self) -> str:

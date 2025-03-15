@@ -14,9 +14,10 @@ from rich.panel import Panel
 from rich.style import Style, StyleType
 from rich.text import Span, Text, TextType
 
+from rich_gradient.color import Color, ColorError, ColorType
 from rich_gradient._simple_gradient import SimpleGradient
-from rich_gradient._base_color import ColorError, ColorType
-from rich_gradient.color import Color
+
+# from rich_gradient.color import Color
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
@@ -57,7 +58,6 @@ class Gradient(Text):
 
             .. [1] colors: List[Optional[Color|Tuple|str|int]
     """
-
 
     __slots__ = [
         "_colors",
@@ -301,7 +301,7 @@ class Gradient(Text):
         elif isinstance(colors, tuple):
             for color in colors:
                 try:
-                    color = Color(color)
+                    color = Color(color)  # type: ignore
                 except ColorError as ce:
                     raise ce
                 else:
@@ -311,7 +311,7 @@ class Gradient(Text):
         elif isinstance(colors, list):
             for color in colors:  # type: ignore
                 try:
-                    color = Color(color)
+                    color = Color(color)  # type: ignore
                 except ColorError as pce:
                     raise pce
                 else:

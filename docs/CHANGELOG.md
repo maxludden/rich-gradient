@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--## [Unreleased]-->
+<div class="v0_2_0">
+
+## v0.2.0 - 2025-3-13 | <span style="color:rgb(215, 255, 100)">[uv](https://github.com/astral-sh/uv)</span>, pure python, and 3.13.2
+
+There are a number of significant changes in v0.2.0:
+
+#### <span style="color: rgb(215, 255, 100)">`rye` → `uv`</span>
+
+Astral has done a hell of a job making python dev tools. [ruff](https://github.com/astral-sh/ruff) blew the existing python linters out of the water and uv pretty much did the same thing to package managers. Rich-gradient was started on [rye](https://github.com/astral-sh/rye) but as Astral has since depreciated it, it's moved to their current rust powered python package manager, [uv](https://github.com/astral-sh/uv).
+
+#### <span style="color: rgb(215, 255, 100)">Pure Python</span>
+
+Rich-gradient is now a pure-python package. This allows it to be more easily used regardless of platform. As rich-gradient previously had pydantic as a dependency, it now just borrows the logic from [`pydantic-extra-types.color`](https://github.com/pydantic/pydantic-extra-types/blob/889319b7825331c18cedd16b80a09c2).
+
+#### <span style="color: rgb(215, 255, 100)">3.13.2</span>
+
+After switching to [uv](https://github.com/astral-sh/uv), the package has been updated to python 3.13.2.
+
+### v0.2.0 Updated
+
+- Switched rich-gradient package manager from [astral/rye](https://github.com/astral-sh/rye) to [astral/uv](https://github.com/astral-sh/uv)
+- Updated python to `3.13.2`
+
+### v0.2.0 Changed
+
+- Removed [`pydantic`](https://github.com/pydantic/pydantic) and [`pydantic-extra-types`](https://github.com/pydantic/pydantic-extra-types) dependencies.
+- Updated the names of some of the colors. For example <span style="color: #7CFF00">greenyellow</span> became <span style="color: #7CFF00">lawngreen</span>.
+- Updated `README.md`, `CHANGELOG`, and documentation.
+
+### v0.2.0 Added
+
+- `src/rich_gradient/_base_color.py`: stores the color logic from pydantic-extra-types.color modules stripped of the pydantic framwork.
+
 ## v0.1.7 - 2024-7-16 | Added support for Two-Color Gradients
 
 ### v0.1.7 Updated
