@@ -39,7 +39,7 @@ class GradientRule(JupyterMixin):
         align: AlignMethod = "center",
     ) -> None:
         """Initialize the GradientRule Class.
-        
+
         Args:
             title (Union[str, Text]): Text to render in the rule. Defaults to "".
             gradient (bool, optional): Whether to use gradient colors. Defaults to True.
@@ -90,7 +90,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
 
     def __repr__(self) -> str:
         """The string representation of the GradientRule class.
-        
+
         Returns:
             str: The string representation of the GradientRule"""
         return f"Rule<{self.title!r}, {self.characters!r}>"
@@ -99,11 +99,11 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
     def __rich_console__(
         self, console: Console, options: ConsoleOptions) -> RenderResult:
         """The rich renderable method for the GradientRule class.
-        
+
         Args:
             console (Console): The console instance.
             options (ConsoleOptions): The console options.
-            
+
         Returns:
             RenderResult: The renderable result of the GradientRule class.
         """
@@ -182,7 +182,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
         Args:
             chars_len (int): Width of the rule characters.
             width (int): Width of the rule.
-        
+
         Returns:
             Text: The rule line.
         """
@@ -248,11 +248,11 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
     def __rich_measure__(
         self, console: Console, options: ConsoleOptions) -> Measurement:
         """The rich measure method for the GradientRule class.
-        
+
         Args:
             console (Console): The console instance.
             options (ConsoleOptions): The console options.
-        
+
         Returns:
             Measurement: The measurement of the GradientRule class."""
         return Measurement(1, 1)
@@ -260,7 +260,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
     @property
     def thickness(self) -> str:
         """Thickness of the rule line.
-        
+
         Returns:
             str: The thickness of the rule line."""
         return self._thickness
@@ -272,7 +272,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
 
         Args:
             thickness (Thickness): The thickness of the rule line.
-        
+
         Raises:
             AssertionError: If the thickness is not one of "thin", "medium", or "thick".
         """
@@ -282,7 +282,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
     @property
     def characters(self) -> str:
         """Characters used to draw the rule.
-        
+
         Returns:
             str: The characters used to draw the rule."""
         return self._characters
@@ -290,7 +290,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
     @characters.setter
     def characters(self, characters: Optional[str]) -> None:
         """Set or generate the characters to draw the rule.
-        
+
         Args:
             characters (Optional[str]): The characters to draw the rule.
         """
@@ -311,7 +311,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
     @classmethod
     def rule_example(cls, save: bool = False) -> None:
         """Create a console with examples of Rule.
-        
+
         Args:
             save (bool, optional): Save the console output to an SVG file. Defaults to False."""
         import sys

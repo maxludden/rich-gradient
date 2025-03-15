@@ -4,7 +4,7 @@ import pytest
 from rich.console import Console
 
 from rich_gradient._simple_gradient import SimpleGradient
-from rich_gradient.color import Color
+from rich_gradient._color import Color
 from rich_gradient.gradient import Gradient
 
 @pytest.fixture

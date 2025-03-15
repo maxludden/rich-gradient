@@ -3,7 +3,7 @@ import pytest
 # from rich.table import Table
 from rich.console import Console
 
-from rich_gradient.color import Color
+from rich_gradient._color import Color
 from rich_gradient.spectrum import Spectrum
 
 
