@@ -26,8 +26,6 @@ from rich.color import Color as RichColor
 from itertools import cycle
 from random import randint
 
-from snoop import snoop
-
 ColorTuple = Union[Tuple[int, int, int], Tuple[int, int, int, float]]
 ColorType = Union[ColorTuple, str, Tuple[Any, ...]]
 HslColorTuple = Union[Tuple[float, float, float], Tuple[float, float, float, float]]
