@@ -1,9 +1,10 @@
 # ![rich-gradient](img/rich-gradient.svg)
 
 <div class="badges">
-    <a href="https://GitHub.com/maxludden/maxgradient"><img  class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 -blue?logo=python" alt="PyPI - MaxGradient"></a>
+    <a href="https://github.com/astral-sh/uv"><img class="badge" src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt=uv></a>
+    <a href="https://GitHub.com/maxludden/maxgradient"><img  class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 | 3.13-blue?logo=python" alt="PyPI - MaxGradient"></a>
     <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/PyPI-rich_gradient-blue?" alt="PyPI - rich_radient"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/Version-0.3.1-bbbbbb" alt="Version 0.3.1"></a>
+    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/Version-0.2.0-bbbbbb" alt="Version 0.2.0"></a>
 </div>
 <div id="spacer"></div>
 
@@ -20,10 +21,10 @@ Borrowing from [pydantic-extra-types](https://GitHub.com/pydantic/pydantic-extra
 
 ## Installation
 
-### Rye (Recommended)
+### uv (Recommended)
 
 ```bash
-rye add rich-gradient
+uv add rich-gradient
 ```
 
 ### Pip
