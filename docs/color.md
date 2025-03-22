@@ -1,6 +1,6 @@
 # Color
 
-`rich-gradient`'s Color class is a subclass of `pydantic_extra_types.color.Color` that extends the rich standard colors to include:
+`rich-gradient`'s Color class is a copy of `pydantic_extra_types.color.Color` that extends the rich standard colors to include:
 
 - 3 digit hex codes (e.g. `#f00`)
 - 6 digit hex codes (e.g. `#ff0000`)
