@@ -102,7 +102,7 @@ class Gradient(Text):
             colors (List[Optional[Color|Tuple|str|int]]): A list of colors to use \
                 for the gradient. Defaults to None.\n
             rainbow (bool): Whether to print the gradient text in rainbow colors\
-                  across the spectrum. Defaults to False.\n
+                across the spectrum. Defaults to False.\n
             hues (int): The number of colors in the gradient. Defaults to `4`.\n
             style (StyleType): The style of the gradient text. Defaults to None.\n
             verbose (bool): Whether to print verbose output. Defaults to False.
