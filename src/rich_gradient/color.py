@@ -32,9 +32,10 @@ from typing import (
     cast,
 )
 
+from rich import get_console
 from rich.color import Color as RichColor
 from rich.color_triplet import ColorTriplet
-from rich.console import Console
+from rich.console import Console, ConsoleOptions
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
@@ -507,7 +508,45 @@ back to hex representation if name is not found.
 
     @classmethod
     def from_rich(cls, value: RichColor) -> "Color":
-        return cls(RGBA.from_rich(value))
+        """Create a Color from a RichColor.
+        Args:
+            value (RichColor): The RichColor to convert.
+        Returns:
+            Color: The converted Color.
+        """
+        if isinstance(value, RichColor):
+            if value.triplet is None:
+                if value.name in COLORS_BY_NAME:
+                    color = COLORS_BY_NAME[value.name]
+                    rgb_tuple: Tuple[int, int, int] = color["rgb"]  # type: ignore
+                    r, g, b = [int(param) for param in rgb_tuple]
+                    return cls.from_rgba(RGBA(r, g, b))
+                try:
+                    _value = cls(value)
+                    return _value
+                except ColorError as ce:
+                    raise ColorError(
+                        f"Color.from_rich({value}) has no triplet: {ce}"
+                    ) from ce
+
+            elif isinstance(value, str):
+                try:
+                    parsed_color = RichColor.parse(value)
+                except Exception:
+                    try:
+                        return cls(value)
+                    except ColorError as ce:
+                        raise ColorError(
+                            f"Unable to parse color in Color.from_rich({value}): {ce}"
+                        ) from ce
+
+                if parsed_color.triplet is None:
+                    raise ColorError(
+                        f"Parsed rich color from string {value} has no triplet"
+                    )
+                return cls.from_triplet(parsed_color.triplet)
+            return cls.from_triplet(value.triplet)
+        raise ColorError(f"Unable to parse color in Color.from_rich({value}).")
 
     @classmethod
     def from_style(cls, style: Style) -> "Color":
@@ -565,35 +604,47 @@ back to hex representation if name is not found.
                 r, g, b = rgb
                 return RGBA(r, g, b)
         if value_lower == "default":
-            return RGBA.default()
-        if value_lower == "transparent":
-            return RGBA(0, 0, 0, 0)
-        raise ColorError(
-            f"value is not a valid color: {value} string not \
-recognised as a valid color"
-        )
+            default_rich = RichColor.default()
+            if default_rich.triplet is None:
+                raise ColorError("Default RichColor has no triplet")
+            return RGBA.from_triplet(default_rich.triplet)
+        if color_info and "rgb" in color_info:
+            rgb = color_info["rgb"]
+            assert isinstance(rgb, tuple), (
+                f"Expected rgb to be a tuple, got {type(rgb)}"
+            )
+            r, g, b = rgb
+            return RGBA(r, g, b)
+        raise ColorError(f"Unable to parse color string: {value}")
 
     @classmethod
-    def parse_tuple(cls, value: tuple[Any, ...] | Color) -> RGBA:
+    def parse_tuple(cls, value: tuple[int | float | str, ...] | Color) -> RGBA:
+        """
+        Parse a tuple of RGB or RGBA values where each can be int, float, or numeric string.
+        Returns an RGBA instance with 0-255 channels and alpha.
+        """
         if isinstance(value, Color):
             return value._rgba
         value_tuple = cast(tuple, value)
-        if len(value_tuple) == 3:
-            r, g, b = value_tuple
-            return RGBA(round(r * 255), round(g * 255), round(b * 255), 1.0)
-        elif len(value_tuple) == 4:
-            r, g, b = value_tuple[:3]
-            return RGBA(
-                round(r * 255),
-                round(g * 255),
-                round(b * 255),
-                cls.parse_float_alpha(value_tuple[3]),
-            )
-        else:
+        length = len(value_tuple)
+        if length not in (3, 4):
             raise ColorError(
-                "value is not a valid color: tuples must \
-have length 3 or 4",
+                "value is not a valid color: tuples must have length 3 or 4"
             )
+
+        # Helper to convert each component to 0-255 int
+        def to_int(comp: int | float | str) -> int:
+            if isinstance(comp, int):
+                return comp
+            # float or numeric string: normalize to 0..1 then scale
+            frac = cls.parse_color_value(comp)  # returns 0..1
+            return round(frac * 255)
+
+        r = to_int(value_tuple[0])
+        g = to_int(value_tuple[1])
+        b = to_int(value_tuple[2])
+        alpha = cls.parse_float_alpha(value_tuple[3]) if length == 4 else 1.0
+        return RGBA(r, g, b, alpha)
 
     @classmethod
     def parse_hsl(
@@ -633,7 +684,7 @@ have length 3 or 4",
         )
 
     @staticmethod
-    def parse_color_value(value: int | str, max_val: int = 255) -> float:
+    def parse_color_value(value: int | float | str, max_val: int = 255) -> float:
         """
         Parse a color value for a channel (r, g, b, etc.) to a float in 0..1.
         Returns the normalized value.

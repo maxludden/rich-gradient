@@ -32,6 +32,7 @@ from rich_gradient._parsers import (
     repeat_colors,
     rads
 )
+from rich_gradient._colors_by_ import COLORS_BY_NAME, COLORS_BY_RGB, COLORS_BY_HEX, COLORS_BY_ANSI
 
 ColorTuple: TypeAlias = Union[Tuple[int, int, int], Tuple[int, int, int, float]]
 HslColorTuple: TypeAlias = Union[
@@ -237,10 +238,51 @@ class RGBA:
         try:
             triplet = value.triplet if value.triplet else RichColor.parse(value).triplet
             if triplet:
-                return cls.from_triplet(triplet)
-            raise ValueError("Unable to parse RichColor")
-        except Exception as e:
-            raise e
+                r,g,b = triplet
+                return cls(r, g, b)
+            elif value.get_truecolor():
+                r,g,b = value.get_truecolor()
+                return cls(r, g, b)
+            elif value.name in COLORS_BY_NAME:
+                color = COLORS_BY_NAME.get(value.name)
+                rgb: Tuple[int, int, int] = color['rgb'] # type: ignore
+                r, g, b = rgb
+                return cls(r, g, b)
+            elif value.number in COLORS_BY_ANSI:
+                color = COLORS_BY_ANSI.get(value.number)
+                rgb: Tuple[int, int, int] = color['rgb'] # type: ignore
+                r, g, b = rgb
+                return cls(r, g, b)
+            else:
+                color = RichColor.parse(value)
+                if color:
+                    r, g, b = color.get_truecolor()
+                    return cls(r, g, b)
+                raise RGBAError(
+                    f"Invalid RichColor value: {value}"
+                )
+        except AttributeError:
+            raise RGBAError(
+                f"AttributeError: Invalid RichColor value: {value}"
+            )
+        except ValueError:
+            raise RGBAError(
+                f"ValueError: Invalid RichColor value: {value}"
+            )
+        except TypeError:
+            raise RGBAError(
+                f"TypeError: Invalid RichColor value: {value} or type: {type(value)}"
+            )
+        except RGBAError:
+            raise RGBAError(
+                f"RGBAError: Invalid RichColor value: {value}"
+            )
+        except Exception:
+            raise RGBAError(
+                f"Exception: Invalid RichColor value: {value}"
+            )
+
+
 
     @classmethod
     def from_hsl(cls, value: str) -> "RGBA":

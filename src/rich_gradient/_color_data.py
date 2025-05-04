@@ -1,14 +1,24 @@
+"""
+rich_gradient.panel
+-------------------
+Provides GradientPanel, a Panel-like renderable that can apply color gradients
+to its title, subtitle, border box, and body content.
+"""
+
 from __future__ import annotations
+
 import re
 from typing import Any, Dict, List, Optional, Tuple, Union
-from rich_gradient._colors import COLOR_DATA_DICT
+
 from rich_gradient._colors_by_ import (
-    COLORS_BY_RGB,
+    COLORS_BY_ANSI,
     COLORS_BY_HEX,
     COLORS_BY_NAME,
-    COLORS_BY_ANSI,
-    SPECTRUM_COLOR_STRS
+    COLORS_BY_RGB,
+    SPECTRUM_COLOR_STRS,
 )
+from rich_gradient._colors_dict import COLOR_DATA_DICT
+
 
 class ColorData:
     """Class to handle color data.
@@ -36,7 +46,6 @@ class ColorData:
         find(value: Union[str, Tuple[int, int, int], int]) -> Optional[Dict[str, Any]]:
             Auto-detects the lookup method based on the type of the input value.
     """
-
 
     def __init__(self) -> None:
         self.color_dict: Dict[str, Dict[str, str | Tuple[int, int, int] | int]] = (
@@ -157,8 +166,6 @@ class ColorData:
                 "function_name": "ColorData.by_ansi",
             },
         )
-
-
 
     @staticmethod
     def to_dict(name: str) -> Tuple[str, Dict[str, Any]]:
