@@ -9,48 +9,52 @@ and provides utility methods for computing contrast and rendering with rich text
 Types and constants related to color representation, including alias types for color tuples,
 are also defined here.
 """
+
 from __future__ import annotations
 
-import re
 import inspect
-from typing import Any, TypeAlias, Tuple, Union, Optional
-from functools import cached_property
+import re
 from colorsys import hls_to_rgb, rgb_to_hls
+from functools import cached_property
+from typing import Any, Optional, Tuple, TypeAlias, Union
 
 from rich.color import Color as RichColor
 from rich.color_triplet import ColorTriplet
-from rich.text import Text
 from rich.style import Style
+from rich.text import Text
 
+from rich_gradient._colors_by_ import (
+    COLORS_BY_ANSI,
+    COLORS_BY_HEX,
+    COLORS_BY_NAME,
+    COLORS_BY_RGB,
+)
 from rich_gradient._parsers import (
-    r_hex_short,
     r_hex_long,
-    r_rgb,
-    r_rgb_v4_style,
+    r_hex_short,
     r_hsl,
     r_hsl_v4_style,
+    r_rgb,
+    r_rgb_v4_style,
+    rads,
     repeat_colors,
-    rads
 )
-from rich_gradient._colors_by_ import COLORS_BY_NAME, COLORS_BY_RGB, COLORS_BY_HEX, COLORS_BY_ANSI
 
 ColorTuple: TypeAlias = Union[Tuple[int, int, int], Tuple[int, int, int, float]]
 HslColorTuple: TypeAlias = Union[
     Tuple[float, float, float], Tuple[float, float, float, float]
 ]
 RGBA_ColorType: TypeAlias = Union[
-    ColorTuple,
-    str, Tuple[Any, ...],
-    ColorTriplet,
-    RichColor,
-    "RGBA"
+    ColorTuple, str, Tuple[Any, ...], ColorTriplet, RichColor, "RGBA"
 ]
+
 
 class RGBAError(Exception):
     """
     An exception that automatically prefixes the module and function
     where it was raised to the message.
     """
+
     def __init__(self, message: str) -> None:
         # inspect.stack()[1] is the caller’s frame
         frame_info = inspect.stack()[1]
@@ -62,6 +66,7 @@ class RGBAError(Exception):
         full_message = f"{module_name}.{func_name}:{line_no}: {message}"
         super().__init__(full_message)
 
+
 class RGBA:
     """
     Internal representation of an RGBA color.
@@ -71,6 +76,7 @@ class RGBA:
         b (int): Blue value (0-255)
         alpha (float): Alpha value (0-1)
     """
+
     __slots__ = "r", "g", "b", "alpha", "_tuple"
 
     def __init__(self, r: int, g: int, b: int, alpha: float = 1.0) -> None:
@@ -91,7 +97,11 @@ class RGBA:
 
     @red.setter
     def red(self, value: int | float) -> None:
-        self.r = int(round(value * 255)) if isinstance(value, float) and 0 <= value <= 1 else int(value)
+        self.r = (
+            int(round(value * 255))
+            if isinstance(value, float) and 0 <= value <= 1
+            else int(value)
+        )
 
     @property
     def green(self) -> int:
@@ -99,28 +109,46 @@ class RGBA:
 
     @green.setter
     def green(self, value: int | float) -> None:
-        self.g = int(round(value * 255)) if isinstance(value, float) and 0 <= value <= 1 else int(value)
+        self.g = (
+            int(round(value * 255))
+            if isinstance(value, float) and 0 <= value <= 1
+            else int(value)
+        )
+
     @property
     def blue(self) -> int:
         return self.b
 
-
     @blue.setter
     def blue(self, value: int | float) -> None:
-        self.b = int(round(value * 255)) if isinstance(value, float) and 0 <= value <= 1 else int(value)
+        self.b = (
+            int(round(value * 255))
+            if isinstance(value, float) and 0 <= value <= 1
+            else int(value)
+        )
 
     def __repr__(self) -> str:
         return f"RGBA({self.r}, {self.g}, {self.b}, {self.alpha})"
+
     def __str__(self) -> str:
         return self.as_hex()
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, RGBA):
             return NotImplemented
-        return (self.r, self.g, self.b, self.alpha) == (other.r, other.g, other.b, other.alpha)
+        return (self.r, self.g, self.b, self.alpha) == (
+            other.r,
+            other.g,
+            other.b,
+            other.alpha,
+        )
+
     def __ne__(self, other: object) -> bool:
         return not self == other
+
     def __hash__(self) -> int:
         return hash((self.r, self.g, self.b, self.alpha))
+
     def __add__(self, other: "RGBA") -> "RGBA":
         if not isinstance(other, RGBA):
             return NotImplemented
@@ -132,6 +160,7 @@ class RGBA:
             if self.alpha != 1.0 and other.alpha != 1.0
             else max(self.alpha, other.alpha),
         )
+
     def __rich__(self) -> Text:
         style = Style(color=self.as_rgb(), bold=True)
         return Text.assemble(
@@ -238,19 +267,19 @@ class RGBA:
         try:
             triplet = value.triplet if value.triplet else RichColor.parse(value).triplet
             if triplet:
-                r,g,b = triplet
+                r, g, b = triplet
                 return cls(r, g, b)
             elif value.get_truecolor():
-                r,g,b = value.get_truecolor()
+                r, g, b = value.get_truecolor()
                 return cls(r, g, b)
             elif value.name in COLORS_BY_NAME:
                 color = COLORS_BY_NAME.get(value.name)
-                rgb: Tuple[int, int, int] = color['rgb'] # type: ignore
+                rgb: Tuple[int, int, int] = color["rgb"]  # type: ignore
                 r, g, b = rgb
                 return cls(r, g, b)
             elif value.number in COLORS_BY_ANSI:
                 color = COLORS_BY_ANSI.get(value.number)
-                rgb: Tuple[int, int, int] = color['rgb'] # type: ignore
+                rgb: Tuple[int, int, int] = color["rgb"]  # type: ignore
                 r, g, b = rgb
                 return cls(r, g, b)
             else:
@@ -258,31 +287,19 @@ class RGBA:
                 if color:
                     r, g, b = color.get_truecolor()
                     return cls(r, g, b)
-                raise RGBAError(
-                    f"Invalid RichColor value: {value}"
-                )
+                raise RGBAError(f"Invalid RichColor value: {value}")
         except AttributeError:
-            raise RGBAError(
-                f"AttributeError: Invalid RichColor value: {value}"
-            )
+            raise RGBAError(f"AttributeError: Invalid RichColor value: {value}")
         except ValueError:
-            raise RGBAError(
-                f"ValueError: Invalid RichColor value: {value}"
-            )
+            raise RGBAError(f"ValueError: Invalid RichColor value: {value}")
         except TypeError:
             raise RGBAError(
                 f"TypeError: Invalid RichColor value: {value} or type: {type(value)}"
             )
         except RGBAError:
-            raise RGBAError(
-                f"RGBAError: Invalid RichColor value: {value}"
-            )
+            raise RGBAError(f"RGBAError: Invalid RichColor value: {value}")
         except Exception:
-            raise RGBAError(
-                f"Exception: Invalid RichColor value: {value}"
-            )
-
-
+            raise RGBAError(f"Exception: Invalid RichColor value: {value}")
 
     @classmethod
     def from_hsl(cls, value: str) -> "RGBA":
@@ -293,6 +310,7 @@ class RGBA:
             _lightness = lightness / 100
             r, g, b = hls_to_rgb(_hue, _lightness, _saturation)
             return cls(r=int(r * 255), g=int(g * 255), b=int(b * 255))
+
         for regex in (r_hsl, r_hsl_v4_style):
             match = re.match(regex, value)
             if match:
