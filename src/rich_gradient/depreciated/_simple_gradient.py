@@ -7,21 +7,21 @@ This module provides the `SimpleGradient` class that generates a gradient of tex
 # ruff: noqa: F401
 import re
 from functools import partial
-from operator import itemgetter
-from typing import Any, Dict, Generator, Iterable, List, Literal, Optional, Tuple, Union
+from typing import Dict, Iterable, List, Literal, Optional, Tuple, Union
 
 import rich.style
-from rich._pick import pick_bool
+from rich import get_console
 from rich.cells import cell_len
-from rich.console import Console, ConsoleOptions, JustifyMethod, OverflowMethod
+from rich.color import Color as RichColor
+from rich.console import Console, ConsoleOptions, JustifyMethod, OverflowMethod, RenderableType
 from rich.control import strip_control_codes
 from rich.measure import Measurement
 from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Span, Text
+from operator import itemgetter
 
-from rich_gradient import Color
-from rich_gradient.color import ColorType
+from rich_gradient.color import Color, ColorType
 
 # ColorType = Union[ColorTuple, str, BaseColor, Color]
 GradientMethod = Literal["default", "list", "mono", "rainbow"]
@@ -29,9 +29,14 @@ DEFAULT_JUSTIFY: JustifyMethod = "default"
 DEFAULT_OVERFLOW: OverflowMethod = "fold"
 WHITESPACE_REGEX = re.compile(r"^\s+$")
 ColorInput = Union[ColorType, "Color"]
-
-
 VERBOSE: bool = False
+
+
+def pick_bool(*args):
+    for arg in args:
+        if arg is not None:
+            return arg
+    return False
 
 
 class SimpleGradient(Text):
@@ -62,10 +67,10 @@ class SimpleGradient(Text):
 
     def __init__(
         self,
-        text: str | Text = "",
+        renderable: RenderableType = "",
         *,
-        color1: ColorType|Color,
-        color2: ColorType|Color,
+        color1: ColorType | Color,
+        color2: ColorType | Color,
         justify: JustifyMethod = "default",
         overflow: OverflowMethod = "fold",
         no_wrap: bool = False,
@@ -75,11 +80,22 @@ class SimpleGradient(Text):
         verbose: bool = False,
     ) -> None:
         self.verbose = verbose
-        self.text = text  # type: ignore
+        console = get_console()
+        # If already a Text, use as is, else extract as Text using console
+        text_obj: Text
+        if isinstance(renderable, Text):
+            text_obj = renderable
+        else:
+            # Render the renderable to a Text object using console
+            text_obj = console.render_str(str(renderable))
+        # Now, set up self._text, self._length, self._spans
+        self._length = text_obj._length
+        self._text = text_obj._text
+        self._spans = text_obj.spans
         _style = Style.parse(style) if isinstance(style, str) else style
 
         super().__init__(
-            text=self.text,
+            text=self.plain,
             style=_style,
             justify=justify,
             overflow=overflow,
@@ -88,14 +104,13 @@ class SimpleGradient(Text):
             spans=spans,
         )
 
-
         if not isinstance(color1, Color):
             color1 = Color(color1)  # type: ignore
         if not isinstance(color2, Color):
             color2 = Color(color2)  # type: ignore
 
-        self.color1 = Color(color1) # type: ignore
-        self.color2 = Color(color2) # type: ignore
+        self.color1 = Color(color1)  # type: ignore
+        self.color2 = Color(color2)  # type: ignore
         self._spans = list(self.generate_spans())
 
     def __len__(self) -> int:
@@ -112,11 +127,9 @@ class SimpleGradient(Text):
         Returns:
             str: The string representation of the SimpleGradient.
         """
-        return f"SimpleGradient({self.text!r}, \
-            {self.color1.as_named()!r}, \
-                {self.color2.as_named()!r}"
+        return f"SimpleGradient({self.plain!r}, {self.color1.as_named()!r}, {self.color2.as_named()!r})"
 
-    def __add__(self, other: Any) -> "Text":
+    def __add__(self, other) -> "Text":
         """Add two Text objects together.
 
         Args:
@@ -126,10 +139,9 @@ class SimpleGradient(Text):
             Text: The concatenated Text object.
         """
         if isinstance(other, str):
-            result = self.copy()
-            result._text = (" ".join(["".join(self.text), other])).split()
+            new_text = self.text + other
             return SimpleGradient(
-                "".join(result._text),
+                new_text,
                 color1=self.color1,
                 color2=self.color2,
                 style=self.style,
@@ -148,8 +160,6 @@ class SimpleGradient(Text):
         if not isinstance(other, Text):
             return NotImplemented
         return self.plain == other.plain and self._spans == other._spans
-
-
 
     @property
     def text(self) -> str:
@@ -184,7 +194,7 @@ class SimpleGradient(Text):
                 raise ValueError("Text cannot be empty.")
             sanitized_text = strip_control_codes(value)
             self._length = len(sanitized_text)
-            self._text = sanitized_text  # type: ignore
+            self._text = list(sanitized_text)
         elif value is None:
             raise ValueError("Text cannot be None.")
         else:
@@ -210,7 +220,7 @@ class SimpleGradient(Text):
         else:
             self._style = Style.parse(style)
 
-    def generate_spans(self) -> Generator[Span, None, None]:
+    def generate_spans(self):
         """
         Generate the gradient's spans.
 
@@ -222,9 +232,9 @@ class SimpleGradient(Text):
         """
         if self.verbose:
             console.log("Entered generate_gradient")
-        triplet1 = self.color1.triplet
+        triplet1 = self.color1.as_triplet()
         r1, g1, b1 = triplet1
-        triplet2 = self.color2.triplet
+        triplet2 = self.color2.as_triplet()
         r2, g2, b2 = triplet2
         dr: int = r2 - r1
         dg: int = g2 - g1
@@ -236,9 +246,8 @@ class SimpleGradient(Text):
             green: int = int(g1 + (dg * blend))
             blue: int = int(b1 + (db * blend))
             hex_str: str = f"#{red:02X}{green:02X}{blue:02X}"
-            color = Color(hex_str)
-            style = color.style + self._style
-            yield Span(index, index + 1, style=style)
+            style = Style(color=hex_str) + self.style
+            yield Span(index, index + 1, style)
 
     def __rich_console__(
         self, console: "Console", options: "ConsoleOptions"
