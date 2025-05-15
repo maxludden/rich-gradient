@@ -2,123 +2,66 @@ from __future__ import annotations
 
 from itertools import cycle
 from random import randint
-from typing import List, Tuple
+from typing import Generator
 
-
-from rich.style import Style
+from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from rich_gradient.color import ColorType, Color
-# from rich_gradient.color import Color
+from rich_gradient.new_colors import COLORS_BY_NAME, COLORS_BY_HEX
+from rich_gradient.color import Color
+from rich_gradient.style import Style
 
 
-class Spectrum(List[Color]):
-    """The colors from which to create random gradients.
+class Spectrum(list):
+    """Create a list of Color instances by:
+    1. Cycling through the first 18 keys of COLORS_BY_NAME.
+    2. Skipping a random offset.
+    3. Collecting the next `length` colors.
+    4. Optionally reversing the sequence.
 
-    Attributes:
-        NAMES (Tuple[str, ...]): Tuple of color names.
-        HEX (Tuple[str, ...]): Tuple of color hex codes.
-        RGB (Tuple[str, ...]): Tuple of color RGB values.
+    Args:
+        length (int): Number of colors to generate. Defaults to 18.
+        invert (bool, optional): If True, reverse the generated list. Defaults to False.
 
-    Methods:
-        __init__(): Initializes the Spectrum class.
-        __rich__(): Returns a rich Table object representing the Spectrum colors.
+    Returns:
+        List[Color]: A list of Color instances.
 
+    Example:
+        >>> spectrum = Spectrum(5)
+        >>> print(spectrum)
+        [Color(name='purple'), Color(name='violet'), Color(name='blue'), Color(name='deepblue'), Color(name='skyblue')]
     """
 
-    NAMES: Tuple[str, ...] = (
-        "magenta",  # 1
-        "purple",  # 2
-        "violet",  # 3
-        "blue",  # 4
-        "dodgerblue",  # 5
-        "skyblue",  # 6
-        "lightskyblue",  # 7
-        "cyan",  # 8
-        "springgreen",  # 9
-        "lime",  # 10
-        "greenyellow",  # 11
-        "yellow",  # 12
-        "orange",  # 13
-        "darkorange",  # 14
-        "tomato",  # 15
-        "red",  # 16
-        "deeppink",  # 17
-        "hotpink",  # 18
-    )
-
-    HEX: Tuple[ColorType, ...] = (
-        "#FF00FF",  # 1
-        "#AF00FF",  # 2
-        "#5F00FF",  # 3
-        "#0000FF",  # 4
-        "#0055FF",  # 5
-        "#0087FF",  # 6
-        "#00CCFF",  # 7
-        "#00FFFF",  # 8
-        "#00FFAF",  # 9
-        "#00FF00",  # 10
-        "#AFFF00",  # 11
-        "#FFFF00",  # 12
-        "#FFAF00",  # 13
-        "#FF8700",  # 14
-        "#FF4B00",  # 15
-        "#FF0000",  # 16
-        "#FF005F",  # 17
-        "#FF00AF",  # 18
-    )
-
-    RGB: Tuple[ColorType, ...] = (
-        "rgb(255, 0, 255)",
-        "rgb(175, 0, 255)",
-        "rgb(95, 0, 255)",
-        "rgb(0, 0, 255)",
-        "rgb(0, 85, 255)",
-        "rgb(0, 135, 255)",
-        "rgb(0, 195, 255)",
-        "rgb(0, 255, 255)",
-        "rgb(0, 255, 175)",
-        "rgb(0, 255, 0)",
-        "rgb(175, 255, 0)",
-        "rgb(255, 255, 0)",
-        "rgb(255, 175, 0)",
-        "rgb(255, 135, 0)",
-        "rgb(255, 75, 0)",
-        "rgb(255, 0, 0)",
-        "rgb(255, 0, 95)",
-        "rgb(255, 0, 175)",
-    )
-
-    def __init__(self, length: int = 18,* , invert: bool = False) -> None:
-        """Initializes the Spectrum class.
-
-        Initializes the Spectrum class by creating a list of Color objects
-        based on the HEX values.
+    def __new__(cls, length: int = 18, invert: bool = False):
+        """
+        Create a list of `length` Color instances by:
+            1. Cycling through the first 18 keys of COLORS_BY_NAME.
+            2. Skipping a random offset.
+            3. Collecting the next `length` colors.
+            4. Optionally reversing the sequence.
 
         Args:
-            length (int, optional): The number of colors in the Spectrum. Defaults to 18.
-            invert (bool, optional): Invert the Spectrum colors. Defaults to False.
-        """
-        colors: List[Color] = [Color(hex) for hex in self.HEX]
-        color_cycle = cycle(colors)
-        for _ in range(0, randint(a=0, b=18)):
-            color_cycle.__next__()
-        if invert:
-            self.COLORS = [next(color_cycle) for _ in range(length)][::-1]
-        else:
-            self.COLORS = [next(color_cycle) for _ in range(length)]
-        super().__init__(self.COLORS)
-
-    @property
-    def invert(self) -> List[Color]:
-        """Returns a Spectrum object with the colors inverted.
+            length (int): Number of colors to generate.
+            invert (bool, optional): If True, reverse the generated list. Defaults to False.
 
         Returns:
-            Spectrum: A Spectrum object with the colors inverted.
+            List[Color]: A list of Color instances.
 
+        Example:
+            >>> spectrum = Spectrum(5)
+            >>> print(spectrum)
+            [Color(name='purple'), Color(name='violet'), Color(name='blue'), Color(name='deepblue'), Color(name='skyblue')]
         """
-        colors = self.COLORS[::-1]
+        base_names = list(COLORS_BY_NAME.keys())[:18]
+        base_colors = [Color(name) for name in base_names]
+        color_cycle = cycle(base_colors)
+        offset = randint(1, len(base_colors))
+        for _ in range(offset):
+            next(color_cycle)
+        colors = [next(color_cycle) for _ in range(length)]
+        if invert:
+            colors = list(reversed(colors))
         return colors
 
     def __rich__(self) -> Table:
@@ -128,39 +71,38 @@ class Spectrum(List[Color]):
             Table: A rich Table object representing the Spectrum colors.
 
         """
+        return self.table()
+
+    @staticmethod
+    def table() -> Table:
+        """Returns a rich Table object representing the Spectrum colors.
+
+        Returns:
+            Table: A rich Table object representing the Spectrum colors.
+        """
         table = Table(
             "[b i #ffffff]Sample[/]",
             "[b i #ffffff]Name[/]",
             "[b i #ffffff]Hex[/]",
             "[b i #ffffff]RGB[/]",
-            title="[b #ffffff]Gradient Colors[/]",
+            title="[b #ffffff]Spectrum[/]",
             show_footer=False,
             show_header=True,
             row_styles=(["on #1f1f1f", "on #000000"]),
         )
-        for color in self.COLORS:
-            assert color.triplet, "ColorTriplet must not be None"
-            triplet = color.triplet
-            hex_str = triplet.hex.upper()
-            if hex_str in [
-                "#AF00FF",
-                "#5F00FF",
-                "#0000FF",
-                "#0055FF",
-            ]:
-                foreground = "#ffffff"
-            else:
-                foreground = "#000000"
-            bg_style = Style(color=foreground, bgcolor=hex_str, bold=True)
-            style = Style(color=hex_str, bold=True)
-            index = self.HEX.index(hex_str)
-            name = self.NAMES[index].capitalize()
-            table.add_row(
-                Text(" " * 10, style=bg_style),
-                Text(name, style=style),
-                Text(hex_str, style=style),
-                Text(triplet.rgb, style=style),
-            )
+
+        colors = Spectrum()
+        for index, color in enumerate(colors):
+            style = str(Style(color=color.hex, bold=True))
+            name_str = COLORS_BY_HEX.get(color.hex.upper(), {}).get("name", color.name)
+            name = Text(f"{str(name_str).capitalize(): <13}", style=style)
+            sample = Text(f"{'█' * 10}", style=style)
+            hex_str = f" {color.as_hex('long').upper()} "
+            hex_text = Text(f"{hex_str: ^7}", style=f"bold on {color.hex}")
+            rgb = color._rgba
+
+            table.add_row(sample, name, hex_text, rgb)
+
         return table
 
 
@@ -169,6 +111,7 @@ if __name__ == "__main__":
 
     console = Console(width=64)
     console.line(2)
-    console.print(Spectrum(), justify="center")
+    # spectrum = Spectrum()
+    console.print(Spectrum.table())
     console.line(2)
     console.save_svg("docs/img/spectrum.svg")
