@@ -1,0 +1,11 @@
+
+===== Run Unknown Log =====
+02:02:08.957 |  logger.py   | Line 401 | INFO ➤ Started
+02:02:08.958 |  logger.py   | Line 402 | TRACE ➤ Trace
+02:02:08.958 |  logger.py   | Line 403 | DEBUG ➤ Debug
+02:02:08.958 |  logger.py   | Line 404 | INFO ➤ Info
+02:02:08.958 |  logger.py   | Line 405 | SUCCESS ➤ Success
+02:02:08.959 |  logger.py   | Line 406 | WARNING ➤ Warning
+02:02:08.959 |  logger.py   | Line 407 | ERROR ➤ Error
+02:02:08.959 |  logger.py   | Line 408 | CRITICAL ➤ Critical
+02:02:09.533 |  logger.py   | Line 226 | TRACE ➤ Incrementing run count...

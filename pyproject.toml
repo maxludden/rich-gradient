@@ -8,8 +8,10 @@ authors = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "loguru>=0.7.3",
     "pip>=25.0.1",
-    "rich>=13.9.4",
+    "rich>=14.0.0",
+    "thefuzz>=0.22.1",
 ]
 
 [project.scripts]
@@ -26,6 +28,7 @@ dev = [
     "mkdocs-material>=9.6.7",
     "mkdocstrings-python>=1.16.5",
     "pytest>=8.3.5",
+    "snoop>=0.6.0",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -34,4 +37,5 @@ packages = ["src/rich_gradient"]
 [tool.ruff]
 ignore=[
     "F401", # Unused imports
+    "E741", # Ambiguous variable name
 ]

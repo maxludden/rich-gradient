@@ -109,7 +109,13 @@
 			"**/*tsconfig.json": true,
 			".cache": true,
 			"retool.config.json": true
-		}
+		},
+		"cSpell.words": [
+			"objtype",
+			"raise",
+			"Renderable",
+			"truecolor"
+		]
 	},
 	"colorize.colorized_colors": [
 			"ARGB",
