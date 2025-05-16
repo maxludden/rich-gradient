@@ -45,6 +45,7 @@ class Gradient(Text):
         "underline",
         "strike",
         "reverse",
+        "dim",
         "no_wrap",
         "end",
         "angle",
@@ -70,6 +71,7 @@ class Gradient(Text):
         underline: bool = False,
         strike: bool = False,
         reverse: bool = False,
+        dim: bool = False,
         end: str = "\n",
         no_wrap: bool = False,
         angle: float = 1.5,
@@ -91,6 +93,7 @@ class Gradient(Text):
         self.underline = underline
         self.strike = strike
         self.reverse = reverse
+        self.dim = dim
         self.no_wrap = no_wrap
         self.end = end
         self.angle = angle
@@ -104,11 +107,6 @@ class Gradient(Text):
     # @snoop()
     def _extract_lines(self, renderable: Union[str, Text, Gradient]) -> List[str]:
         """Wrap the input to console width and preserve original newlines."""
-        if VERBOSE:
-            console.log(
-                f"Entered Gradient._extract_lines with renderable:\n\n{renderable}"
-            )
-            log_spectrum = Spectrum()
         if isinstance(renderable, Gradient):
             input = renderable.plain
         elif isinstance(renderable, Text):
@@ -129,62 +127,38 @@ class Gradient(Text):
                 start = end
             if start < len(raw_line):
                 lines.append(f"{raw_line[start:]}")
-        if VERBOSE:
-            for final_index, line in enumerate(lines):
-                console.log(
-                    f"[b #999] Line {final_index}:[/]{len(line)} | [{log_spectrum[index]}]{line!r}[/]"
-                )
         return lines
 
     def _build_styles(self, styles: Optional[List[StyleType]]) -> List[Style]:
         if self.rainbow:
-            spectrum: List[Color] = Spectrum()
-            return [
-                Style(
-                    color=color.hex,
-                    bold=self.bold,
-                    italic=self.italic,
-                    underline=self.underline,
-                    strike=self.strike,
-                    reverse=self.reverse,
-                )
-                for color in spectrum
-            ]
+            return Spectrum(
+                bold=self.bold,
+                italic=self.italic,
+                underline=self.underline,
+                strike=self.strike,
+                reverse=self.reverse,
+                dim=self.dim,
+            ).styles
         if not styles:
-            spectrum: List[Color] = Spectrum(length=self.hues)
-            return [
-                Style(
-                    color=color.hex,
-                    bold=self.bold,
-                    italic=self.italic,
-                    underline=self.underline,
-                    strike=self.strike,
-                    reverse=self.reverse,
-                )
-                for color in spectrum
-            ]
+            return Spectrum(
+                length=self.hues,
+                bold=self.bold,
+                italic=self.italic,
+                underline=self.underline,
+                strike=self.strike,
+                reverse=self.reverse,
+                dim=self.dim,
+            ).styles
+
         parsed_styles: List[Style] = []
         for __style in styles:
             if isinstance(__style, str):
-                _style = Style.parse(__style) + Style(
-                    color=__style,
-                    bold=self.bold,
-                    italic=self.italic,
-                    underline=self.underline,
-                    strike=self.strike,
-                    reverse=self.reverse,
-                )
+                _style = Style.parse(__style)
             elif isinstance(__style, Style):
-                _style = __style + Style(
-                    bold=self.bold,
-                    italic=self.italic,
-                    underline=self.underline,
-                    strike=self.strike,
-                    reverse=self.reverse,
-                )
+                _style = __style
             else:
-                _style = Style.parse(str(__style)) + Style(
-                    color=__style,
+                _style = Style.parse(str(__style))
+            _style += Style(
                     bold=self.bold,
                     italic=self.italic,
                     underline=self.underline,

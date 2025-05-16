@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from itertools import cycle
 from random import randint
-from typing import Generator
+from typing import Generator, List
 
 from rich.console import Console
 from rich.table import Table
@@ -13,43 +13,57 @@ from rich_gradient.color import Color
 from rich_gradient.style import Style
 
 
-class Spectrum(list):
-    """Create a list of Color instances by:
-    1. Cycling through the first 18 keys of COLORS_BY_NAME.
-    2. Skipping a random offset.
-    3. Collecting the next `length` colors.
-    4. Optionally reversing the sequence.
+class Spectrum:
+    """Create a list of concurrent Color and/or Style instances.
 
     Args:
         length (int): Number of colors to generate. Defaults to 18.
         invert (bool, optional): If True, reverse the generated list. Defaults to False.
+        bold (bool, optional): If True, apply bold style. Defaults to False.
+        italic (bool, optional): If True, apply italic style. Defaults to False.
+        underline (bool, optional): If True, apply underline style. Defaults to False.
+        strike (bool, optional): If True, apply strikethrough style. Defaults to False.
+        reverse (bool, optional): If True, apply reverse style. Defaults to False.
+        dim (bool, optional): If True, apply dim style. Defaults to False.
 
-    Returns:
-        List[Color]: A list of Color instances.
+    Attributes:
+        colors (List[Color]): A list of Color instances.
+        styles (List[Style]): A list of Style instances.
 
     Example:
-        >>> spectrum = Spectrum(5)
+        >>> spectrum = Spectrum(5).colors
         >>> print(spectrum)
         [Color(name='purple'), Color(name='violet'), Color(name='blue'), Color(name='deepblue'), Color(name='skyblue')]
     """
 
-    def __new__(cls, length: int = 18, invert: bool = False):
+    def __init__(
+        self,
+        length: int = 18,
+        invert: bool = False,
+        *,
+        bold: bool = False,
+        italic: bool = False,
+        underline: bool = False,
+        strike: bool = False,
+        reverse: bool = False,
+        dim: bool = False
+    ) -> None:
         """
-        Create a list of `length` Color instances by:
-            1. Cycling through the first 18 keys of COLORS_BY_NAME.
-            2. Skipping a random offset.
-            3. Collecting the next `length` colors.
-            4. Optionally reversing the sequence.
-
         Args:
-            length (int): Number of colors to generate.
+            length (int): Number of colors to generate. Defaults to 18.
             invert (bool, optional): If True, reverse the generated list. Defaults to False.
+            bold (bool, optional): If True, apply bold style. Defaults to False.
+            italic (bool, optional): If True, apply italic style. Defaults to False.
+            underline (bool, optional): If True, apply underline style. Defaults to False.
+            strike (bool, optional): If True, apply strikethrough style. Defaults to False.
+            reverse (bool, optional): If True, apply reverse style. Defaults to False.
+            dim (bool, optional): If True, apply dim style. Defaults to False.
 
         Returns:
             List[Color]: A list of Color instances.
 
         Example:
-            >>> spectrum = Spectrum(5)
+            >>> spectrum = Spectrum(5).colors
             >>> print(spectrum)
             [Color(name='purple'), Color(name='violet'), Color(name='blue'), Color(name='deepblue'), Color(name='skyblue')]
         """
@@ -59,10 +73,23 @@ class Spectrum(list):
         offset = randint(1, len(base_colors))
         for _ in range(offset):
             next(color_cycle)
-        colors = [next(color_cycle) for _ in range(length)]
+        self.colors: List[Color] = [next(color_cycle) for _ in range(length)]
         if invert:
-            colors = list(reversed(colors))
-        return colors
+            self.colors = list(reversed(self.colors))
+
+        self.styles: List[Style] = [
+            Style(
+                color=color.hex,
+                bold=bold,
+                italic=italic,
+                underline=underline,
+                strike=strike,
+                reverse=reverse,
+                dim=dim,
+            )
+            for color in self.colors
+        ]
+
 
     def __rich__(self) -> Table:
         """Returns a rich Table object representing the Spectrum colors.
@@ -72,6 +99,7 @@ class Spectrum(list):
 
         """
         return self.table()
+
 
     @staticmethod
     def table() -> Table:
@@ -91,8 +119,8 @@ class Spectrum(list):
             row_styles=(["on #1f1f1f", "on #000000"]),
         )
 
-        colors = Spectrum()
-        for index, color in enumerate(colors):
+        spectrum = Spectrum()
+        for index, color in enumerate(spectrum.colors):
             style = str(Style(color=color.hex, bold=True))
             name_str = COLORS_BY_HEX.get(color.hex.upper(), {}).get("name", color.name)
             name = Text(f"{str(name_str).capitalize(): <13}", style=style)
