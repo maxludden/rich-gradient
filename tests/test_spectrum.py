@@ -31,12 +31,14 @@ def test_console_output():
     console.print(spectrum)
     # This test is more for manual/visual inspection
 
+
 def test_spectrum_sequence():
     # Test the sequence of colors
     spectrum = Spectrum()
-    colors = spectrum.COLORS
+    colors = spectrum.colors
     for i in range(1, len(colors)):
         assert colors[i - 1].triplet.hex != colors[i].triplet.hex
+
 
 if __name__ == "__main__":
     pytest.main()

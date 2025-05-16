@@ -10,7 +10,7 @@ from rich.color import ColorParseError, ColorSystem, blend_rgb
 from rich.repr import Result, rich_repr
 from rich.terminal_theme import DEFAULT_TERMINAL_THEME, TerminalTheme
 
-from rich_gradient.new_colors import (
+from rich_gradient._colors import (
     COLORS_BY_ANSI,
     COLORS_BY_HEX,
     COLORS_BY_NAME,

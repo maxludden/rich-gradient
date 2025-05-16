@@ -10,12 +10,14 @@ from rich.measure import Measurement
 from rich.text import Text
 
 from rich_gradient.color import Color
+from rich_gradient.gradient import ColorType, Gradient
 from rich_gradient.spectrum import Spectrum
-from rich_gradient.gradient import Gradient
+from rich_gradient.style import Style
 
 Thickness = Literal["thin", "medium", "thick"]
 
 console = Console()
+
 
 class GradientRule(JupyterMixin):
     """A console renderable to draw a horizontal rule (line).
@@ -72,21 +74,10 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
         self.end = end
         self.align = align
 
-        rule_color_list: Spectrum = Spectrum(10)
-        self.left_colors: List[Color] = [
-            rule_color_list[0],
-            rule_color_list[1],
-            rule_color_list[2],
-            rule_color_list[3],
-            rule_color_list[4],
-        ]
-        self.right_colors: List[Color] = [
-            rule_color_list[4],
-            rule_color_list[5],
-            rule_color_list[6],
-            rule_color_list[7],
-            rule_color_list[8],
-        ]
+        rule_color_list = Spectrum(10)
+        # Use Color objects directly for Gradient.styles
+        self.left_colors = rule_color_list[:5]
+        self.right_colors = rule_color_list[4:9]
 
     def __repr__(self) -> str:
         """The string representation of the GradientRule class.
@@ -97,7 +88,8 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
 
     # @spy
     def __rich_console__(
-        self, console: Console, options: ConsoleOptions) -> RenderResult:
+        self, console: Console, options: ConsoleOptions
+    ) -> RenderResult:
         """The rich renderable method for the GradientRule class.
 
         Args:
@@ -117,17 +109,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
 
         chars_len = cell_len(characters)
         if not self.title:
-            color_list = Spectrum(5)
-            yield Gradient(
-                self._rule_line(chars_len, width),
-                colors=[
-                    color_list[0],
-                    color_list[1],
-                    color_list[2],
-                    color_list[3],
-                    color_list[4],
-                ],
-            )
+            yield self._rule_line(chars_len, width)
             return
 
         if isinstance(self.title, Text):
@@ -141,7 +123,6 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
         required_space = 4 if self.align == "center" else 2
         truncate_width = max(0, width - required_space)
 
-        # / No Title
         if not truncate_width:
             yield self._rule_line(chars_len, width)
             return
@@ -153,23 +134,30 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
             self.title_text.truncate(truncate_width, overflow="ellipsis")
             rule_text.append(self.title_text)
             rule_text.append(" ")
+            fill_width = width - self.title_text.cell_len - 1
             if self.gradient:
                 rule_text.append(
                     Gradient(
-                        characters * (width - self.title_text.cell_len - 1),
-                        colors=self.right_colors,  # type: ignore
+                        characters * fill_width,
+                        styles=self.right_colors
+                        * ((fill_width // len(self.right_colors)) + 1),
                     )
                 )
             else:
-                rule_text.append(characters * (width - rule_text.cell_len))
+                rule_text.append(characters * fill_width)
         elif self.align == "right":
             self.title_text.truncate(truncate_width, overflow="ellipsis")
-            rule_text.append(
-                Gradient(
-                    characters * (width - self.title_text.cell_len - 1),
-                    colors=self.left_colors,  # type: ignore
+            fill_width = width - self.title_text.cell_len - 1
+            if self.gradient:
+                rule_text.append(
+                    Gradient(
+                        characters * fill_width,
+                        styles=self.left_colors
+                        * ((fill_width // len(self.left_colors)) + 1),
+                    )
                 )
-            )
+            else:
+                rule_text.append(characters * fill_width)
             rule_text.append(" ")
             rule_text.append(self.title_text)
 
@@ -186,20 +174,22 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
         Returns:
             Text: The rule line.
         """
-        rule_text = Gradient(
-            self.characters * ((width // chars_len) + 1),
-            colors=self.left_colors,  # type: ignore
-        )
+        line = self.characters * ((width // chars_len) + 1)
+        if self.gradient:
+            rule_text = Gradient(
+                line[:width],
+                styles=(self.left_colors + self.right_colors)
+                * ((width // (len(self.left_colors) + len(self.right_colors))) + 1),
+            )
+        else:
+            rule_text = Text(line[:width])
         rule_text.truncate(width)
         rule_text.plain = set_cell_size(rule_text.plain, width)
         return rule_text
 
     def center_rule(
-        self,
-        rule_text: Text,
-        truncate_width: int,
-        chars_len: int,
-        width: int) -> Text:
+        self, rule_text: Text, truncate_width: int, chars_len: int, width: int
+    ) -> Text:
         """Generate a centered rule.
 
         Args:
@@ -211,42 +201,43 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
         Returns:
             Text: The centered rule
         """
-        if rule_text is None:
-            rule_text = Text()
         self.title_text.truncate(truncate_width, overflow="ellipsis")
-        self.side_width: int = (width - cell_len(self.title_text.plain)) // 2
+        title_len = cell_len(self.title_text.plain)
+        side_width = (width - title_len - 2) // 2  # 2 spaces for padding
+        left_width = side_width
+        right_width = width - title_len - 2 - left_width
+
         if self.gradient:
             rule_text.append(
                 Gradient(
-                    self.characters * (self.side_width // chars_len + 1),
-                    colors=self.left_colors,  # type: ignore
+                    self.characters * left_width,
+                    styles=self.left_colors
+                    * ((left_width // len(self.left_colors)) + 1),
                     end="",
                 )
             )
         else:
-            rule_text.append(
-                Text(self.characters * (self.side_width // chars_len + 1), end="")
-            )
+            rule_text.append(Text(self.characters * left_width, end=""))
         rule_text.append(" ")
         rule_text.append(self.title_text)
         rule_text.append(" ")
         if self.gradient:
             rule_text.append(
                 Gradient(
-                    self.characters * (self.side_width // chars_len + 1),
-                    colors=self.right_colors,  # type: ignore
+                    self.characters * right_width,
+                    styles=self.right_colors
+                    * ((right_width // len(self.right_colors)) + 1),
                     end=" ",
                 )
             )
         else:
-            rule_text.append(
-                Text(self.characters * (self.side_width // chars_len + 1), end=" ")
-            )
+            rule_text.append(Text(self.characters * right_width, end=" "))
         rule_text.truncate(width)
         return rule_text
 
     def __rich_measure__(
-        self, console: Console, options: ConsoleOptions) -> Measurement:
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
         """The rich measure method for the GradientRule class.
 
         Args:
@@ -316,8 +307,9 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
             save (bool, optional): Save the console output to an SVG file. Defaults to False."""
         import sys
 
-        from rich_gradient.theme import GRADIENT_TERMINAL_THEME
         from rich.console import Console
+
+        from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
         try:
             title: str = sys.argv[1]
@@ -363,7 +355,7 @@ thin (`─`), medium (`━`), and thick (`█`). Defaults to "medium".
         console.save_svg(
             path="docs/img/rule_example.svg",
             title="rich-gradient",
-            theme=GRADIENT_TERMINAL_THEME
+            theme=GRADIENT_TERMINAL_THEME,
         )
 
 

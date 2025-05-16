@@ -23,21 +23,14 @@ from rich.color_triplet import ColorTriplet
 from rich.style import Style
 from rich.text import Text
 
-from rich_gradient._colors_by_ import (
-    COLORS_BY_ANSI,
-    COLORS_BY_HEX,
-    COLORS_BY_NAME,
-    COLORS_BY_RGB,
-)
+from rich_gradient._colors import COLORS_BY_ANSI,COLORS_BY_NAME
 from rich_gradient._parsers import (
     r_hex_long,
     r_hex_short,
     r_hsl,
     r_hsl_v4_style,
     r_rgb,
-    r_rgb_v4_style,
-    rads,
-    repeat_colors,
+    r_rgb_v4_style
 )
 
 ColorTuple: TypeAlias = Union[Tuple[int, int, int], Tuple[int, int, int, float]]
@@ -216,10 +209,16 @@ class RGBA:
                 return h, s, l, self._alpha
         return (h, s, l, self._alpha) if alpha else (h, s, l)
 
-    @classmethod
-    def default(cls) -> RGBA:
-        default = RichColor.default().triplet
-        return cls.from_triplet(default) if default else cls.from_hex("#000000")
+    @property
+    def default(self) -> RGBA:
+        return self.as_default()
+
+    @staticmethod
+    def as_default() -> RGBA:
+        default_rich = RichColor.default()
+        default_triplet = default_rich.get_truecolor()
+        r, g, b = default_triplet.red, default_triplet.green, default_triplet.blue
+        return RGBA(r, g, b)
 
     @property
     def _alpha(self) -> float:
@@ -249,7 +248,7 @@ class RGBA:
     @classmethod
     def from_hex(cls, value: str) -> "RGBA":
         for regex in (r_hex_short, r_hex_long, r_rgb, r_rgb_v4_style):
-            match = re.match(regex, value)
+            match = re.match(regex, value, re.IGNORECASE)
             if match:
                 if "x" in regex:
                     r, g, b = (int(match.group(i), 16) for i in range(1, 4))

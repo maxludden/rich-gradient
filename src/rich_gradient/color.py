@@ -18,7 +18,6 @@ import re
 from colorsys import hls_to_rgb, rgb_to_hls
 from functools import cached_property
 from itertools import cycle
-from random import randint
 from typing import (
     Any,
     Dict,
@@ -31,46 +30,45 @@ from typing import (
     Union,
     cast,
 )
+from random import randint
 
-from rich import get_console
 from rich.color import Color as RichColor
 from rich.color_triplet import ColorTriplet
-from rich.console import Console, ConsoleOptions
-from rich.style import Style
+from rich.console import Console
+from rich.style import Style as RichStyle
 from rich.table import Table
 from rich.text import Text
-from rich.theme import Theme
 
-from rich_gradient._color_data import ColorData
-from rich_gradient._colors_by_ import (
+
+from rich_gradient._colors import (
     COLORS_BY_ANSI,
     COLORS_BY_HEX,
     COLORS_BY_NAME,
     COLORS_BY_RGB,
-    SPECTRUM_COLOR_STRS,
+    NAMES
 )
 from rich_gradient._parsers import (
-    _r_255,
-    _r_alpha,
-    _r_comma,
-    _r_h,
-    _r_sl,
     r_hex_long,
     r_hex_short,
     r_hsl,
     r_hsl_v4_style,
     r_rgb,
     r_rgb_v4_style,
-    rads,
-    repeat_colors,
+    rads
 )
 from rich_gradient._rgba import RGBA, HslColorTuple, RGBA_ColorType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
+# Spectrum color names for gradient and display utilities
+# Use first 18 color names from COLORS_BY_NAME if NAMES[:18] is not defined or unavailable.
+SPECTRUM_COLOR_STRS = list(COLORS_BY_NAME.keys())[:18]
+
+
+
 ColorType: TypeAlias = Union[RGBA_ColorType, "Color"]
 
 # --- Exports ---
-__all__ = ["Color", "ColorError", "ColorType", "RGBA", "ColorData"]
+__all__ = ["Color", "ColorError", "ColorType", "RGBA"]
 
 
 class ColorError(Exception):
@@ -83,7 +81,7 @@ class ColorError(Exception):
         # inspect.stack()[1] is the caller’s frame
         frame_info = inspect.stack()[1]
         module_name = getattr(
-            frame_info.frame.f_globals, "__name__", "<unknown module>"
+            frame_info.frame.f_globals, "__file__", "<unknown module>"
         )
         if not isinstance(module_name, str):
             module_name = "<unknown module>"
@@ -95,48 +93,34 @@ class ColorError(Exception):
 
 
 class Color:
-    """This class is used to represent a color in various formats and provides methods to convert the color to different formats.
-
-    Args:
-        value (ColorType): The color value to be represented.
-
-    Raises:
-        ColorError: If the input value is not a valid color.
-
-    **An edited version of the `Color` class from the [`pydantic-extra-types`](https://github.com/pydantic/pydantic-extra-types) package.*
-    """
+    """Represents a color in various formats and provides conversion methods."""
 
     __slots__ = "_original", "_rgba"
 
-    # --- Core Methods ---
-
     def __init__(self, value: ColorType) -> None:
-        self._rgba: RGBA
-        self._original = str(ColorType)
-        if isinstance(value, (tuple, list)):
+        if isinstance(value, Color):
+            self._rgba: RGBA = value._rgba
+            self._original: str = value._original
+
+        elif isinstance(value, (tuple, list)):
             self._rgba = self.parse_tuple(value)
-            return
-        elif isinstance(value, Color):
-            self._rgba = value._rgba
-            return
+            self._original = str(value)
         elif isinstance(value, RGBA):
             self._rgba = value
-            return
+            self._original = str(value)
         elif isinstance(value, ColorTriplet):
             self._rgba = RGBA.from_triplet(value)
-            return
+            self._original = str(value)
         elif isinstance(value, RichColor):
             self._rgba = RGBA.from_rich(value)
-            return
+            self._original = str(value)
         elif isinstance(value, str):
-            self._rgba = self.parse_str(value)
-            return
+            self._rgba = self.parse_str(value.lower())
+            self._original = value
         else:
             raise ColorError(
-                "Value is not a valid color: value must be a tuple, \
-list, string, Color, RGBA, RichColor, or ColorTriplet."
+                "Value is not a valid color: must be tuple, list, string, Color, RGBA, RichColor, or ColorTriplet."
             )
-        self.original = value
 
     def __str__(self) -> str:
         return self.as_named(fallback=True)
@@ -149,7 +133,8 @@ list, string, Color, RGBA, RichColor, or ColorTriplet."
 
     def __rich__(self) -> Text:
         """Return a simple visual block for Console.print()."""
-        return Text(f"{'█' * 10}", style=self.style)
+        # Apply gradient after justification by calling self.as_rich().stylize(Text("█" * 10))
+        return Text(f"{'█' * 10}", style=self.hex)
 
     def __repr__(self, *args: Any, **kwds: Any) -> Any:
         return f"Color({self.as_named(fallback=True)})"
@@ -166,10 +151,18 @@ list, string, Color, RGBA, RichColor, or ColorTriplet."
 
     # --- Properties ---
 
+    # @property
+    # def alpha(self) -> float:
+    #     """Alpha channel as a float, treating None as fully opaque (1.0)."""
+    #     return 1.0 if self._rgba.alpha is None else self._rgba.alpha
+
     @property
-    def alpha(self) -> float:
-        """Alpha channel as a float, treating None as fully opaque (1.0)."""
-        return 1.0 if self._rgba.alpha is None else self._rgba.alpha
+    def name(self) -> str:
+        """The name of color.
+        Returns:
+            str: The name of the color.
+        """
+        return self.as_named(fallback=True)
 
     @property
     def hex(self) -> str:
@@ -188,26 +181,26 @@ list, string, Color, RGBA, RichColor, or ColorTriplet."
             str: The RGB value of the color."""
         return self.as_rgb()
 
-    @cached_property
+    @property
     def triplet(self) -> ColorTriplet:
         """The `rich.color_triplet.ColorTriplet` representation \
 of the color."""
         return self.as_triplet()
 
-    @cached_property
+    @property
     def rich(self) -> RichColor:
         """The color as a rich color."""
         return self.as_rich()
 
-    @cached_property
-    def style(self) -> Style:
+    @property
+    def style(self) -> RichStyle:
         """The color as a rich style."""
-        return self.as_style()
+        return RichStyle(color=self.hex)
 
-    @cached_property
-    def bg_style(self) -> Style:
+    @property
+    def bg_style(self) -> RichStyle:
         """The color as a background style."""
-        return self.as_bg_style()
+        return RichStyle(bgcolor=self.hex)
 
     @property
     def ansi(self) -> int | None:
@@ -230,6 +223,28 @@ of the color."""
         else:
             self._original = str(value)
 
+    @property
+    def default(self) -> RGBA:
+        """
+        Get the default RGBA color.
+
+        Returns:
+            RGBA: The default RGBA color.
+        """
+        return self.as_default()
+
+    @staticmethod
+    def as_default() -> RGBA:
+        """
+        Parse rich.color.Color.default() into an RGBA instance.
+
+        Returns:
+            RGBA: The RGBA representation of the default rich color.
+        """
+        return RGBA.as_default()
+
+
+
     # --- Conversion Methods ---
 
     def as_named(self, *, fallback: bool = True) -> str:
@@ -246,26 +261,13 @@ back to hex representation if name is not found.
         Raises:
             ValueError: If no named color exists and fallback is False.
         """
-        rgb = self.as_rgb_tuple()
-        color_info = COLORS_BY_RGB.get(rgb)
-        if color_info and isinstance(color_info, dict):
-            name = color_info.get("name")
-            if not isinstance(name, str):
-                raise ColorError(f"Expected a color name string, got {type(name)}")
-            return name
-        if fallback:
-            return self.as_hex()
-        raise ValueError(f"Color {rgb} has no named equivalent.")
-
-    @classmethod
-    def default(cls) -> "Color":
-        """Returns the default color for the terminal theme.
-
-        Returns:
-            Color: The default color for the terminal theme.
-        """
-        default = RichColor.default().triplet
-        return Color.from_triplet(default) if default else Color.from_hex("#000000")
+        if self.hex in COLORS_BY_HEX:
+            color_dict = COLORS_BY_HEX[self.hex]
+            return str(color_dict["name"])
+        else:
+            if fallback:
+                return self.hex
+            raise ValueError(f"Color {self.hex} does not have a named representation.")
 
     def as_hex(
         self, format: Literal["short", "long"] = "long", fallback: bool = True
@@ -285,190 +287,83 @@ back to hex representation if name is not found.
         return f"#{hex_str}"
 
     def as_rgb(self) -> str:
-        r, g, b, a = (self._rgba.r, self._rgba.g, self._rgba.b, self._rgba.alpha)
-        if a == 1.0 or a is None:
-            return f"rgb({r}, {g}, {b})"
-        return f"rgba({r}, {g}, {b}, {round(self.alpha, 2)})"
+        """Return the color as an RGB string."""
+        r, g, b = (self._rgba.r, self._rgba.g, self._rgba.b)
+        return f"rgb({r}, {g}, {b})"
+
+    def as_rich_rgb(self) -> Text:
+        """Return the color as a rich RGB string."""
+        r, g, b = (self._rgba.r, self._rgba.g, self._rgba.b)
+        style = RichStyle(
+            color=self.hex,
+            bold=True,
+        )
+        return Text.assemble(
+            *[
+                Text("rgb", style=style),
+                Text("(", style="b #ffffff"),
+                Text(f"{r:>3}", style="b #ff0000"),
+                Text(",", style="b #555"),
+                Text(f"{g:>3}", style="b #00ff00"),
+                Text(",", style="b #555"),
+                Text(f"{b:>3}", style="b #0099ff"),
+                Text(")", style="b #ffffff"),
+            ]
+        )
 
     def as_rgb_tuple(self) -> tuple[int, int, int]:
+        """Return the color as an (r, g, b) tuple."""
         r, g, b = (c for c in self._rgba[:3])
         return r, g, b
 
     def as_hsl(self) -> str:
         hsl_tuple = self.as_hsl_tuple()
         h, s, li = hsl_tuple[0], hsl_tuple[1], hsl_tuple[2]
-        if self._rgba.alpha is None:
-            return f"hsl({h * 360:0.0f}, {s:0.0%}, {li:0.0%})"
-        else:
-            a = self.alpha
-            return f"hsl({h * 360:0.0f}, {s:0.0%}, {li:0.0%}, {round(a, 2)})"
+        return f"hsl({h * 360:0.0f}, {s:0.0%}, {li:0.0%})"
 
     def as_hsl_tuple(self) -> HslColorTuple:
         h, l, s = rgb_to_hls(self._rgba.r / 255, self._rgba.g / 255, self._rgba.b / 255)
         return h, s, l
 
     def as_triplet(self) -> ColorTriplet:
+        """Return the color as a rich.color_triplet.ColorTriplet."""
         return ColorTriplet(self._rgba.r, self._rgba.g, self._rgba.b)
 
     def as_rich(self) -> RichColor:
+        """Return the color as a rich.color.Color."""
         try:
             rgb_triplet = self.as_triplet()
             return RichColor.from_triplet(rgb_triplet)
         except ColorError:
             raise ColorError("Unable to parse color")
 
-    def as_style(
+    def _build_style(
         self,
-        bgcolor: RichColor | None = None,
-        bold: bool | None = None,
-        dim: bool | None = None,
-        italic: bool | None = None,
-        underline: bool | None = None,
-        blink: bool | None = None,
-        blink2: bool | None = None,
-        reverse: bool | None = None,
-        conceal: bool | None = None,
-        strike: bool | None = None,
-        underline2: bool | None = None,
-        frame: bool | None = None,
-        encircle: bool | None = None,
-        overline: bool | None = None,
-        link: str | None = None,
-        meta: Dict[str, Any] | None = None,
-    ) -> Style:
-        """
-                A terminal style.
-
-        A terminal style consists of the color (color), a background color (bgcolor), and a number of attributes, such
-        as bold, italic etc. The attributes have 3 states: they can either be on (True), off (False), or not set (None).
-
-        Args:
-            bgcolor (RichColor, optional): Background color. Defaults to None.
-            bold (bool, optional): Enable bold text. Defaults to None.
-            dim (bool, optional): Enable dim text. Defaults to None.
-            italic (bool, optional): Enable italic text. Defaults to None.
-            underline (bool, optional): Enable underlined text. Defaults to None.
-            blink (bool, optional): Enabled blinking text. Defaults to None.
-            blink2 (bool, optional): Enable fast blinking text. Defaults to None.
-            reverse (bool, optional): Enabled reverse text. Defaults to None.
-            conceal (bool, optional): Enable concealed text. Defaults to None.
-            strike (bool, optional): Enable strikethrough text. Defaults to None.
-            underline2 (bool, optional): Enable doubly underlined text. Defaults to None.
-            frame (bool, optional): Enable framed text. Defaults to None.
-            encircle (bool, optional): Enable encircled text. Defaults to None.
-            overline (bool, optional): Enable overlined text. Defaults to None.
-            link (str, link): Link URL. Defaults to None.
-
-        Returns:
-            rich.style.Style: A rich.style.Style with the foreground set to the color.
-        """
-        rich_color = self.as_rich()
-        return Style(
-            color=rich_color,
-            bgcolor=bgcolor,
-            bold=bold,
-            dim=dim,
-            italic=italic,
-            underline=underline,
-            blink=blink,
-            blink2=blink2,
-            reverse=reverse,
-            conceal=conceal,
-            strike=strike,
-            underline2=underline2,
-            frame=frame,
-            encircle=encircle,
-            overline=overline,
-            link=link,
-            meta=meta,
-        )
-
-    def as_bg_style(
-        self,
-        color: RichColor | None = None,
-        bgcolor: RichColor | None = None,
-        bold: bool | None = True,
-        dim: bool | None = None,
-        italic: bool | None = None,
-        underline: bool | None = None,
-        blink: bool | None = None,
-        blink2: bool | None = None,
-        reverse: bool | None = None,
-        conceal: bool | None = None,
-        strike: bool | None = None,
-        underline2: bool | None = None,
-        frame: bool | None = None,
-        encircle: bool | None = None,
-        overline: bool | None = None,
-        link: str | None = None,
-        meta: Dict[str, Any] | None = None,
         *,
-        fixed: Optional[str] = None,
-    ) -> Style:
-        """
-                A terminal style.
+        color: Color,
+        bgcolor: Optional[Color] = None,
+        **attributes: Any,
+    ) -> RichStyle:
+        """Helper to construct a Style with shared parameters."""
+        if not isinstance(color, Color):
+            # If color is not a Color instance, raise an error
+            raise TypeError(f"color must be a Color, got {type(color)}")
+        if bgcolor is not None and not isinstance(bgcolor, Color):
+            raise TypeError(f"bgcolor must be a Color, got {type(bgcolor)}")
+        return RichStyle(color=color.rich, **attributes)
 
-        A terminal style consists of the color (color), a background color (bgcolor), and a number of attributes, such
-        as bold, italic etc. The attributes have 3 states: they can either be on (True), off (False), or not set (None).
 
-        Args:
-            color (RichColor, optional): Foreground color. Defaults to None, which will generate a foreground color based on the contrast ratio.
-            bold (bool, optional): Enable bold text. Defaults to True.
-            dim (bool, optional): Enable dim text. Defaults to None.
-            italic (bool, optional): Enable italic text. Defaults to None.
-            underline (bool, optional): Enable underlined text. Defaults to None.
-            blink (bool, optional): Enabled blinking text. Defaults to None.
-            blink2 (bool, optional): Enable fast blinking text. Defaults to None.
-            reverse (bool, optional): Enabled reverse text. Defaults to None.
-            conceal (bool, optional): Enable concealed text. Defaults to None.
-            strike (bool, optional): Enable strikethrough text. Defaults to None.
-            underline2 (bool, optional): Enable doubly underlined text. Defaults to None.
-            frame (bool, optional): Enable framed text. Defaults to None.
-            encircle (bool, optional): Enable encircled text. Defaults to None.
-            overline (bool, optional): Enable overlined text. Defaults to None.
-            link (str, link): Link URL. Defaults to None.
-
-        Returns:
-            Style: The style.
-        """
-        if color is None:
-            color = self.get_contrast(fixed=fixed)
-        if bgcolor is None:
-            bgcolor = self._rgba.as_rich()
-        return Style(
-            color=color,
-            bgcolor=bgcolor,
-            bold=bold,
-            dim=dim,
-            italic=italic,
-            underline=underline,
-            blink=blink,
-            blink2=blink2,
-            reverse=reverse,
-            conceal=conceal,
-            strike=strike,
-            underline2=underline2,
-            frame=frame,
-            encircle=encircle,
-            overline=overline,
-            link=link,
-            meta=meta,
-        )
 
     def as_ansi(self) -> int | None:
+        """Return the ANSI color code for the color, or raise KeyError if not found."""
         color_dict: Optional[dict[str, str | Tuple[int, int, int] | int]] = (
             COLORS_BY_HEX.get(self.hex)
         )
         if not color_dict:
             raise KeyError(f"Color not found in COLORS_BY_HEX: {self.hex}")
-        ansi = color_dict.get("ansi")
-        if ansi != -1:
-            assert isinstance(ansi, int), (
-                f"Expected ansi to be an int, got {type(ansi)}"
-            )
+        ansi = color_dict.get("ansi", -1)
+        if isinstance(ansi, int) and ansi != -1:
             return ansi
-        else:
-            return None
         raise KeyError(f"ANSI color code not found for color: {self.hex}")
 
     @classmethod
@@ -476,8 +371,8 @@ back to hex representation if name is not found.
         return cls(value)
 
     @classmethod
-    def from_hex(cls, value: str) -> "Color":
-        return cls(RGBA.from_hex(value))
+    def from_hex(cls, value: str | ColorType) -> "Color":
+        return cls(RGBA.from_hex(str(value)))
 
     @classmethod
     def from_rgb(cls, value: str) -> "Color":
@@ -513,109 +408,160 @@ back to hex representation if name is not found.
             value (RichColor): The RichColor to convert.
         Returns:
             Color: The converted Color.
+        Raises:
+            ColorError: If the RichColor has no RGB triplet to convert.
         """
         if isinstance(value, RichColor):
             if value.triplet is None:
-                if value.name in COLORS_BY_NAME:
-                    color = COLORS_BY_NAME[value.name]
-                    rgb_tuple: Tuple[int, int, int] = color["rgb"]  # type: ignore
-                    r, g, b = [int(param) for param in rgb_tuple]
-                    return cls.from_rgba(RGBA(r, g, b))
-                try:
-                    _value = cls(value)
-                    return _value
-                except ColorError as ce:
-                    raise ColorError(
-                        f"Color.from_rich({value}) has no triplet: {ce}"
-                    ) from ce
-
-            elif isinstance(value, str):
-                try:
-                    parsed_color = RichColor.parse(value)
-                except Exception:
-                    try:
-                        return cls(value)
-                    except ColorError as ce:
-                        raise ColorError(
-                            f"Unable to parse color in Color.from_rich({value}): {ce}"
-                        ) from ce
-
-                if parsed_color.triplet is None:
-                    raise ColorError(
-                        f"Parsed rich color from string {value} has no triplet"
-                    )
-                return cls.from_triplet(parsed_color.triplet)
+                raise ColorError(f"RichColor {value} has no RGB triplet to convert")
             return cls.from_triplet(value.triplet)
         raise ColorError(f"Unable to parse color in Color.from_rich({value}).")
 
     @classmethod
-    def from_style(cls, style: Style) -> "Color":
+    def from_style(cls, style: RichStyle) -> "Color":
+        """Create a Color from a rich Style object."""
         if style.color:
             return cls.from_rich(style.color)
         raise ColorError("Style has no foreground color")
 
+
+
     # --- Parsing Helpers ---
 
     def parse_str(self, value: str) -> RGBA:
-        if isinstance(value, RichColor):
-            assert value.triplet is not None, f"Richcolor has no triplet: {value}"
-            value_lower: str = value.triplet.hex.lower()
-        else:
-            value_lower = value.lower()
+        """Parse a string into an RGBA or Color.
+        Args:
+            value (str): The color string to parse. `value` can be a:
+
+            ### `str``
+                - hex string: "#FF0000", "ff0"
+                - RGB string: "rgb(255, 0, 0)", "rgba(255, 0, 0, 0.5)"
+                - HSL string: "hsl(0, 100%, 50%)", "hsla(0, 100%, 50%, 0.5)"
+                - the name of a CSS3 color: "red", "tomato"
+                - the name of a rich standard color: `grey93`, `gold1`
+                - the fuzzy match of any color names in _color_dict.COLORS_BY_NAME
+        """
+        # Normalize input
+        value_lower = value.strip().lower()
+
+        # Direct name lookup (with underscore/hyphen normalization)
+        name_key: str | None = None
         if value_lower in COLORS_BY_NAME:
-            color_info = COLORS_BY_NAME[value_lower]
-            if "rgb" in color_info:
-                rgb = color_info["rgb"]
-                assert isinstance(rgb, tuple), (
-                    f"Expected rgb to be a tuple, got {type(rgb)}"
-                )
+            name_key = value_lower
+        else:
+            alias = value_lower.replace("_", "").replace("-", "")
+            if alias in COLORS_BY_NAME:
+                name_key = alias
+        if name_key:
+            color_name_info = COLORS_BY_NAME[name_key]
+            rgb: Tuple[int, int, int] = color_name_info.get("tuple") or color_name_info.get("rgb")  # type: ignore
+            if len(rgb) == 3:
                 r, g, b = rgb
-                return RGBA(r, g, b)
+            else:
+                raise ColorError(f"Expected 3 RGB values, got {len(rgb)}: {rgb}")
+            return RGBA(int(r), int(g), int(b))
+
+        # Fuzzy-match fallback
+        try:
+            from thefuzz import process
+            match_result = process.extractOne(value_lower, COLORS_BY_NAME.keys())
+            if match_result:
+                best_match, score = match_result[0], match_result[1]
+                if score >= 80:
+                    fzf_color_info = COLORS_BY_NAME[best_match]
+                    rgb: Tuple[int, int, int] = fzf_color_info.get("tuple") or fzf_color_info.get("rgb")  # type: ignore
+                    if len(rgb) == 3:
+                        r, g, b = rgb
+                    else:
+                        raise ColorError(f"Expected 3 RGB values, got {len(rgb)}: {rgb}")
+                    return RGBA(int(r), int(g), int(b))
+        except ImportError:
+            pass
+
+        # Handle hex color strings (short form, e.g. "#f0a" or "f0a")
         m = re.fullmatch(r_hex_short, value_lower)
         if m:
-            *rgb, a = m.groups()
-            r, g, b = (int(v * 2, 16) for v in rgb)
+            _r, _g, _b, a = m.groups()
+            _rgb = (_r, _g, _b)
+            # duplicate each hex digit and parse
+            r, g, b = (int(v * 2, 16) for v in _rgb)
             alpha = int(a * 2, 16) / 255 if a else 1.0
             return self.ints_to_rgba(r, g, b, alpha)
         m = re.fullmatch(r_hex_long, value_lower)
         if m:
-            *rgb, a = m.groups()
-            r, g, b = (int(v, 16) for v in rgb)
+            r_str, g_str, b_str, a = m.groups()
+            r = int(r_str, 16)
+            g = int(g_str, 16)
+            b = int(b_str, 16)
             alpha = int(a, 16) / 255 if a else 1.0
             return self.ints_to_rgba(r, g, b, alpha)
+
+        # Handle RGB color strings
         m = re.fullmatch(r_rgb, value_lower) or re.fullmatch(
             r_rgb_v4_style, value_lower
         )
         if m:
             return self.ints_to_rgba(*m.groups())  # type: ignore
+
+        # Handle HSL color strings
         m = re.fullmatch(r_hsl, value_lower) or re.fullmatch(
             r_hsl_v4_style, value_lower
         )
         if m:
             return self.parse_hsl(*m.groups())  # type: ignore
+
+        # Handle ANSI color codes
         m = re.fullmatch(r"^(\d+)$", value_lower)
         if m:
-            color_info = COLORS_BY_ANSI.get(int(m.group(1)))
+            _ansi = int(m.group(1))
+            color_info: Dict[str, Tuple[int, int, int] | str] | None = COLORS_BY_ANSI.get(_ansi)
             if color_info and "rgb" in color_info:
-                rgb = color_info["rgb"]
-                assert isinstance(rgb, tuple), (
+                _rgb = color_info["rgb"]
+                assert isinstance(_rgb, tuple), (
                     f"Expected rgb to be a tuple, got {type(rgb)}"
                 )
                 r, g, b = rgb
                 return RGBA(r, g, b)
-        if value_lower == "default":
-            default_rich = RichColor.default()
-            if default_rich.triplet is None:
-                raise ColorError("Default RichColor has no triplet")
-            return RGBA.from_triplet(default_rich.triplet)
-        if color_info and "rgb" in color_info:
-            rgb = color_info["rgb"]
-            assert isinstance(rgb, tuple), (
-                f"Expected rgb to be a tuple, got {type(rgb)}"
-            )
-            r, g, b = rgb
-            return RGBA(r, g, b)
+        if value_lower in {"default", "none"}:
+            return self.default
+
+        # RichColor parsing
+        rich_color = RichColor.parse(value_lower)
+        if rich_color:
+            color_triplet = rich_color.get_truecolor()
+            if color_triplet:
+                return RGBA.from_triplet(color_triplet)
+
         raise ColorError(f"Unable to parse color string: {value}")
+
+    @classmethod
+    def _lookup_color(cls, value: ColorType) -> Optional[RGBA]:
+        """Lookup a color in the color data.
+
+        Args:
+            value (ColorType): The color value to lookup.
+
+        Returns:
+            Optional[Color]: The Color instance if found, else None.
+        """
+        color_dicts: List[Dict] = [
+            COLORS_BY_NAME,
+            COLORS_BY_RGB,
+            COLORS_BY_HEX,
+            COLORS_BY_ANSI,
+        ]
+        for color_dict in color_dicts:
+            if value not in color_dict:
+                continue
+
+            # value in color dict
+            color_info: Dict = color_dict[value]
+            if color_info["hex"]:
+                hex_value = color_info["hex"]
+                if isinstance(hex_value, str):
+                    return RGBA.from_hex(hex_value)
+            else:
+                return RGBA.from_hex(str(value))
 
     @classmethod
     def parse_tuple(cls, value: tuple[int | float | str, ...] | Color) -> RGBA:
@@ -840,12 +786,12 @@ back to hex representation if name is not found.
                 break
             color = Color(key)
 
-            color_index = Text(f"{index: >3}", style=color.as_style(bold=True))
-            style = color.as_style(bold=True)
+            color_index = Text(f"{index: >3}", style=f'bold {color.hex}')
+            style = RichStyle(color=color.hex, bold=True)
             sample = Text(f"{'█' * 10}", style=style)
             name = Text(f"{key.capitalize(): <20}", style=style)
             hex_str = f" {color.as_hex('long').upper()} "
-            hex = Text(f"{hex_str: ^7}", style=color.as_bg_style())
+            hex = Text(f"{hex_str: ^7}", style=f"bold on {color.hex}")
             rgb = color._rgba
             if show_index:
                 table.add_row(color_index, sample, name, hex, rgb)
@@ -914,6 +860,29 @@ def color_prompt() -> None:
         console.line(2)
     except Exception as e:
         console.print(f"[b i red]Error:[/] {e}")
+
+
+
+# Utility method to render a RichRenderable (like Text) into stylized Text without printing
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from rich.console import Console as RichConsole, RenderableType
+    from rich.text import Text
+else:
+    RenderableType = Any
+    RichConsole = Console
+    Text = Text
+
+class _ColorUtils:
+    @staticmethod
+    def render_renderable(renderable: "RenderableType", console: Optional[Console] = None) -> Text:
+        from rich.console import Console as RichConsole
+        from io import StringIO
+        console = console or RichConsole()
+        with console.capture() as capture:
+            console.print(renderable, end="")
+        rendered = capture.get()
+        return Text.from_ansi(rendered)
 
 
 if __name__ == "__main__":

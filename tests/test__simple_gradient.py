@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.style import Style
 from rich.text import Text
 
-from rich_gradient._simple_gradient import SimpleGradient
+from rich_gradient.depreciated._simple_gradient import SimpleGradient
 
 
 @pytest.fixture

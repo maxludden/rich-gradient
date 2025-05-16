@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from rich_gradient.new_colors import COLORS_BY_NAME, COLORS_BY_HEX
+from rich_gradient._colors import COLORS_BY_NAME, COLORS_BY_HEX
 from rich_gradient.color import Color
 from rich_gradient.style import Style
 

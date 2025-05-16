@@ -1,27 +1,30 @@
 from __future__ import annotations
 
 import inspect
-from typing import List, Optional, Union
 from io import StringIO
+from typing import List, Optional, Union, cast
 
-from rich.markup import render
+from cheap_repr import normal_repr, register_repr
+from loguru import logger
+from rich import get_console
+from rich._wrap import divide_line
+from rich.align import Align, AlignMethod
 from rich.color import blend_rgb
 from rich.console import Console, JustifyMethod, OverflowMethod
+from rich.markup import render
+from rich.measure import Measurement, measure_renderables
+from rich.segment import Segment
 from rich.text import Span, Text
-from rich._wrap import divide_line
 from rich.traceback import install
-
 from snoop import snoop
-from cheap_repr import register_repr, normal_repr
 
-from rich_gradient.color import ColorType, Color
+from rich_gradient.color import Color, ColorType
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.style import Style, StyleType
-from loguru import logger
 
 DEFAULT_JUSTIFY = "default"
 DEFAULT_OVERFLOW = "fold"
-VERBOSE: bool = True
+VERBOSE: bool = False
 
 console: Console = Console()
 install(console=console, show_locals=True)
@@ -30,7 +33,29 @@ install(console=console, show_locals=True)
 class Gradient(Text):
     """A Text subclass that renders each line with a smooth horizontal gradient."""
 
-    # @snoop(watch="self.renderable, self.styles" )
+    __slots__ = [
+        "_text",
+        "_spans",
+        "console",
+        "console_width",
+        "justify",
+        "overflow",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "reverse",
+        "no_wrap",
+        "end",
+        "angle",
+        "rainbow",
+        "hues",
+        "lines",
+        "styles",
+        "_renderable",
+        "_renderable_width",
+    ]
+
     def __init__(
         self,
         renderable: Union[str, Text, Gradient],
@@ -40,40 +65,49 @@ class Gradient(Text):
         hues: int = 5,
         justify: JustifyMethod = DEFAULT_JUSTIFY,
         overflow: OverflowMethod = DEFAULT_OVERFLOW,
+        bold: bool = False,
+        italic: bool = False,
+        underline: bool = False,
+        strike: bool = False,
+        reverse: bool = False,
         end: str = "\n",
         no_wrap: bool = False,
-        angle: float = 1.5  # Reserved for future use
+        angle: float = 1.5,
+        verbose: bool = False,
     ) -> None:
+        if verbose:
+            global VERBOSE
+            VERBOSE = True
+            console.log(
+                f"[b #ff0]Gradient.__init__[/] with renderable:\n\n{renderable}\n\n"
+            )
         super().__init__("")
-        self.console = Console()
+        self.console = console  # Use the global console
         self.console_width = self.console.width
         self.justify = justify
         self.overflow = overflow
+        self.bold = bold
+        self.italic = italic
+        self.underline = underline
+        self.strike = strike
+        self.reverse = reverse
         self.no_wrap = no_wrap
         self.end = end
         self.angle = angle
         self.rainbow = rainbow
         self.hues = hues
 
-        self.lines: List[str] = self._extract_lines(renderable)  # type: ignore
-        line_count = len([l for l in self.lines if l])
+        self.lines: List[str] = self._extract_lines(renderable)
+        self.styles: List[Style] = self._build_styles(styles)
+        self._apply_gradient()
 
-        if styles is None:
-            self.hues = line_count
-            spectrum = Spectrum(length=self.hues)
-            self.styles = [Style(color=color.hex) for color in spectrum]
-        elif self.rainbow:
-            self.styles = [Style(color=color.hex) for color in Spectrum(18)]
-        else:
-            self.styles: List[Style] = self._build_styles(styles)  # type: ignore
-
-        self._apply_gradient()  # type: ignore
-
-
+    # @snoop()
     def _extract_lines(self, renderable: Union[str, Text, Gradient]) -> List[str]:
         """Wrap the input to console width and preserve original newlines."""
         if VERBOSE:
-            console.log(f"Entered Gradient._extract_lines with renderable:\n\n{renderable}")
+            console.log(
+                f"Entered Gradient._extract_lines with renderable:\n\n{renderable}"
+            )
             log_spectrum = Spectrum()
         if isinstance(renderable, Gradient):
             input = renderable.plain
@@ -94,101 +128,113 @@ class Gradient(Text):
                 lines.append(raw_line[start:end])
                 start = end
             if start < len(raw_line):
-                lines.append(raw_line[start:])
+                lines.append(f"{raw_line[start:]}")
         if VERBOSE:
             for final_index, line in enumerate(lines):
-                console.log(f"[b #999] Line {final_index}:[/] [{log_spectrum[index]}]{line!r}[/]")
+                console.log(
+                    f"[b #999] Line {final_index}:[/]{len(line)} | [{log_spectrum[index]}]{line!r}[/]"
+                )
         return lines
 
-
-
-
-    # @snoop
     def _build_styles(self, styles: Optional[List[StyleType]]) -> List[Style]:
-        """Build styles from the provided list or generate a rainbow spectrum."""
-        if VERBOSE:
-            console.log(
-                Text(
-                    f"\n\nEntered Gradient._build_styles with styles:\n\n\
-{", ".join([str(style) for style in styles]) if styles else "[b red]"}", style="bold #99ff00"))
-        if styles is None and self.rainbow:
-            return [Style(color=color.hex) for color in Spectrum(18)]
-
+        if self.rainbow:
+            spectrum: List[Color] = Spectrum()
+            return [
+                Style(
+                    color=color.hex,
+                    bold=self.bold,
+                    italic=self.italic,
+                    underline=self.underline,
+                    strike=self.strike,
+                    reverse=self.reverse,
+                )
+                for color in spectrum
+            ]
         if not styles:
             spectrum: List[Color] = Spectrum(length=self.hues)
-
-            parsed_styles = [Style(color=color.hex) for color in spectrum]
-            if VERBOSE:
-                console.log("Parsed styles:")
-                for style in parsed_styles:
-                    console.print(f"\t\t\t[{style}]{'█' * 10}[/]")
-            return parsed_styles
-
-        parsed_styles = [Style.parse(style) if not isinstance(style, Style) else style for style in styles]
-
-        if len(parsed_styles) < 2:
-            raise GradientError(
-                "Gradient requires at least two styles. "
-                "Please provide a list of styles or set the rainbow parameter to True."
-            )
-        if VERBOSE:
-            console.log("[b #fff]Parsed styles:[/]")
-            for style in parsed_styles:
-                console.print(f"[{style}]{'█' * 10}[/]")
-
+            return [
+                Style(
+                    color=color.hex,
+                    bold=self.bold,
+                    italic=self.italic,
+                    underline=self.underline,
+                    strike=self.strike,
+                    reverse=self.reverse,
+                )
+                for color in spectrum
+            ]
+        parsed_styles: List[Style] = []
+        for __style in styles:
+            if isinstance(__style, str):
+                _style = Style.parse(__style) + Style(
+                    color=__style,
+                    bold=self.bold,
+                    italic=self.italic,
+                    underline=self.underline,
+                    strike=self.strike,
+                    reverse=self.reverse,
+                )
+            elif isinstance(__style, Style):
+                _style = __style + Style(
+                    bold=self.bold,
+                    italic=self.italic,
+                    underline=self.underline,
+                    strike=self.strike,
+                    reverse=self.reverse,
+                )
+            else:
+                _style = Style.parse(str(__style)) + Style(
+                    color=__style,
+                    bold=self.bold,
+                    italic=self.italic,
+                    underline=self.underline,
+                    strike=self.strike,
+                    reverse=self.reverse,
+                )
+            parsed_styles.append(_style)
         return parsed_styles
 
-    # @snoop(watch="self._text, self._spans")
     def _apply_gradient(self) -> None:
         self._text = ""
         self._spans.clear()
-
         width = self.console_width
         hues = len(self.styles)
-        justify = self.console.options.justify or DEFAULT_JUSTIFY
-
         for line in self.lines:
-            line_len = len(line)
-            if line_len == 0:
-                self._text += "\n"
-                continue
-
-            padding = self._calculate_padding(justify, width, line_len)
-            self._text += " " * padding
-
-            for x, char in enumerate(line):
-                visual_column = padding + x
-                pos_ratio = visual_column / max(1, width - 1)
+            padded_line = self.get_padding(cast(JustifyMethod, self.justify), width, line)
+            for i, char in enumerate(padded_line):
+                pos_ratio = i / max(1, width - 1)
                 index = pos_ratio * (hues - 1)
                 lower = int(index)
                 upper = min(lower + 1, hues - 1)
                 interp = index - lower
-
                 color1 = self.styles[lower].color or self.styles[0].color
                 color2 = self.styles[upper].color or self.styles[-1].color
-
+                assert color1 is not None and color2 is not None, f"{color1=}, {color2=}"
                 c1 = color1.as_triplet()
                 c2 = color2.as_triplet()
                 blended = blend_rgb(c1, c2, interp)
                 hex_color = f"#{blended.red:02x}{blended.green:02x}{blended.blue:02x}"
-
                 style = Style(color=hex_color)
                 start = len(self._text)
                 self._text += char
                 self._spans.append(Span(start, start + 1, style))
-
             self._text += "\n"
 
-    # @snoop
-    def _calculate_padding(self, justify: str, width: int, line_len: int) -> int:
+    # @snoop(watch="line, padded_line")
+    def get_padding(self, justify: str, width: int, line: str) -> str:
+        line = line.strip()
         if justify == "center":
-            return max((width - line_len) // 2, 0)
-        if justify == "right":
-            return max(width - line_len, 0)
-        return 0
+            return line.center(width)
+        elif justify == "right":
+            return line.rjust(width)
+        elif justify == "left":
+            return line.ljust(width)
+        else:
+            return line.ljust(width)
 
 
 register_repr(Gradient)(normal_repr)
+
 
 class GradientError(Exception):
     def __init__(self, message: str, stacklevel: int = 1) -> None:
@@ -204,15 +250,30 @@ if __name__ == "__main__":
     from rich.console import Console
 
     console = Console()
-    sample = """
-Duis veniam est eiusmod laboris labore ex elit dolore fugiat aliqua qui minim sit. Proident dolore in eu sit. Non in sunt in. Qui proident commodo est minim ex velit consectetur sunt laboris culpa nulla nulla mollit. Dolor velit non aute. Esse voluptate occaecat mollit cupidatat cillum do. Adipisicing est exercitation duis ea commodo amet. Officia non consectetur consectetur anim excepteur culpa.
-
-Eu fugiat exercitation pariatur tempor ullamco duis ullamco in excepteur in incididunt et occaecat duis consequat. Aliquip dolor fugiat esse ad non ad exercitation ea aliquip irure non. Nulla consectetur fugiat tempor Lorem sit quis do voluptate nisi nisi do occaecat veniam. Aliquip sunt ad labore voluptate qui officia aliqua ipsum. Velit nostrud cupidatat aliqua aute proident aliqua officia aliqua adipisicing magna.
-
-Id pariatur sit adipisicing exercitation aute. Ex elit ex tempor exercitation eu consectetur non consectetur irure ut veniam officia ipsum. Tempor ea duis Lorem sint ex eiusmod amet Lorem. Ipsum eiusmod nisi eiusmod in duis enim fugiat aliquip culpa in esse. Ex velit duis nulla non eu nulla do dolor pariatur culpa ullamco adipisicing enim. Elit mollit ea incididunt aliquip dolore magna commodo. Minim occaecat sint tempor sit veniam ullamco nostrud nulla dolor irure ut minim laborum sit anim. Voluptate pariatur culpa aliquip."""
-
     console.rule("Gradient Examples")
-    console.print(Gradient(sample))
-    console.print(Gradient(sample, justify="center"), justify="center")
+    example1 = Gradient(
+        "Hello, World! This is a gradient Text example with random colors."
+    )
+    console.print(example1)
+    console.line(2)
     console.rule("Gradient with Rainbow")
-    console.print(Gradient(sample, rainbow=True))
+    console.print(
+        Text(
+            "This is a gradient Text example with rainbow colors. \
+Note that Gradient's justify argument is set to 'right':",
+            style="bold #ff00ff",
+            justify="center",
+        )
+    )
+    console.print(
+        Gradient(
+            """
+Ullamco culpa tempor anim duis nulla ad in. Quis ad sint culpa aliquip voluptate magna adipisicing deserunt anim sunt minim eu incididunt sit mollit. Enim incididunt pariatur magna. Sint amet ipsum reprehenderit elit sunt sunt laborum reprehenderit labore. Ipsum dolore laborum et ad commodo consectetur aute Lorem commodo.
+
+Mollit irure aute tempor laborum culpa excepteur duis sit. Ut id sint incididunt ea mollit proident est exercitation dolore tempor eiusmod sint nulla do culpa. Lorem mollit velit laboris id ad irure pariatur excepteur cupidatat ad fugiat occaecat qui enim. Aliquip irure dolore ut sunt sunt non. Eu ut incididunt anim aute non.
+
+Anim reprehenderit ut laboris aute ipsum ex aute ea labore. Non amet duis ad. Consequat non in et elit sit ex fugiat laborum est laborum enim in consectetur ad. Labore quis aliqua officia reprehenderit magna cillum officia. Ullamco fugiat labore adipisicing. Magna aute irure excepteur veniam excepteur et sit sunt. Dolor amet mollit qui est nisi elit enim eu aute. Incididunt est dolor nulla.""",
+            rainbow=True,
+            justify="right",
+        )
+    )

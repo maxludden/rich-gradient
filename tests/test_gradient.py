@@ -3,9 +3,9 @@ import pytest
 
 from rich.console import Console
 
-from rich_gradient._simple_gradient import SimpleGradient
+from rich_gradient.depreciated._simple_gradient import SimpleGradient
 from rich_gradient._color import Color
-from rich_gradient.gradient import Gradient
+from rich_gradient.depreciated._gradient import Gradient
 
 @pytest.fixture
 def simple_gradient():
