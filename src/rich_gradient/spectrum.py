@@ -89,6 +89,7 @@ class Spectrum:
             )
             for color in self.colors
         ]
+        self.hex: List[str] = [color.hex for color in self.colors]
 
 
     def __rich__(self) -> Table:
