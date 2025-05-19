@@ -15,3 +15,4 @@ src/rich_gradient/examples/example_gradient.py
 src/rich_gradient/examples/example_rule.py
 .mypy_cache/
 out/
+lolcat.py
