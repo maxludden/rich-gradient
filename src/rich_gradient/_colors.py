@@ -1670,6 +1670,7 @@ COLORS_BY_ANSI: Dict[int, Dict[str, Tuple[int, int, int] | str]] = (
     create_color_mapping("ansi")
 )
 
+
 if __name__ == "__main__":
     # Example usage
     from rich.console import Console
