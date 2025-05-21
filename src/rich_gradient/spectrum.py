@@ -8,10 +8,30 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from rich_gradient._colors import COLORS_BY_NAME, COLORS_BY_HEX
+from rich_gradient._colors import COLORS_BY_HEX, COLORS_BY_NAME
 from rich_gradient.color import Color
 from rich_gradient.style import Style
 
+SPECTRUM_COLORS = [
+    "#FF00FF",
+    "#AF00FF",
+    "#5F00FF",
+    "#0000FF",
+    "#0055FF",
+    "#0087FF",
+    "#00C3FF",
+    "#00FFFF",
+    "#00FFC3",
+    "#00FF00",
+    "#7CFF00",
+    "#FFFF00",
+    "#FFAF00",
+    "#FF8700",
+    "#FF4B00",
+    "#FF0000",
+    "#FF0088",
+    "#FF00AF",
+]
 
 class Spectrum:
     """Create a list of concurrent Color and/or Style instances.
@@ -46,7 +66,7 @@ class Spectrum:
         underline: bool = False,
         strike: bool = False,
         reverse: bool = False,
-        dim: bool = False
+        dim: bool = False,
     ) -> None:
         """
         Args:
@@ -91,7 +111,6 @@ class Spectrum:
         ]
         self.hex: List[str] = [color.hex for color in self.colors]
 
-
     def __rich__(self) -> Table:
         """Returns a rich Table object representing the Spectrum colors.
 
@@ -100,7 +119,6 @@ class Spectrum:
 
         """
         return self.table()
-
 
     @staticmethod
     def table() -> Table:

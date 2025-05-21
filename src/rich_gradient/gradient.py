@@ -1,253 +1,325 @@
-from __future__ import annotations
+"""Gradient rendering utilities using Rich.
 
-import inspect
-from io import StringIO
-from typing import List, Optional, Union, cast
+This module defines a `Gradient` ConsoleRenderable that can wrap any Rich renderable
+and apply a left-to-right color gradient to it using either a provided color palette
+or a default rainbow spectrum.
+"""
 
-from cheap_repr import normal_repr, register_repr
-from loguru import logger
-from rich import get_console
-from rich._wrap import divide_line
-from rich.align import Align, AlignMethod
-from rich.color import blend_rgb
-from rich.console import Console, JustifyMethod, OverflowMethod
-from rich.markup import render
-from rich.measure import Measurement, measure_renderables
+__all__ = ["Gradient"]
+
+import time
+from colorsys import hls_to_rgb
+from functools import lru_cache
+from re import escape
+from typing import List, Optional, Tuple
+
+from rich import inspect
+from rich.color import Color as RichColor
+from rich.color import ColorType
+from rich.color_triplet import ColorTriplet
+from rich.console import Console, ConsoleOptions, ConsoleRenderable, RenderResult
+from rich.highlighter import RegexHighlighter
+from rich.panel import Panel
 from rich.segment import Segment
-from rich.text import Span, Text
-from rich.traceback import install
-from snoop import snoop
+from rich.style import Style as RichStyle
+from rich.text import Text
 
-from rich_gradient.color import Color, ColorType
+from rich_gradient.color import Color
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.style import Style, StyleType
 
-DEFAULT_JUSTIFY = "default"
-DEFAULT_OVERFLOW = "fold"
-VERBOSE: bool = False
 
-console: Console = Console()
-install(console=console, show_locals=True)
+def _hsl_to_rgb_hex(h: float, s: float, l: float) -> str:
+    """Convert an HSL color to a hex RGB string.
+
+    Args:
+        h: Hue component (0–1).
+        s: Saturation component (0–1).
+        l: Lightness component (0–1).
+
+    Returns:
+        Hex RGB color string.
+    """
+    r, g, b = hls_to_rgb(h, l, s)
+    return f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}"
 
 
-class Gradient(Text):
-    """A Text subclass that renders each line with a smooth horizontal gradient."""
+@lru_cache(maxsize=1024)
+def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
+    """Convert a hex color string to an RGB tuple."""
+    if hex_color.startswith("#"):
+        hex_color = hex_color.lstrip("#")
+    if len(hex_color) == 3:
+        hex_color = "".join([c * 2 for c in hex_color])
+    if len(hex_color) != 6:
+        raise ValueError(f"Invalid hex color: {hex_color}")
+    if not all(c in "0123456789abcdefABCDEF" for c in hex_color):
+        raise ValueError(f"Invalid hex color: {hex_color}")
+    return (
+        int(hex_color[0:2], 16),
+        int(hex_color[2:4], 16),
+        int(hex_color[4:6], 16),
+    )
 
-    __slots__ = [
-        "_text",
-        "_spans",
-        "console",
-        "console_width",
-        "justify",
-        "overflow",
-        "bold",
-        "italic",
-        "underline",
-        "strike",
-        "reverse",
-        "dim",
-        "no_wrap",
-        "end",
-        "angle",
-        "rainbow",
-        "hues",
-        "lines",
-        "styles",
-        "_renderable",
-        "_renderable_width",
-    ]
+
+@lru_cache(maxsize=1024)
+def _rgb_to_hex(rgb: tuple[int, ...]) -> str:
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+class Gradient(ConsoleRenderable):
+    """
+    A Rich ConsoleRenderable that applies a horizontal color gradient to any renderable.
+
+    The gradient can be configured using a list of hex colors, a rainbow flag,
+    or a number of generated hues.
+    """
 
     def __init__(
         self,
-        renderable: Union[str, Text, Gradient],
-        styles: Optional[List[StyleType]] = None,
+        renderable: ConsoleRenderable,
+        colors: Optional[List[str]] = None,
+        hues: int = 5,
         *,
         rainbow: bool = False,
-        hues: int = 5,
-        justify: JustifyMethod = DEFAULT_JUSTIFY,
-        overflow: OverflowMethod = DEFAULT_OVERFLOW,
-        bold: bool = False,
-        italic: bool = False,
-        underline: bool = False,
-        strike: bool = False,
-        reverse: bool = False,
-        dim: bool = False,
-        end: str = "\n",
-        no_wrap: bool = False,
-        angle: float = 1.5,
-        verbose: bool = False,
+        spread: Optional[float] = None,
+        saturation: float = 1.0,
+        lightness: float = 0.5,
+        offset: float = 0.0,
+        animate: bool = False,
+        gradient_border: bool = True,
+        border_style: Optional[StyleType] = None,
     ) -> None:
-        if verbose:
-            global VERBOSE
-            VERBOSE = True
-            console.log(
-                f"[b #ff0]Gradient.__init__[/] with renderable:\n\n{renderable}\n\n"
+        """
+        Initialize a Gradient renderable.
+
+        Args:
+            renderable: The Rich renderable to wrap.
+            colors: Optional list of color stops (hex strings).
+            hues: Number of hues to generate if colors is None and rainbow is False.
+            rainbow: Whether to use a rainbow spectrum for the gradient.
+            spread: Fixed width to spread the gradient over. Defaults to visual line width.
+            saturation: Saturation value for rainbow generation (0–1).
+            lightness: Lightness value for rainbow generation (0–1).
+            offset: Hue offset for animation or scrolling effects.
+            animate: Whether to animate the gradient with continuous updates.
+        """
+        self.renderable: ConsoleRenderable = renderable
+        self.colors: List[str] = self.parse_colors(rainbow, hues, colors)
+        self.spread: Optional[float] = spread
+        self.saturation: float = saturation
+        self.lightness: float = lightness
+        self.offset: float = offset
+        self.animate = animate
+
+    def parse_colors(
+        self, rainbow: bool, hues: int, colors: Optional[List[str]]
+    ) -> List[str]:
+        """
+        Parse or generate a list of hex color strings to use for the gradient.
+
+        Args:
+            rainbow: Whether to use a rainbow color spectrum.
+            hues: Number of hues to generate if not using a rainbow.
+            colors: Optional list of hex color strings.
+
+        Returns:
+            A list of hex colors suitable for the gradient.
+        """
+        if rainbow:
+            return Spectrum().hex
+        if colors is None:
+            return Spectrum(hues).hex
+        return [Color(str(color)).hex for color in colors]
+
+    def __rich_console__(
+        self, console: Console, options: ConsoleOptions
+    ) -> RenderResult:
+        """
+        Render the gradient-wrapped content.
+
+        Args:
+            console: The console to render with.
+            options: Rendering options, including width and styles.
+
+        Yields:
+            Rich Text lines with gradient applied character-by-character.
+        """
+        lines: List[List[Segment]] = list(
+            console.render_lines(self.renderable, options, style=None)
+        )
+
+        if self.animate:
+            from time import sleep
+
+            try:
+                while True:
+                    yield from Gradient(
+                        self.renderable,
+                        colors=self.colors,
+                        hues=len(self.colors),
+                        rainbow=False,
+                        spread=self.spread,
+                        saturation=self.saturation,
+                        lightness=self.lightness,
+                        offset=self.offset,
+                        animate=False,
+                    ).__rich_console__(console, options)
+                    self.offset += 0.01
+                    sleep(1 / 30)
+            except KeyboardInterrupt:
+                return
+
+        @lru_cache(maxsize=256)
+        def _get_gradient_styles(
+            colors_tuple: tuple[str, ...], width: int
+        ) -> List[Style]:
+            """
+            Generate a list of RichStyle instances representing the gradient.
+
+            Args:
+                colors_tuple: A tuple of color hex strings that define the gradient stops.
+                width: The number of gradient steps to generate.
+
+            Returns:
+                A list of RichStyle instances, one per character position.
+            """
+            if len(colors_tuple) <= 1:
+                # Generate fallback gradient using HSL hue interpolation
+                return [
+                    Style(color=_hsl_to_rgb_hex(i / width, 1.0, 0.5))
+                    for i in range(width)
+                ]
+
+            styles = []
+            for i in range(width):
+                t = i / max(width - 1, 1)  # Normalized position along the gradient
+                num_segments = len(colors_tuple) - 1
+                scaled_t = t * num_segments
+                seg_index = int(scaled_t)
+                local_t = scaled_t - seg_index  # Position within the segment
+
+                if seg_index >= num_segments:
+                    hex_color = colors_tuple[-1]
+                else:
+                    # Linearly interpolate between two adjacent color stops
+                    start_rgb = _hex_to_rgb(colors_tuple[seg_index])
+                    end_rgb = _hex_to_rgb(colors_tuple[seg_index + 1])
+                    blended = tuple(
+                        int(start + (end - start) * local_t)
+                        for start, end in zip(start_rgb, end_rgb)
+                    )
+                    hex_color = _rgb_to_hex(blended)
+
+                styles.append(RichStyle.parse(hex_color))
+            return styles
+
+        for line in lines:
+            width = (
+                int(self.spread)
+                if self.spread is not None
+                else sum(len(segment.text) for segment in line)
             )
-        super().__init__("")
-        self.console = console  # Use the global console
-        self.console_width = self.console.width
-        self.justify = justify
-        self.overflow = overflow
-        self.bold = bold
-        self.italic = italic
-        self.underline = underline
-        self.strike = strike
-        self.reverse = reverse
-        self.dim = dim
-        self.no_wrap = no_wrap
-        self.end = end
-        self.angle = angle
-        self.rainbow = rainbow
-        self.hues = hues
+            gradient_styles: List[Style] = _get_gradient_styles(
+                tuple(self.colors), width
+            )
+            fragments: List[Tuple[str, RichStyle]] = []
+            char_index = 0
+            for segment in line:
+                base_style = segment.style or RichStyle()
+                for char, grad_style in zip(
+                    segment.text,
+                    gradient_styles[char_index : char_index + len(segment.text)],
+                ):
+                    if base_style.reverse:
+                        assert grad_style.color is not None
+                        grad_style: RichStyle = RichStyle(
+                            color=RichColor(
+                                name="#ffffff",
+                                type=ColorType.TRUECOLOR,
+                                triplet=ColorTriplet(red=255, green=255, blue=255),
+                            ),
+                            bgcolor=grad_style.color.triplet.hex,
+                            reverse=False,
+                            bold=True
+                        )
+                        styled = grad_style
+                    else:
+                        styled = grad_style + base_style
+                    fragments.append((char, styled))
+                char_index += len(segment.text)
+            yield Text.assemble(*fragments)
 
-        self.lines: List[str] = self._extract_lines(renderable)
-        self.styles: List[Style] = self._build_styles(styles)
-        self._apply_gradient()
+    def get_color_at(self, index: int, width: int) -> str:
+        """
+        Get the interpolated color for the character at the given index.
 
-    # @snoop()
-    def _extract_lines(self, renderable: Union[str, Text, Gradient]) -> List[str]:
-        """Wrap the input to console width and preserve original newlines."""
-        if isinstance(renderable, Gradient):
-            input = renderable.plain
-        elif isinstance(renderable, Text):
-            input = renderable.plain
-        else:
-            input = str(renderable)
+        Args:
+            index: Position of the character in the line.
+            width: Total width of the line.
 
-        raw_lines = input.split("\n")
-        lines: List[str] = []
-        for index, raw_line in enumerate(raw_lines, 1):
-            if raw_line == "":
-                lines.append("")  # Preserve empty line
-                continue
-            wrapped: List[int] = divide_line(raw_line, self.console_width)
-            start = 0
-            for end in wrapped:
-                lines.append(raw_line[start:end])
-                start = end
-            if start < len(raw_line):
-                lines.append(f"{raw_line[start:]}")
-        return lines
+        Returns:
+            A hex color string.
+        """
+        if self.colors and len(self.colors) > 1:
+            # Calculate position in gradient [0, 1]
+            t = index / max(width - 1, 1)
+            num_segments = len(self.colors) - 1
+            scaled_t = t * num_segments
+            seg_index = int(scaled_t)
+            local_t = scaled_t - seg_index
 
-    def _build_styles(self, styles: Optional[List[StyleType]]) -> List[Style]:
-        if self.rainbow:
-            return Spectrum(
-                bold=self.bold,
-                italic=self.italic,
-                underline=self.underline,
-                strike=self.strike,
-                reverse=self.reverse,
-                dim=self.dim,
-            ).styles
-        if not styles:
-            return Spectrum(
-                length=self.hues,
-                bold=self.bold,
-                italic=self.italic,
-                underline=self.underline,
-                strike=self.strike,
-                reverse=self.reverse,
-                dim=self.dim,
-            ).styles
+            if seg_index >= num_segments:
+                return self.colors[-1]
 
-        parsed_styles: List[Style] = []
-        for __style in styles:
-            if isinstance(__style, str):
-                _style = Style.parse(__style)
-            elif isinstance(__style, Style):
-                _style = __style
-            else:
-                _style = Style.parse(str(__style))
-            _style += Style(
-                    bold=self.bold,
-                    italic=self.italic,
-                    underline=self.underline,
-                    strike=self.strike,
-                    reverse=self.reverse,
-                )
-            parsed_styles.append(_style)
-        return parsed_styles
+            start_rgb = _hex_to_rgb(self.colors[seg_index])
+            end_rgb = _hex_to_rgb(self.colors[seg_index + 1])
 
-    def _apply_gradient(self) -> None:
-        self._text = ""
-        self._spans.clear()
-        width = self.console_width
-        hues = len(self.styles)
-        for line in self.lines:
-            padded_line = self.get_padding(cast(JustifyMethod, self.justify), width, line)
-            for i, char in enumerate(padded_line):
-                pos_ratio = i / max(1, width - 1)
-                index = pos_ratio * (hues - 1)
-                lower = int(index)
-                upper = min(lower + 1, hues - 1)
-                interp = index - lower
-                color1 = self.styles[lower].color or self.styles[0].color
-                color2 = self.styles[upper].color or self.styles[-1].color
-                assert color1 is not None and color2 is not None, f"{color1=}, {color2=}"
-                c1 = color1.as_triplet()
-                c2 = color2.as_triplet()
-                blended = blend_rgb(c1, c2, interp)
-                hex_color = f"#{blended.red:02x}{blended.green:02x}{blended.blue:02x}"
-                style = Style(color=hex_color)
-                start = len(self._text)
-                self._text += char
-                self._spans.append(Span(start, start + 1, style))
-            self._text += "\n"
+            blended = tuple(
+                int(start + (end - start) * local_t)
+                for start, end in zip(start_rgb, end_rgb)
+            )
+            return _rgb_to_hex(blended)
 
-    # @snoop(watch="line, padded_line")
-    def get_padding(self, justify: str, width: int, line: str) -> str:
-        line = line.strip()
-        if justify == "center":
-            return line.center(width)
-        elif justify == "right":
-            return line.rjust(width)
-        elif justify == "left":
-            return line.ljust(width)
-        else:
-            return line.ljust(width)
+        # fallback to hue wheel
+        hue = (self.offset + index / width) % 1.0
+        return _hsl_to_rgb_hex(hue, self.saturation, self.lightness)
 
 
-register_repr(Gradient)(normal_repr)
+class BoxHighlighter(RegexHighlighter):
+    """Highlights box-drawing characters used by rich.box."""
 
+    # Characters extracted from all rich.box styles (including ASCII and Unicode)
+    box_chars = "┌─┬┐│ ├┼┤└┴┘╞═╪╡╺━┿╸╶╴╷╵╭╮╰╯┃┣╋┗┏┫┛┠┨┷┯╔╗╚╝╬╠╣╦╩╤╧+-=|"
+    escaped_box_chars = escape(box_chars)
 
-class GradientError(Exception):
-    def __init__(self, message: str, stacklevel: int = 1) -> None:
-        frame_info = inspect.stack()[stacklevel]
-        module = frame_info.frame.f_globals.get("__name__", "<unknown module>")
-        func = frame_info.function
-        lineno = frame_info.lineno
-        full_message = f"{module}.{func}:Line {lineno}: {message}"
-        super().__init__(full_message)
+    base_style = "box.highlight"
+    highlights = [rf"(?P<box>[{escaped_box_chars}])"]
 
 
 if __name__ == "__main__":
-    from rich.console import Console
+    from time import sleep
 
-    console = Console()
-    console.rule("Gradient Examples")
-    example1 = Gradient(
-        "Hello, World! This is a gradient Text example with random colors."
-    )
-    console.print(example1)
-    console.line(2)
-    console.rule("Gradient with Rainbow")
-    console.print(
-        Text(
-            "This is a gradient Text example with rainbow colors. \
-Note that Gradient's justify argument is set to 'right':",
-            style="bold #ff00ff",
-            justify="center",
-        )
-    )
-    console.print(
-        Gradient(
-            """
-Ullamco culpa tempor anim duis nulla ad in. Quis ad sint culpa aliquip voluptate magna adipisicing deserunt anim sunt minim eu incididunt sit mollit. Enim incididunt pariatur magna. Sint amet ipsum reprehenderit elit sunt sunt laborum reprehenderit labore. Ipsum dolore laborum et ad commodo consectetur aute Lorem commodo.
+    from rich.live import Live
 
-Mollit irure aute tempor laborum culpa excepteur duis sit. Ut id sint incididunt ea mollit proident est exercitation dolore tempor eiusmod sint nulla do culpa. Lorem mollit velit laboris id ad irure pariatur excepteur cupidatat ad fugiat occaecat qui enim. Aliquip irure dolore ut sunt sunt non. Eu ut incididunt anim aute non.
+    console = Console(width=64)
+    text: Text = Text(
+        """Ipsum ullamco sint veniam id sunt commodo ipsum veniam aliquip labore sint pariatur dolore proident cillum. Eiusmod nulla veniam dolore consequat ea irure. Labore cupidatat nulla laboris reprehenderit esse aliquip velit sunt do adipisicing aliqua ex dolore ad. Nulla sit amet nostrud. Tempor ipsum Lorem aliquip et eiusmod aliquip ullamco cupidatat. Consequat occaecat tempor cillum aliqua reprehenderit in consectetur quis veniam nostrud tempor occaecat qui est duis.
 
-Anim reprehenderit ut laboris aute ipsum ex aute ea labore. Non amet duis ad. Consequat non in et elit sit ex fugiat laborum est laborum enim in consectetur ad. Labore quis aliqua officia reprehenderit magna cillum officia. Ullamco fugiat labore adipisicing. Magna aute irure excepteur veniam excepteur et sit sunt. Dolor amet mollit qui est nisi elit enim eu aute. Incididunt est dolor nulla.""",
-            rainbow=True,
-            justify="right",
-        )
+Sunt quis esse occaecat eu commodo sint anim pariatur aute non laboris ad. Magna elit culpa consequat nulla. Aliqua culpa magna aliqua aliqua sint deserunt occaecat duis ex adipisicing ut non. Duis esse proident irure cupidatat do commodo esse proident Lorem. Quis adipisicing nostrud eiusmod amet incididunt dolor excepteur commodo ea sit tempor anim.
+
+Veniam qui excepteur pariatur voluptate fugiat. Eu amet incididunt est aute fugiat sunt. Adipisicing qui aliqua duis elit nulla. Irure aute nostrud reprehenderit id aliquip. Adipisicing laboris pariatur veniam fugiat et dolor eiusmod excepteur voluptate. Pariatur ea excepteur ipsum. Non in excepteur ea ut aliquip officia excepteur esse esse deserunt sunt ipsum incididunt.""",
+        justify="right",
+        style="bold",
     )
+    panel = Panel(Gradient(text))
+    console.print(panel)
+
+    gradient_panel = Gradient(
+        Panel(
+            text,
+            title=Text("Gradient Panel", style="bold reverse"),
+        ),
+        rainbow=True,
+    )
+    console.print(gradient_panel)

@@ -5,9 +5,9 @@ from random import randint
 from typing import Any, Dict, Iterable, List, Optional, Type, Union, cast
 
 from rich import errors
-from rich.style import Style as RichStyle
 from rich.color import ColorParseError, ColorSystem, blend_rgb
 from rich.repr import Result, rich_repr
+from rich.style import Style as RichStyle
 from rich.terminal_theme import DEFAULT_TERMINAL_THEME, TerminalTheme
 
 from rich_gradient._colors import (
@@ -472,6 +472,11 @@ class Style(RichStyle):
             yield "meta", self.meta
 
     def __eq__(self, other: Any) -> bool:
+        if isinstance(other, RichStyle):
+            return self.as_rich() == other
+        elif isinstance(other, str):
+            parsed_other = self.parse(other)
+            return self.as_rich() == parsed_other.as_rich()
         if not isinstance(other, Style):
             return NotImplemented
         return self.__hash__() == other.__hash__()
@@ -564,7 +569,9 @@ class Style(RichStyle):
         if isinstance(style_definition, RGBA):
             style_definition = style_definition.hex
         if not isinstance(style_definition, str):
-            raise TypeError(f"Style.parse() expected a str, got {type(style_definition).__name__}")
+            raise TypeError(
+                f"Style.parse() expected a str, got {type(style_definition).__name__}"
+            )
         if style_definition.strip() == "none" or not style_definition:
             return cls.null()
 
@@ -814,7 +821,9 @@ class Style(RichStyle):
         new_style._hash = None
         return new_style
 
-    def __add__(self, style: Optional["Style"]) -> "Style":
+    def __add__(self, style: Optional["Style"]|Optional[RichStyle]) -> "Style":
+        if isinstance(style, RichStyle):
+            style = Style.from_rich(style)
         combined_style = self._add(style)
         return combined_style.copy() if combined_style.link else combined_style
 
@@ -822,7 +831,7 @@ class Style(RichStyle):
     def rich(self) -> RichStyle:
         """Creates a rich.style.Style instance from this Style.
 
-            `(This is a convenience method for use with rich.)`
+        `(This is a convenience method for use with rich.)`
         """
         return self.as_rich()
 
@@ -844,6 +853,32 @@ class Style(RichStyle):
             frame=self.frame,
             encircle=self.encircle,
             overline=self.overline,
+        )
+
+    @classmethod
+    def from_rich(cls, rich_style: RichStyle) -> "Style":
+        """Convert a rich.style.Style instance to a Style instance."""
+        assert isinstance(rich_style, RichStyle)
+        assert rich_style.color is not None
+        assert rich_style.bgcolor is not None
+        color = Color.from_triplet(rich_style.color.get_truecolor())
+        bgcolor = Color.from_triplet(rich_style.bgcolor.get_truecolor())
+        return cls(
+            color=color,
+            bgcolor=bgcolor,
+            bold=rich_style.bold,
+            dim=rich_style.dim,
+            italic=rich_style.italic,
+            underline=rich_style.underline,
+            blink=rich_style.blink,
+            blink2=rich_style.blink2,
+            reverse=rich_style.reverse,
+            conceal=rich_style.conceal,
+            strike=rich_style.strike,
+            underline2=rich_style.underline2,
+            frame=rich_style.frame,
+            encircle=rich_style.encircle,
+            overline=rich_style.overline,
         )
 
 

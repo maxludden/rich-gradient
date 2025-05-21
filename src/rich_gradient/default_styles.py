@@ -202,6 +202,7 @@ DEFAULT_STYLES: dict[str, StyleType] = {
     "cs.magenta": Style(color="#ff00ff", bgcolor="default", bold=True),
     "style.magenta": Style(color="#ff00ff", bgcolor="default", bold=True),
     "bg_style.magenta": Style(color="#111111", bgcolor="#ff00ff", bold=True),
+    "box.highlight": Style(color="#eeeeee"),
     "inspect.attr": Style(color="#ffff00", italic=True),
     "inspect.attr.dunder": Style(color="#ffff00", italic=True, dim=True),
     "inspect.callable": Style(color="#AF00FF", bold=True),

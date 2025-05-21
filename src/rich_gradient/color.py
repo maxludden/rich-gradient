@@ -150,12 +150,6 @@ class Color:
         )
 
     # --- Properties ---
-
-    # @property
-    # def alpha(self) -> float:
-    #     """Alpha channel as a float, treating None as fully opaque (1.0)."""
-    #     return 1.0 if self._rgba.alpha is None else self._rgba.alpha
-
     @property
     def name(self) -> str:
         """The name of color.
@@ -186,6 +180,11 @@ class Color:
         """The `rich.color_triplet.ColorTriplet` representation \
 of the color."""
         return self.as_triplet()
+
+    @property
+    def tuple(self) -> Tuple[int, int, int]:
+        """The red, green, blue tuple representation of the color."""
+        return self.as_rgb_tuple()
 
     @property
     def rich(self) -> RichColor:
