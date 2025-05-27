@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from itertools import cycle
 from random import randint
-from typing import Generator, List
+from typing import Generator, List, Union
 
 from rich.console import Console
 from rich.table import Table
@@ -32,6 +32,7 @@ SPECTRUM_COLORS = [
     "#FF0088",
     "#FF00AF",
 ]
+
 
 class Spectrum:
     """Create a list of concurrent Color and/or Style instances.
@@ -99,7 +100,7 @@ class Spectrum:
 
         self.styles: List[Style] = [
             Style(
-                color=color.hex,
+                color=color.segments,
                 bold=bold,
                 italic=italic,
                 underline=underline,
@@ -109,6 +110,12 @@ class Spectrum:
             )
             for color in self.colors
         ]
+        self.hex: List[str] = [color.segments for color in self.colors]
+
+    def __getitem__(self, index: int) -> Style:
+        return self.styles[index]
+
+        self.hex: List[str] = [color.hex for color in self.colors]
         self.hex: List[str] = [color.hex for color in self.colors]
 
     def __rich__(self) -> Table:
@@ -140,12 +147,14 @@ class Spectrum:
 
         spectrum = Spectrum()
         for index, color in enumerate(spectrum.colors):
-            style = str(Style(color=color.hex, bold=True))
-            name_str = COLORS_BY_HEX.get(color.hex.upper(), {}).get("name", color.name)
+            style = str(Style(color=color.segments, bold=True))
+            name_str = COLORS_BY_HEX.get(color.segments.upper(), {}).get(
+                "name", color.name
+            )
             name = Text(f"{str(name_str).capitalize(): <13}", style=style)
             sample = Text(f"{'█' * 10}", style=style)
             hex_str = f" {color.as_hex('long').upper()} "
-            hex_text = Text(f"{hex_str: ^7}", style=f"bold on {color.hex}")
+            hex_text = Text(f"{hex_str: ^7}", style=f"bold on {color.segments}")
             rgb = color._rgba
 
             table.add_row(sample, name, hex_text, rgb)

@@ -405,22 +405,89 @@ Automatically generated gradients are always generated with consecutive colors."
     gradient_example2()
 
 
-    # Example 3: Using rainbow mode
-    text3 = Text(
-        "Automatic Rainbow!",
-        rainbow=True,
-        hues=12,
-        style="bold underline",
-    )
-    console.print(text3)
+    def gradient_example3() -> None:
+        """Print the third example with a rainbow gradient."""
+        console.print(
+            Panel(
+                Text(
+                    "If you like lots of colors, but don't want to write them all yourself... \
+Good News! You can also generate a rainbow gradient by passing the `rainbow` \
+argument to the `rich_gradient.text.Text` constructor. \
+This will generate a gradient with the full spectrum of colors.",
+                    rainbow=True,
+                ),
+                title=Text(
+                    "Example 3",
+                    style="bold",
+                ),
+                padding=(1, 4),
+                width=64,
+            )
+        )
+        console.save_svg(
+            "docs/img/v0.2.1/gradient_example3.svg",
+            title="gradient_example_3",
+            unique_id="gradient_example_3",
+            theme=GRADIENT_TERMINAL_THEME,
+        )
+        sleep(1)
 
+    gradient_example3()
     # Example 4: Custom color stops with hex codes
-    text4 = Text(
-        "Background Color Gradient",
-        colors=["#ff0", "#99ff00", "lime"],
-        style="reverse",
-    )
-    console.print(text4)
+
+    def gradient_example4() -> None:
+        """Print the fourth example with custom color stops."""
+        specified_colors: Text = Text(
+            text="""If you like to specify your own \
+colors, you can pass Text a list of colors. Colors can be specified \
+as:
+
+    - 3 and 6 digit hex strings (eg. '#ff0000' or '#9f0')
+    - RGB tuples or strings (eg. (255, 0, 0) or rgb(255, 0, 0) for red)
+    - CSS3 Color names (eg. 'red', 'springgreen', 'dodgerblue')
+
+Just make sure to pass at least two colors... otherwise the gradient \
+is superfluous!\n\n This gradient uses:
+
+    - 'magenta'
+    - '#f09'
+    - 'rgb(255, 0, 75)'
+    - 'red'
+    - '#FF4B00'""",
+    colors = [
+                "magenta",
+                "#f09",
+                "rgb(255, 0, 75)",
+                "red",
+                "#FF4B00",
+            ],
+
+        )
+        specified_colors.highlight_words(["magenta"], "bold #magenta")
+        specified_colors.highlight_regex(r"#f09", "bold #f09")
+        specified_colors.highlight_regex(r"rgb\(255, 0, 75\)", style="rgb(255, 0, 75)")
+        specified_colors.highlight_regex(r"red", "bold red")
+        specified_colors.highlight_regex(r"\"#FF4B00\"", "bold #FF4B00")
+        console.print(
+            Panel(
+                specified_colors,
+                title=Text(
+                    "Example 4",
+                    style="bold",
+                ),
+                padding=(1, 4),
+                width=64,
+            )
+        )
+        console.save_svg(
+            "docs/img/v0.2.1/gradient_example4.svg",
+            title="gradient_example_4",
+            unique_id="gradient_example_4",
+            theme=GRADIENT_TERMINAL_THEME,
+        )
+        sleep(1)
+
+    gradient_example4()
 
     # Example 5: Long text with a smooth gradient
     long_text = (

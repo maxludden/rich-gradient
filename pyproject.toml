@@ -9,6 +9,8 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
+    "lorem-text>=3.0",
+    "openai>=1.81.0",
     "pip>=25.0.1",
     "rich>=14.0.0",
     "thefuzz>=0.22.1",

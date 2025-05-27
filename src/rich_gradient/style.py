@@ -4,11 +4,14 @@ from marshal import dumps, loads
 from random import randint
 from typing import Any, Dict, Iterable, List, Optional, Type, Union, cast
 
-from rich import errors
+from cheap_repr import normal_repr, register_repr
+from rich import errors, get_console
 from rich.color import ColorParseError, ColorSystem, blend_rgb
+from rich.console import Console
 from rich.repr import Result, rich_repr
 from rich.style import Style as RichStyle
 from rich.terminal_theme import DEFAULT_TERMINAL_THEME, TerminalTheme
+from snoop import snoop
 
 from rich_gradient._colors import (
     COLORS_BY_ANSI,
@@ -38,7 +41,7 @@ class _Bit:
 
 
 @rich_repr
-class Style(RichStyle):
+class Style():
     """A terminal style.
 
     A terminal style consists of a color (`color`), a background color (`bgcolor`), and a number of attributes, such
@@ -61,8 +64,8 @@ class Style(RichStyle):
         frame (bool, optional): Enable framed text. Defaults to None.
         encircle (bool, optional): Enable encircled text. Defaults to None.
         overline (bool, optional): Enable overlined text. Defaults to None.
-        link (str, link): Link URL. Defaults to None.
-
+        link (str, optional): Link URL. Defaults to None.
+        meta (Dict[str, Any], optional): Meta information. Defaults to None.
     """
 
     _color: Optional[Color]
@@ -149,7 +152,29 @@ class Style(RichStyle):
         overline: Optional[bool] = None,
         link: Optional[str] = None,
         meta: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
+        """
+        Initialize a Style instance.
+
+        Args:
+            color (Optional[Union[Color, str]]): Foreground color.
+            bgcolor (Optional[Union[Color, str]]): Background color.
+            bold (Optional[bool]): Bold attribute.
+            dim (Optional[bool]): Dim attribute.
+            italic (Optional[bool]): Italic attribute.
+            underline (Optional[bool]): Underline attribute.
+            blink (Optional[bool]): Blink attribute.
+            blink2 (Optional[bool]): Fast blink attribute.
+            reverse (Optional[bool]): Reverse attribute.
+            conceal (Optional[bool]): Conceal attribute.
+            strike (Optional[bool]): Strike attribute.
+            underline2 (Optional[bool]): Double underline attribute.
+            frame (Optional[bool]): Frame attribute.
+            encircle (Optional[bool]): Encircle attribute.
+            overline (Optional[bool]): Overline attribute.
+            link (Optional[str]): Link URL.
+            meta (Optional[Dict[str, Any]]): Meta information.
+        """
         self._ansi: Optional[str] = None
         self._style_definition: Optional[str] = None
 
@@ -237,7 +262,11 @@ class Style(RichStyle):
 
     @classmethod
     def null(cls) -> "Style":
-        """Create an 'null' style, equivalent to Style(), but more performant."""
+        """Create a 'null' style, equivalent to Style(), but more performant.
+
+        Returns:
+            Style: A null Style instance.
+        """
         return NULL_STYLE
 
     @classmethod
@@ -246,9 +275,12 @@ class Style(RichStyle):
     ) -> "Style":
         """Create a new style with colors and no attributes.
 
+        Args:
+            color (Optional[Color]): Foreground color.
+            bgcolor (Optional[Color]): Background color.
+
         Returns:
-            color (Optional[Color]): A (foreground) color, or None for no color. Defaults to None.
-            bgcolor (Optional[Color]): A (background) color, or None for no color. Defaults to None.
+            Style: A new Style instance.
         """
         style: Style = cls.__new__(Style)  # type: ignore
         style._ansi = None
@@ -268,8 +300,11 @@ class Style(RichStyle):
     def from_meta(cls, meta: Optional[Dict[str, Any]]) -> "Style":
         """Create a new style with meta data.
 
+        Args:
+            meta (Optional[Dict[str, Any]]): A dictionary of meta data.
+
         Returns:
-            meta (Optional[Dict[str, Any]]): A dictionary of meta data. Defaults to None.
+            Style: A new Style instance.
         """
         style: Style = cls.__new__(Style)  # type: ignore
         style._ansi = None
@@ -319,11 +354,19 @@ class Style(RichStyle):
 
     @property
     def link_id(self) -> str:
-        """Get a link id, used in ansi code for links."""
+        """Get a link id, used in ansi code for links.
+
+        Returns:
+            str: The link id.
+        """
         return self._link_id
 
     def __str__(self) -> str:
-        """Re-generate style definition from attributes."""
+        """Re-generate style definition from attributes.
+
+        Returns:
+            str: The style definition string.
+        """
         if self._style_definition is None:
             attributes: List[str] = []
             append = attributes.append
@@ -358,10 +401,10 @@ class Style(RichStyle):
                 if bits & (1 << 12):
                     append("overline" if self.overline else "not overline")
             if self._color is not None:
-                append(self._color.hex)
+                append(self._color.segments)
             if self._bgcolor is not None:
                 append("on")
-                append(self._bgcolor.hex)
+                append(self._bgcolor.segments)
             if self._link:
                 append("link")
                 append(self._link)
@@ -369,7 +412,11 @@ class Style(RichStyle):
         return self._style_definition
 
     def __bool__(self) -> bool:
-        """A Style is false if it has no attributes, colors, or links."""
+        """A Style is false if it has no attributes, colors, or links.
+
+        Returns:
+            bool: True if the style is not null, False otherwise.
+        """
         return not self._null
 
     def _make_ansi_codes(self, color_system: ColorSystem) -> str:
@@ -405,8 +452,16 @@ class Style(RichStyle):
                         if attributes & (1 << bit):
                             append(_style_map[bit])
             if self._color is not None:
+                if not hasattr(self._color, "rich") or not hasattr(self._color, "rich_gradient"):
+                    raise TypeError(
+                        f"[ERROR] _color missing 'rich' or 'rich_gradient' property: {self._color} ({type(self._color)})"
+                    )
                 sgr.extend(self._color.rich.downgrade(color_system).get_ansi_codes())
             if self._bgcolor is not None:
+                if not hasattr(self._bgcolor, "rich") or not hasattr(self._bgcolor, "rich_gradient"):
+                    raise TypeError(
+                        f"[ERROR] _bgcolor missing 'rich' or 'rich_gradient' property: {self._bgcolor} ({type(self._bgcolor)})"
+                    )
                 sgr.extend(
                     self._bgcolor.rich.downgrade(color_system).get_ansi_codes(
                         foreground=False
@@ -433,32 +488,35 @@ class Style(RichStyle):
             return style.strip().lower()
 
     @classmethod
-    def pick_first(cls, *values: Optional[StyleType]) -> StyleType:
-        """Pick first non-None style."""
+    def pick_first(cls, *values: Any) -> Any:
+        """Pick first non-None style.
+
+        Args:
+            *values (Any): Values to pick from.
+
+        Returns:
+            Any: The first non-None value.
+
+        Raises:
+            ValueError: If all values are None.
+        """
         for value in values:
             if value is not None:
                 return value
         raise ValueError("expected at least one non-None style")
 
     def __rich_repr__(self) -> Result:
+        """Rich library representation for debugging.
+
+        Returns:
+            Result: Rich representation.
+        """
         yield "color", self.color, None
         yield "bgcolor", self.bgcolor, None
-        yield (
-            "bold",
-            self.bold,
-            None,
-        )
-        yield (
-            "dim",
-            self.dim,
-            None,
-        )
+        yield "bold", self.bold, None
+        yield "dim", self.dim, None
         yield "italic", self.italic, None
-        yield (
-            "underline",
-            self.underline,
-            None,
-        )
+        yield "underline", self.underline, None
         yield "blink", self.blink, None
         yield "blink2", self.blink2, None
         yield "reverse", self.reverse, None
@@ -472,21 +530,43 @@ class Style(RichStyle):
             yield "meta", self.meta
 
     def __eq__(self, other: Any) -> bool:
+        """Equality comparison.
+
+        Args:
+            other (Any): Object to compare.
+
+        Returns:
+            bool: True if equal, False otherwise.
+        """
         if isinstance(other, RichStyle):
             return self.as_rich() == other
         elif isinstance(other, str):
-            parsed_other = self.parse(other)
-            return self.as_rich() == parsed_other.as_rich()
+            try:
+                parsed_other = self.parse(other)
+                return self == parsed_other
+            except Exception:
+                return False
         if not isinstance(other, Style):
             return NotImplemented
-        return self.__hash__() == other.__hash__()
+        return hash(self) == hash(other)
 
     def __ne__(self, other: Any) -> bool:
-        if not isinstance(other, Style):
-            return NotImplemented
-        return self.__hash__() != other.__hash__()
+        """Inequality comparison.
+
+        Args:
+            other (Any): Object to compare.
+
+        Returns:
+            bool: True if not equal, False otherwise.
+        """
+        return not self.__eq__(other)
 
     def __hash__(self) -> int:
+        """Hash for the style.
+
+        Returns:
+            int: Hash value.
+        """
         if self._hash is not None:
             return self._hash
         self._hash = hash(
@@ -503,37 +583,65 @@ class Style(RichStyle):
 
     @property
     def color(self) -> Optional[Color]:
-        """The foreground color or None if it is not set."""
+        """The foreground color or None if it is not set.
+
+        Returns:
+            Optional[Color]: Foreground color.
+        """
         return self._color
 
     @property
     def bgcolor(self) -> Optional[Color]:
-        """The background color or None if it is not set."""
+        """The background color or None if it is not set.
+
+        Returns:
+            Optional[Color]: Background color.
+        """
         return self._bgcolor
 
     @property
     def link(self) -> Optional[str]:
-        """Link text, if set."""
+        """Link text, if set.
+
+        Returns:
+            Optional[str]: Link URL.
+        """
         return self._link
 
     @property
     def transparent_background(self) -> bool:
-        """Check if the style specified a transparent background."""
+        """Check if the style specified a transparent background.
+
+        Returns:
+            bool: True if background is transparent.
+        """
         return self.bgcolor is None or self.bgcolor.rich.is_default
 
     @property
     def background_style(self) -> "Style":
-        """A Style with background only."""
+        """A Style with background only.
+
+        Returns:
+            Style: Style with only background color.
+        """
         return Style(bgcolor=self.bgcolor)
 
     @property
     def meta(self) -> Dict[str, Any]:
-        """Get meta information (can not be changed after construction)."""
+        """Get meta information (can not be changed after construction).
+
+        Returns:
+            Dict[str, Any]: Meta information.
+        """
         return {} if self._meta is None else cast(Dict[str, Any], loads(self._meta))
 
     @property
     def without_color(self) -> "Style":
-        """Get a copy of the style with color removed."""
+        """Get a copy of the style with color removed.
+
+        Returns:
+            Style: Style without color.
+        """
         if self._null:
             return NULL_STYLE
         style: Style = self.__new__(Style)  # type: ignore
@@ -551,7 +659,7 @@ class Style(RichStyle):
         return style
 
     @classmethod
-    @lru_cache(maxsize=4096)
+    @lru_cache(maxsize=4096)  # type: ignore
     def parse(cls, style_definition: str) -> "Style":
         """Parse a style definition.
 
@@ -562,17 +670,26 @@ class Style(RichStyle):
             errors.StyleSyntaxError: If the style definition syntax is invalid.
 
         Returns:
-            `Style`: A Style instance.
+            RichStyle: A Style instance, with colors sanitized to rich.color.Color.
         """
+        # Updated handling for null/none styles
+
+        if isinstance(style_definition, Style) and style_definition._null:
+            return Style.null()
+        if isinstance(style_definition, (Style, RichStyle)):
+            return style_definition
+        if str(style_definition) == "none":
+            return Style.null()
         if isinstance(style_definition, Color):
-            style_definition = style_definition.hex
+            style_definition = style_definition.segments
         if isinstance(style_definition, RGBA):
             style_definition = style_definition.hex
+        # proceed with parsing string definitions manually below
         if not isinstance(style_definition, str):
             raise TypeError(
                 f"Style.parse() expected a str, got {type(style_definition).__name__}"
             )
-        if style_definition.strip() == "none" or not style_definition:
+        if not style_definition:
             return cls.null()
 
         STYLE_ATTRIBUTES = cls.STYLE_ATTRIBUTES
@@ -623,11 +740,19 @@ class Style(RichStyle):
                     ) from None
                 color = word
         style = Style(color=color, bgcolor=bgcolor, link=link, **attributes)
+        # Ensure that the returned style uses only rich.color.Color in its color and bgcolor
         return style
 
     @lru_cache(maxsize=1024)
     def get_html_style(self, theme: Optional[TerminalTheme] = None) -> str:
-        """Get a CSS style rule."""
+        """Get a CSS style rule.
+
+        Args:
+            theme (Optional[TerminalTheme]): Terminal theme.
+
+        Returns:
+            str: CSS style string.
+        """
         theme = theme or DEFAULT_TERMINAL_THEME
         css: List[str] = []
         append = css.append
@@ -665,30 +790,29 @@ class Style(RichStyle):
         return "; ".join(css)
 
     @classmethod
-    def combine(cls, styles: Iterable["Style"]) -> "Style":
+    def combine(cls, styles: Iterable[Any]) -> "Style":
         """Combine styles and get result.
 
         Args:
-            styles (Iterable[Style]): Styles to combine.
+            styles (Iterable[Any]): Styles to combine.
 
         Returns:
             Style: A new style instance.
         """
-        iter_styles = iter(styles)
-        return sum(iter_styles, next(iter_styles))
+        from functools import reduce
+        return reduce(lambda a, b: a + b, styles, Style.null())
 
     @classmethod
-    def chain(cls, *styles: "Style") -> "Style":
-        """Combine styles from positional argument in to a single style.
+    def chain(cls, *styles: Any) -> "Style":
+        """Combine styles from positional arguments into a single style.
 
         Args:
-            *styles (Iterable[Style]): Styles to combine.
+            *styles (Any): Styles to combine.
 
         Returns:
             Style: A new style instance.
         """
-        iter_styles = iter(styles)
-        return sum(iter_styles, next(iter_styles))
+        return cls.combine(styles)
 
     def copy(self) -> "Style":
         """Get a copy of this style.
@@ -739,7 +863,7 @@ class Style(RichStyle):
         """Get a copy with a different value for link.
 
         Args:
-            link (str, optional): New value for link. Defaults to None.
+            link (Optional[str]): New value for link.
 
         Returns:
             Style: A new Style instance.
@@ -770,6 +894,7 @@ class Style(RichStyle):
         Args:
             text (str, optional): A string to style. Defaults to "".
             color_system (Optional[ColorSystem], optional): Color system to render to. Defaults to ColorSystem.TRUECOLOR.
+            legacy_windows (bool, optional): Use legacy Windows mode. Defaults to False.
 
         Returns:
             str: A string containing ANSI style codes.
@@ -791,13 +916,23 @@ class Style(RichStyle):
 
         Args:
             text (Optional[str], optional): Text to style or None for style name.
-
         """
         text = text or str(self)
         sys.stdout.write(f"{self.render(text)}\n")
 
     @lru_cache(maxsize=1024)
-    def _add(self, style: Optional["Style"]) -> "Style":
+    def _add(self, style: Optional["Style"]|Optional[RichStyle]) -> "Style":
+        """Combine this style with another style.
+
+        Args:
+            style (Optional[Style]): Style to add.
+
+        Returns:
+            Style: Combined style.
+        """
+        if isinstance(style, RichStyle):
+            style_string = str(style)
+            style = Style.parse(style_string)
         if style is None or style._null:
             return self
         if self._null:
@@ -821,7 +956,15 @@ class Style(RichStyle):
         new_style._hash = None
         return new_style
 
-    def __add__(self, style: Optional["Style"]|Optional[RichStyle]) -> "Style":
+    def __add__(self, style: Optional[Union["Style", RichStyle]]) -> "Style":
+        """Add (combine) this style with another.
+
+        Args:
+            style (Optional[Union[Style, RichStyle]]): Style to add.
+
+        Returns:
+            Style: Combined style.
+        """
         if isinstance(style, RichStyle):
             style = Style.from_rich(style)
         combined_style = self._add(style)
@@ -831,12 +974,17 @@ class Style(RichStyle):
     def rich(self) -> RichStyle:
         """Creates a rich.style.Style instance from this Style.
 
-        `(This is a convenience method for use with rich.)`
+        Returns:
+            RichStyle: Equivalent rich.style.Style instance.
         """
         return self.as_rich()
 
     def as_rich(self) -> RichStyle:
-        """Convert this Style into a rich.style.Style instance."""
+        """Convert this Style into a rich.style.Style instance.
+
+        Returns:
+            RichStyle: Equivalent rich.style.Style instance.
+        """
         return RichStyle(
             color=self._color.rich if self._color is not None else None,
             bgcolor=self._bgcolor.rich if self._bgcolor is not None else None,
@@ -857,12 +1005,24 @@ class Style(RichStyle):
 
     @classmethod
     def from_rich(cls, rich_style: RichStyle) -> "Style":
-        """Convert a rich.style.Style instance to a Style instance."""
-        assert isinstance(rich_style, RichStyle)
-        assert rich_style.color is not None
-        assert rich_style.bgcolor is not None
-        color = Color.from_triplet(rich_style.color.get_truecolor())
-        bgcolor = Color.from_triplet(rich_style.bgcolor.get_truecolor())
+        """Create a Style from a rich.style.Style instance.
+
+        Args:
+            rich_style (RichStyle): Rich style instance.
+
+        Returns:
+            Style: New Style instance.
+        """
+        color = (
+            Color.from_triplet(rich_style.color.get_truecolor())
+            if rich_style.color
+            else None
+        )
+        bgcolor = (
+            Color.from_triplet(rich_style.bgcolor.get_truecolor())
+            if rich_style.bgcolor
+            else None
+        )
         return cls(
             color=color,
             bgcolor=bgcolor,
@@ -883,6 +1043,9 @@ class Style(RichStyle):
 
 
 NULL_STYLE = Style()
+
+register_repr(Style)(normal_repr)
+register_repr(RichStyle)(normal_repr)
 
 
 class StyleStack:

@@ -30,28 +30,35 @@ __all__ = [
     "rads"
 ]
 
-# Regex patterns for parsing colors
-# these are not compiled here to avoid import slowdown, they'll be compiled the first time they're used, then cached
-_r_255 = r"(\d{1,3}(?:\.\d+)?)"
-_r_comma = r"\s*,\s*"
-_r_alpha = r"(\d(?:\.\d+)?|\.\d+|\d{1,2}%)"
-_r_h = r"(-?\d+(?:\.\d+)?|-?\.\d+)(deg|rad|turn)?"
-_r_sl = r"(\d{1,3}(?:\.\d+)?)%"
-r_hex_short = r"\s*(?:#|0x)?([0-9a-f])([0-9a-f])([0-9a-f])([0-9a-f])?\s*"
-r_hex_long = r"\s*(?:#|0x)?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?\s*"
-# CSS3 RGB examples: rgb(0, 0, 0), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 50%)
-r_rgb = rf"\s*rgba?\(\s*{_r_255}{_r_comma}{_r_255}{_r_comma}{_r_255}(?:{_r_comma}{_r_alpha})?\s*\)\s*"
-# CSS3 HSL examples: hsl(270, 60%, 50%), hsla(270, 60%, 50%, 0.5), hsla(270, 60%, 50%, 50%)
-r_hsl = rf"\s*hsla?\(\s*{_r_h}{_r_comma}{_r_sl}{_r_comma}{_r_sl}(?:{_r_comma}{_r_alpha})?\s*\)\s*"
-# CSS4 RGB examples: rgb(0 0 0), rgb(0 0 0 / 0.5), rgb(0 0 0 / 50%), rgba(0 0 0 / 50%)
-r_rgb_v4_style = (
+# Regex fragment for an RGB channel (0-255)
+_r_255: str = r"(\d{1,3}(?:\.\d+)?)"
+# Comma with optional surrounding spaces
+_r_comma: str = r"\s*,\s*"
+# Alpha channel: float (0.0–1.0) or percentage
+_r_alpha: str = r"(\d(?:\.\d+)?|\.\d+|\d{1,2}%)"
+# Hue value with optional unit: deg, rad, or turn
+_r_h: str = r"(-?\d+(?:\.\d+)?|-?\.\d+)(deg|rad|turn)?"
+# Saturation/lightness percentage
+_r_sl: str = r"(\d{1,3}(?:\.\d+)?)%"
+
+# Short and long hexadecimal notation
+r_hex_short: str = r"\s*(?:#|0x)?([0-9a-f])([0-9a-f])([0-9a-f])([0-9a-f])?\s*"
+r_hex_long: str = r"\s*(?:#|0x)?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?\s*"
+
+# CSS3-compatible rgba() and hsla()
+r_rgb: str = rf"\s*rgba?\(\s*{_r_255}{_r_comma}{_r_255}{_r_comma}{_r_255}(?:{_r_comma}{_r_alpha})?\s*\)\s*"
+r_hsl: str = rf"\s*hsla?\(\s*{_r_h}{_r_comma}{_r_sl}{_r_comma}{_r_sl}(?:{_r_comma}{_r_alpha})?\s*\)\s*"
+
+# CSS4 color syntax with spaces and optional slash
+r_rgb_v4_style: str = (
     rf"\s*rgba?\(\s*{_r_255}\s+{_r_255}\s+{_r_255}(?:\s*/\s*{_r_alpha})?\s*\)\s*"
 )
-# CSS4 HSL examples: hsl(270 60% 50%), hsl(270 60% 50% / 0.5), hsl(270 60% 50% / 50%), hsla(270 60% 50% / 50%)
-r_hsl_v4_style = (
+r_hsl_v4_style: str = (
     rf"\s*hsla?\(\s*{_r_h}\s+{_r_sl}\s+{_r_sl}(?:\s*/\s*{_r_alpha})?\s*\)\s*"
 )
 
-# colors where the two hex characters are the same, if all colors match this the short version of hex colors can be used
-repeat_colors = {int(c * 2, 16) for c in "0123456789abcdef"}
-rads = 2 * math.pi
+# Precomputed integer values where both hex characters are the same (used for short hex matching)
+repeat_colors: set[int] = {int(c * 2, 16) for c in "0123456789abcdef"}
+
+# Constant for 2π (used in radian conversion)
+rads: float = 2 * math.pi

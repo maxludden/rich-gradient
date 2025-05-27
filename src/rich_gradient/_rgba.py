@@ -23,14 +23,14 @@ from rich.color_triplet import ColorTriplet
 from rich.style import Style
 from rich.text import Text
 
-from rich_gradient._colors import COLORS_BY_ANSI,COLORS_BY_NAME
+from rich_gradient._colors import COLORS_BY_ANSI, COLORS_BY_NAME
 from rich_gradient._parsers import (
     r_hex_long,
     r_hex_short,
     r_hsl,
     r_hsl_v4_style,
     r_rgb,
-    r_rgb_v4_style
+    r_rgb_v4_style,
 )
 
 ColorTuple: TypeAlias = Union[Tuple[int, int, int], Tuple[int, int, int, float]]
@@ -70,7 +70,13 @@ class RGBA:
         alpha (float): Alpha value (0-1)
     """
 
-    __slots__ = "r", "g", "b", "alpha", "_tuple"
+    __slots__: Tuple[str, ...] = ("r", "g", "b", "alpha", "_tuple")
+
+    r: int
+    g: int
+    b: int
+    alpha: float
+    _tuple: Tuple[int, int, int, float]
 
     def __init__(self, r: int, g: int, b: int, alpha: float = 1.0) -> None:
         self.r = int(r)
@@ -82,14 +88,31 @@ class RGBA:
         self._tuple = (self.r, self.g, self.b, self.alpha)
 
     def __getitem__(self, item: Any) -> Any:
+        """Get the RGBA color value by index or name.
+        Args:
+            item (int|str): The index (0-3) or name ('r', 'g', 'b', 'a') of the color value.
+        Returns:
+            Any: The color value (0-255 for r, g, b; 0.0-1.0 for a).
+        Raises:
+            IndexError: If the index is out of range.
+            KeyError: If the key is not 'r', 'g', 'b', or 'a'.
+        """
         return self._tuple[item]
 
     @property
     def red(self) -> int:
+        """Return the red value of the RGBA color.
+        Returns:
+            int: The red value (0-255).
+        """
         return self.r
 
     @red.setter
     def red(self, value: int | float) -> None:
+        """Set the red value of the RGBA color.
+
+        Args:
+            value (int|float): The red value (0-255 or 0-1)."""
         self.r = (
             int(round(value * 255))
             if isinstance(value, float) and 0 <= value <= 1
@@ -98,10 +121,15 @@ class RGBA:
 
     @property
     def green(self) -> int:
+        """Return the green value of the RGBA color.
+        Returns:
+            int: The green value (0-255).
+        """
         return self.g
 
     @green.setter
     def green(self, value: int | float) -> None:
+        """Set the green value of the RGBA color."""
         self.g = (
             int(round(value * 255))
             if isinstance(value, float) and 0 <= value <= 1
@@ -110,6 +138,11 @@ class RGBA:
 
     @property
     def blue(self) -> int:
+        """Return the blue value of the RGBA color.
+
+        Returns:
+            int: The blue value (0-255).
+        """
         return self.b
 
     @blue.setter
@@ -121,12 +154,15 @@ class RGBA:
         )
 
     def __repr__(self) -> str:
+        """Return a string representation of the RGBA color."""
         return f"RGBA({self.r}, {self.g}, {self.b}, {self.alpha})"
 
     def __str__(self) -> str:
+        """Return a string representation of the RGBA color."""
         return self.as_hex()
 
     def __eq__(self, other: object) -> bool:
+        """Check if two RGBA colors are equal."""
         if not isinstance(other, RGBA):
             return NotImplemented
         return (self.r, self.g, self.b, self.alpha) == (
@@ -143,6 +179,7 @@ class RGBA:
         return hash((self.r, self.g, self.b, self.alpha))
 
     def __add__(self, other: "RGBA") -> "RGBA":
+        """Add two RGBA colors together and return a new RGBA color."""
         if not isinstance(other, RGBA):
             return NotImplemented
         return RGBA(
@@ -155,7 +192,8 @@ class RGBA:
         )
 
     def __rich__(self) -> Text:
-        style = Style(color=self.as_rgb(), bold=True)
+        """Return a rich text representation of the RGBA color."""
+        style: Style = Style(color=self.as_rgb(), bold=True)
         return Text.assemble(
             *[
                 Text("rgb", style=style),
@@ -215,10 +253,15 @@ class RGBA:
 
     @staticmethod
     def as_default() -> RGBA:
-        default_rich = RichColor.default()
-        default_triplet = default_rich.get_truecolor()
+        default_rich: RichColor = RichColor.default()
+        default_triplet: ColorTriplet = default_rich.get_truecolor()
         r, g, b = default_triplet.red, default_triplet.green, default_triplet.blue
         return RGBA(r, g, b)
+
+    @classmethod
+    def as_rich_default(seclslf) -> RichColor:
+        """Return the default rich color."""
+        return RichColor.default()
 
     @property
     def _alpha(self) -> float:
@@ -226,27 +269,37 @@ class RGBA:
 
     @cached_property
     def triplet(self) -> ColorTriplet:
+        """Return the color as a ColorTriplet."""
         return self.as_triplet()
 
     def as_triplet(self) -> ColorTriplet:
+        """Return the color as a ColorTriplet."""
         return ColorTriplet(self.r, self.g, self.b)
 
     @cached_property
     def tuple(self) -> Tuple[int, int, int]:
+        """Return the color as a tuple of ints (0-255)."""
         return self.as_tuple()
 
-    def as_tuple(self) -> tuple[int, int, int]:
+    def as_tuple(self) -> Tuple[int, int, int]:
+        """Return the color as a tuple of ints (0-255)."""
         return (self.r, self.g, self.b)
 
     @cached_property
     def rich(self) -> RichColor:
+        """Return the color as a rich.color.Color."""
         return self.as_rich()
 
     def as_rich(self) -> RichColor:
+        """Return the color as a rich.color.Color."""
         return RichColor.from_triplet(self.as_triplet())
 
     @classmethod
-    def from_hex(cls, value: str) -> "RGBA":
+    def from_hex(cls, value: str) -> RGBA:
+        """Generate an RGBA instance from a hex color code (str). ie. #ff0000"""
+        if not isinstance(value, str):
+            raise TypeError(f"Expected string for hex value, got {type(value).__name__}")
+
         for regex in (r_hex_short, r_hex_long, r_rgb, r_rgb_v4_style):
             match = re.match(regex, value, re.IGNORECASE)
             if match:
@@ -258,11 +311,27 @@ class RGBA:
         raise ValueError(f"Invalid hex value: `{value}`")
 
     @classmethod
-    def from_rgb(cls, value: str) -> "RGBA":
+    def from_rgb(cls, value: str) -> RGBA:
+        """Parse a RGBA instance from a rgb string.
+        Args:
+            value (str): A rgb string.
+        Returns:
+            RGBA: An RGBA instance.
+        Raises:
+            ValueError: If the value is not a valid rgb string.
+        """
         return cls.from_hex(value)
 
     @classmethod
     def from_rich(cls, value: RichColor) -> RGBA:
+        """Parse a RGBA instance from a rich.color.Color.
+        Args:
+            value (RichColor): A rich.color.Color instance.
+        Returns:
+            RGBA: An RGBA instance.
+        Raises:
+            ValueError: If the value is not a valid rich.color.Color instance.
+        """
         try:
             triplet = value.triplet if value.triplet else RichColor.parse(value).triplet
             if triplet:
@@ -301,8 +370,17 @@ class RGBA:
             raise RGBAError(f"Exception: Invalid RichColor value: {value}")
 
     @classmethod
-    def from_hsl(cls, value: str) -> "RGBA":
-        def _convert_hsl_match(match: re.Match) -> RGBA:
+    def from_hsl(cls, value: str) -> RGBA:
+        """Parse a RGBA instance from a hsl string.
+        Args:
+            value (str): A hsl string.
+        Returns:
+            RGBA: An RGBA instance.
+        Raises:
+            ValueError: If the value is not a valid hsl string.
+        """
+
+        def _convert_hsl_match(match: re.Match[str]) -> RGBA:
             hue, saturation, lightness = (float(match.group(i)) for i in range(1, 4))
             _hue = hue / 360
             _saturation = saturation / 100
@@ -342,12 +420,27 @@ class RGBA:
     @classmethod
     def from_tuple(
         cls, value: tuple[int, int, int] | tuple[int, int, int, float]
-    ) -> "RGBA":
+    ) -> RGBA:
+        """Parse a RGBA instance from a tuple.
+        Args:
+            value (tuple): A tuple of ints (0-255) or floats (0-1).
+        Returns:
+            RGBA: An RGBA instance.
+        Raises:
+            ValueError: If the value is not a valid tuple.
+        """
         return cls.from_triplet(value)
 
-    # blend_rgb moved to color_utils.py
-
-    def get_contrast(self, fixed: Optional[str] = None) -> "RGBA":
+    def get_contrast(self, fixed: Optional[str] = None) -> RGBA:
+        """Get the contrast color for the current RGBA color.
+        Args:
+            fixed (str, optional): If "black" or "white", return a fixed color.
+                Defaults to None.
+        Returns:
+            RGBA: The contrast color.
+        Raises:
+            ValueError: If fixed is not "black" or "white".
+        """
         if fixed:
             if fixed not in ["black", "white"]:
                 raise ValueError("Fixed color must be 'black' or 'white'")

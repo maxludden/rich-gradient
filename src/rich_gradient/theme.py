@@ -13,7 +13,7 @@ from rich_gradient.default_styles import DEFAULT_STYLES, styles_table
 _ColorTuple = Tuple[int, int, int]
 
 
-class GradientTheme:
+class GradientTheme(Theme):
     """A container for style information used by 'rich.console.Console'.
 
     Args:
@@ -24,9 +24,11 @@ class GradientTheme:
 
     # styles: Dict[str, Style] = {}
 
-    def __init__(self) -> None:
-        self.theme = Theme(DEFAULT_STYLES)
-        self.styles = DEFAULT_STYLES
+    def __init__(self, styles: Dict[str, StyleType] = DEFAULT_STYLES) -> None:
+        """Initialize the GradientTheme with default styles."""
+        super().__init__(styles=styles, inherit=True)
+        self._theme: Theme = Theme(DEFAULT_STYLES)
+        self._styles: Dict[str, StyleType] = styles
 
     @property
     def theme(self) -> Theme:
@@ -36,21 +38,21 @@ class GradientTheme:
     def theme(self, theme: Theme = Theme(DEFAULT_STYLES)) -> None:
         self._theme = theme
 
-    @property
-    def styles(self) -> Dict[str, StyleType]:
-        """The styles of the the theme."""
-        if self._styles is None:
-            self._styles: Dict[str, StyleType] = DEFAULT_STYLES
-        return self._styles
+    # @property
+    # def styles(self) -> Dict[str, StyleType]:
+    #     """The styles of the the theme."""
+    #     if self._styles is None:
+    #         self._styles: Dict[str, StyleType] = DEFAULT_STYLES
+    #     return self._styles
 
-    @styles.setter
-    def styles(self, styles: Dict[str, StyleType] = DEFAULT_STYLES) -> None:
-        """Set the style of the theme.
+    # @styles.setter
+    # def styles(self, styles: Dict[str, StyleType] = DEFAULT_STYLES) -> None:
+    #     """Set the style of the theme.
 
-        Args:
-            style(Dict[str, StyleType]): The styles of the theme."""
-        assert styles, "Cannot set styles to None."
-        self._style: Dict[str, StyleType] = styles
+    #     Args:
+    #         style(Dict[str, StyleType]): The styles of the theme."""
+    #     assert styles, "Cannot set styles to None."
+    #     self._style: Dict[str, StyleType] = styles
 
     def __call__(self) -> Theme:
         return self.theme
@@ -74,24 +76,24 @@ GRADIENT_TERMINAL_THEME = TerminalTheme(
     background=(0, 0, 0),
     foreground=(255, 255, 255),
     normal=[
-        ( 33,  34,  44), # rgb(35 35 35),
-        (255,  85,  85), # rgb(254 109 109),
-        ( 20, 200,  20), # rgb(24 195 24),
-        (241, 250, 140), # rgb(211 208 31),
-        (189, 147, 249), # rgb(122 65 202),
-        (255, 121, 198), # rgb(255 139 205),
-        (139, 233, 253), # rgb(0 115 255),
-        (248, 248, 242), # rgb(245 245 245),
+        (33, 34, 44),  # rgb(35 35 35),
+        (255, 85, 85),  # rgb(254 109 109),
+        (20, 200, 20),  # rgb(24 195 24),
+        (241, 250, 140),  # rgb(211 208 31),
+        (189, 147, 249),  # rgb(122 65 202),
+        (255, 121, 198),  # rgb(255 139 205),
+        (139, 233, 253),  # rgb(0 115 255),
+        (248, 248, 242),  # rgb(245 245 245),
     ],
     bright=[
-        (0, 0, 0), #       rgb(0, 0, 0),
-        (255, 0, 0), #     rgb(255, 0, 0),
-        (0, 255, 0), #     rgb(0, 255, 0),
-        (255, 255, 0), #   rgb(255, 255, 0),
-        (214, 172, 255), # rgb(136, 0, 255),
-        (255, 146, 223), # rgb(255, 0, 255),
-        (164, 255, 255), # rgb(0, 0, 255),
-        (255, 255, 255), # rgb(255, 255, 255),
+        (0, 0, 0),  #       rgb(0, 0, 0),
+        (255, 0, 0),  #     rgb(255, 0, 0),
+        (0, 255, 0),  #     rgb(0, 255, 0),
+        (255, 255, 0),  #   rgb(255, 255, 0),
+        (214, 172, 255),  # rgb(136, 0, 255),
+        (255, 146, 223),  # rgb(255, 0, 255),
+        (164, 255, 255),  # rgb(0, 0, 255),
+        (255, 255, 255),  # rgb(255, 255, 255),
     ],
 )
 
