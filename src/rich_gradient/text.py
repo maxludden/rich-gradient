@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from typing import List, Optional, Sequence, Tuple
 from time import sleep
+from typing import List, Optional, Sequence, Tuple
 
 from cheap_repr import normal_repr, register_repr
 from lorem_text import lorem
 from rich import inspect
 from rich.color import Color as RichColor
+from rich.color_triplet import ColorTriplet
 from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.panel import Panel
 from rich.text import Span
@@ -14,7 +15,7 @@ from rich.text import Text as RichText
 from rich.traceback import install as install_tr
 
 from rich_gradient._helper import get_console
-from rich_gradient.color import Color, ColorType
+from rich_gradient.color import Color, ColorError, ColorType
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.style import Style, StyleType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
@@ -56,6 +57,8 @@ class Text(RichText):
         "tab_size",  # type: int
         "_spans",  # type: List[Span]
         "rich_text",  # type: RichText
+        "_cached_substring_indexes",
+        "_cached_gradient_spans"
     ]
 
     def __init__(
@@ -92,11 +95,11 @@ class Text(RichText):
             spans: Optional custom Rich spans.
             verbose: Whether to print debug info to the console.
         """
-        if verbose:
-            global VERBOSE
-            VERBOSE = True
+        global VERBOSE
+        VERBOSE = verbose
         if style is None:
             style = Style.null()
+        # Centralize RichText creation logic
         if markup:
             parsed = RichText.from_markup(
                 text, style=str(style), justify=justify, overflow=overflow, end=end
@@ -124,11 +127,7 @@ class Text(RichText):
         self.style = str(style)
         self._text = parsed._text
         self._spans = list(parsed.spans)
-        self._colors = self.parse_colors(
-            colors,
-            rainbow=rainbow,
-            hues=hues,
-        )
+        self._colors = self._init_colors(colors, rainbow, hues)
         self._apply_gradient_spans()
         self.rich_text = RichText(
             self.plain,
@@ -140,6 +139,55 @@ class Text(RichText):
             tab_size=tab_size,
             spans=self._spans,
         )
+
+    # Note: parse_colors now duplicates _init_colors logic; consider consolidating usage.
+    def _init_colors(
+        self, colors: Optional[Sequence[ColorType]], rainbow: bool, hues: int
+    ) -> List[Color]:
+        # Using same parsing logic as parse_colors for consistency
+        """
+        Parse a list of colors or styles into Color objects.
+
+        Args:
+            colors: A list of valid color definitions.
+            rainbow: If True, generate a rainbow color spectrum.
+            hues: Number of hues to generate if rainbow is True.
+
+        Returns:
+            A list of Color objects.
+        """
+        if rainbow:
+            return Spectrum(18).colors
+        if colors is None:
+            if hues < 2:
+                raise ValueError(
+                    "At least two hues are required when no colors provided."
+                )
+            return Spectrum(hues).colors
+
+        parsed_colors: List[Color] = []
+        for color in colors:
+            # if isinstance(color, str):
+            #     parsed_colors.append(Color(color))
+            # elif isinstance(color, Color):
+            #     parsed_colors.append(color)
+            # elif isinstance(color, RichColor):
+            #     parsed_colors.append(Color.from_rich(color))
+            # elif isinstance(color, Style):
+            #     style_color = color.color
+            #     if style_color is None:
+            #         raise ValueError("Style color cannot be None")
+            #     parsed_colors.append(Color.from_rich(style_color))
+            # elif isinstance(color, tuple) and len(color) == 3:
+            #     parsed_colors.append(Color.from_triplet(ColorTriplet(*color)))
+            # else:
+            #     raise TypeError(f"Unsupported color type: {type(color)}")
+            try:
+                parsed_colors.append(Color(color))
+            except ColorError as ce:
+                console.log(f"Error parsing color {color}: {ce}")
+                raise ValueError(f"Invalid color definition: {color}") from ce
+        return parsed_colors
 
     @staticmethod
     def parse_colors(
@@ -162,28 +210,34 @@ class Text(RichText):
             return Spectrum(18).colors
         if colors is None:
             if hues < 2:
-                raise ValueError
+                raise ValueError(
+                    "At least two hues are required when no colors provided."
+                )
             return Spectrum(hues).colors
-        if colors:
-            parsed_colors: List[Color] = []
-            for color in colors:
-                if isinstance(color, str):
-                    parsed_colors.append(Color(color))
-                elif isinstance(color, Color):
-                    parsed_colors.append(color)
-                elif isinstance(color, RichColor):
-                    parsed_colors.append(Color.from_rich(color))
-                elif isinstance(color, Style):
-                    style_color = color.color
-                    if style_color is None:
-                        raise ValueError("Style color cannot be None")
-                    parsed_colors.append(style_color)
-                else:
-                    raise TypeError(f"Unsupported color type: {type(color)}")
-            return parsed_colors
-        raise ValueError(
-            "Invalid colors provided. Must be a list of Color, RichColor, Style, or str."
-        )
+
+        parsed_colors: List[Color] = []
+        for color in colors:
+            # if isinstance(color, str):
+            #     parsed_colors.append(Color(color))
+            # elif isinstance(color, Color):
+            #     parsed_colors.append(color)
+            # elif isinstance(color, RichColor):
+            #     parsed_colors.append(Color.from_rich(color))
+            # elif isinstance(color, Style):
+            #     style_color = color.color
+            #     if style_color is None:
+            #         raise ValueError("Style color cannot be None")
+            #     parsed_colors.append(Color.from_rich(style_color))
+            # elif isinstance(color, tuple) and len(color) == 3:
+            #     parsed_colors.append(Color.from_triplet(ColorTriplet(*color)))
+            # else:
+            #     raise TypeError(f"Unsupported color type: {type(color)}")
+            try:
+                parsed_colors.append(Color(color))
+            except ColorError as ce:
+                console.log(f"Error parsing color {color}: {ce}")
+                raise ValueError(f"Invalid color definition: {color}") from ce
+        return parsed_colors
 
     def generate_substring_indexes(self) -> List[Tuple[int, int]]:
         """
@@ -192,6 +246,9 @@ class Text(RichText):
         Returns:
             A list of (start, end) index pairs for each text segment.
         """
+        if hasattr(self, "_cached_substring_indexes"):
+            return self._cached_substring_indexes
+
         segments = len(self._colors) - 1
         if VERBOSE:
             console.log(f"{segments=}")
@@ -212,6 +269,7 @@ class Text(RichText):
                     f"Segment {i}: start={start_index}, end={end_index}, length={length}"
                 )
             start_index = end_index
+        self._cached_substring_indexes = substring_indexes
         return substring_indexes
 
     def get_style_at_index(self, index: int) -> Style:
@@ -227,11 +285,11 @@ class Text(RichText):
         if VERBOSE:
             console.log(f"Getting spans at index {index}")
 
+        if not self._spans:
+            return Style.null()
+
         # Get all spans that cover the specified index
-        spans: List[Span] = []
-        for span in self._spans:
-            if span.start <= index < span.end:
-                spans.append(span)
+        spans = [span for span in self._spans if span.start <= index < span.end]
 
         # Merge styles from all spans at this index
         if len(spans) > 0:
@@ -249,6 +307,7 @@ class Text(RichText):
     def _apply_gradient_spans(self) -> None:
         """
         Merge parsed spans with gradient spans, combining styles where necessary.
+        Gradient spans are cached after first generation for performance.
         """
         gradient_spans = self._generate_gradient_spans()
         self._spans.extend(gradient_spans)
@@ -260,6 +319,10 @@ class Text(RichText):
         Returns:
             A list of spans with blended RGB styles across the text.
         """
+        if hasattr(self, "_cached_gradient_spans"):
+            if VERBOSE:
+                console.log("Using cached gradient spans")
+            return self._cached_gradient_spans
         plain_text = self.plain
         num_chars = len(plain_text)
         num_segments = len(self._colors) - 1
@@ -292,6 +355,7 @@ class Text(RichText):
                 spans.append(Span(index, index + 1, str(blended_style)))
             start += segment_length
 
+        self._cached_gradient_spans = spans
         return spans
 
     @property
@@ -309,27 +373,19 @@ class Text(RichText):
         return self.rich_text
 
 
-register_repr(Text)(normal_repr)
+# TODO: re-enable repr registration if needed for debugging
 
 if __name__ == "__main__":
     from rich.console import Console
 
     console = Console(width=64, theme=GradientTheme(), record=True)
 
-
-
     def gradient_example1() -> None:
         """Print the first example with a gradient."""
         colors = [
             Color(color)
-                for color in [
-                    "yellow",
-                    "#9f0",
-                    "rgb(0, 255, 0)",
-                    "springgreen",
-                    "#00FFFF"
-                ]
-            ]
+            for color in ["yellow", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
+        ]
 
         def example1_text(colors: List[Color] = colors) -> RichText:
             """Generate example text with a simple two-color gradient."""
@@ -353,9 +409,8 @@ Overflow handling\n\t- Custom styles and spans',
                 colors=colors,
                 style="bold",
                 justify="center",
-        )
+            )
             return example1_title
-
 
         console.print(
             Panel(
@@ -372,6 +427,7 @@ Overflow handling\n\t- Custom styles and spans',
             theme=GRADIENT_TERMINAL_THEME,
         )
         sleep(1)
+
     gradient_example1()
 
     def gradient_example2() -> None:
@@ -401,9 +457,7 @@ Automatically generated gradients are always generated with consecutive colors."
         )
         sleep(1)
 
-
     gradient_example2()
-
 
     def gradient_example3() -> None:
         """Print the third example with a rainbow gradient."""
@@ -439,35 +493,51 @@ This will generate a gradient with the full spectrum of colors.",
         """Print the fourth example with custom color stops."""
         specified_colors: Text = Text(
             text="""If you like to specify your own \
-colors, you can pass Text a list of colors. Colors can be specified \
+colors, you can specify a list of colors. Colors can be specified \
 as:
 
-    - 3 and 6 digit hex strings (eg. '#ff0000' or '#9f0')
-    - RGB tuples or strings (eg. (255, 0, 0) or rgb(255, 0, 0) for red)
-    - CSS3 Color names (eg. 'red', 'springgreen', 'dodgerblue')
+    - 3 and 6 digit hex strings:
+        - '#ff0000'
+        - '#9F0'
+    - RGB tuples or strings:
+        - (255, 0, 0)
+        - 'rgb(95, 0, 255)'
+    - CSS3 Color names:
+        - 'red'
+        - 'springgreen'
+        - 'dodgerblue'
+    - rich.color.Color names:
+        - 'grey0'
+        - 'purple4'
+    - rich.color.Color objects
+    - rich_gradient.color.Color objects
+    - rich_gradient.style.Style objects
+
 
 Just make sure to pass at least two colors... otherwise the gradient \
-is superfluous!\n\n This gradient uses:
+is superfluous!\n\nThis gradient uses:
 
     - 'magenta'
-    - '#f09'
-    - 'rgb(255, 0, 75)'
-    - 'red'
-    - '#FF4B00'""",
-    colors = [
+    - 'gold1'
+    - '#0f0''""",
+            colors=[
                 "magenta",
-                "#f09",
-                "rgb(255, 0, 75)",
-                "red",
-                "#FF4B00",
+                "gold1",
+                "#0f0"
             ],
-
         )
-        specified_colors.highlight_words(["magenta"], "bold #magenta")
-        specified_colors.highlight_regex(r"#f09", "bold #f09")
-        specified_colors.highlight_regex(r"rgb\(255, 0, 75\)", style="rgb(255, 0, 75)")
-        specified_colors.highlight_regex(r"red", "bold red")
-        specified_colors.highlight_regex(r"\"#FF4B00\"", "bold #FF4B00")
+        specified_colors.highlight_regex(r"magenta", "#ff00ff")
+        specified_colors.highlight_regex(r"#9F0", "#99fF00")
+        specified_colors.highlight_words(["gold1"], style="gold1")
+        specified_colors.highlight_regex(r"springgreen", style="#00FF7F")
+        specified_colors.highlight_regex(r"dodgerblue", style="#1E90FF")
+        specified_colors.highlight_regex(r"grey0", style="grey0")
+        specified_colors.highlight_regex(r"purple4", style="purple4")
+        specified_colors.highlight_regex(r"#f09", style="#f09")
+        specified_colors.highlight_regex(r"red|#ff0000|\(255, 0, 0\)", style="red")
+        specified_colors.highlight_regex(r"#00FFFF", style="#00FFFF")
+        specified_colors.highlight_regex(
+            r"rich_gradient\.color\.Color|rich_gradient\.style\.Style|rich\.color\.Color|'|white", style="italic white")
         console.print(
             Panel(
                 specified_colors,
@@ -490,12 +560,33 @@ is superfluous!\n\n This gradient uses:
     gradient_example4()
 
     # Example 5: Long text with a smooth gradient
+    colors5 = ["magenta", "cyan"]
     long_text = (
-        "This is a long string to demonstrate a smooth gradient across many characters."
+        "If you are picky about your colors, but prefer simpler gradients, Text will smoothly \
+interpolate between two or more colors. This means you can specify a list of colors, or even just \
+two colors and Text will generate a smooth gradient between them."
     )
     text5 = Text(
         long_text,
-        colors=["magenta", "cyan"],
+        colors=colors5,
         style="bold",
+        justify = "center"
     )
-    console.print(text5)
+    console.print(
+        Panel(
+            text5,
+            padding=(1, 4),
+            width=64,
+            title=Text(
+                "Example 5",
+                style="bold white",
+            ),
+            border_style="bold cyan",
+        )
+    )
+    console.save_svg(
+        "docs/img/v0.2.1/gradient_example5.svg",
+        title="gradient_example_5",
+        unique_id="gradient_example_5",
+        theme=GRADIENT_TERMINAL_THEME,
+    )

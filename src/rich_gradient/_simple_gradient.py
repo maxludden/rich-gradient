@@ -59,10 +59,10 @@ class SimpleGradient(Text):
         "color2",
         "_text",
         "_length",
-        "style",
         "_spans",
         "end",
         "verbose",
+        "_style"
     )
 
     def __init__(

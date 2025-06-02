@@ -30,6 +30,7 @@ from typing import (
     TypeAlias,
     Union,
     cast,
+    TYPE_CHECKING
 )
 
 from rich.color import Color as RichColor
@@ -99,7 +100,6 @@ class Color:
         if isinstance(value, Color):
             self._rgba: RGBA = value._rgba
             self._original: str = value._original
-
         elif isinstance(value, (tuple, list)):
             self._rgba: RGBA = self.parse_tuple(value)
             self._original: str = str(value)
@@ -132,7 +132,7 @@ class Color:
     def __rich__(self) -> Text:
         """Return a simple visual block for Console.print()."""
         # Apply gradient after justification by calling self.as_rich().stylize(Text("█" * 10))
-        return Text(f"{'█' * 10}", style=self.segments)
+        return Text(f"{'█' * 10}", style=self.as_hex())
 
     def __repr__(self, *args: Any, **kwds: Any) -> str:
         return f"Color({self.as_named(fallback=True)})"
@@ -143,7 +143,7 @@ class Color:
             *[
                 Text("Color(", style="bold #ffffff"),
                 Text(
-                    f"'{self.as_named(fallback=True)}'", style=f"bold {self.segments}"
+                    f"'{self.as_named(fallback=True)}'", style=f"bold {self.as_hex()}"
                 ),
                 Text(")", style="bold #ffffff"),
             ]
@@ -159,7 +159,7 @@ class Color:
         return self.as_named(fallback=True)
 
     @property
-    def segments(self) -> str:
+    def hex(self) -> str:
         """Return the hex value of the color.
 
         Returns:
@@ -194,12 +194,12 @@ of the color."""
     @property
     def style(self) -> RichStyle:
         """The color as a rich style."""
-        return RichStyle(color=self.segments)
+        return RichStyle(color=self.as_hex())
 
     @property
     def bg_style(self) -> RichStyle:
         """The color as a background style."""
-        return RichStyle(bgcolor=self.segments)
+        return RichStyle(bgcolor=self.as_hex())
 
     @property
     def ansi(self) -> int | None:
@@ -207,7 +207,7 @@ of the color."""
         ansi = self.as_ansi()
         if ansi is not None and ansi != -1:
             return ansi
-        raise KeyError(f"ANSI color code not found for color: {self.segments}")
+        raise KeyError(f"ANSI color code not found for color: {self.as_hex()}")
 
     @property
     def original(self) -> ColorType:
@@ -257,8 +257,8 @@ of the color."""
 
         Args:
             fallback (bool, optional): If True (default), fall \
-back to hex representation if name is not found.
-                If False, raise ValueError when no name is found.
+back to hex representation if name is not found. If False, raise \
+ValueError when no name is found.
 
         Returns:
             str: Named color or hex string.
@@ -266,14 +266,14 @@ back to hex representation if name is not found.
         Raises:
             ValueError: If no named color exists and fallback is False.
         """
-        if self.segments in COLORS_BY_HEX:
-            color_dict = COLORS_BY_HEX[self.segments]
+        if self.as_hex() in COLORS_BY_HEX:
+            color_dict = COLORS_BY_HEX[self.as_hex()]
             return str(color_dict["name"])
         else:
             if fallback:
-                return self.segments
+                return self.as_hex()
             raise ValueError(
-                f"Color {self.segments} does not have a named representation."
+                f"Color {self.as_hex()} does not have a named representation."
             )
 
     def as_hex(
@@ -300,23 +300,7 @@ back to hex representation if name is not found.
 
     def as_rich_rgb(self) -> Text:
         """Return the color as a rich RGB string."""
-        r, g, b = (self._rgba.r, self._rgba.g, self._rgba.b)
-        style = RichStyle(
-            color=self.segments,
-            bold=True,
-        )
-        return Text.assemble(
-            *[
-                Text("rgb", style=style),
-                Text("(", style="b #ffffff"),
-                Text(f"{r:>3}", style="b #ff0000"),
-                Text(",", style="b #555"),
-                Text(f"{g:>3}", style="b #00ff00"),
-                Text(",", style="b #555"),
-                Text(f"{b:>3}", style="b #0099ff"),
-                Text(")", style="b #ffffff"),
-            ]
-        )
+        return self._rgba.__rich__()
 
     def as_rgb_tuple(self) -> Tuple[int, int, int]:
         """Return the color as an (r, g, b) tuple."""
@@ -357,19 +341,28 @@ back to hex representation if name is not found.
             raise TypeError(f"color must be a Color, got {type(color)}")
         if bgcolor is not None and not isinstance(bgcolor, Color):
             raise TypeError(f"bgcolor must be a Color, got {type(bgcolor)}")
+        if hasattr(attributes, "reverse"):
+            # If attributes has a 'reverse' key, set the bgcolor to the color
+            # and the color to #ffffff
+            return RichStyle(
+                color="#ffffff",
+                bgcolor=color.as_hex(),
+                reverse=False,
+                **{k: v for k, v in attributes.items() if k != "reverse"},
+            )
         return RichStyle(color=color.rich, **attributes)
 
     def as_ansi(self) -> int | None:
         """Return the ANSI color code for the color, or raise KeyError if not found."""
         color_dict: Optional[dict[str, str | Tuple[int, int, int] | int]] = (
-            COLORS_BY_HEX.get(self.segments)
+            COLORS_BY_HEX.get(self.as_hex())
         )
         if not color_dict:
-            raise KeyError(f"Color not found in COLORS_BY_HEX: {self.segments}")
+            raise KeyError(f"Color not found in COLORS_BY_HEX: {self.as_hex()}")
         ansi = color_dict.get("ansi", -1)
         if isinstance(ansi, int) and ansi != -1:
             return ansi
-        raise KeyError(f"ANSI color code not found for color: {self.segments}")
+        raise KeyError(f"ANSI color code not found for color: {self.as_hex()}")
 
     @classmethod
     def from_rgba(cls, value: RGBA) -> "Color":
@@ -802,12 +795,12 @@ back to hex representation if name is not found.
                 break
             color = Color(key)
 
-            color_index = Text(f"{index: >3}", style=f"bold {color.segments}")
-            style = RichStyle(color=color.segments, bold=True)
+            color_index = Text(f"{index: >3}", style=f"bold {color.hex}")
+            style = RichStyle(color=color.hex, bold=True)
             sample = Text(f"{'█' * 10}", style=style)
             name = Text(f"{key.capitalize(): <20}", style=style)
             hex_str = f" {color.as_hex('long').upper()} "
-            hex = Text(f"{hex_str: ^7}", style=f"bold on {color.segments}")
+            hex = Text(f"{hex_str: ^7}", style=f"bold on {color.hex}")
             rgb = color._rgba
             if show_index:
                 table.add_row(color_index, sample, name, hex, rgb)
@@ -879,7 +872,7 @@ def color_prompt() -> None:
 
 
 # Utility method to render a RichRenderable (like Text) into stylized Text without printing
-from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from rich.console import Console as RichConsole

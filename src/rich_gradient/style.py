@@ -7,6 +7,7 @@ from typing import Any, Dict, Iterable, List, Optional, Type, Union, cast
 from cheap_repr import normal_repr, register_repr
 from rich import errors, get_console
 from rich.color import ColorParseError, ColorSystem, blend_rgb
+from rich.color import Color as RichColor
 from rich.console import Console
 from rich.repr import Result, rich_repr
 from rich.style import Style as RichStyle
@@ -401,10 +402,10 @@ class Style():
                 if bits & (1 << 12):
                     append("overline" if self.overline else "not overline")
             if self._color is not None:
-                append(self._color.segments)
+                append(self._color.hex)
             if self._bgcolor is not None:
                 append("on")
-                append(self._bgcolor.segments)
+                append(self._bgcolor.hex)
             if self._link:
                 append("link")
                 append(self._link)
@@ -451,21 +452,33 @@ class Style():
                     for bit in range(9, 13):
                         if attributes & (1 << bit):
                             append(_style_map[bit])
+
             if self._color is not None:
-                if not hasattr(self._color, "rich") or not hasattr(self._color, "rich_gradient"):
-                    raise TypeError(
-                        f"[ERROR] _color missing 'rich' or 'rich_gradient' property: {self._color} ({type(self._color)})"
-                    )
-                sgr.extend(self._color.rich.downgrade(color_system).get_ansi_codes())
+                # Ensure we have a RichColor instance
+                if isinstance(self._color, Color):
+                    rich_color = self._color.rich
+                elif isinstance(self._color, RichColor):
+                    rich_color = self._color
+                else:
+                    try:
+                        rich_color = Color(self._color).rich
+                    except ColorError:
+                        raise TypeError(f"Unable to convert _color to Color: {self._color} ({type(self._color)})")
+                sgr.extend(rich_color.downgrade(color_system).get_ansi_codes())
+
             if self._bgcolor is not None:
-                if not hasattr(self._bgcolor, "rich") or not hasattr(self._bgcolor, "rich_gradient"):
-                    raise TypeError(
-                        f"[ERROR] _bgcolor missing 'rich' or 'rich_gradient' property: {self._bgcolor} ({type(self._bgcolor)})"
-                    )
+                # Ensure we have a RichColor instance for background
+                if isinstance(self._bgcolor, Color):
+                    rich_bgcolor = self._bgcolor.rich
+                elif isinstance(self._bgcolor, RichColor):
+                    rich_bgcolor = self._bgcolor
+                else:
+                    try:
+                        rich_bgcolor = Color(self._bgcolor).rich
+                    except ColorError:
+                        raise TypeError(f"Unable to convert _bgcolor to Color: {self._bgcolor} ({type(self._bgcolor)})")
                 sgr.extend(
-                    self._bgcolor.rich.downgrade(color_system).get_ansi_codes(
-                        foreground=False
-                    )
+                    rich_bgcolor.downgrade(color_system).get_ansi_codes(foreground=False)
                 )
             self._ansi = ";".join(sgr)
         return self._ansi
@@ -681,7 +694,7 @@ class Style():
         if str(style_definition) == "none":
             return Style.null()
         if isinstance(style_definition, Color):
-            style_definition = style_definition.segments
+            style_definition = str(RichStyle.parse(style_definition).color)
         if isinstance(style_definition, RGBA):
             style_definition = style_definition.hex
         # proceed with parsing string definitions manually below

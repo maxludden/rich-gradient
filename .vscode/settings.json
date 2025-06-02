@@ -92,5 +92,9 @@
         "veniam",
         "Veniam",
         "voluptate"
+    ],
+    "cSpell.ignoreWords": [
+        "renderables",
+        "wrappable"
     ]
 }
