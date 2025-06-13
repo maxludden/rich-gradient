@@ -343,6 +343,20 @@ DEFAULT_STYLES: dict[str, StyleType] = {
     "rgb.red": Style(color="#ff0000", bold=True, italic=True),
     "rgb.green": Style(color="#00ff00", bold=True, italic=True),
     "rgb.blue": Style(color="#0088ff", bold=True, italic=True),
+    "repr.rgb_red": Style(color="#ff4444", bold=True, italic=True),
+    "repr.rgb_green": Style(color="#44ff44", bold=True, italic=True),
+    "repr.rgb_blue": Style(color="#44aaff", bold=True, italic=True),
+    "repr.rgb_parentheses": Style(color="#ffffff", bold=True, italic=False),
+    "mypy.error_path": Style(color="#5CECFF", italic=True),
+    "mypy.error_line": Style(color="#00ff5f", bold=True),
+    "mypy.error_msg": Style(color="#dfdfdf", bold=True),
+    "mypy.error_border": Style(color="#ff0000", bold=True),
+    "mypy.error": Style(color="#ff0000", bold=True),
+    "mypy.numbers": Style(color="#8BE9FD", bold=True),
+    "mypy.success": Style(color="#00ff00", bold=True),
+    "mypy.colon": Style(color="#ffffff", bold=True),
+    "mypy.quoted": Style(color="#00afff", bold=True),
+    "mypy.message": Style(color="#ffffff", bold=True),
 }
 
 
@@ -415,7 +429,7 @@ def styles_table() -> Table:
             continue
         edited = EDITED_STYLES.get(style_name)
         table.add_row(Text(style_name, style=style), style_string, edited)
-        if style_name in ("none", "reset"):
+        if style_name == "none" or style_name == "reset":
             table.add_section()
 
     return table

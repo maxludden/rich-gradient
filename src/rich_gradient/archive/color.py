@@ -56,7 +56,7 @@ from rich_gradient._parsers import (
     r_rgb_v4_style,
     rads,
 )
-from rich_gradient._rgba import RGBA, HslColorTuple, RGBA_ColorType
+from rich_gradient._rgb import RGBA, HslColorTuple, RGBA_ColorType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 # Spectrum color names for gradient and display utilities

@@ -1,434 +1,192 @@
-from __future__ import annotations
+from contextlib import suppress
+from typing import List, Optional, Union
 
-from typing import List, Optional, Sequence, Tuple
-from time import sleep
+from rich.color import Color
+from rich.console import Console, ConsoleOptions, RenderResult
+from rich.measure import Measurement
+from rich.segment import Segment
+from rich.style import Style
+from rich.cells import get_character_cell_size
 
-from cheap_repr import normal_repr, register_repr
-from lorem_text import lorem
-from rich import inspect
-from rich.color import Color as RichColor
-from rich.console import Console, JustifyMethod, OverflowMethod
-from rich.panel import Panel
-from rich.text import Span
-from rich.text import Text as RichText
-from rich.traceback import install as install_tr
-
-from rich_gradient._helper import get_console
-from rich_gradient.color import Color, ColorType
 from rich_gradient.spectrum import Spectrum
-from rich_gradient.style import Style, StyleType
-from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 
-console = get_console()
-install_tr(console=console)
+from rich.live import Live
+import time
 
-DEFAULT_JUSTIFY: JustifyMethod = "default"
-DEFAULT_OVERFLOW: OverflowMethod = "fold"
-
-VERBOSE: bool = False
+from rich.console import Group
+from rich.align import Align
+from rich.panel import Panel as RichPanel
 
 
-class Text(RichText):
-    """A text object that supports smooth horizontal gradient colors.
-    Args:
-        text: The string to render.
-        colors: Optional list of StyleType elements (e.g. hex strings or Color objects).
-        style: A Rich style to apply globally.
-        hues: Number of color stops for rainbow spectrum.
-        rainbow: Whether to apply rainbow coloring.
-        justify: Text justification.
-        overflow: Overflow behavior.
-        no_wrap: Whether to disable text wrapping.
-        end: End string after rendering.
-        tab_size: Tab character size.
-        spans: Optional custom Rich spans.
-        verbose: Whether to print debug info to the console.
+class Gradient:
     """
+    Render any Rich renderable with a smooth horizontal gradient.
 
-    __slots__ = [
-        "_text",  # type: str
-        "_colors",  # type: List[Color]
-        "style",  # type: str
-        "justify",  # type: JustifyMethod
-        "overflow",  # type: OverflowMethod
-        "no_wrap",  # type: bool
-        "end",  # type: str
-        "tab_size",  # type: int
-        "_spans",  # type: List[Span]
-        "rich_text",  # type: RichText
-    ]
+    Parameters
+    ----------
+    renderable : RenderableType
+        The content to render (Text, Panel, Table, etc.).
+    colors : List[ColorType], optional
+        A list of Rich color identifiers (hex, names, Color).  If provided, these
+        are used as gradient stops.  If omitted and rainbow=False, Spectrum is used.
+    rainbow : bool
+        If True, uses the full rainbow spectrum instead of custom stops.
+    background : bool
+        If True, applies gradient to the background color; otherwise to foreground.
+    """
 
     def __init__(
         self,
-        text: str = "",
-        colors: Optional[Sequence[ColorType]] = None,
-        style: Optional[StyleType] = None,
-        *,
-        hues: int = 5,
-        rainbow: bool = False,
-        justify: JustifyMethod = DEFAULT_JUSTIFY,
-        overflow: OverflowMethod = DEFAULT_OVERFLOW,
-        no_wrap: bool = False,
-        end: str = "\n",
-        tab_size: int = 4,
-        spans: Optional[List[Span]] = None,
-        verbose: bool = VERBOSE,
-        markup: bool = True,
-    ) -> None:
-        """
-        Initialize a Text object that supports gradient colors.
-
-        Args:
-            text: The string to render.
-            colors: Optional list of StyleType elements (e.g. hex strings or Color objects).
-            style: A Rich style to apply globally.
-            hues: Number of color stops for rainbow spectrum.
-            rainbow: Whether to apply rainbow coloring.
-            justify: Text justification.
-            overflow: Overflow behavior.
-            no_wrap: Whether to disable text wrapping.
-            end: End string after rendering.
-            tab_size: Tab character size.
-            spans: Optional custom Rich spans.
-            verbose: Whether to print debug info to the console.
-        """
-        if verbose:
-            global VERBOSE
-            VERBOSE = True
-        if style is None:
-            style = Style.null()
-        if markup:
-            parsed = RichText.from_markup(
-                text, style=str(style), justify=justify, overflow=overflow, end=end
-            )
+        renderable,
+        colors=None,
+        rainbow=False,
+        background=False,
+        phase: int = 0,
+    ):
+        self.renderable = renderable
+        self.rainbow = rainbow
+        self.background = background
+        # Determine color stops
+        if rainbow or not colors:
+            spec = Spectrum()
+            self._stops = []
+            for color in spec.colors:
+                r, g, b = color.get_truecolor()
+                self._stops.append((r, g, b))
         else:
-            parsed = RichText(
-                text,
-                style=str(style),
-                justify=justify,
-                overflow=overflow,
-                no_wrap=no_wrap,
-                end=end,
-                tab_size=tab_size,
-            )
-        super().__init__(
-            parsed.plain,
-            style=str(style),
-            justify=justify,
-            overflow=overflow,
-            no_wrap=no_wrap,
-            end=end,
-            tab_size=tab_size,
-            spans=spans if spans is not None else parsed.spans,
-        )
-        self.style = str(style)
-        self._text = parsed._text
-        self._spans = list(parsed.spans)
-        self._colors = self.parse_colors(
-            colors,
-            rainbow=rainbow,
-            hues=hues,
-        )
-        self._apply_gradient_spans()
-        self.rich_text = RichText(
-            self.plain,
-            style=self.style,
-            justify=self.justify,
-            overflow=self.overflow,
-            no_wrap=no_wrap,
-            end=end,
-            tab_size=tab_size,
-            spans=self._spans,
+            self._stops = []
+            for c in colors:
+                col = c if isinstance(c, Color) else Color.parse(c)
+                r, g, b = col.get_truecolor()
+                self._stops.append((r, g, b))
+            if len(self._stops) == 1:
+                self._stops *= 2
+
+        # animation phase offset
+        self.phase = phase
+
+    def __rich_measure__(
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
+        # Delegate layout measurement to the inner renderable
+        return Measurement.get(console, options, self.renderable)
+
+    def __rich_console__(
+        self, console: Console, options: ConsoleOptions
+    ) -> RenderResult:
+        # Use the renderable's width constraint for gradient span
+        target_width = console.width or 80
+
+        # Include padding (borders, margins) in the rendered lines
+        lines = console.render_lines(
+            self.renderable, options, pad=True, new_lines=False
         )
 
-    @staticmethod
-    def parse_colors(
-        colors: Optional[Sequence[ColorType]],
-        rainbow: bool = False,
-        hues: int = 5,
-    ) -> List[Color]:
-        """
-        Parse a list of colors or styles into Color objects.
+        for line_no, segments in enumerate(lines):
+            # Compute total visible width of this line
+            total = sum(seg.cell_length for seg in segments)
+            col = 0
+            for seg in segments:
+                text = seg.text
+                base_style = seg.style or Style()
+                cluster = ""
+                cluster_width = 0
+                for ch in text:
+                    w = get_character_cell_size(ch)  # Use rich.text.cells instead of wcwidth
+                    if w <= 0:
+                        cluster += ch
+                        continue
+                    # flush any accumulated cluster
+                    if cluster:
+                        color = self._color_at(
+                            col - cluster_width, cluster_width, target_width
+                        )
+                        yield Segment(cluster, self._styled(base_style, color))
+                        cluster = ""
+                        cluster_width = 0
+                    cluster = ch
+                    cluster_width = w
+                    col += w
+                if cluster:
+                    color = self._color_at(
+                        col - cluster_width, cluster_width, target_width
+                    )
+                    yield Segment(cluster, self._styled(base_style, color))
+            # end-of-line: newline if not last
+            if line_no < len(lines) - 1:
+                yield Segment.line()
 
-        Args:
-            colors: A list of valid color definitions.
-            rainbow: If True, generate a rainbow color spectrum.
-            hues: Number of hues to generate if rainbow is True.
-
-        Returns:
-            A list of Color objects.
-        """
-        if rainbow:
-            return Spectrum(18).colors
-        if colors is None:
-            if hues < 2:
-                raise ValueError
-            return Spectrum(hues).colors
-        if colors:
-            parsed_colors: List[Color] = []
-            for color in colors:
-                if isinstance(color, str):
-                    parsed_colors.append(Color(color))
-                elif isinstance(color, Color):
-                    parsed_colors.append(color)
-                elif isinstance(color, RichColor):
-                    parsed_colors.append(Color.from_rich(color))
-                elif isinstance(color, Style):
-                    style_color = color.color
-                    if style_color is None:
-                        raise ValueError("Style color cannot be None")
-                    parsed_colors.append(style_color)
-                else:
-                    raise TypeError(f"Unsupported color type: {type(color)}")
-            return parsed_colors
-        raise ValueError(
-            "Invalid colors provided. Must be a list of Color, RichColor, Style, or str."
-        )
-
-    def generate_substring_indexes(self) -> List[Tuple[int, int]]:
-        """
-        Divide text into segments matching color transitions.
-
-        Returns:
-            A list of (start, end) index pairs for each text segment.
-        """
-        segments = len(self._colors) - 1
-        if VERBOSE:
-            console.log(f"{segments=}")
-
-        flat_text = self.plain
-        if VERBOSE:
-            console.log(f"{flat_text=}")
-
-        base, remainder = divmod(len(flat_text), segments)
-        substring_indexes: List[Tuple[int, int]] = []
-        start_index = 0
-        for i in range(segments):
-            length = base + (1 if i < remainder else 0)
-            end_index = start_index + length
-            substring_indexes.append((start_index, end_index))
-            if VERBOSE:
-                console.log(
-                    f"Segment {i}: start={start_index}, end={end_index}, length={length}"
-                )
-            start_index = end_index
-        return substring_indexes
-
-    def get_style_at_index(self, index: int) -> Style:
-        """
-        Get the style at a specific index.
-
-        Args:
-            index (int): The index to get the style for.
-
-        Returns:
-            Style: The style at the specified index.
-        """
-        if VERBOSE:
-            console.log(f"Getting spans at index {index}")
-
-        # Get all spans that cover the specified index
-        spans: List[Span] = []
-        for span in self._spans:
-            if span.start <= index < span.end:
-                spans.append(span)
-
-        # Merge styles from all spans at this index
-        if len(spans) > 0:
-            styles: list[Style] = [Style.parse(span.style) for span in spans]
-            style = Style()
-            for span_style in styles:
-                style += span_style
+    def _color_at(self, position: int, width: int, span: int) -> str:
+        # incorporate phase shift and wrap around for animation
+        frac = (position + width / 2 + self.phase) / max(span - 1, 1)
+        frac = frac % 1.0
+        stops = self._stops
+        count = len(stops)
+        if count == 0:
+            return ""
+        if frac <= 0:
+            r, g, b = stops[0]
+        elif frac >= 1:
+            r, g, b = stops[-1]
         else:
-            style = Style.null()
+            seg = frac * (count - 1)
+            idx = int(seg)
+            t = seg - idx
+            r1, g1, b1 = stops[idx]
+            r2, g2, b2 = stops[min(idx + 1, count - 1)]
+            r = r1 + (r2 - r1) * t
+            g = g1 + (g2 - g1) * t
+            b = b1 + (b2 - b1) * t
+        return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
 
-        if VERBOSE:
-            console.log(f"Style at index {index}: {style=}")
-        return style
+    def _styled(self, original: Style, color: str) -> Style:
+        if self.background:
+            grad = Style(bgcolor=color)
+        else:
+            grad = Style(color=color)
+        return Style.combine([original, grad])
 
-    def _apply_gradient_spans(self) -> None:
-        """
-        Merge parsed spans with gradient spans, combining styles where necessary.
-        """
-        gradient_spans = self._generate_gradient_spans()
-        self._spans.extend(gradient_spans)
-
-    def _generate_gradient_spans(self) -> List[Span]:
-        """
-        Generate gradient Rich spans by blending between adjacent color stops.
-
-        Returns:
-            A list of spans with blended RGB styles across the text.
-        """
-        plain_text = self.plain
-        num_chars = len(plain_text)
-        num_segments = len(self._colors) - 1
-
-        if num_segments < 1 or num_chars == 0:
-            return []
-
-        spans: List[Span] = []
-        base, remainder = divmod(num_chars, num_segments)
-
-        start = 0
-        for i in range(num_segments):
-            color1 = self._colors[i]
-            color2 = self._colors[i + 1]
-            r1, g1, b1 = color1.triplet
-            r2, g2, b2 = color2.triplet
-
-            segment_length = base + (1 if i < remainder else 0)
-
-            for j in range(segment_length):
-                index = start + j
-                t = j / (segment_length - 1) if segment_length > 1 else 0
-                r = int(r1 + (r2 - r1) * t)
-                g = int(g1 + (g2 - g1) * t)
-                b = int(b1 + (b2 - b1) * t)
-                hex_color = f"#{r:02x}{g:02x}{b:02x}"
-
-                existing_style = self.get_style_at_index(index)
-                blended_style = Style.combine([existing_style, Style(color=hex_color)])
-                spans.append(Span(index, index + 1, str(blended_style)))
-            start += segment_length
-
-        return spans
-
-    @property
-    def rich(self) -> RichText:
-        """Return the underlying RichText object."""
-        return self.rich_text
-
-    def __call__(self) -> RichText:
-        """
-        Call the Text object to return its RichText representation.
-
-        Returns:
-            RichText: The RichText representation of this Text object.
-        """
-        return self.rich_text
-
-
-register_repr(Text)(normal_repr)
-
-if __name__ == "__main__":
+def example():
+    from rich.panel import Panel
     from rich.console import Console
 
-    console = Console(width=64, theme=GradientTheme(), record=True)
+    console = Console()
 
-
-
-    def gradient_example1() -> None:
-        """Print the first example with a gradient."""
-        colors = [
-            Color(color)
-                for color in [
-                    "yellow",
-                    "#9f0",
-                    "rgb(0, 255, 0)",
-                    "springgreen",
-                    "#00FFFF"
-                ]
-            ]
-
-        def example1_text(colors: List[Color] = colors) -> RichText:
-            """Generate example text with a simple two-color gradient."""
-            example1_text = Text(
-                'rich-gradient makes it easy to create text with smooth multi-color gradients! \
-It is built on top of the amazing rich library, subclassing rich.text.Text. As such, you \
-can make use of all the features rich.text.Text provides including:\n\n\t- [bold]bold text[/bold]\
-\n\t- [italic]italic text[/italic]\n\t- [underline]underline text[/underline]" \
-\n\t- [strike]strikethrough text[/strike]\n\t- [reverse]reverse text[/reverse]\n\t- Text alignment\n\t- \
-Overflow handling\n\t- Custom styles and spans',
-                colors=colors,
-            )
-            example1_text.highlight_regex(r"rich.text.Text", "bold  cyan")
-            example1_text.highlight_regex(r"rich-gradient|\brich", "bold white")
-            return example1_text
-
-        def example1_title(colors: List[Color] = colors) -> RichText:
-            """Generate example title text with a gradient."""
-            example1_title = Text(
-                "Example 1",
-                colors=colors,
-                style="bold",
-                justify="center",
+    console.print(
+        Gradient(
+            Panel("[i b]Aute eu voluptate velit dolor est Lorem nulla mollit.[/] Enim ad sint duis. Culpa excepteur amet esse voluptate cillum dolor exercitation mollit sit eu excepteur id ad eu. Quis quis tempor proident labore consequat voluptate nostrud non in est ea laborum officia Lorem. Ea sunt incididunt nulla aliqua anim ipsum labore qui eiusmod qui voluptate Lorem pariatur. Eu tempor commodo occaecat commodo exercitation ex do amet occaecat occaecat commodo. Ea Lorem minim cupidatat occaecat elit deserunt eiusmod sint labore velit et et voluptate labore irure. Veniam commodo ea est sit et quis nulla commodo sit laborum dolor eu est officia.",
+                  title="Gradient Example",
+                  padding=(1,2)
+                  ),
+            rainbow=True
         )
-            return example1_title
-
-
-        console.print(
-            Panel(
-                example1_text(),
-                width=64,
-                title=example1_title(),
-                padding=(1, 4),
-            )
-        )
-        console.save_svg(
-            "docs/img/v0.2.1/gradient_example1.svg",
-            title="gradient_example_1",
-            unique_id="gradient_example_1",
-            theme=GRADIENT_TERMINAL_THEME,
-        )
-        sleep(1)
-    gradient_example1()
-
-    def gradient_example2() -> None:
-        """Print the second example with a random gradient."""
-        console.print(
-            Panel(
-                Text(
-                    "To generate a [u]rich_gradient.text.Text[/u] instance, all you need \
-is to pass it a string. If no colors are specified it will automatically \
-generate a random gradient for you. Random gradients are generated from a \
-[b]Spectrum[/b] which is a cycle of 18 colors that span the full RGB color space. \
-Automatically generated gradients are always generated with consecutive colors.",
-                ),
-                title=Text(
-                    "Example 2",
-                    style="bold",
-                ),
-                padding=(1, 4),
-                width=64,
-            )
-        )
-        console.save_svg(
-            "docs/img/v0.2.1/gradient_example2.svg",
-            title="gradient_example_2",
-            unique_id="gradient_example_2",
-            theme=GRADIENT_TERMINAL_THEME,
-        )
-        sleep(1)
-
-
-    gradient_example2()
-
-
-    # Example 3: Using rainbow mode
-    text3 = Text(
-        "Automatic Rainbow!",
-        rainbow=True,
-        hues=12,
-        style="bold underline",
     )
-    console.print(text3)
 
-    # Example 4: Custom color stops with hex codes
-    text4 = Text(
-        "Background Color Gradient",
-        colors=["#ff0", "#99ff00", "lime"],
-        style="reverse",
-    )
-    console.print(text4)
 
-    # Example 5: Long text with a smooth gradient
-    long_text = (
-        "This is a long string to demonstrate a smooth gradient across many characters."
+# Animated example using Live
+def animated_example():
+    """Demonstrate an animated gradient using rich.live.Live."""
+    from rich.panel import Panel
+    from rich.console import Console
+
+    console = Console()
+    panel = Panel(
+        "Animating gradient...\nPress Ctrl+C to stop.",
+        title="Animated Gradient",
+        padding=(1, 2),
     )
-    text5 = Text(
-        long_text,
-        colors=["magenta", "cyan"],
-        style="bold",
-    )
-    console.print(text5)
+    gradient = Gradient(panel, rainbow=True)
+    footer = Align.right(RichPanel(" Press Ctrl+C to stop.", expand=False))
+    live_renderable = Group(gradient, footer)
+    # animate at ~30 FPS
+    with Live(live_renderable, console=console, refresh_per_second=30):
+        try:
+            while True:
+                time.sleep(0.03)
+                gradient.phase += 1
+        except KeyboardInterrupt:
+            pass
+
+
+if __name__ == "__main__":
+    animated_example()

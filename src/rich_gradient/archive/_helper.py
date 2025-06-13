@@ -73,12 +73,12 @@ def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
         hex_color = "".join([c * 2 for c in hex_color])
     if len(hex_color) != 6:
         raise ValueError(f"Invalid hex color: {hex_color}")
-    if not all(c in "0123456789abcdefABCDEF" for c in hex_color):
+    if any(c not in "0123456789abcdefABCDEF" for c in hex_color):
         raise ValueError(f"Invalid hex color: {hex_color}")
     return (
-        int(hex_color[0:2], 16),
+        int(hex_color[:2], 16),
         int(hex_color[2:4], 16),
-        int(hex_color[4:6], 16),
+        int(hex_color[4:], 16),
     )
 
 

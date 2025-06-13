@@ -20,7 +20,7 @@ from rich_gradient._colors import (
     COLORS_BY_NAME,
     COLORS_BY_RGB,
 )
-from rich_gradient._rgba import RGBA
+from rich_gradient._rgb import RGBA
 from rich_gradient.color import Color, ColorError
 
 # Style instances and style definitions are often interchangeable

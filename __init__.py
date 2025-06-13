@@ -2,7 +2,7 @@
 from rich.console import Console
 from rich.traceback import install
 
-from rich_gradient._rgba import RGBA, RGBAError
+from rich_gradient._rgb import RGBA, RGBAError
 from rich_gradient.color import Color, ColorError, ColorType
 from rich_gradient.default_styles import DEFAULT_STYLES
 from rich_gradient.depreciated._gradient import Gradient

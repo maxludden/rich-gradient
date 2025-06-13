@@ -79,12 +79,12 @@ class RGBA:
     _tuple: Tuple[int, int, int, float]
 
     def __init__(self, r: int, g: int, b: int, alpha: float = 1.0) -> None:
-        self.r = int(r)
-        self.g = int(g)
-        self.b = int(b)
+        self.r = r
+        self.g = g
+        self.b = b
         if not (0.0 <= alpha <= 1.0):
             raise RGBAError("Alpha must be between 0.0 and 1.0")
-        self.alpha = float(alpha)
+        self.alpha = alpha
         self._tuple = (self.r, self.g, self.b, self.alpha)
 
     def __getitem__(self, item: Any) -> Any:
