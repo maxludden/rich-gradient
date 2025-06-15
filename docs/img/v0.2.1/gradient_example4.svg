@@ -1,4 +1,4 @@
-<svg class="rich-terminal" viewBox="0 0 1751 74.4" xmlns="http://www.w3.org/2000/svg">
+<svg class="rich-terminal" viewBox="0 0 1958 74.4" xmlns="http://www.w3.org/2000/svg">
     <!-- Generated with Rich https://www.textualize.io -->
     <style>
 
@@ -37,12 +37,12 @@
 
     <defs>
     <clipPath id="gradient_example_4-clip-terminal">
-      <rect x="0" y="0" width="1731.3999999999999" height="23.4" />
+      <rect x="0" y="0" width="1938.8" height="23.4" />
     </clipPath>
     
     </defs>
 
-    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1749" height="72.4" rx="8"/><text class="gradient_example_4-title" fill="#ffffff" text-anchor="middle" x="874" y="27">gradient_example_4</text>
+    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1956" height="72.4" rx="8"/><text class="gradient_example_4-title" fill="#ffffff" text-anchor="middle" x="978" y="27">gradient_example_4</text>
             <g transform="translate(26,22)">
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>

@@ -72,7 +72,24 @@ class Text(RichText):
         """Set the list of colors in the gradient."""
         self._colors = value or []
 
-   ca
+    @staticmethod
+    def parse_colors(
+        colors: Optional[Sequence[ColorType | Color]] = None,
+        hues: int = 5,
+        rainbow: bool = False,
+    ) -> List[Color]:
+        """Parse and return a list of colors for the gradient.
+        Args:
+            colors (Optional[Sequence[ColorType | Color]]): A list of colors as Color instances or strings.
+            hues (int): The number of hues to generate if colors are not provided.
+            rainbow (bool): If True, generate a rainbow spectrum.
+        Returns:
+            List[Color]: A list of Color objects.
+        """
+        if colors is None or len(colors) == 0:
+            return Spectrum(hues).colors
+        return [c if isinstance(c, Color) else Color.parse(c) for c in colors]
+
     def interpolate_colors(self) -> List[Color]:
         """Interpolate colors in the gradient."""
         if not self.colors:
