@@ -1,24 +1,23 @@
 # Initialize supergene package
 import re
+from json import dump, load
 from pathlib import Path
-from typing import Dict, Tuple, Optional, Mapping, Any, List
-from json import load, dump
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
-from rich.console import Console
+import rich_color_ext
+from pydantic import BaseModel, Field
 from rich.color import Color as RichColor
+from rich.console import Console
+from rich.pretty import Pretty
 from rich.table import Table
 from rich.traceback import install
-from rich.pretty import Pretty
-from pydantic import BaseModel, Field
-import rich_color_ext
 
 from rich_gradient._rgb import RGBA
-from rich_gradient.style import Style
 from rich_gradient.color2 import Color
-from rich_gradient.gradient import Gradient
+from rich_gradient.gradient import Text
+from rich_gradient.style import Style
 from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
-
 
 _original_parse = RichColor.parse
 
@@ -186,6 +185,7 @@ def _patched_parse(color: str) -> RichColor:
 
     return _original_parse(color)
 
+
 RichColor.parse = staticmethod(_patched_parse)  # type: ignore[attr-defined]
 
 
@@ -195,7 +195,7 @@ def install_rich_gradient():
     RichColor.parse = staticmethod(_patched_parse)  # type: ignore[attr-defined]
     console = Console()
     console.print(
-            Text("rich-gradient has been installed!", rainbow=True),
+        Text("rich-gradient has been installed!", rainbow=True),
     )
 
 

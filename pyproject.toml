@@ -1,11 +1,9 @@
 [project]
 name = "rich-gradient"
-version = "0.2.0"
+version = "0.3.0"
 description = "A gradient generator for the Rich library."
 readme = "README.md"
-authors = [
-    { name = "Max Ludden", email = "dev@maxludden.com" }
-]
+authors = [{ name = "Max Ludden", email = "dev@maxludden.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
@@ -39,7 +37,10 @@ dev = [
 packages = ["src/rich_gradient"]
 
 [tool.ruff]
-ignore=[
+ignore = [
     "F401", # Unused imports
     "E741", # Ambiguous variable name
 ]
+
+[tool.pytest]
+packages= ["rich_gradient"]

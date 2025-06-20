@@ -3,6 +3,7 @@ from __future__ import annotations
 from itertools import cycle
 from random import randint
 from typing import Generator, List, Union
+import random
 
 import rich_color_ext
 from rich.console import Console
@@ -10,8 +11,8 @@ from rich.table import Table
 from rich.text import Text
 
 # from rich_gradient._colors import COLORS_BY_HEX, COLORS_BY_NAME
-from rich_gradient.color import Color
-from rich_gradient.style import Style
+from rich.color import Color
+from rich.style import Style
 
 SPECTRUM_COLORS = [
     "#FF00FF", # 1 magenta
@@ -61,6 +62,7 @@ class Spectrum:
         strike (bool, optional): If True, apply strikethrough style. Defaults to False.
         reverse (bool, optional): If True, apply reverse style. Defaults to False.
         dim (bool, optional): If True, apply dim style. Defaults to False.
+        seed (int | None, optional): Seed for random generator. Defaults to None.
 
     Attributes:
         colors (List[Color]): A list of Color instances.
@@ -83,6 +85,7 @@ class Spectrum:
         strike: bool = False,
         reverse: bool = False,
         dim: bool = False,
+        seed: int | None = None,
     ) -> None:
         """
         Args:
@@ -94,6 +97,7 @@ class Spectrum:
             strike (bool, optional): If True, apply strikethrough style. Defaults to False.
             reverse (bool, optional): If True, apply reverse style. Defaults to False.
             dim (bool, optional): If True, apply dim style. Defaults to False.
+            seed (int | None, optional): Seed for random generator. Defaults to None.
 
         Returns:
             List[Color]: A list of Color instances.
@@ -103,7 +107,9 @@ class Spectrum:
             >>> print(spectrum)
             [Color(name='purple'), Color(name='violet'), Color(name='blue'), Color(name='deepblue'), Color(name='skyblue')]
         """
-        base_colors = [Color(name) for name in SPECTRUM_COLORS]
+        if seed is not None:
+            random.seed(seed)
+        base_colors = [Color.parse(name) for name in SPECTRUM_COLORS]
         color_cycle = cycle(base_colors)
         offset = randint(1, len(base_colors))
         for _ in range(offset):
@@ -114,7 +120,7 @@ class Spectrum:
 
         self.styles: List[Style] = [
             Style(
-                color=color.hex,
+                color=color.get_truecolor().hex,
                 bold=bold,
                 italic=italic,
                 underline=underline,
@@ -124,13 +130,10 @@ class Spectrum:
             )
             for color in self.colors
         ]
-        self.hex: List[str] = [color.hex for color in self.colors]
+        self.hex: List[str] = [color.get_truecolor().hex for color in self.colors]
 
     def __getitem__(self, index: int) -> Style:
         return self.styles[index]
-
-        self.hex: List[str] = [color.hex for color in self.colors]
-        self.hex: List[str] = [color.hex for color in self.colors]
 
     def __rich__(self) -> Table:
         """Returns a rich Table object representing the Spectrum colors.
@@ -161,12 +164,12 @@ class Spectrum:
 
         spectrum = Spectrum()
         for color in spectrum.colors:
-            style = str(Style(color=color.hex, bold=True))
-            name = Text(f"{SPECTRUM_NAMES[color.hex.upper()].capitalize():>16}", style=style)
+            style = str(Style(color=color.get_truecolor().hex, bold=True))
+            name = Text(f"{SPECTRUM_NAMES[color.get_truecolor().hex.upper()].capitalize():>16}", style=style)
             sample = Text(f"{'█' * 10}", style=style)
-            hex_str = f" {color.as_hex('long').upper()} "
-            hex_text = Text(f"{hex_str: ^7}", style=f"bold on {color.hex}")
-            rgb = color._rgba
+            hex_str = f" {color.get_truecolor().hex.upper()} "
+            hex_text = Text(f"{hex_str: ^7}", style=f"bold on {color.get_truecolor().hex}")
+            rgb = Text(color.get_truecolor().rgb, style=style)
 
             table.add_row(sample, name, hex_text, rgb)
 

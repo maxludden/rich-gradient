@@ -16,40 +16,51 @@ from snoop import snoop
 console = _get_console()
 install(console=console)
 
+# A smoother, evenly spaced color spectrum (hue wheel) for gradients
 SPECTRUM_COLORS: Tuple[str, ...] = (
-    "#FF00FF",  # 1 magenta
-    "#CC55FF",  # 2 purple
-    "#9955FF",  # 3 violet
-    "#6666FF",  # 4 purple-blue
-    "#5599FF",  # 5 blue
-    "#00CCFF",  # 6 lightblue
-    "#00FFFF",  # 7 cyan
-    "#00FF44",  # 8 aquamarine
-    "#00FF00",  # 9 lime
-    "#7CFF00",  # 10 green
-    "#FFFF00",  # 11 yellow
-    "#FFAF00",  # 12 orange
-    "#FF7700",  # 13 orange-red
-    "#FF0000",  # 14 red
-    "#FF00AA",  # 16 pink
+    "#FF0000",  # red
+    "#FF4000",  # reddish-orange
+    "#FF8000",  # orange
+    "#FFBF00",  # amber
+    "#FFFF00",  # yellow
+    "#BFFF00",  # yellow-green
+    "#80FF00",  # lime-green
+    "#40FF00",  # green
+    "#00FF40",  # spring green
+    "#00FF80",  # aquamarine
+    "#00FFBF",  # turquoise
+    "#00FFFF",  # cyan
+    "#00BFFF",  # skyblue
+    "#0080FF",  # blue
+    "#668CFF",  # cobalt (brighter)
+    "#8A7DFF",  # indigo (balanced)
+    "#B388FF",  # violet (high contrast)
+    "#D966FF",  # magenta
 )
 SPECTRUM_NAMES: Dict[str, str] = {
-    "#FF00FF": "magenta",
-    "#CC55FF": "purple",
-    "#9955FF": "violet",
-    "#6666FF": "purple-blue",
-    "#5599FF": "blue",
-    "#00CCFF": "lightblue",
-    "#00FFFF": "cyan",
-    "#00FF44": "aquamarine",
-    "#00FF00": "lime",
-    "#7CFF00": "green",
-    "#FFFF00": "yellow",
-    "#FFAF00": "orange",
-    "#FF7700": "orange-red",
     "#FF0000": "red",
-    "#FF00AA": "pink",
+    "#FF4000": "reddish-orange",
+    "#FF8000": "orange",
+    "#FFBF00": "amber",
+    "#FFFF00": "yellow",
+    "#BFFF00": "yellow-green",
+    "#80FF00": "lime-green",
+    "#40FF00": "green",
+    "#00FF40": "spring-green",
+    "#00FF80": "aquamarine",
+    "#00FFBF": "turquoise",
+    "#00FFFF": "cyan",
+    "#00BFFF": "skyblue",
+    "#0080FF": "blue",
+    "#668CFF": "cobalt",
+    "#8A7DFF": "indigo",
+    "#B388FF": "violet",
+    "#D966FF": "magenta",
 }
+
+# Ensure no color is paired with a white foreground, even when reversed.
+# This is handled by always using the color itself as the foreground,
+# and never setting foreground to white in style creation.
 
 
 class Spectrum:
@@ -94,6 +105,8 @@ class Spectrum:
             Style(color=color, bold=False, italic=False, underline=False)
             for color in self._colors
         ]
+
+        self.hex = [color.get_truecolor().hex.upper() for color in self._colors]
 
     @property
     def colors(self) -> List[Color]:

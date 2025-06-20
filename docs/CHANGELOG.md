@@ -6,7 +6,45 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--## [Unreleased]-->
-## Most Recent v0.2.0
+
+
+### v0.3.0 - 2025-06-20 | <span style="color: rgb(215, 255, 100)"> Working Rewrite</span>
+
+#### <span style="color: rgb(215, 255, 100)">v0.3.0 Added</span>
+
+- Validated working and added tests for:
+  - `rich_gradient.text.Text`
+  - `rich_gradient.gradient.Gradient`
+  - `rich_gradient.rule.GradientRule`
+  - `rich_gradient.spectrum.Spectrum`
+  - `rich-color-ext` acting as adequate replacement for previous color logic
+- Added examples directory containing:
+  - `animated_gradient_example.py`
+  - `gradient_example.py`
+  - `hello_world.py`
+  - `rainbow_gradient.py`
+  - `specific_color_gradient.py`
+  - `text_markup.py`
+  - `two_color_gradients.py`
+- Generated updated exports for examples for documentation (still in the works)
+
+#### <span style="color: rgb(215, 255, 100)">v0.3.0 Updated</span>
+
+- `docs/index.md`
+
+#### <span style="color: rgb(215, 255, 100)">v0.3.0 TODO</span>
+
+- Update Documentation
+- Expand Tests
+- Work on Gradient Panel and Table Renderables
+
+#### <span style="color: rgb(215, 255, 100)">v0.3.0 Removed</span>
+
+Removed all of the the archived modules from rich_gradient/archive/*
+
+### v0.2.1 <span style="color: rgb(215, 255, 100)">Rewrite</span>
+
+There was a lot of overhead in rich-gradient so I rewrote it from the ground up with an actual goal. I created [rich-color-ext](https://github.com/maxludden/rich-color-ext) to wrap around rich's color parsing removing the need for the` _rgb.py`, `color.py`, `color_data.py`, `_colors.py`, and all of their tests.
 
 ### v0.2.0 - 2025-3-13 | <span style="color:rgb(215, 255, 100)">[uv](https://github.com/astral-sh/uv)</span>, pure python, and 3.13.2
 

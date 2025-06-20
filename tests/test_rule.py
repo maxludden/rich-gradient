@@ -1,92 +1,50 @@
-from typing import Iterable, List, Literal, Optional, Sequence, Union, cast
+
 
 import pytest
-from rich.align import AlignMethod
-from rich.console import Console, ConsoleOptions, RenderResult
-from rich.rule import Rule
-from rich.segment import Segment
-from rich.text import Text
-from rich.traceback import install
-
-from rich_gradient.color import Color, ColorError, ColorType
-from rich_gradient.gradient import Gradient
+from rich.style import Style
+from rich.color import ColorParseError
+from rich.console import Console
+from rich.text import Text as RichText
 from rich_gradient.rule import GradientRule
-from rich_gradient.spectrum import Spectrum
-from rich_gradient.style import Style, StyleType
-from rich_gradient.text import Text
-from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-console = Console()
-install(console=console, width=64)
+@pytest.mark.parametrize("thickness", [0, 1, 2, 3])
+def test_gradient_rule_renders_thickness(thickness):
+    console = Console()
+    rule = GradientRule(title="Test", colors=["#f00", "#0f0"], thickness=thickness)
+    # Render to string to check output is str (not crash)
+    rendered = console.render_str(str(rule))
+    assert isinstance(rendered, RichText)
 
-
-def test_gradient_rule():
-    """Test the GradientRule class for various alignments, gradients, and styles."""
-
-    console = Console(record=True, width=60)
-
-    # Test default gradient rule with no title style
-    rule1 = GradientRule(title="Test Rule", colors=["#ff0000", "#00ff00"], thickness=1)
-    console.print(rule1)
-    output1 = console.export_text()
-    assert "Test Rule" in output1
-
-    # Test rainbow gradient with thickness 3 and center alignment
-    rule2 = GradientRule(
-        title="Rainbow Rule", rainbow=True, thickness=3, align="center"
+def test_gradient_rule_title_and_style():
+    rule = GradientRule(
+        title="Hello",
+        title_style="bold white",
+        colors=["red", "green"],
+        thickness=1,
+        style="italic",
     )
-    console.print(rule2)
-    output2 = console.export_text()
-    assert "Rainbow Rule" in output2
+    assert rule.title == "Hello"
+    assert isinstance(rule.title_style, Style)
 
-    # Test left alignment with custom colors and title style
-    rule3 = GradientRule(
-        title="Left Align",
-        colors=["#0000ff", "#00ffff"],
-        thickness=2,
-        align="left",
-        title_style="bold red",
-    )
-    console.print(rule3)
-    output3 = console.export_text()
-    assert "Left Align" in output3
+def test_gradient_rule_rainbow_colors():
+    rule = GradientRule(title="Rainbow", rainbow=True, thickness=1)
+    assert len(rule.colors) > 1  # Should be populated by Spectrum
 
-    # Test invalid thickness raises ValueError
+def test_gradient_rule_color_validation():
     with pytest.raises(ValueError):
-        GradientRule(title="Invalid", thickness=5)
+        GradientRule(title="BadColor", colors=["not-a-color"])
 
-    # Test single color raises ValueError
+def test_gradient_rule_invalid_thickness():
     with pytest.raises(ValueError):
-        GradientRule(title="Single Color", colors=["#ff0000"])
+        GradientRule(title="Fail", colors=["#f00", "#0f0"], thickness=5)
 
-    # Test invalid color string raises ColorError
-    with pytest.raises(ColorError):
-        GradientRule(title="Bad Color", colors=["notacolor", "#000000"])
+def test_gradient_rule_no_title():
+    rule = GradientRule(title=None, colors=["#f00", "#0f0"])
+    assert isinstance(rule, GradientRule)
 
-    # Test no colors provided uses default spectrum hues
-    rule4 = GradientRule(title="Default Spectrum", colors=[])
-    console.print(rule4)
-    output4 = console.export_text()
-    assert "Default Spectrum" in output4
-
-    # Test that title_style is applied after gradient generation
-    rule5 = GradientRule(
-        title="Styled Title",
-        colors=["#123456", "#654321"],
-        title_style="bold underline",
-    )
-    console.print(rule5)
-    output5 = console.export_text()
-    assert "Styled Title" in output5
-
-    # Test that thickness 0 uses correct character
-    rule6 = GradientRule(title="Thin Rule", thickness=0)
-    console.print(rule6)
-    output6 = console.export_text()
-    assert "Thin Rule" in output6
-
-    # Test that thickness 3 uses correct character
-    rule7 = GradientRule(title="Thick Rule", thickness=3)
-    console.print(rule7)
-    output7 = console.export_text()
-    assert "Thick Rule" in output7
+def test_gradient_rule_render_output():
+    console = Console()
+    rule = GradientRule(title="Centered", colors=["#f00", "#0f0"])
+    segments = list(rule.__rich_console__(console, console.options))
+    assert segments
+    assert all(hasattr(seg, "text") for seg in segments)

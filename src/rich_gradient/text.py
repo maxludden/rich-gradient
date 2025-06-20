@@ -12,6 +12,8 @@ from rich.text import TextType
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
+ColorInputType: TypeAlias = Union[str, Tuple[int, int, int], Color]
+
 
 class Text(RichText):
     """A rich text class that supports gradient colors and styles."""
@@ -19,7 +21,7 @@ class Text(RichText):
     def __init__(
         self,
         text: TextType = "",
-        colors: Optional[Sequence[ColorType | Color]] = None,
+        colors: Optional[Sequence[ColorInputType]] = None,
         *,
         rainbow: bool = False,
         hues: int = 5,
@@ -43,20 +45,23 @@ class Text(RichText):
             no_wrap (bool): If True, disable wrapping of the text.
             markup (bool): If True, parse Rich markup tags in the input text.
         """
+        # Extract out complex expressions for clarity
         parsed_text = RichText.from_markup(
-            text=str(text),
-            style=style,
-            justify=justify,
-            overflow=overflow
+            text=str(text), style=style, justify=justify, overflow=overflow
         )
+        plain = parsed_text.plain
+        parsed_justify = parsed_text.justify
+        parsed_overflow = parsed_text.overflow
+        parsed_spans = parsed_text._spans
+
         super().__init__(
-            parsed_text.plain,
-            justify=parsed_text.justify,
-            overflow=parsed_text.overflow,
+            plain,
+            justify=parsed_justify,
+            overflow=parsed_overflow,
             no_wrap=no_wrap,
             end=end,
             tab_size=tab_size,
-            spans=parsed_text._spans,
+            spans=parsed_spans,
         )
         self.colors = self.parse_colors(colors, hues, rainbow)
         # Apply the gradient coloring
@@ -74,11 +79,12 @@ class Text(RichText):
 
     @staticmethod
     def parse_colors(
-        colors: Optional[Sequence[ColorType | Color]] = None,
+        colors: Optional[Sequence[ColorInputType]] = None,
         hues: int = 5,
         rainbow: bool = False,
     ) -> List[Color]:
         """Parse and return a list of colors for the gradient.
+        Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, and Color objects.
         Args:
             colors (Optional[Sequence[ColorType | Color]]): A list of colors as Color instances or strings.
             hues (int): The number of hues to generate if colors are not provided.
@@ -86,8 +92,11 @@ class Text(RichText):
         Returns:
             List[Color]: A list of Color objects.
         """
+        if rainbow:
+            return Spectrum(hues=18).colors
         if colors is None or len(colors) == 0:
             return Spectrum(hues).colors
+        # Support 3-digit hex colors and all string representations via Color.parse
         return [c if isinstance(c, Color) else Color.parse(c) for c in colors]
 
     def interpolate_colors(self) -> List[Color]:
@@ -153,12 +162,9 @@ if __name__ == "__main__":
 
     def gradient_example1() -> None:
         """Print the first example with a gradient."""
-        colors = [
-            Color.parse(color)
-            for color in ["#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
-        ]
+        colors = ["#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
 
-        def example1_text(colors: List[Color] = colors) -> RichText:
+        def example1_text(colors: Sequence[ColorInputType] = colors) -> RichText:
             """Generate example text with a simple two-color gradient."""
             example1_text = Text(
                 'rich-gradient makes it easy to create text with smooth multi-color gradients! \
@@ -173,7 +179,7 @@ Overflow handling\n\t- Custom styles and spans',
             example1_text.highlight_regex(r"rich-gradient|\brich", "bold white")
             return example1_text
 
-        def example1_title(colors: List[Color] = colors) -> RichText:
+        def example1_title(colors: Sequence[ColorInputType] = colors) -> RichText:
             """Generate example title text with a gradient."""
             example1_title = Text(
                 "Example 1",
@@ -284,8 +290,8 @@ is superfluous!\n\nThis gradient uses:
 
     - 'magenta'
     - 'gold1'
-    - '#0f0''""",
-            colors=[Color.parse("magenta"), Color.parse("gold1"), Color.parse("#0f0")],
+    - '#0f0'""",
+            colors=["magenta", "gold1", "#0f0"],
         )
         specified_colors.highlight_regex(r"magenta", "#ff00ff")
         specified_colors.highlight_regex(r"#9F0", "#99fF00")
@@ -322,7 +328,7 @@ is superfluous!\n\nThis gradient uses:
     gradient_example4()
 
     # Example 5: Long text with a smooth gradient
-    colors5 = [Color.parse("magenta"), Color.parse("cyan")]
+    colors5 = ["magenta", "cyan"]
     long_text = (
         "If you are picky about your colors, but prefer simpler gradients, Text will smoothly \
 interpolate between two or more colors. This means you can specify a list of colors, or even just \

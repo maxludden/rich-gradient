@@ -1,0 +1,247 @@
+<svg class="rich-terminal" viewBox="0 0 799 464.79999999999995" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .rainbow_gradient_example-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .rainbow_gradient_example-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .rainbow_gradient_example-r1 { fill: #ffffff }
+.rainbow_gradient_example-r2 { fill: #ff4689 }
+.rainbow_gradient_example-r3 { fill: #f8f8f2 }
+.rainbow_gradient_example-r4 { fill: #e6db74 }
+.rainbow_gradient_example-r5 { fill: #66d9ef }
+.rainbow_gradient_example-r6 { fill: #ff4000 }
+.rainbow_gradient_example-r7 { fill: #ff4800 }
+.rainbow_gradient_example-r8 { fill: #ff5100 }
+.rainbow_gradient_example-r9 { fill: #ff5a00 }
+.rainbow_gradient_example-r10 { fill: #ff6300 }
+.rainbow_gradient_example-r11 { fill: #ff6c00 }
+.rainbow_gradient_example-r12 { fill: #ff7500 }
+.rainbow_gradient_example-r13 { fill: #ff7e00 }
+.rainbow_gradient_example-r14 { fill: #ff8700 }
+.rainbow_gradient_example-r15 { fill: #ff9000 }
+.rainbow_gradient_example-r16 { fill: #ff9900 }
+.rainbow_gradient_example-r17 { fill: #ffa200 }
+.rainbow_gradient_example-r18 { fill: #ffab00 }
+.rainbow_gradient_example-r19 { fill: #ffb400 }
+.rainbow_gradient_example-r20 { fill: #ffbc00 }
+.rainbow_gradient_example-r21 { fill: #ffc500 }
+.rainbow_gradient_example-r22 { fill: #ffce00 }
+.rainbow_gradient_example-r23 { fill: #ffd700 }
+.rainbow_gradient_example-r24 { fill: #ffe000 }
+.rainbow_gradient_example-r25 { fill: #ffe900 }
+.rainbow_gradient_example-r26 { fill: #fff200 }
+.rainbow_gradient_example-r27 { fill: #fffb00 }
+.rainbow_gradient_example-r28 { fill: #f9ff00 }
+.rainbow_gradient_example-r29 { fill: #f0ff00 }
+.rainbow_gradient_example-r30 { fill: #e7ff00 }
+.rainbow_gradient_example-r31 { fill: #deff00 }
+.rainbow_gradient_example-r32 { fill: #d5ff00 }
+.rainbow_gradient_example-r33 { fill: #ccff00 }
+.rainbow_gradient_example-r34 { fill: #c3ff00 }
+.rainbow_gradient_example-r35 { fill: #baff00 }
+.rainbow_gradient_example-r36 { fill: #b1ff00 }
+.rainbow_gradient_example-r37 { fill: #a8ff00 }
+.rainbow_gradient_example-r38 { fill: #9fff00 }
+.rainbow_gradient_example-r39 { fill: #96ff00 }
+.rainbow_gradient_example-r40 { fill: #8eff00 }
+.rainbow_gradient_example-r41 { fill: #85ff00 }
+.rainbow_gradient_example-r42 { fill: #7cff00 }
+.rainbow_gradient_example-r43 { fill: #73ff00 }
+.rainbow_gradient_example-r44 { fill: #6aff00 }
+.rainbow_gradient_example-r45 { fill: #61ff00 }
+.rainbow_gradient_example-r46 { fill: #58ff00 }
+.rainbow_gradient_example-r47 { fill: #4fff00 }
+.rainbow_gradient_example-r48 { fill: #46ff00 }
+.rainbow_gradient_example-r49 { fill: #3dff02;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r50 { fill: #34ff0b;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r51 { fill: #2bff14;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r52 { fill: #22ff1d;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r53 { fill: #19ff26;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r54 { fill: #10ff2f;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r55 { fill: #07ff38;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r56 { fill: #00ff41;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r57 { fill: #00ff4a;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r58 { fill: #00ff53;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r59 { fill: #00ff5c;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r60 { fill: #00ff65;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r61 { fill: #00ff6e;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r62 { fill: #00ff77;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r63 { fill: #00ff80;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r64 { fill: #00ff92;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r65 { fill: #00ff9b;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r66 { fill: #00ffa3;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r67 { fill: #00ffac;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r68 { fill: #00ffb5;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r69 { fill: #00ffbe;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r70 { fill: #00ffc7;font-weight: bold;font-style: italic; }
+.rainbow_gradient_example-r71 { fill: #00ffd0 }
+.rainbow_gradient_example-r72 { fill: #00ffd9 }
+.rainbow_gradient_example-r73 { fill: #00ffe2 }
+.rainbow_gradient_example-r74 { fill: #00ffeb }
+.rainbow_gradient_example-r75 { fill: #00fff4 }
+.rainbow_gradient_example-r76 { fill: #00fffd }
+.rainbow_gradient_example-r77 { fill: #00f7ff }
+.rainbow_gradient_example-r78 { fill: #00eeff }
+.rainbow_gradient_example-r79 { fill: #00e5ff;font-weight: bold }
+.rainbow_gradient_example-r80 { fill: #00dcff;font-weight: bold }
+.rainbow_gradient_example-r81 { fill: #00d3ff;font-weight: bold }
+.rainbow_gradient_example-r82 { fill: #00caff;font-weight: bold }
+.rainbow_gradient_example-r83 { fill: #00c1ff;font-weight: bold }
+.rainbow_gradient_example-r84 { fill: #00b8ff;font-weight: bold }
+.rainbow_gradient_example-r85 { fill: #00afff;font-weight: bold }
+.rainbow_gradient_example-r86 { fill: #00a7ff;font-weight: bold }
+.rainbow_gradient_example-r87 { fill: #009eff;font-weight: bold }
+.rainbow_gradient_example-r88 { fill: #0095ff;font-weight: bold }
+.rainbow_gradient_example-r89 { fill: #008cff;font-weight: bold }
+.rainbow_gradient_example-r90 { fill: #0083ff;font-weight: bold }
+.rainbow_gradient_example-r91 { fill: #0880ff;font-weight: bold }
+.rainbow_gradient_example-r92 { fill: #1682ff;font-weight: bold }
+.rainbow_gradient_example-r93 { fill: #2584ff;font-weight: bold }
+.rainbow_gradient_example-r94 { fill: #3386ff;font-weight: bold }
+.rainbow_gradient_example-r95 { fill: #4187ff }
+.rainbow_gradient_example-r96 { fill: #5089ff }
+.rainbow_gradient_example-r97 { fill: #5e8bff }
+.rainbow_gradient_example-r98 { fill: #688bff }
+.rainbow_gradient_example-r99 { fill: #6d88ff }
+.rainbow_gradient_example-r100 { fill: #7286ff }
+.rainbow_gradient_example-r101 { fill: #7784ff }
+.rainbow_gradient_example-r102 { fill: #7c82ff }
+.rainbow_gradient_example-r103 { fill: #8180ff }
+.rainbow_gradient_example-r104 { fill: #867eff }
+.rainbow_gradient_example-r105 { fill: #8c7dff }
+.rainbow_gradient_example-r106 { fill: #917fff }
+.rainbow_gradient_example-r107 { fill: #9780ff }
+.rainbow_gradient_example-r108 { fill: #9d82ff }
+.rainbow_gradient_example-r109 { fill: #a383ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r110 { fill: #a885ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r111 { fill: #ae86ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r112 { fill: #b486ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r113 { fill: #b982ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r114 { fill: #be7dff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r115 { fill: #c478ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r116 { fill: #c973ff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r117 { fill: #ce6eff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r118 { fill: #d46aff;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r119 { fill: #d964fa;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r120 { fill: #de55d6;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r121 { fill: #e447b3;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r122 { fill: #e9398f;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r123 { fill: #ee2a6b;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r124 { fill: #f41c47;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r125 { fill: #f90e23;font-weight: bold;font-style: italic;;text-decoration: underline; }
+.rainbow_gradient_example-r126 { fill: #ff0000;font-weight: bold;font-style: italic;;text-decoration: underline; }
+    </style>
+
+    <defs>
+    <clipPath id="rainbow_gradient_example-clip-terminal">
+      <rect x="0" y="0" width="779.8" height="413.79999999999995" />
+    </clipPath>
+    <clipPath id="rainbow_gradient_example-line-0">
+    <rect x="0" y="1.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-1">
+    <rect x="0" y="25.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-2">
+    <rect x="0" y="50.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-3">
+    <rect x="0" y="74.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-4">
+    <rect x="0" y="99.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-5">
+    <rect x="0" y="123.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-6">
+    <rect x="0" y="147.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-7">
+    <rect x="0" y="172.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-8">
+    <rect x="0" y="196.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-9">
+    <rect x="0" y="221.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-10">
+    <rect x="0" y="245.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-11">
+    <rect x="0" y="269.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-12">
+    <rect x="0" y="294.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-13">
+    <rect x="0" y="318.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-14">
+    <rect x="0" y="343.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="rainbow_gradient_example-line-15">
+    <rect x="0" y="367.5" width="780.8" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="797" height="462.8" rx="8"/><text class="rainbow_gradient_example-title" fill="#ffffff" text-anchor="middle" x="398" y="27">Rainbow&#160;Gradient&#160;Example</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#rainbow_gradient_example-clip-terminal)">
+    <rect fill="#111111" x="0" y="1.5" width="780.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="25.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="25.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="73.2" y="25.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="85.4" y="25.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="134.2" y="25.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="146.4" y="25.9" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="231.8" y="25.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="244" y="25.9" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="317.2" y="25.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="329.4" y="25.9" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="414.8" y="25.9" width="341.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="25.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="50.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="50.3" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="73.2" y="50.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="85.4" y="50.3" width="158.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="244" y="50.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="256.2" y="50.3" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="305" y="50.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="317.2" y="50.3" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="390.4" y="50.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="402.6" y="50.3" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="451.4" y="50.3" width="305" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="50.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="74.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="74.7" width="732" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="74.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="99.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="99.1" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="109.8" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="122" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="134.2" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="146.4" y="99.1" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="231.8" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="244" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="256.2" y="99.1" width="500.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="99.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="123.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="123.5" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="109.8" y="123.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="122" y="123.5" width="61" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="183" y="123.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="195.2" y="123.5" width="561.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="123.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="147.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="147.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="73.2" y="147.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="122" y="147.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="134.2" y="147.9" width="622.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="147.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="172.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="172.3" width="97.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="122" y="172.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="134.2" y="172.3" width="622.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="172.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="196.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="196.7" width="732" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="196.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="221.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="221.1" width="305" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="329.4" y="221.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="341.6" y="221.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="353.8" y="221.1" width="402.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="221.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="245.5" width="97.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="122" y="245.5" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="207.4" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="219.6" y="245.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="268.4" y="245.5" width="488" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="269.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="73.2" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="85.4" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="97.6" y="269.9" width="658.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="294.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="294.3" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="73.2" y="294.3" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="158.6" y="294.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="170.8" y="294.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="183" y="294.3" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="256.2" y="294.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="268.4" y="294.3" width="488" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="294.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="318.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="24.4" y="318.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="36.6" y="318.7" width="719.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="756.4" y="318.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#111111" x="0" y="343.1" width="780.8" height="24.65" shape-rendering="crispEdges"/>
+    <g class="rainbow_gradient_example-matrix">
+    <text class="rainbow_gradient_example-r1" x="780.8" y="20" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-0)">
+</text><text class="rainbow_gradient_example-r2" x="24.4" y="44.4" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-1)">from</text><text class="rainbow_gradient_example-r3" x="85.4" y="44.4" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-1)">rich</text><text class="rainbow_gradient_example-r3" x="134.2" y="44.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-1)">.</text><text class="rainbow_gradient_example-r3" x="146.4" y="44.4" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-1)">console</text><text class="rainbow_gradient_example-r2" x="244" y="44.4" textLength="73.2" clip-path="url(#rainbow_gradient_example-line-1)">import</text><text class="rainbow_gradient_example-r3" x="329.4" y="44.4" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-1)">Console</text><text class="rainbow_gradient_example-r1" x="780.8" y="44.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-1)">
+</text><text class="rainbow_gradient_example-r2" x="24.4" y="68.8" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-2)">from</text><text class="rainbow_gradient_example-r3" x="85.4" y="68.8" textLength="158.6" clip-path="url(#rainbow_gradient_example-line-2)">rich_gradient</text><text class="rainbow_gradient_example-r3" x="244" y="68.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-2)">.</text><text class="rainbow_gradient_example-r3" x="256.2" y="68.8" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-2)">text</text><text class="rainbow_gradient_example-r2" x="317.2" y="68.8" textLength="73.2" clip-path="url(#rainbow_gradient_example-line-2)">import</text><text class="rainbow_gradient_example-r3" x="402.6" y="68.8" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-2)">Text</text><text class="rainbow_gradient_example-r1" x="780.8" y="68.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-2)">
+</text><text class="rainbow_gradient_example-r1" x="780.8" y="93.2" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-3)">
+</text><text class="rainbow_gradient_example-r3" x="24.4" y="117.6" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-4)">console</text><text class="rainbow_gradient_example-r2" x="122" y="117.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-4)">=</text><text class="rainbow_gradient_example-r3" x="146.4" y="117.6" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-4)">Console</text><text class="rainbow_gradient_example-r3" x="231.8" y="117.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-4)">(</text><text class="rainbow_gradient_example-r3" x="244" y="117.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-4)">)</text><text class="rainbow_gradient_example-r1" x="780.8" y="117.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-4)">
+</text><text class="rainbow_gradient_example-r3" x="24.4" y="142" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-5)">console</text><text class="rainbow_gradient_example-r2" x="109.8" y="142" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-5)">.</text><text class="rainbow_gradient_example-r3" x="122" y="142" textLength="61" clip-path="url(#rainbow_gradient_example-line-5)">print</text><text class="rainbow_gradient_example-r3" x="183" y="142" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-5)">(</text><text class="rainbow_gradient_example-r1" x="780.8" y="142" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-5)">
+</text><text class="rainbow_gradient_example-r3" x="73.2" y="166.4" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-6)">Text</text><text class="rainbow_gradient_example-r3" x="122" y="166.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-6)">(</text><text class="rainbow_gradient_example-r1" x="780.8" y="166.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-6)">
+</text><text class="rainbow_gradient_example-r4" x="122" y="190.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-7)">&quot;</text><text class="rainbow_gradient_example-r4" x="134.2" y="190.8" textLength="622.2" clip-path="url(#rainbow_gradient_example-line-7)">This&#160;text&#160;is&#160;printed&#160;with&#160;color&#160;stops&#160;that&#160;[i]span&#160;</text><text class="rainbow_gradient_example-r1" x="780.8" y="190.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-7)">
+</text><text class="rainbow_gradient_example-r4" x="24.4" y="215.2" textLength="732" clip-path="url(#rainbow_gradient_example-line-8)">entire&#160;rainbow[/i].&#160;It&#160;is&#160;[b]center&#160;justified[/b]&#160;and&#160;respec</text><text class="rainbow_gradient_example-r1" x="780.8" y="215.2" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-8)">
+</text><text class="rainbow_gradient_example-r4" x="24.4" y="239.6" textLength="305" clip-path="url(#rainbow_gradient_example-line-9)">[u&#160;b&#160;i]inline&#160;formatting.</text><text class="rainbow_gradient_example-r4" x="329.4" y="239.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-9)">&quot;</text><text class="rainbow_gradient_example-r3" x="341.6" y="239.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-9)">,</text><text class="rainbow_gradient_example-r1" x="780.8" y="239.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-9)">
+</text><text class="rainbow_gradient_example-r3" x="122" y="264" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-10)">rainbow</text><text class="rainbow_gradient_example-r2" x="207.4" y="264" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-10)">=</text><text class="rainbow_gradient_example-r5" x="219.6" y="264" textLength="48.8" clip-path="url(#rainbow_gradient_example-line-10)">True</text><text class="rainbow_gradient_example-r1" x="780.8" y="264" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-10)">
+</text><text class="rainbow_gradient_example-r3" x="73.2" y="288.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-11)">)</text><text class="rainbow_gradient_example-r3" x="85.4" y="288.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-11)">,</text><text class="rainbow_gradient_example-r1" x="780.8" y="288.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-11)">
+</text><text class="rainbow_gradient_example-r3" x="73.2" y="312.8" textLength="85.4" clip-path="url(#rainbow_gradient_example-line-12)">justify</text><text class="rainbow_gradient_example-r2" x="158.6" y="312.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-12)">=</text><text class="rainbow_gradient_example-r4" x="170.8" y="312.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-12)">&quot;</text><text class="rainbow_gradient_example-r4" x="183" y="312.8" textLength="73.2" clip-path="url(#rainbow_gradient_example-line-12)">center</text><text class="rainbow_gradient_example-r4" x="256.2" y="312.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-12)">&quot;</text><text class="rainbow_gradient_example-r1" x="780.8" y="312.8" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-12)">
+</text><text class="rainbow_gradient_example-r3" x="24.4" y="337.2" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-13)">)</text><text class="rainbow_gradient_example-r1" x="780.8" y="337.2" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-13)">
+</text><text class="rainbow_gradient_example-r1" x="780.8" y="361.6" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-14)">
+</text><text class="rainbow_gradient_example-r6" x="36.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">T</text><text class="rainbow_gradient_example-r7" x="48.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">h</text><text class="rainbow_gradient_example-r8" x="61" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">i</text><text class="rainbow_gradient_example-r9" x="73.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">s</text><text class="rainbow_gradient_example-r11" x="97.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r12" x="109.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">e</text><text class="rainbow_gradient_example-r13" x="122" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">x</text><text class="rainbow_gradient_example-r14" x="134.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r16" x="158.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">i</text><text class="rainbow_gradient_example-r17" x="170.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">s</text><text class="rainbow_gradient_example-r19" x="195.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">p</text><text class="rainbow_gradient_example-r20" x="207.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">r</text><text class="rainbow_gradient_example-r21" x="219.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">i</text><text class="rainbow_gradient_example-r22" x="231.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">n</text><text class="rainbow_gradient_example-r23" x="244" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r24" x="256.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">e</text><text class="rainbow_gradient_example-r25" x="268.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">d</text><text class="rainbow_gradient_example-r27" x="292.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">w</text><text class="rainbow_gradient_example-r28" x="305" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">i</text><text class="rainbow_gradient_example-r29" x="317.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r30" x="329.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">h</text><text class="rainbow_gradient_example-r32" x="353.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">c</text><text class="rainbow_gradient_example-r33" x="366" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">o</text><text class="rainbow_gradient_example-r34" x="378.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">l</text><text class="rainbow_gradient_example-r35" x="390.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">o</text><text class="rainbow_gradient_example-r36" x="402.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">r</text><text class="rainbow_gradient_example-r38" x="427" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">s</text><text class="rainbow_gradient_example-r39" x="439.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r40" x="451.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">o</text><text class="rainbow_gradient_example-r41" x="463.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">p</text><text class="rainbow_gradient_example-r42" x="475.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">s</text><text class="rainbow_gradient_example-r44" x="500.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r45" x="512.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">h</text><text class="rainbow_gradient_example-r46" x="524.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">a</text><text class="rainbow_gradient_example-r47" x="536.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r49" x="561.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">s</text><text class="rainbow_gradient_example-r50" x="573.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">p</text><text class="rainbow_gradient_example-r51" x="585.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">a</text><text class="rainbow_gradient_example-r52" x="597.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">n</text><text class="rainbow_gradient_example-r54" x="622.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r55" x="634.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">h</text><text class="rainbow_gradient_example-r56" x="646.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">e</text><text class="rainbow_gradient_example-r58" x="671" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">e</text><text class="rainbow_gradient_example-r59" x="683.2" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">n</text><text class="rainbow_gradient_example-r60" x="695.4" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">t</text><text class="rainbow_gradient_example-r61" x="707.6" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">i</text><text class="rainbow_gradient_example-r62" x="719.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">r</text><text class="rainbow_gradient_example-r63" x="732" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">e</text><text class="rainbow_gradient_example-r1" x="780.8" y="386" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-15)">
+</text><text class="rainbow_gradient_example-r64" x="0" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">r</text><text class="rainbow_gradient_example-r65" x="12.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">a</text><text class="rainbow_gradient_example-r66" x="24.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r67" x="36.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">n</text><text class="rainbow_gradient_example-r68" x="48.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">b</text><text class="rainbow_gradient_example-r69" x="61" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">o</text><text class="rainbow_gradient_example-r70" x="73.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">w</text><text class="rainbow_gradient_example-r71" x="85.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">.</text><text class="rainbow_gradient_example-r73" x="109.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">I</text><text class="rainbow_gradient_example-r74" x="122" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">t</text><text class="rainbow_gradient_example-r76" x="146.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r77" x="158.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">s</text><text class="rainbow_gradient_example-r79" x="183" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">c</text><text class="rainbow_gradient_example-r80" x="195.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">e</text><text class="rainbow_gradient_example-r81" x="207.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">n</text><text class="rainbow_gradient_example-r82" x="219.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">t</text><text class="rainbow_gradient_example-r83" x="231.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">e</text><text class="rainbow_gradient_example-r84" x="244" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">r</text><text class="rainbow_gradient_example-r86" x="268.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">j</text><text class="rainbow_gradient_example-r87" x="280.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">u</text><text class="rainbow_gradient_example-r88" x="292.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">s</text><text class="rainbow_gradient_example-r89" x="305" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">t</text><text class="rainbow_gradient_example-r90" x="317.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r91" x="329.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">f</text><text class="rainbow_gradient_example-r92" x="341.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r93" x="353.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">e</text><text class="rainbow_gradient_example-r94" x="366" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">d</text><text class="rainbow_gradient_example-r96" x="390.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">a</text><text class="rainbow_gradient_example-r97" x="402.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">n</text><text class="rainbow_gradient_example-r98" x="414.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">d</text><text class="rainbow_gradient_example-r100" x="439.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">r</text><text class="rainbow_gradient_example-r101" x="451.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">e</text><text class="rainbow_gradient_example-r102" x="463.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">s</text><text class="rainbow_gradient_example-r103" x="475.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">p</text><text class="rainbow_gradient_example-r104" x="488" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">e</text><text class="rainbow_gradient_example-r105" x="500.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">c</text><text class="rainbow_gradient_example-r106" x="512.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">t</text><text class="rainbow_gradient_example-r107" x="524.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">s</text><text class="rainbow_gradient_example-r109" x="549" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r110" x="561.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">n</text><text class="rainbow_gradient_example-r111" x="573.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">l</text><text class="rainbow_gradient_example-r112" x="585.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r113" x="597.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">n</text><text class="rainbow_gradient_example-r114" x="610" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">e</text><text class="rainbow_gradient_example-r116" x="634.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">f</text><text class="rainbow_gradient_example-r117" x="646.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">o</text><text class="rainbow_gradient_example-r118" x="658.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">r</text><text class="rainbow_gradient_example-r119" x="671" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">m</text><text class="rainbow_gradient_example-r120" x="683.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">a</text><text class="rainbow_gradient_example-r121" x="695.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">t</text><text class="rainbow_gradient_example-r122" x="707.6" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">t</text><text class="rainbow_gradient_example-r123" x="719.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">i</text><text class="rainbow_gradient_example-r124" x="732" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">n</text><text class="rainbow_gradient_example-r125" x="744.2" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">g</text><text class="rainbow_gradient_example-r126" x="756.4" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">.</text><text class="rainbow_gradient_example-r1" x="780.8" y="410.4" textLength="12.2" clip-path="url(#rainbow_gradient_example-line-16)">
+</text>
+    </g>
+    </g>
+</svg>
