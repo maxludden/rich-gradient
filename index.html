@@ -14,7 +14,7 @@
       
       
       
-        <link rel="next" href="gradient/">
+        <link rel="next" href="text/">
       
       
       <link rel="icon" href="img/rich-gradient-icon.svg">
@@ -360,46 +360,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#basic-gradient-example" class="md-nav__link">
+  <a href="#basic-text-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Gradient Example
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gradient-with-specific-colors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Gradient with Specific Colors
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Gradient with Specific Colors">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#color-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Color Formats
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Code
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#specific-color-gradient-result" class="md-nav__link">
-    <span class="md-ellipsis">
-      Specific Color Gradient Result
+      Basic Text Example
     </span>
   </a>
   
@@ -409,27 +372,13 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#rainbow-gradient-example" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#gradient" class="md-nav__link">
     <span class="md-ellipsis">
-      Rainbow Gradient Example
+      Gradient
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#still-inherits-from-richtexttext" class="md-nav__link">
-    <span class="md-ellipsis">
-      Still inherits from rich.text.Text
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -484,11 +433,11 @@
   
   
     <li class="md-nav__item">
-      <a href="gradient/" class="md-nav__link">
+      <a href="text/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Gradient
+    Text
     
   </span>
   
@@ -506,11 +455,11 @@
   
   
     <li class="md-nav__item">
-      <a href="color/" class="md-nav__link">
+      <a href="gradient/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Color
+    Gradient
     
   </span>
   
@@ -593,11 +542,11 @@
   
   
     <li class="md-nav__item">
-      <a href="gradient_ref/" class="md-nav__link">
+      <a href="text_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Gradient Reference
+    Text Reference
     
   </span>
   
@@ -615,11 +564,11 @@
   
   
     <li class="md-nav__item">
-      <a href="color_ref/" class="md-nav__link">
+      <a href="gradient_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Color Reference
+    Gradient Reference
     
   </span>
   
@@ -702,20 +651,20 @@
 <h1 id="_1"><img alt="rich-gradient" src="img/rich-gradient.svg" /><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <div class="badges">
     <a href="https://github.com/astral-sh/uv"><img class="badge" src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt=uv></a>
-    <a href="https://GitHub.com/maxludden/maxgradient"><img  class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 | 3.13-blue?logo=python" alt="PyPI - MaxGradient"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/PyPI-rich_gradient-blue?" alt="PyPI - rich_radient"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/Version-0.2.0-bbbbbb" alt="Version 0.2.0"></a>
+    <a href="https://GitHub.com/maxludden/maxgradient"><img  class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 | 3.13-blue?logo=python" alt="PyPI - rich-gradient"></a>
+    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/PyPI-rich_gradient-blue?" alt="PyPI - rich-gradient"></a>
+    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/Version-0.2.1-bbbbbb" alt="Version 0.2.1"></a>
 </div>
 <div id="spacer"></div>
 
 <p><img alt="gradient example" src="img/gradient.svg" /></p>
 <p>This library is a wrapper of the great <a href="https://GitHub.com/textualize/rich">rich</a> library that extends <a href="https://github.com/Textualize/rich/blob/master/rich/text.py">rich.text.Text</a> to allow for the easy generation gradient text from either user entered colors or randomly if no colors are entered.</p>
-<p>Borrowing from <a href="https://GitHub.com/pydantic/pydantic-extra-types">pydantic-extra-types</a>' <a href="https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py">Color</a> class, rich_gradient extends the rich standard colors to include:</p>
+<p>Borrowing from <a href="https://github.com/maxludden/rich-color-ext">rich-color-ext</a> rich_gradient extends the rich standard colors to include:</p>
 <ul>
 <li>3 or 6 digit hex code (e.g. <code>#f00</code> or <code>#ff0000</code>)</li>
 <li>RGB color codes (e.g. <code>rgb(255, 0, 0)</code>)</li>
 <li>RGB tuples   (e.g. <code>(255, 0, 0)</code>)</li>
-<li>CSS3 Color Names (e.g. <code>red</code>)</li>
+<li>CSS3 Color Names (e.g. <code>rebeccapurple</code>)</li>
 </ul>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <h3 id="uv-recommended">uv (Recommended)<a class="headerlink" href="#uv-recommended" title="Permanent link">&para;</a></h3>
@@ -725,68 +674,11 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>rich-gradient
 </span></code></pre></div>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<h3 id="basic-gradient-example">Basic Gradient Example<a class="headerlink" href="#basic-gradient-example" title="Permanent link">&para;</a></h3>
-<p>To print a simple gradient just substitue the <code>Gradient</code> class for the <code>Text</code> class in the rich library.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich_gradient</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gradient</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Gradient</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
-</span></code></pre></div>
+<h3 id="basic-text-example">Basic Text Example<a class="headerlink" href="#basic-text-example" title="Permanent link">&para;</a></h3>
+<p>To print a simple gradient import the <code>Text</code> class from in the <code>rich_gradient</code> library:</p>
 <p><img alt="Hello, World!" src="img/hello_world.svg" /></p>
-<hr />
-<h3 id="gradient-with-specific-colors">Gradient with Specific Colors<a class="headerlink" href="#gradient-with-specific-colors" title="Permanent link">&para;</a></h3>
-<p>If you want a bit more control of the gradient, you can specify the colors you want to use in the gradient by passing them as a list of colors to the <code>colors</code> parameter.</p>
-<h4 id="color-formats">Color Formats<a class="headerlink" href="#color-formats" title="Permanent link">&para;</a></h4>
-<p>Color can be parsed from a variety of formats including:</p>
-<p><img alt="3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors" src="img/color_formats.svg" /></p>
-<h4 id="example-code">Example Code<a class="headerlink" href="#example-code" title="Permanent link">&para;</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">Gradient</span><span class="p">(</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="s2">&quot;This a gradient with specific colors.&quot;</span><span class="p">,</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;#ff9900&quot;</span><span class="p">,</span> <span class="s2">&quot;#ff0&quot;</span><span class="p">,</span> <span class="s2">&quot;Lime&quot;</span><span class="p">],</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">)</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
-</span></code></pre></div>
-<h4 id="specific-color-gradient-result">Specific Color Gradient Result<a class="headerlink" href="#specific-color-gradient-result" title="Permanent link">&para;</a></h4>
-<p><img alt="specific colors" src="img/specific_color_gradient.svg" /></p>
-<hr />
-<h3 id="rainbow-gradient-example">Rainbow Gradient Example<a class="headerlink" href="#rainbow-gradient-example" title="Permanent link">&para;</a></h3>
-<p>If four colors isn't enough, you can use the 'rainbow' parameter to generate a rainbow gradient that spans the entire spectrum of colors randomly.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">Gradient</span><span class="p">(</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="s2">&quot;This is a rainbow gradient.&quot;</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="n">rainbow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="p">)</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span>
-</span></code></pre></div>
-<p><img alt="Rainbow Gradient" src="img/example_rainbow_gradient.svg" /></p>
-<p style="text-align:right;">*The rainbow gradient is generated randomly each time the code is run.</p>
-
-<hr />
-<h3 id="still-inherits-from-richtexttext">Still inherits from <code>rich.text.Text</code><a class="headerlink" href="#still-inherits-from-richtexttext" title="Permanent link">&para;</a></h3>
-<p>Since <code>Gradient</code> is a subclass of <code>Text</code>, you can still use all the same methods and properties as you would with <code>Text</code>.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">Gradient</span><span class="p">(</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="s2">&quot;This is an underlined rainbow gradient.&quot;</span><span class="p">,</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="n">rainbow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="n">style</span><span class="o">=</span><span class="s2">&quot;underline&quot;</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="p">),</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">)</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">()</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="n">Gradient</span><span class="p">(</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="s2">&quot;This is a bold italic gradient.&quot;</span><span class="p">,</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold italic&quot;</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="p">),</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">)</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">()</span>
-</span></code></pre></div>
-<p><img alt="Still Text" src="img/still_text.svg" /></p>
+<h2 id="gradient">Gradient<a class="headerlink" href="#gradient" title="Permanent link">&para;</a></h2>
+<p>If just text is boring, <code>rich_gradient.gradient.Gradient</code> allows you to</p>
 
 
 

@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../gradient/">
+        <link rel="prev" href="..">
       
       
-        <link rel="next" href="../gradient_rule/">
+        <link rel="next" href="../gradient/">
       
       
       <link rel="icon" href="../img/rich-gradient-icon.svg">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Color - rich-gradient</title>
+        <title>Text - rich-gradient</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#color" class="md-skip">
+        <a href="#rich_gradienttexttext" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Color
+              Text
             
           </span>
         </div>
@@ -327,6 +327,96 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Text
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Text
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gradient-with-specific-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gradient with Specific Colors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rainbow-gradient-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rainbow Gradient Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#still-inherits-from-richtexttext" class="md-nav__link">
+    <span class="md-ellipsis">
+      Still inherits from rich.text.Text
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
@@ -340,38 +430,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Color
-    
-  </span>
-  
-
-      </a>
-      
     </li>
   
 
@@ -449,11 +507,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient_ref/" class="md-nav__link">
+      <a href="../text_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Gradient Reference
+    Text Reference
     
   </span>
   
@@ -471,11 +529,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../color_ref/" class="md-nav__link">
+      <a href="../gradient_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Color Reference
+    Gradient Reference
     
   </span>
   
@@ -555,16 +613,53 @@
   
 
 
-<h1 id="color">Color<a class="headerlink" href="#color" title="Permanent link">&para;</a></h1>
-<p><code>rich-gradient</code>'s Color class is a copy of <code>pydantic_extra_types.color.Color</code> that extends the rich standard colors to include:</p>
+<h1 id="rich_gradienttexttext">rich_gradient.text.Text<a class="headerlink" href="#rich_gradienttexttext" title="Permanent link">&para;</a></h1>
+<p>If you pass <code>rich_gradient.text.Text</code> a string, it will print the string to the console in a random gradient. Rich-gradient's <code>Text</code> class inherits from <code>rich.text.Text</code>. In addition to all of it's parent's parameters, <code>rich_gradient.text.Text</code> also accepts:</p>
 <ul>
-<li>3 digit hex codes (e.g. <code>#f00</code>)</li>
-<li>6 digit hex codes (e.g. <code>#ff0000</code>)</li>
-<li>RGB color codes (e.g. <code>rgb(255, 0, 0)</code>)</li>
-<li>RGB tuples (e.g. <code>(255, 0, 0)</code>)</li>
-<li>CSS3 Color Names (e.g. <code>red</code>)</li>
+<li><code>colors</code>: (<code>List[ColorType]</code>) - A list of strings that can be parsed by <code>rich.color.Color</code>.</li>
 </ul>
-<p><img alt="colors" src="../img/colors.svg" /></p>
+<blockquote style="padding:50px,margin:20em;">
+  <strong style="padding:10px;">📝 Note</strong><br><code>rich_color_ext</code> extends rich to be able to parse:
+  <ul>
+        <li><strong>CSS color names:</strong>
+          <ul>
+              <li><span style="color:rebeccapurple;">rebeccapurple</span></li>
+              <li><span style="color:salmon;">salmon</span></li>
+              <li><span style="color:aliceblue">aliceblue</span></li>
+          </ul>
+    </li><li><strong>3-Digit Hex Color Codes:</strong>
+        <ul>
+            <li><span style="color:#abc">#abc</span></li>
+            <li><span style="color:#FDC">#FDC</span></li>
+            <li><span style="color:#A1f">#A1f
+        </ul>
+    </li>
+  </ul>
+</blockquote>
+
+<ul>
+<li><code>hues</code>: (<code>int</code>) - The number of color stops a gradient should use</li>
+<li><code>rainbow</code>: (<code>bool</code>) - Whether to create a gradient that spans the entire spectrum. Defaults to <code>False</code></li>
+<li><code>markup</code>: (<code>bool</code>) - Whether to respect the inputs existing styles. Defaults  to <code>True</code></li>
+</ul>
+<hr />
+<h3 id="gradient-with-specific-colors">Gradient with Specific Colors<a class="headerlink" href="#gradient-with-specific-colors" title="Permanent link">&para;</a></h3>
+<p>To have more control over the gradient that is printed, you can pass the <code>colors</code> parameter a list of colors. Colors can be parsed from:
+-  CSS colors names,
+-  3 or 6 digit hex codes,
+-  <code>rich.color.Color</code> instances or names,
+-  any string or style that <code>rich.color.Color</code> can parse.</p>
+<p><img alt="specific colors" src="../img/specific_color_gradient.svg" /></p>
+<hr />
+<h3 id="rainbow-gradient-example">Rainbow Gradient Example<a class="headerlink" href="#rainbow-gradient-example" title="Permanent link">&para;</a></h3>
+<p>If four colors isn't enough, you can use the 'rainbow' parameter to generate a rainbow gradient that spans the entire spectrum of colors randomly.</p>
+<p><img alt="Rainbow Gradient" src="../img/rainbow_gradient_text.svg" /></p>
+<p style="text-align:right;margin-top: 0px;padding-top:0px;">*The rainbow gradient is generated randomly each time the code is run.</p>
+
+<hr />
+<h3 id="still-inherits-from-richtexttext">Still inherits from <code>rich.text.Text</code><a class="headerlink" href="#still-inherits-from-richtexttext" title="Permanent link">&para;</a></h3>
+<p>Since <code>rich_gradient.text.Text</code> is a subclass of <code>rich.text.Text</code>, you can still use all the same methods and parameters as you would.</p>
+<p><img alt="Still Text" src="../img/still_text.svg" /></p>
 
 
 
