@@ -326,11 +326,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient/" class="md-nav__link">
+      <a href="../text/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Gradient
+    Text
     
   </span>
   
@@ -348,11 +348,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../color/" class="md-nav__link">
+      <a href="../gradient/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Color
+    Gradient
     
   </span>
   
@@ -435,11 +435,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient_ref/" class="md-nav__link">
+      <a href="../text_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Gradient Reference
+    Text Reference
     
   </span>
   
@@ -457,11 +457,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../color_ref/" class="md-nav__link">
+      <a href="../gradient_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Color Reference
+    Gradient Reference
     
   </span>
   
@@ -556,16 +556,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#most-recent-v020" class="md-nav__link">
+  <a href="#v030-2025-06-20-working-rewrite" class="md-nav__link">
     <span class="md-ellipsis">
-      Most Recent v0.2.0
+      v0.3.0 - 2025-06-20 | Working Rewrite
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Most Recent v0.2.0">
+    <nav class="md-nav" aria-label="v0.3.0 - 2025-06-20 | Working Rewrite">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v030-added" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.0 Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v030-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.0 Updated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v030-todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.0 TODO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v030-removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.0 Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v021-rewrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.2.1 Rewrite
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v020-2025-3-13-uv-pure-python-and-3132" class="md-nav__link">
     <span class="md-ellipsis">
       v0.2.0 - 2025-3-13 | uv, pure python, and 3.13.2
@@ -606,8 +656,8 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#v020-updated" class="md-nav__link">
     <span class="md-ellipsis">
       v0.2.0 Updated
@@ -615,8 +665,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#v020-changed" class="md-nav__link">
     <span class="md-ellipsis">
       v0.2.0 Changed
@@ -624,18 +674,13 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#v020-added" class="md-nav__link">
     <span class="md-ellipsis">
       v0.2.0 Added
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -860,7 +905,40 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <!--## [Unreleased]-->
-<h2 id="most-recent-v020">Most Recent v0.2.0<a class="headerlink" href="#most-recent-v020" title="Permanent link">&para;</a></h2>
+
+<h3 id="v030-2025-06-20-working-rewrite">v0.3.0 - 2025-06-20 | <span style="color: rgb(215, 255, 100)"> Working Rewrite</span><a class="headerlink" href="#v030-2025-06-20-working-rewrite" title="Permanent link">&para;</a></h3>
+<h4 id="v030-added"><span style="color: rgb(215, 255, 100)">v0.3.0 Added</span><a class="headerlink" href="#v030-added" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Validated working and added tests for:</li>
+<li><code>rich_gradient.text.Text</code></li>
+<li><code>rich_gradient.gradient.Gradient</code></li>
+<li><code>rich_gradient.rule.GradientRule</code></li>
+<li><code>rich_gradient.spectrum.Spectrum</code></li>
+<li><code>rich-color-ext</code> acting as adequate replacement for previous color logic</li>
+<li>Added examples directory containing:</li>
+<li><code>animated_gradient_example.py</code></li>
+<li><code>gradient_example.py</code></li>
+<li><code>hello_world.py</code></li>
+<li><code>rainbow_gradient.py</code></li>
+<li><code>specific_color_gradient.py</code></li>
+<li><code>text_markup.py</code></li>
+<li><code>two_color_gradients.py</code></li>
+<li>Generated updated exports for examples for documentation (still in the works)</li>
+</ul>
+<h4 id="v030-updated"><span style="color: rgb(215, 255, 100)">v0.3.0 Updated</span><a class="headerlink" href="#v030-updated" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>docs/index.md</code></li>
+</ul>
+<h4 id="v030-todo"><span style="color: rgb(215, 255, 100)">v0.3.0 TODO</span><a class="headerlink" href="#v030-todo" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Update Documentation</li>
+<li>Expand Tests</li>
+<li>Work on Gradient Panel and Table Renderables</li>
+</ul>
+<h4 id="v030-removed"><span style="color: rgb(215, 255, 100)">v0.3.0 Removed</span><a class="headerlink" href="#v030-removed" title="Permanent link">&para;</a></h4>
+<p>Removed all of the the archived modules from rich_gradient/archive/*</p>
+<h3 id="v021-rewrite">v0.2.1 <span style="color: rgb(215, 255, 100)">Rewrite</span><a class="headerlink" href="#v021-rewrite" title="Permanent link">&para;</a></h3>
+<p>There was a lot of overhead in rich-gradient so I rewrote it from the ground up with an actual goal. I created <a href="https://github.com/maxludden/rich-color-ext">rich-color-ext</a> to wrap around rich's color parsing removing the need for the<code>_rgb.py</code>, <code>color.py</code>, <code>color_data.py</code>, <code>_colors.py</code>, and all of their tests.</p>
 <h3 id="v020-2025-3-13-uv-pure-python-and-3132">v0.2.0 - 2025-3-13 | <span style="color:rgb(215, 255, 100)"><a href="https://github.com/astral-sh/uv">uv</a></span>, pure python, and 3.13.2<a class="headerlink" href="#v020-2025-3-13-uv-pure-python-and-3132" title="Permanent link">&para;</a></h3>
 <p>There are a number of significant changes in v0.2.0:</p>
 <h4 id="rye-uv"><span style="color: rgb(215, 255, 100)"><code>rye</code> → <code>uv</code></span><a class="headerlink" href="#rye-uv" title="Permanent link">&para;</a></h4>

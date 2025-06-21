@@ -1,0 +1,103 @@
+<svg class="rich-terminal" viewBox="0 0 1312 342.79999999999995" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .terminal-347058233-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .terminal-347058233-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .terminal-347058233-r1 { fill: #ff00ff }
+.terminal-347058233-r2 { fill: #ffffff }
+    </style>
+
+    <defs>
+    <clipPath id="terminal-347058233-clip-terminal">
+      <rect x="0" y="0" width="1292.1999999999998" height="291.79999999999995" />
+    </clipPath>
+    <clipPath id="terminal-347058233-line-0">
+    <rect x="0" y="1.5" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-1">
+    <rect x="0" y="25.9" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-2">
+    <rect x="0" y="50.3" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-3">
+    <rect x="0" y="74.7" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-4">
+    <rect x="0" y="99.1" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-5">
+    <rect x="0" y="123.5" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-6">
+    <rect x="0" y="147.9" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-7">
+    <rect x="0" y="172.3" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-8">
+    <rect x="0" y="196.7" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-9">
+    <rect x="0" y="221.1" width="1293.2" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-347058233-line-10">
+    <rect x="0" y="245.5" width="1293.2" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1310" height="340.8" rx="8"/><text class="terminal-347058233-title" fill="#ffffff" text-anchor="middle" x="655" y="27">Gradient&#160;Example</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#terminal-347058233-clip-terminal)">
+    
+    <g class="terminal-347058233-matrix">
+    <text class="terminal-347058233-r1" x="0" y="20" textLength="780.8" clip-path="url(#terminal-347058233-line-0)">╭──────────────────────&#160;Gradient&#160;Example&#160;──────────────────────╮</text><text class="terminal-347058233-r2" x="1293.2" y="20" textLength="12.2" clip-path="url(#terminal-347058233-line-0)">
+</text><text class="terminal-347058233-r1" x="0" y="44.4" textLength="780.8" clip-path="url(#terminal-347058233-line-1)">│&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="44.4" textLength="12.2" clip-path="url(#terminal-347058233-line-1)">
+</text><text class="terminal-347058233-r1" x="0" y="68.8" textLength="780.8" clip-path="url(#terminal-347058233-line-2)">│&#160;&#160;Lorem&#160;ipsum&#160;dolor&#160;sit&#160;amet,&#160;consectetur&#160;adipisicing&#160;&#160;elit,&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="68.8" textLength="12.2" clip-path="url(#terminal-347058233-line-2)">
+</text><text class="terminal-347058233-r1" x="0" y="93.2" textLength="780.8" clip-path="url(#terminal-347058233-line-3)">│&#160;&#160;sed&#160;do&#160;eiusmod&#160;tempor&#160;incididunt&#160;ut&#160;labore&#160;et&#160;dolore&#160;magna&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="93.2" textLength="12.2" clip-path="url(#terminal-347058233-line-3)">
+</text><text class="terminal-347058233-r1" x="0" y="117.6" textLength="780.8" clip-path="url(#terminal-347058233-line-4)">│&#160;&#160;aliqua.&#160;Ut&#160;enim&#160;ad&#160;minim&#160;veniam,&#160;quis&#160;nostrud&#160;exercitation&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="117.6" textLength="12.2" clip-path="url(#terminal-347058233-line-4)">
+</text><text class="terminal-347058233-r1" x="0" y="142" textLength="780.8" clip-path="url(#terminal-347058233-line-5)">│&#160;&#160;ullamco&#160;laboris&#160;nisi&#160;ut&#160;aliquip&#160;ex&#160;ea&#160;&#160;commodo&#160;&#160;consequat.&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="142" textLength="12.2" clip-path="url(#terminal-347058233-line-5)">
+</text><text class="terminal-347058233-r1" x="0" y="166.4" textLength="780.8" clip-path="url(#terminal-347058233-line-6)">│&#160;&#160;Duis&#160;aute&#160;irure&#160;dolor&#160;in&#160;reprehenderit&#160;in&#160;voluptate&#160;&#160;velit&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="166.4" textLength="12.2" clip-path="url(#terminal-347058233-line-6)">
+</text><text class="terminal-347058233-r1" x="0" y="190.8" textLength="780.8" clip-path="url(#terminal-347058233-line-7)">│&#160;&#160;esse&#160;cillum&#160;dolore&#160;eu&#160;&#160;fugiat&#160;&#160;nulla&#160;&#160;pariatur.&#160;&#160;Excepteur&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="190.8" textLength="12.2" clip-path="url(#terminal-347058233-line-7)">
+</text><text class="terminal-347058233-r1" x="0" y="215.2" textLength="780.8" clip-path="url(#terminal-347058233-line-8)">│&#160;&#160;sint&#160;occaecat&#160;cupidatat&#160;non&#160;proident,&#160;sunt&#160;&#160;in&#160;&#160;culpa&#160;&#160;qui&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="215.2" textLength="12.2" clip-path="url(#terminal-347058233-line-8)">
+</text><text class="terminal-347058233-r1" x="0" y="239.6" textLength="780.8" clip-path="url(#terminal-347058233-line-9)">│&#160;&#160;officia&#160;deserunt&#160;mollit&#160;anim&#160;id&#160;est&#160;laborum.&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="239.6" textLength="12.2" clip-path="url(#terminal-347058233-line-9)">
+</text><text class="terminal-347058233-r1" x="0" y="264" textLength="780.8" clip-path="url(#terminal-347058233-line-10)">│&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;│</text><text class="terminal-347058233-r2" x="1293.2" y="264" textLength="12.2" clip-path="url(#terminal-347058233-line-10)">
+</text><text class="terminal-347058233-r1" x="0" y="288.4" textLength="780.8" clip-path="url(#terminal-347058233-line-11)">╰──────────────────────────────────────────────────────────────╯</text><text class="terminal-347058233-r2" x="1293.2" y="288.4" textLength="12.2" clip-path="url(#terminal-347058233-line-11)">
+</text>
+    </g>
+    </g>
+</svg>

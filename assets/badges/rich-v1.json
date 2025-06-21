@@ -1,0 +1,13 @@
+{
+    "schemaVersion": 1,
+    "label": "",
+    "message": "rich",
+    "style": "flat",
+    "logo": "https://raw.githubusercontent.com/Badges/rich-badges/main/assets/badges/rich-v1.svg",
+    "logoPosition": "left",
+    "logoWidth": 10,
+    "labelColor": "#0084ff",
+    "color": "#fae742",
+    "isError": false,
+    "isWarning": false
+}
