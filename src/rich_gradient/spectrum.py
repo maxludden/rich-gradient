@@ -2,7 +2,7 @@ from itertools import cycle
 from random import randint
 from typing import Dict, List, Set, Tuple
 
-import rich_color_ext
+from rich_color_ext import install
 from cheap_repr import normal_repr, register_repr
 from rich import get_console as _get_console
 from rich.color import Color
@@ -10,11 +10,12 @@ from rich.console import Console
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
-from rich.traceback import install
+from rich.traceback import install as tr_install
 from snoop import snoop
 
 console = _get_console()
-install(console=console)
+tr_install(console=console)
+install()
 
 # A smoother, evenly spaced color spectrum (hue wheel) for gradients
 SPECTRUM_COLORS: Tuple[str, ...] = (

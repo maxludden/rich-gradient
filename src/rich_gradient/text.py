@@ -1,6 +1,6 @@
 from typing import List, Optional, Sequence, Tuple, TypeAlias, Union
 
-import rich_color_ext
+from rich_color_ext import install
 from rich.color import Color, ColorType
 from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.control import strip_control_codes
@@ -13,7 +13,7 @@ from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 ColorInputType: TypeAlias = Union[str, Tuple[int, int, int], Color]
-
+install()
 
 class Text(RichText):
     """A rich text class that supports gradient colors and styles."""

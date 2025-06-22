@@ -1,6 +1,6 @@
 from typing import Iterable, List, Literal, Optional, Sequence, Union, cast
 
-import rich_color_ext
+from rich_color_ext import install
 from cheap_repr import normal_repr, register_repr
 from rich.align import AlignMethod
 from rich.color import Color
@@ -11,7 +11,7 @@ from rich.rule import Rule
 from rich.segment import Segment
 from rich.style import NULL_STYLE, Style, StyleType
 from rich.text import Text as RichText
-from rich.traceback import install
+from rich.traceback import install as tr_install
 from snoop import snoop
 
 from rich_gradient.gradient import Gradient
@@ -20,7 +20,8 @@ from rich_gradient.text import ColorInputType, Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 console = Console()
-install(console=console, width=64)
+tr_install(console=console, width=64)
+install()
 
 CHARACTER_MAP = {
     0: "─",
