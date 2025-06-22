@@ -378,18 +378,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gradient-with-specific-colors" class="md-nav__link">
+  <a href="#gradient-text-with-specific-colors" class="md-nav__link">
     <span class="md-ellipsis">
-      Gradient with Specific Colors
+      Gradient Text with Specific Colors
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#rainbow-gradient-example" class="md-nav__link">
+  <a href="#rainbow-gradient-text-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Rainbow Gradient Example
+      Rainbow Gradient Text Example
     </span>
   </a>
   
@@ -618,20 +618,20 @@
 <ul>
 <li><code>colors</code>: (<code>List[ColorType]</code>) - A list of strings that can be parsed by <code>rich.color.Color</code>.</li>
 </ul>
-<blockquote style="padding:50px,margin:20em;">
+<blockquote style="padding:50px,margin:20em;background-color: #000;padding:10px;">
   <strong style="padding:10px;">📝 Note</strong><br><code>rich_color_ext</code> extends rich to be able to parse:
   <ul>
         <li><strong>CSS color names:</strong>
           <ul>
-              <li><span style="color:rebeccapurple;">rebeccapurple</span></li>
-              <li><span style="color:salmon;">salmon</span></li>
-              <li><span style="color:aliceblue">aliceblue</span></li>
+              <li><span style="color:rebeccapurple;">◉ rebeccapurple</span></li>
+              <li><span style="color:salmon;">◉ salmon</span></li>
+              <li><span style="color:aliceblue">◉ aliceblue</span></li>
           </ul>
     </li><li><strong>3-Digit Hex Color Codes:</strong>
         <ul>
-            <li><span style="color:#abc">#abc</span></li>
-            <li><span style="color:#FDC">#FDC</span></li>
-            <li><span style="color:#A1f">#A1f
+            <li><span style="color:#abc">◉ #abc</span></li>
+            <li><span style="color:#FDC">◉ #FDC</span></li>
+            <li><span style="color:#A1f">◉ #A1f
         </ul>
     </li>
   </ul>
@@ -643,7 +643,7 @@
 <li><code>markup</code>: (<code>bool</code>) - Whether to respect the inputs existing styles. Defaults  to <code>True</code></li>
 </ul>
 <hr />
-<h3 id="gradient-with-specific-colors">Gradient with Specific Colors<a class="headerlink" href="#gradient-with-specific-colors" title="Permanent link">&para;</a></h3>
+<h2 id="gradient-text-with-specific-colors">Gradient Text with Specific Colors<a class="headerlink" href="#gradient-text-with-specific-colors" title="Permanent link">&para;</a></h2>
 <p>To have more control over the gradient that is printed, you can pass the <code>colors</code> parameter a list of colors. Colors can be parsed from:
 -  CSS colors names,
 -  3 or 6 digit hex codes,
@@ -651,13 +651,13 @@
 -  any string or style that <code>rich.color.Color</code> can parse.</p>
 <p><img alt="specific colors" src="../img/specific_color_gradient.svg" /></p>
 <hr />
-<h3 id="rainbow-gradient-example">Rainbow Gradient Example<a class="headerlink" href="#rainbow-gradient-example" title="Permanent link">&para;</a></h3>
+<h2 id="rainbow-gradient-text-example">Rainbow Gradient Text Example<a class="headerlink" href="#rainbow-gradient-text-example" title="Permanent link">&para;</a></h2>
 <p>If four colors isn't enough, you can use the 'rainbow' parameter to generate a rainbow gradient that spans the entire spectrum of colors randomly.</p>
 <p><img alt="Rainbow Gradient" src="../img/rainbow_gradient_text.svg" /></p>
 <p style="text-align:right;margin-top: 0px;padding-top:0px;">*The rainbow gradient is generated randomly each time the code is run.</p>
 
 <hr />
-<h3 id="still-inherits-from-richtexttext">Still inherits from <code>rich.text.Text</code><a class="headerlink" href="#still-inherits-from-richtexttext" title="Permanent link">&para;</a></h3>
+<h2 id="still-inherits-from-richtexttext">Still inherits from <code>rich.text.Text</code><a class="headerlink" href="#still-inherits-from-richtexttext" title="Permanent link">&para;</a></h2>
 <p>Since <code>rich_gradient.text.Text</code> is a subclass of <code>rich.text.Text</code>, you can still use all the same methods and parameters as you would.</p>
 <p><img alt="Still Text" src="../img/still_text.svg" /></p>
 

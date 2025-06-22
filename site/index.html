@@ -360,9 +360,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#basic-text-example" class="md-nav__link">
+  <a href="#text-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Text Example
+      Text Example
     </span>
   </a>
   
@@ -650,11 +650,11 @@
 
 <h1 id="_1"><img alt="rich-gradient" src="img/rich-gradient.svg" /><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <div class="badges">
-    <a href="https://github.com/astral-sh/uv"><img class="badge" src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt=uv></a>
-    <a href="https://GitHub.com/maxludden/maxgradient"><img  class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 | 3.13-blue?logo=python" alt="PyPI - rich-gradient"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/PyPI-rich_gradient-blue?" alt="PyPI - rich-gradient"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img  class="badge" src="https://img.shields.io/badge/Version-0.2.1-bbbbbb" alt="Version 0.2.1"></a>
-</div>
+    <a href="https://github.com/astral-sh/uv"><img class="badge" src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt="uv badge with text endpoint url equals https colon slash slash raw dot githubusercontent dot com slash astral dash sh slash uv slash main slash assets slash badge slash v0 dot json on a white background"></a>
+    <a href="https://GitHub.com/maxludden/rich-gradient"><img class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 | 3.13-blue?logo=python" alt="Python compatibility badge showing versions 3.10 3.11 3.12 3.13 on a blue background with the Python logo"></a>
+    <a href="https://GitHub.com/maxludden/rich-gradient"><img class="badge" src="https://img.shields.io/badge/PyPI-rich_gradient-blue?" alt="PyPI badge displaying rich underscore gradient on a blue background"></a>
+    <a href="https://GitHub.com/maxludden/rich-gradient"><img class="badge" src="https://img.shields.io/badge/Version-0.3.0-bbbbbb" alt="Version badge showing 0.3.0 on a gray background"></a>
+    <a href="https://github.com/Textualize/rich"><img class="badge" src="img/rich-badge.svg" alt="rich" height=20></a></div>
 <div id="spacer"></div>
 
 <p><img alt="gradient example" src="img/gradient.svg" /></p>
@@ -674,11 +674,40 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>rich-gradient
 </span></code></pre></div>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<h3 id="basic-text-example">Basic Text Example<a class="headerlink" href="#basic-text-example" title="Permanent link">&para;</a></h3>
+<h3 id="text-example">Text Example<a class="headerlink" href="#text-example" title="Permanent link">&para;</a></h3>
 <p>To print a simple gradient import the <code>Text</code> class from in the <code>rich_gradient</code> library:</p>
 <p><img alt="Hello, World!" src="img/hello_world.svg" /></p>
 <h2 id="gradient">Gradient<a class="headerlink" href="#gradient" title="Permanent link">&para;</a></h2>
-<p>If just text is boring, <code>rich_gradient.gradient.Gradient</code> allows you to</p>
+<p>If just text is boring, <code>rich_gradient.gradient.Gradient</code> allows you to apply a gradient to any <code>rich.console.ConsoleRenderable</code>. Such as a <code>rich.panel.Panel</code> or <code>rich.table.Table</code>;</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Gradient Table Example&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">&quot;Renderable&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">vertical</span><span class="o">=</span><span class="s2">&quot;middle&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;right&quot;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Works w/Gradient&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">renderables</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="s2">&quot;Text&quot;</span><span class="p">,</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="s2">&quot;Panel&quot;</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="s2">&quot;Syntax&quot;</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="s2">&quot;Table&quot;</span><span class="p">,</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="s2">&quot;Live&quot;</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="s2">&quot;Group&quot;</span><span class="p">,</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="s2">&quot;Markdown&quot;</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="p">]</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="k">for</span> <span class="n">renderable</span> <span class="ow">in</span> <span class="n">renderables</span><span class="p">:</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        <span class="n">renderable</span><span class="p">,</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="s2">&quot;[b]:heavy_check_mark:[/b]&quot;</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    <span class="p">)</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Gradient</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">rainbow</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Gradient Table Example" src="img/gradient_table_example.svg" /></p>
 
 
 

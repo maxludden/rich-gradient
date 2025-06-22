@@ -3,20 +3,20 @@
 If you pass `rich_gradient.text.Text` a string, it will print the string to the console in a random gradient. Rich-gradient's `Text` class inherits from `rich.text.Text`. In addition to all of it's parent's parameters, `rich_gradient.text.Text` also accepts:
 
 -  `colors`: (`List[ColorType]`) - A list of strings that can be parsed by `rich.color.Color`.
-<blockquote style="padding:50px,margin:20em;">
+<blockquote style="padding:50px,margin:20em;background-color: #000;padding:10px;">
   <strong style="padding:10px;">📝 Note</strong><br><code>rich_color_ext</code> extends rich to be able to parse:
   <ul>
         <li><strong>CSS color names:</strong>
           <ul>
-              <li><span style="color:rebeccapurple;">rebeccapurple</span></li>
-              <li><span style="color:salmon;">salmon</span></li>
-              <li><span style="color:aliceblue">aliceblue</span></li>
+              <li><span style="color:rebeccapurple;">◉ rebeccapurple</span></li>
+              <li><span style="color:salmon;">◉ salmon</span></li>
+              <li><span style="color:aliceblue">◉ aliceblue</span></li>
           </ul>
     </li><li><strong>3-Digit Hex Color Codes:</strong>
         <ul>
-            <li><span style="color:#abc">#abc</span></li>
-            <li><span style="color:#FDC">#FDC</span></li>
-            <li><span style="color:#A1f">#A1f
+            <li><span style="color:#abc">◉ #abc</span></li>
+            <li><span style="color:#FDC">◉ #FDC</span></li>
+            <li><span style="color:#A1f">◉ #A1f
         </ul>
     </li>
   </ul>
@@ -28,7 +28,7 @@ If you pass `rich_gradient.text.Text` a string, it will print the string to the 
 
 ---
 
-### Gradient with Specific Colors
+## Gradient Text with Specific Colors
 
 To have more control over the gradient that is printed, you can pass the `colors` parameter a list of colors. Colors can be parsed from:
 -  CSS colors names,
@@ -40,7 +40,7 @@ To have more control over the gradient that is printed, you can pass the `colors
 
 ---
 
-### Rainbow Gradient Example
+## Rainbow Gradient Text Example
 
 If four colors isn't enough, you can use the 'rainbow' parameter to generate a rainbow gradient that spans the entire spectrum of colors randomly.
 
@@ -49,7 +49,7 @@ If four colors isn't enough, you can use the 'rainbow' parameter to generate a r
 
 ---
 
-### Still inherits from `rich.text.Text`
+## Still inherits from `rich.text.Text`
 
 Since `rich_gradient.text.Text` is a subclass of `rich.text.Text`, you can still use all the same methods and parameters as you would.
 
