@@ -2,55 +2,153 @@ import pytest
 from rich.color import Color
 from rich.style import Style
 from rich.text import Text as RichText
+
 from rich_gradient.text import Text
+
 
 # Helper for color equality (Color.__eq__ is not always implemented)
 def color_eq(c1, c2):
     return c1.get_truecolor() == c2.get_truecolor()
+
 
 @pytest.mark.parametrize(
     "text,colors,rainbow,hues,style,justify,overflow,no_wrap,end,tab_size,markup,expected_plain,expected_colors_len",
     [
         # Simple text, 2 colors, no rainbow
         pytest.param(
-            "Hello", ["#f00", "#0f0"], False, 5, "", "default", "fold", False, "\n", 4, True, "Hello", 2,
-            id="simple-2colors"
+            "Hello",
+            ["#f00", "#0f0"],
+            False,
+            5,
+            "",
+            "default",
+            "fold",
+            False,
+            "\n",
+            4,
+            True,
+            "Hello",
+            2,
+            id="simple-2colors",
         ),
         # Rainbow, hues ignored, colors ignored
         pytest.param(
-            "World", None, True, 7, "", "center", "ellipsis", True, "", 2, False, "World", 18,
-            id="rainbow"
+            "World",
+            None,
+            True,
+            7,
+            "",
+            "center",
+            "ellipsis",
+            True,
+            "",
+            2,
+            False,
+            "World",
+            18,
+            id="rainbow",
         ),
         # No colors, hues=3
         pytest.param(
-            "abc", None, False, 3, "bold", "right", "crop", False, "\n", 8, True, "abc", 3,
-            id="no-colors-hues3"
+            "abc",
+            None,
+            False,
+            3,
+            "bold",
+            "right",
+            "crop",
+            False,
+            "\n",
+            8,
+            True,
+            "abc",
+            3,
+            id="no-colors-hues3",
         ),
         # One color only
         pytest.param(
-            "X", ["#123456"], False, 5, "", "left", "fold", False, "\n", 4, True, "X", 1,
-            id="one-color"
+            "X",
+            ["#123456"],
+            False,
+            5,
+            "",
+            "left",
+            "fold",
+            False,
+            "\n",
+            4,
+            True,
+            "X",
+            1,
+            id="one-color",
         ),
         # Empty text, colors provided
         pytest.param(
-            "", ["#fff", "#000"], False, 5, "", "default", "fold", False, "\n", 4, True, "", 2,
-            id="empty-text"
+            "",
+            ["#fff", "#000"],
+            False,
+            5,
+            "",
+            "default",
+            "fold",
+            False,
+            "\n",
+            4,
+            True,
+            "",
+            2,
+            id="empty-text",
         ),
         # Empty text, no colors
         pytest.param(
-            "", None, False, 2, "", "default", "fold", False, "\n", 4, True, "", 2,
-            id="empty-text-no-colors"
+            "",
+            None,
+            False,
+            2,
+            "",
+            "default",
+            "fold",
+            False,
+            "\n",
+            4,
+            True,
+            "",
+            2,
+            id="empty-text-no-colors",
         ),
         # Markup parsing
         pytest.param(
-            "[bold]B[/bold]", ["#f00", "#00f"], False, 5, "", "default", "fold", False, "\n", 4, True, "B", 2,
-            id="markup"
+            "[bold]B[/bold]",
+            ["#f00", "#00f"],
+            False,
+            5,
+            "",
+            "default",
+            "fold",
+            False,
+            "\n",
+            4,
+            True,
+            "B",
+            2,
+            id="markup",
         ),
-    ]
+    ],
 )
 def test_text_init_and_properties(
-    text, colors, rainbow, hues, style, justify, overflow, no_wrap, end, tab_size, markup,
-    expected_plain, expected_colors_len
+    text,
+    colors,
+    rainbow,
+    hues,
+    style,
+    justify,
+    overflow,
+    no_wrap,
+    end,
+    tab_size,
+    markup,
+    expected_plain,
+    expected_colors_len,
 ):
     # Act
     t = Text(
@@ -78,6 +176,7 @@ def test_text_init_and_properties(
     assert t.end == end
     assert t.tab_size == tab_size
 
+
 @pytest.mark.parametrize(
     "input_colors,hues,rainbow,expected_len,expected_type,case_id",
     [
@@ -88,17 +187,19 @@ def test_text_init_and_properties(
         (None, 18, True, 18, Color, "rainbow-18"),
         (["red", "blue"], 5, False, 2, Color, "css-names"),
         (["#f00"], 5, False, 1, Color, "single-color"),
-    ]
+    ],
 )
-def test_parse_colors(input_colors, hues, rainbow, expected_len, expected_type, case_id):
+def test_parse_colors(
+    input_colors, hues, rainbow, expected_len, expected_type, case_id
+):
     # Act
     result = Text.parse_colors(colors=input_colors, hues=hues, rainbow=rainbow)
 
     # Assert
     assert isinstance(result, list)
     assert len(result) == expected_len
-    for c in result:
-        assert isinstance(c, expected_type)
+    assert all(isinstance(c, expected_type) for c in result)
+
 
 @pytest.mark.parametrize(
     "plain,colors,expected,case_id",
@@ -108,27 +209,42 @@ def test_parse_colors(input_colors, hues, rainbow, expected_len, expected_type, 
         # 1 color, 3 chars
         ("xyz", [Color.parse("#123456")], 3, "1color-3chars"),
         # 3 colors, 4 chars
-        ("test", [Color.parse("#f00"), Color.parse("#0f0"), Color.parse("#00f")], 4, "3colors-4chars"),
-        # 0 chars, 2 colors
-        ("", [Color.parse("#f00"), Color.parse("#0f0")], 0, "empty-2colors"),
-    ]
+        (
+            "test",
+            [Color.parse("#f00"), Color.parse("#0f0"), Color.parse("#00f")],
+            4,
+            "3colors-4chars",
+        ),
+    ],
 )
-def test_interpolate_colors(plain, colors, expected, case_id):
+def test_interpolate_colors_non_empty(plain, colors, expected, case_id):
     # Arrange
     t = Text(plain, colors=colors)
 
     # Act
-    if not plain:
-        result = t.interpolate_colors()
-        # Assert
-        assert result == []
-    else:
-        result = t.interpolate_colors()
-        # Assert
-        assert isinstance(result, list)
-        assert len(result) == expected
-        for c in result:
-            assert isinstance(c, Color)
+    result = t.interpolate_colors()
+    # Assert
+    assert isinstance(result, list)
+    assert len(result) == expected
+    assert all(isinstance(c, Color) for c in result)
+
+
+@pytest.mark.parametrize(
+    "plain,colors,expected,case_id",
+    [
+        # 0 chars, 2 colors
+        ("", [Color.parse("#f00"), Color.parse("#0f0")], 0, "empty-2colors"),
+    ],
+)
+def test_interpolate_colors_empty(plain, colors, expected, case_id):
+    # Arrange
+    t = Text(plain, colors=colors)
+
+    # Act
+    result = t.interpolate_colors()
+    # Assert
+    assert result == []
+
 
 def test_interpolate_colors_no_colors_raises():
     # Arrange
@@ -139,15 +255,16 @@ def test_interpolate_colors_no_colors_raises():
     with pytest.raises(ValueError, match="No colors to interpolate"):
         t.interpolate_colors()
 
+
 @pytest.mark.parametrize(
-    "plain,colors,case_id",
+    "plain,colors,expected_spans,case_id",
     [
-        ("abc", [Color.parse("#f00"), Color.parse("#0f0")], "normal"),
-        ("", [Color.parse("#f00"), Color.parse("#0f0")], "empty-plain"),
-        ("xyz", [Color.parse("#123456")], "one-color"),
-    ]
+        ("abc", [Color.parse("#f00"), Color.parse("#0f0")], 3, "normal"),
+        ("", [Color.parse("#f00"), Color.parse("#0f0")], 0, "empty-plain"),
+        ("xyz", [Color.parse("#123456")], 3, "one-color"),
+    ],
 )
-def test_apply_gradient(plain, colors, case_id):
+def test_apply_gradient(plain, colors, expected_spans, case_id):
     # Arrange
     t = Text(plain, colors=colors)
 
@@ -155,11 +272,11 @@ def test_apply_gradient(plain, colors, case_id):
     t.apply_gradient()
 
     # Assert
-    # Check that spans are applied for each character
-    if plain:
-        assert len(t._spans) >= len(plain)
-    else:
-        assert len(t._spans) == 0
+    # Confirm span coverage matches character count (one per character)
+    covered = {(s.start, s.end) for s in t._spans}
+    expected = {(i, i + 1) for i in range(len(plain))}
+    assert covered == expected, f"{covered=} != {expected=}"
+
 
 def test_colors_property_and_setter():
     # Arrange
@@ -171,6 +288,7 @@ def test_colors_property_and_setter():
     assert len(t.colors) == 1
     assert color_eq(t.colors[0], Color.parse("#fff"))
 
+
 def test_colors_setter_none():
     # Arrange
     t = Text("hi", colors=["#f00"])
@@ -178,6 +296,7 @@ def test_colors_setter_none():
     t.colors = None
     # Assert
     assert t.colors == []
+
 
 def test_repr_and_str():
     # Arrange
@@ -190,13 +309,14 @@ def test_repr_and_str():
     assert isinstance(r, str)
     assert "hello" in s
 
+
 @pytest.mark.parametrize(
     "colors,expected",
     [
         (None, []),
         ([], []),
         ([Color.parse("#f00")], [Color.parse("#f00")]),
-    ]
+    ],
 )
 def test_colors_setter_various(colors, expected):
     # Arrange
@@ -206,3 +326,4 @@ def test_colors_setter_various(colors, expected):
     # Assert
     assert t.colors == (expected or [])
 
+    assert t.colors == (expected or [])

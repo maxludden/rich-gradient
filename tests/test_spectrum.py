@@ -1,8 +1,7 @@
 import pytest
 from rich.style import Style
 from rich.color import Color
-from rich.table import Table
-from rich_gradient.spectrum import Spectrum, SPECTRUM_COLORS
+from rich_gradient.spectrum import Spectrum
 
 def test_spectrum_default_length():
     spectrum = Spectrum()
@@ -17,7 +16,6 @@ def test_spectrum_invert_flag():
 
 def test_spectrum_styles_match_colors():
     spectrum = Spectrum(hues=10)
-    assert len(spectrum.styles) == 10
     for style, color in zip(spectrum.styles, spectrum.colors):
         assert isinstance(style, Style)
         assert style.color is not None

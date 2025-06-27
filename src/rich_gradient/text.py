@@ -64,6 +64,13 @@ class Text(RichText):
             spans=parsed_spans,
         )
         self.colors = self.parse_colors(colors, hues, rainbow)
+        # Handle the single color case: apply style directly and return early
+        if len(self.colors) == 1:
+            # Apply the single color style directly
+            style_with_color = Style(color=self.colors[0]) + Style.parse(style)
+            for index in range(len(self.plain)):
+                self.stylize(style_with_color, index, index + 1)
+            return
         # Apply the gradient coloring
         self.apply_gradient()
 

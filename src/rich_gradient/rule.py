@@ -1,27 +1,21 @@
-from typing import Iterable, List, Literal, Optional, Sequence, Union, cast
+from typing import List, Optional, Sequence, cast
 
-from rich_color_ext import install
-from cheap_repr import normal_repr, register_repr
 from rich.align import AlignMethod
-from rich.color import Color
-from rich.color import Color as RichColor
-from rich.color import ColorParseError, ColorType
+from rich.color import Color, ColorParseError
 from rich.console import Console, ConsoleOptions, RenderResult
-from rich.rule import Rule
-from rich.segment import Segment
+from rich.rule import Rule as RichRule
 from rich.style import NULL_STYLE, Style, StyleType
 from rich.text import Text as RichText
 from rich.traceback import install as tr_install
-from snoop import snoop
+from rich_color_ext import install
 
-from rich_gradient.gradient import Gradient
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.text import ColorInputType, Text
-from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
+install()
 console = Console()
 tr_install(console=console, width=64)
-install()
+
 
 CHARACTER_MAP = {
     0: "─",
@@ -32,7 +26,7 @@ CHARACTER_MAP = {
 up_arrow: Text = Text(" ↑ ", style="bold white")
 
 
-class GradientRule(Rule):
+class Rule(RichRule):
     """A Rule with a gradient background.
 
     Args:
@@ -47,11 +41,10 @@ class GradientRule(Rule):
         align (AlignMethod, optional): Alignment of the rule. Defaults to "center".
     """
 
-    # @snoop()
     def __init__(
         self,
         title: Optional[str],
-        title_style: StyleType = NULL_STYLE,
+        title_style: StyleType = Style.parse("bold"),
         colors: Optional[List[ColorInputType]] = None,
         thickness: int = 2,
         style: StyleType = NULL_STYLE,
@@ -92,7 +85,6 @@ class GradientRule(Rule):
             colors if colors is not None else [], rainbow, hues
         )
 
-    # @snoop(watch=["title_style", "style"])
     def __rich_console__(
         self, console: Console, options: ConsoleOptions
     ) -> RenderResult:
@@ -106,7 +98,7 @@ class GradientRule(Rule):
             RenderResult: The rendered segments of the gradient rule.
         """
         # Prepare a base rule with no style to extract segments
-        base_rule = Rule(
+        base_rule = RichRule(
             title=self.title or "",
             characters=self.characters,
             style=NULL_STYLE,
@@ -159,11 +151,15 @@ class GradientRule(Rule):
         if rainbow:
             return Spectrum(hues).hex
         _colors: List[str] = []
-        if len(colors) < 2:
+        if colors and len(colors) < 2:
             raise ValueError(
-                "At least two colors are required for a gradient. "
-                "Please provide a list of at least two color strings."
+                "At least two colors are required for a gradient. ",
+                "Please provide a list of at least two color strings.",
+                f"Received: {colors=}",
             )
+        if not colors:
+            # If no colors provided, generate a random gradient
+            return Spectrum(hues).hex
         for color in colors:
             # Validate color is a string
             if not isinstance(color, str):
@@ -179,32 +175,14 @@ class GradientRule(Rule):
                 ) from ce
         return _colors
 
-    # def get_title(self, title: Optional[str], title_style: StyleType) -> str:
-    #     """Get the title for the rule.
-
-    #     Args:
-    #         title (Optional[str]): The title string.
-    #         title_style (StyleType): The style for the title.
-
-    #     Returns:
-    #         str: The formatted title string.
-    #     """
-
-
-register_repr(GradientRule)(normal_repr)
-
-
-# @snoop(watch=["title_style", "style"])
 def example():
     console = Console(width=80, record=True)
     comment_style = Style.parse("dim italic")
     console.line(2)
-    console.print(
-        GradientRule(title="Centered GradientRule", rainbow=True, thickness=0)
-    )
+    console.print(Rule(title="Centered Rule", rainbow=True, thickness=0))
     console.print(
         Text(
-            "↑ This GradientRule is centered, with a thickness of 0. \
+            "↑ This Rule is centered, with a thickness of 0. \
 When no colors are provided, it defaults to a random gradient. ↑",
             style="dim italic",
         ),
@@ -214,8 +192,8 @@ When no colors are provided, it defaults to a random gradient. ↑",
 
     # left
     console.print(
-        GradientRule(
-            title="[bold]Left-aligned GradientRule[/bold]",
+        Rule(
+            title="[bold]Left-aligned Rule[/bold]",
             thickness=1,
             colors=["#F00", "#F90", "#FF0"],
             align="left",
@@ -224,7 +202,7 @@ When no colors are provided, it defaults to a random gradient. ↑",
     console.print(
         Text.assemble(*[
             RichText(
-                "↑ This GradientRule is left-aligned, with a thickness of 1. ↑",
+                "↑ This Rule is left-aligned, with a thickness of 1. ↑",
                 style=comment_style,
                 end="\n\n",
             ),
@@ -245,8 +223,8 @@ When no colors are provided, it defaults to a random gradient. ↑",
     console.line(3)
 
     console.print(
-        GradientRule(
-            title="Right-aligned GradientRule",
+        Rule(
+            title="Right-aligned Rule",
             align="right",
             thickness=2,
             colors=["deeppink", "purple", "violet", "blue", "dodgerblue"],
@@ -255,7 +233,7 @@ When no colors are provided, it defaults to a random gradient. ↑",
     purple_explanation = Text.assemble(*[
         RichText("↑ ", style="bold white", end=" "),
         RichText(
-            "This GradientRule is right-aligned, with a thickness of 2. ",
+            "This Rule is right-aligned, with a thickness of 2. ",
             style=comment_style,
             end=" ",
         ),
@@ -280,8 +258,8 @@ When no colors are provided, it defaults to a random gradient. ↑",
 
     console.line(3)
     console.print(
-        GradientRule(
-            title="Centered GradientRule",
+        Rule(
+            title="Centered Rule",
             rainbow=True,
             thickness=3,
             title_style="b u white",
@@ -289,7 +267,7 @@ When no colors are provided, it defaults to a random gradient. ↑",
     )
     console.print(
         RichText(
-            "↑ This GradientRule is centered, with a thickness of 3. \
+            "↑ This Rule is centered, with a thickness of 3. \
 When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ↑",
             style="dim italic",
         ),
@@ -298,7 +276,7 @@ When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ↑",
     console.line(3)
 
     console.print(
-        GradientRule(
+        Rule(
             title="",  # No title
             colors=["#F00", "#F90", "#FF0"],
             thickness=1,
@@ -307,14 +285,14 @@ When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ↑",
     )
     console.print(
         RichText(
-            "↑ This GradientRule has no title, but still has a gradient rule. ↑",
+            "↑ This Rule has no title, but still has a gradient rule. ↑",
             style=comment_style,
         ),
         justify="left",
     )
     console.line(3)
 
-    console.save_svg("docs/img/rule.svg", title="GradientRule Example")
+    console.save_svg("docs/img/rule.svg", title="Rule Example")
 
 
 if __name__ == "__main__":

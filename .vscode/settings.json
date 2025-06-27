@@ -8,7 +8,7 @@
         "**/Thumbs.db": true,
         "__pycache__/": true,
         ".pytest_cache/": true,
-        "**/__pycache__/**": true,
+        "**/__pycache__/**": false,
         "requirements*": true,
         "**/*.DS_Store": true,
         "**/*__init__.py": false,
@@ -43,6 +43,7 @@
         "aliquip",
         "amet",
         "aute",
+        "brac",
         "cillum",
         "commodo",
         "consectetur",
@@ -62,6 +63,7 @@
         "Fira",
         "fugiat",
         "incididunt",
+        "invis",
         "irure",
         "Irure",
         "keepends",
@@ -79,6 +81,7 @@
         "overlined",
         "pariatur",
         "proident",
+        "punc",
         "quis",
         "Quis",
         "renderable",
@@ -100,6 +103,7 @@
     "cSpell.ignoreWords": [
         "aabbcc",
         "mollit",
+        "notacolor",
         "renderables",
         "wrappable"
     ]

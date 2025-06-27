@@ -1,19 +1,17 @@
 from itertools import cycle
 from random import randint
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Tuple
 
-from rich_color_ext import install
-from cheap_repr import normal_repr, register_repr
-from rich import get_console as _get_console
+from rich import get_console
 from rich.color import Color
 from rich.console import Console
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 from rich.traceback import install as tr_install
-from snoop import snoop
+from rich_color_ext import install
 
-console = _get_console()
+console: Console = get_console()
 tr_install(console=console)
 install()
 
@@ -216,9 +214,6 @@ class Spectrum:
             sample = Text("█" * 10, style=Style(color=hex_code, bold=True))
             table.add_row(sample, name_text, hex_text, rgb_text)
         return table
-
-
-register_repr(Spectrum)(normal_repr)
 
 
 def example():

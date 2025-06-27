@@ -10,11 +10,11 @@ nav:
     - User Guide:
         - Text: "text.md"
         - Gradient: "gradient.md"
-        - GradientRule: "gradient_rule.md"
+        - Rule: "rule.md"
     - References:
         - Text Reference: "text_ref.md"
         - Gradient Reference: "gradient_ref.md"
-        - GradientRule Reference: "gradient_rule_ref.md"
+        - Rule Reference: "rule_ref.md"
     - Changelog: "CHANGELOG.md"
 
 theme:

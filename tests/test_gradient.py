@@ -5,7 +5,6 @@ import pytest
 from rich.console import Console
 from rich.panel import Panel
 from rich.style import Style
-from rich.text import Text
 from rich.segment import Segment
 from rich_gradient.gradient import Gradient
 

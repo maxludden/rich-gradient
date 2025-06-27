@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--## [Unreleased]-->
+### v0.3.2 - 2025-06-26 | <span style="color: rgb(215, 255, 100)"> Added tests and renamed Rule,/span>
+
+#### v0.3.2 Removed
+
+- Dev Dependencies
+  - `snoop`
+  - `cheap-repr`
+
+#### v0.3.2 Updated
+
+- Removed instances that were imported from:
+  - `snoop`
+    - `@snoop()`
+  - `cheap-repr`
+    - `register_repr(f"{class})(normal_repr)
+- Renamed GradientRule -> Rule
+  -  to match the naming of the other modules in `rich-gradient`
+
+#### v0.3.2 Added
+
+- Tests
+  - `tests/benchmark_perf.py`: To benchmark the performance of generating gradients that span large amounts of characters.
+  - `tests/test_edge_cases.py`: To cover edge cases that may otherwise break `rich-gradient`.
 
 
 ### v0.3.0 - 2025-06-20 | <span style="color: rgb(215, 255, 100)"> Working Rewrite</span>

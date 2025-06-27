@@ -7,7 +7,7 @@
     "settings": {
         "python.defaultInterpreterPath": "/Users/maxludden/dev/py/rich-gradient/.venv/bin/python",
         "python.logging.level": "WARNING",
-        "editor.maxTokenizationLineLength":40000,
+        "editor.maxTokenizationLineLength": 40000,
         "editor.semanticTokenColorCustomizations": {
             "enabled": true,
             "rules": {
@@ -113,6 +113,7 @@
             "retool.config.json": true
         },
         "cSpell.words": [
+            "brac",
             "deepblue",
             "keepends",
             "objtype",
