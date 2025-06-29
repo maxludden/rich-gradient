@@ -37,9 +37,9 @@ pip install rich-gradient
 
 ## Usage
 
-### Basic Gradient Example
+### Basic Gradient Text Example
 
-To print a simple gradient just substitue the `Gradient` class for the `Text` class in the rich library.
+To print a simple gradient just substitute the `Gradient` class for the `Text` class in the rich-gradient library.
 
 ```python
 from rich.console import Console
@@ -53,7 +53,7 @@ console.print(Gradient("Hello, World!")
 
 ---
 
-### Gradient with Specific Colors
+### Gradient Text with Specific Colors
 
 If you want a bit more control of the gradient, you can specify the colors you want to use in the gradient by passing them as a list of colors to the `colors` parameter.
 

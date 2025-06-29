@@ -24,7 +24,7 @@
     
     
       
-        <title>GradientRule - rich-gradient</title>
+        <title>Rule - rich-gradient</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gradientrule" class="md-skip">
+        <a href="#rule" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GradientRule
+              Rule
             
           </span>
         </div>
@@ -387,7 +387,7 @@
           
   
   <span class="md-ellipsis">
-    GradientRule
+    Rule
     
   </span>
   
@@ -399,7 +399,7 @@
         
   
   <span class="md-ellipsis">
-    GradientRule
+    Rule
     
   </span>
   
@@ -437,12 +437,105 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#left-aligned-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Left Aligned Rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#right-aligned-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Right Aligned Rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#center-aligned-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Center Aligned Rule
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
   <a href="#thickness" class="md-nav__link">
     <span class="md-ellipsis">
       Thickness
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thickness">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#thin-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thin Rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#double-line-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Double-line Rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Medium Rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#thick-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thick Rule
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-colored-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Colored Rule
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-title-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Title Style
     </span>
   </a>
   
@@ -551,11 +644,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient_rule_ref/" class="md-nav__link">
+      <a href="../rule_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    GradientRule Reference
+    Rule Reference
     
   </span>
   
@@ -614,40 +707,125 @@
 
 
 <p><img alt="GradientRule" src="../img/rule_example.svg" /></p>
-<h1 id="gradientrule">GradientRule<a class="headerlink" href="#gradientrule" title="Permanent link">&para;</a></h1>
-<p>The 'GradientRule` class is based off of the rich.rule.Rule class and is used to define a rule in gradient color and variable thickness.</p>
+<h1 id="rule">Rule<a class="headerlink" href="#rule" title="Permanent link">&para;</a></h1>
+<p>The 'Rule` class is based off of the rich.rule.Rule class and is used to define a rule in gradient color and variable thickness.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich_gradient.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientRule</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich_gradient.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">GradientRule</span><span class="p">(</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">Rule</span><span class="p">(</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="p">)</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="GradientRule" src="https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/rule_example1.svg" /></p>
+<p><img alt="Rule" src="../img/rule_example.svg" /></p>
 <h2 id="alignment">Alignment<a class="headerlink" href="#alignment" title="Permanent link">&para;</a></h2>
-<p>The <code>GradientRule</code> class supports the same alignment options as the <code>Rule</code> class.</p>
+<p>The <code>Rule</code> class supports the same alignment options as the <code>Rule</code> class.</p>
+<h3 id="left-aligned-rule">Left Aligned Rule<a class="headerlink" href="#left-aligned-rule" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">GradientRule</span><span class="p">(</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="s2">&quot;Hello, world! on the left&quot;</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="s2">&quot;← This is a left aligned rule.&quot;</span><span class="p">,</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">)</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="GradientRule Alignment" src="https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/rule_example2.svg" /></p>
-<h2 id="thickness">Thickness<a class="headerlink" href="#thickness" title="Permanent link">&para;</a></h2>
-<p>The <code>GradientRule</code> class add the ability to determine the thickness of the rule. Valid values are <code>thin</code>, <code>medium</code>, and <code>thick</code>. Defaults to <code>medium</code>.</p>
+<p><img alt="Left Aligned Rule Example" src="../img/rule_example1.svg" /></p>
+<h3 id="right-aligned-rule">Right Aligned Rule<a class="headerlink" href="#right-aligned-rule" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">GradientRule</span><span class="p">(</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="s2">&quot;Hello, world! thick&quot;</span><span class="p">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">thickness</span><span class="o">=</span><span class="s2">&quot;thick&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="s2">&quot;This is a right aligned rule. →,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;right&quot;</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="p">)</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><img alt="GradientRule Thickness" src="https://raw.githubusercontent.com/maxludden/rich-gradient/3b6e2cb013eda3bcba9dbcdd14c65179d28532da/docs/img/rule_example3.svg" /></p>
+<p><img alt="Rich Aligned Rule Example" src="../img/rule_example2.svg" /></p>
+<h3 id="center-aligned-rule">Center Aligned Rule<a class="headerlink" href="#center-aligned-rule" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="s2">&quot;→ This is a center aligned rule. ←&quot;</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Center aligned rule example" src="../img/rule_example3.svg" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default behavior of rich_gradient.rule.Rule is center aligned.</p>
+</div>
+<h2 id="thickness">Thickness<a class="headerlink" href="#thickness" title="Permanent link">&para;</a></h2>
+<p>The <code>Rule</code> class add the ability to determine the thickness of the rule. Valid values are:</p>
+<ol>
+<li><code>thin</code> (<code>─</code>)</li>
+<li><code>double</code> (<code>═</code>)</li>
+<li><code>medium</code> (<code>━</code>) (default)</li>
+<li><code>thick</code> (<code>█</code>)</li>
+</ol>
+<h3 id="thin-rule">Thin Rule<a class="headerlink" href="#thin-rule" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="s2">&quot;This is a thin rule&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="n">thickness</span><span class="o">=</span><span class="mi">1</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Thin Rule Thickness" src="../img/thin_rule_example.svg" /></p>
+<h3 id="double-line-rule">Double-line Rule<a class="headerlink" href="#double-line-rule" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="s2">&quot;This is a double-line rule&quot;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="n">thickness</span><span class="o">=</span><span class="mi">2</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Double-lined Rule Thickness" src="../img/double_line_rule_example.svg" /></p>
+<h3 id="medium-rule">Medium Rule<a class="headerlink" href="#medium-rule" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="s2">&quot;This is a medium rule&quot;</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="n">thickness</span><span class="o">=</span><span class="mi">3</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Medium Rule Thickness" src="../img/medium_rule_example.svg" /></p>
+<h3 id="thick-rule">Thick Rule<a class="headerlink" href="#thick-rule" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="s2">&quot;This is a thick rule&quot;</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">thickness</span><span class="o">=</span><span class="mi">4</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Thick Rule Thickness" src="../img/thick_rule_example.svg" /></p>
+<h2 id="custom-colored-rule">Custom Colored Rule<a class="headerlink" href="#custom-colored-rule" title="Permanent link">&para;</a></h2>
+<p>To create a rule with custom colors, simply supply the <code>colors</code> parameter with a list of colors (as CSS color names, 3 or 6 digit hex codes, rich color names, or rgb color codes).</p>
+<div style="background: #271632; color: #eee; padding: 1em; border-radius: 6px; font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace; font-size: 1em;">
+   <span style="color: #6cf;">console</span>.print(<br>
+   &nbsp;&nbsp;<span style="color: #9f0;">Rule</span>(<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #aaf;">"This rule has custom colors!",</span><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f90;">colors</span>=<span style="color:#ff0;">[</span><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #eee;">"<span style='color:#f00;'>#f00</span>",</span>  <span style="color: #888;"># red</span><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #eee;">"<span style='color:#f90;'>#f90</span>",</span>  <span style="color: #888;"># orange</span><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #eee;">"<span style='color:#ff0;'>#ff0</span>",</span>  <span style="color: #888;"># yellow</span><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #eee;">"<span style='color:#9f0;'>#9f0</span>",</span>  <span style="color: #888;"># yellow-green</span><br>
+   &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#ff0;">]</span><br>
+   &nbsp;&nbsp;)<br>
+)
+</div>
+<p><br></p>
+<p><img alt="Custom Color" src="../img/rule_custom_colored_example.svg" /></p>
+<h2 id="custom-title-style">Custom Title Style<a class="headerlink" href="#custom-title-style" title="Permanent link">&para;</a></h2>
+<p>If you would like some distinction between the rule and it's title, simply pass a rich style to the <code>title_style</code> parameter:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>     <span class="n">Rule</span><span class="p">(</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>         <span class="s2">&quot;Custom Styled Rule Title&quot;</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>         <span class="n">title_style</span><span class="o">=</span><span class="s2">&quot;bold white&quot;</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>         <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>     <span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><img alt="Rule Custom Title Style Example" src="../img/rule_custom_title_style_example.svg" /></p>
 
 
 

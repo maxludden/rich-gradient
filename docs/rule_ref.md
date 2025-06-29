@@ -1,6 +1,6 @@
-# Gradient Rule Reference
+# Rule Reference
 
-::: rich_gradient.rule.GradientRule
+::: rich_gradient.rule.Rule
     :docstring:
     :members:
     :undoc-members:

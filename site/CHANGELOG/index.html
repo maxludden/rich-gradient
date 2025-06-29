@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../gradient_rule_ref/">
+        <link rel="prev" href="../rule_ref/">
       
       
       
@@ -370,11 +370,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient_rule/" class="md-nav__link">
+      <a href="../rule/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    GradientRule
+    Rule
     
   </span>
   
@@ -479,11 +479,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient_rule_ref/" class="md-nav__link">
+      <a href="../rule_ref/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    GradientRule Reference
+    Rule Reference
     
   </span>
   
@@ -554,6 +554,48 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v032-2025-06-26-added-tests-and-renamed-rulespan" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.2 - 2025-06-26 | Added tests and renamed Rule,/span&gt;
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.3.2 - 2025-06-26 | Added tests and renamed Rule,/span&gt;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v032-removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.2 Removed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v032-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.2 Updated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v032-added" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.2 Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#v030-2025-06-20-working-rewrite" class="md-nav__link">
@@ -905,7 +947,33 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <!--## [Unreleased]-->
-
+<h3 id="v032-2025-06-26-added-tests-and-renamed-rulespan">v0.3.2 - 2025-06-26 | <span style="color: rgb(215, 255, 100)"> Added tests and renamed Rule,/span&gt;<a class="headerlink" href="#v032-2025-06-26-added-tests-and-renamed-rulespan" title="Permanent link">&para;</a></h3>
+<h4 id="v032-removed">v0.3.2 Removed<a class="headerlink" href="#v032-removed" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Dev Dependencies</li>
+<li><code>snoop</code></li>
+<li><code>cheap-repr</code></li>
+</ul>
+<h4 id="v032-updated">v0.3.2 Updated<a class="headerlink" href="#v032-updated" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Removed instances that were imported from:</li>
+<li><code>snoop</code><ul>
+<li><code>@snoop()</code></li>
+</ul>
+</li>
+<li><code>cheap-repr</code><ul>
+<li>`register_repr(f"{class})(normal_repr)</li>
+</ul>
+</li>
+<li>Renamed GradientRule -&gt; Rule</li>
+<li>to match the naming of the other modules in <code>rich-gradient</code></li>
+</ul>
+<h4 id="v032-added">v0.3.2 Added<a class="headerlink" href="#v032-added" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Tests</li>
+<li><code>tests/benchmark_perf.py</code>: To benchmark the performance of generating gradients that span large amounts of characters.</li>
+<li><code>tests/test_edge_cases.py</code>: To cover edge cases that may otherwise break <code>rich-gradient</code>.</li>
+</ul>
 <h3 id="v030-2025-06-20-working-rewrite">v0.3.0 - 2025-06-20 | <span style="color: rgb(215, 255, 100)"> Working Rewrite</span><a class="headerlink" href="#v030-2025-06-20-working-rewrite" title="Permanent link">&para;</a></h3>
 <h4 id="v030-added"><span style="color: rgb(215, 255, 100)">v0.3.0 Added</span><a class="headerlink" href="#v030-added" title="Permanent link">&para;</a></h4>
 <ul>
