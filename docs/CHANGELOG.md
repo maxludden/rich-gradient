@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--## [Unreleased]-->
-### v0.3.2 - 2025-06-26 | <span style="color: rgb(215, 255, 100)"> Added tests and renamed Rule,/span>
+### v0.3.2 - 2025-06-26 | <span style="color: rgb(215, 255, 100)"> Added tests and renamed Rule</span>
 
 #### v0.3.2 Removed
 
@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `snoop`
     - `@snoop()`
   - `cheap-repr`
-    - `register_repr(f"{class})(normal_repr)
+    - `register_repr(f"{class})(normal_repr)`
 - Renamed GradientRule -> Rule
   -  to match the naming of the other modules in `rich-gradient`
 

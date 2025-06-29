@@ -69,7 +69,7 @@ Color can be parsed from a variety of formats including:
 
 ```python
 console.print(
-    Gradient(
+    Text(
         "This a gradient with two colors.",
         colors=["red", "orange"]
     ),
