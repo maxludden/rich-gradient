@@ -131,12 +131,33 @@ wheels = [
 ]
 
 [[package]]
+name = "color-contrast"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colour" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/d1/13ca64af15b9abf4dd3daf8d69aa0705a43169d7e493fe3f47d276691416/color_contrast-0.1.1.tar.gz", hash = "sha256:168d823434293a3e625a239ae03cfbc7371de695c873979d85df24e776c204cf", size = 2860, upload-time = "2025-03-21T15:19:15.112Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a8/a2/60889952b11c1a9443c467b874a8383a737e2c8287171c2c61df3c3397bb/color_contrast-0.1.1-py3-none-any.whl", hash = "sha256:9a8f379e29a813ebcca0196bb8a90ce46fec63615ce68a534b2d6719afb4099d", size = 3406, upload-time = "2025-03-21T15:19:13.868Z" },
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44", size = 27697, upload-time = "2022-10-25T02:36:22.414Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
+]
+
+[[package]]
+name = "colour"
+version = "0.1.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a0/d4/5911a7618acddc3f594ddf144ecd8a03c29074a540f4494670ad8f153efe/colour-0.1.5.tar.gz", hash = "sha256:af20120fefd2afede8b001fbef2ea9da70ad7d49fafdb6489025dae8745c3aee", size = 24776, upload-time = "2017-11-19T23:20:08.015Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/74/46/e81907704ab203206769dee1385dc77e1407576ff8f50a0681d0a6b541be/colour-0.1.5-py2.py3-none-any.whl", hash = "sha256:33f6db9d564fadc16e59921a56999b79571160ce09916303d35346dddc17978c", size = 23772, upload-time = "2017-11-19T23:20:04.56Z" },
 ]
 
 [[package]]
@@ -983,9 +1004,10 @@ wheels = [
 
 [[package]]
 name = "rich-gradient"
-version = "0.3.1"
+version = "0.3.2"
 source = { editable = "." }
 dependencies = [
+    { name = "color-contrast" },
     { name = "loguru" },
     { name = "lorem-text" },
     { name = "openai" },
@@ -1008,6 +1030,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "color-contrast", specifier = ">=0.1.1" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "lorem-text", specifier = ">=3.0" },
     { name = "openai", specifier = ">=1.81.0" },

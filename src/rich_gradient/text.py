@@ -1,19 +1,25 @@
 from typing import List, Optional, Sequence, Tuple, TypeAlias, Union
 
-from rich_color_ext import install
-from rich.color import Color, ColorType
+from color_contrast import ModulationMode, modulate
+from colour import Color as ColourColor
+from rich import get_console
+from rich.color import Color, ColorParseError
+from rich.color_triplet import ColorTriplet
 from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.control import strip_control_codes
 from rich.panel import Panel
 from rich.style import Style, StyleType
+from rich.text import Span, TextType
 from rich.text import Text as RichText
-from rich.text import TextType
+from rich_color_ext import install
 
+from rich_gradient._contrast import is_valid_style
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-ColorInputType: TypeAlias = Union[str, Tuple[int, int, int], Color]
+ColorType: TypeAlias = Union[str, Color, ColorTriplet, Tuple[int, int, int]]
 install()
+
 
 class Text(RichText):
     """A rich text class that supports gradient colors and styles."""
@@ -21,7 +27,7 @@ class Text(RichText):
     def __init__(
         self,
         text: TextType = "",
-        colors: Optional[Sequence[ColorInputType]] = None,
+        colors: Optional[Sequence[ColorType]] = None,
         *,
         rainbow: bool = False,
         hues: int = 5,
@@ -31,7 +37,9 @@ class Text(RichText):
         no_wrap: bool = False,
         end: str = "\n",
         tab_size: int = 4,
+        bgcolor: Optional[ColorType] = None,
         markup: bool = True,
+        spans: Optional[Sequence[Span]] = None,
     ):
         """Initialize the Text with gradient colors and styles.
         Args:
@@ -45,10 +53,17 @@ class Text(RichText):
             no_wrap (bool): If True, disable wrapping of the text.
             markup (bool): If True, parse Rich markup tags in the input text.
         """
-        # Extract out complex expressions for clarity
-        parsed_text = RichText.from_markup(
-            text=str(text), style=style, justify=justify, overflow=overflow
-        )
+        if markup:
+            parsed_text = RichText.from_markup(
+                text=str(text), style=style, justify=justify, overflow=overflow
+            )
+        else:
+            parsed_text = RichText(
+                strip_control_codes(str(text)),
+                style=style,
+                justify=justify,
+                overflow=overflow,
+            )
         plain = parsed_text.plain
         parsed_justify = parsed_text.justify
         parsed_overflow = parsed_text.overflow
@@ -56,6 +71,7 @@ class Text(RichText):
 
         super().__init__(
             plain,
+            style=style,
             justify=parsed_justify,
             overflow=parsed_overflow,
             no_wrap=no_wrap,
@@ -64,13 +80,18 @@ class Text(RichText):
             spans=parsed_spans,
         )
         self.colors = self.parse_colors(colors, hues, rainbow)
+        self.bgcolor = bgcolor or Color.parse("default")
+
         # Handle the single color case: apply style directly and return early
         if len(self.colors) == 1:
             # Apply the single color style directly
-            style_with_color = Style(color=self.colors[0]) + Style.parse(style)
+            style_with_color = Style(
+                color=self.colors[0], bgcolor=self.bgcolor
+            ) + Style.parse(style)
             for index in range(len(self.plain)):
                 self.stylize(style_with_color, index, index + 1)
             return
+
         # Apply the gradient coloring
         self.apply_gradient()
 
@@ -84,9 +105,37 @@ class Text(RichText):
         """Set the list of colors in the gradient."""
         self._colors = value or []
 
+    @property
+    def bgcolor(self) -> Color:
+        """Return the background color of the text."""
+        return self._bgcolor
+
+    @bgcolor.setter
+    def bgcolor(self, value: ColorType) -> None:
+        """Set the background color of the text."""
+        if value is None:
+            self._bgcolor = Color.parse("default")
+        elif isinstance(value, Color):
+            self._bgcolor = value
+        elif isinstance(value, str):
+            # Parse the string as a color
+            if value.lower() == "default":
+                self._bgcolor = Color.parse("default")
+            else:
+                # Attempt to parse as a hex color, CSS name, or RGB tuple
+                try:
+                    # This will raise ValueError if the string is not a valid color
+                    self._bgcolor = Color.parse(value)
+                except ColorParseError as cpe:
+                    raise ColorParseError(
+                        f"Invalid background color string: {value}"
+                    ) from cpe
+        else:
+            raise ValueError(f"Invalid background color: {value}")
+
     @staticmethod
     def parse_colors(
-        colors: Optional[Sequence[ColorInputType]] = None,
+        colors: Optional[Sequence[ColorType]] = None,
         hues: int = 5,
         rainbow: bool = False,
     ) -> List[Color]:
@@ -158,9 +207,48 @@ class Text(RichText):
         # Apply a style span for each character with its corresponding color
         for index, color in enumerate(colors):
             # Build a style with the interpolated color
-            span_style = Style(color=color)
+            span_style = Style(color=color, bgcolor=self.bgcolor)
             # Stylize the single character range
             self.stylize(span_style, index, index + 1)
+
+    def _validate_reverse_foreground(self) -> None:
+        """Check to see if any span of the text has a style that is reversed.
+        If so, apply the gradient to the background instead of the foreground \
+        and set the foreground to self.bgcolor.
+        """
+        for span in self.spans:
+            style = span.style
+            if isinstance(style, str):
+                # If the style is a string, parse it to a Style object
+                style = Style.parse(style)
+            if style.reverse:
+                # If the style is reversed, swap foreground and background
+                span_start = span.start
+                span_end = span.end
+
+                for index in range(span_start, span_end + 1):
+                    style = self.get_style_at_offset(
+                        console=get_console(), offset=index
+                    )
+                    color = style.color
+                    bgcolor = self.bgcolor
+                    # Swap foreground and background
+                    swapped_style = Style(color=bgcolor, bgcolor=color, reverse=True)
+                    # Ensure sufficient contrast after swap
+                    from rich_gradient._contrast import adjust_style_for_contrast
+
+                    corrected_style = adjust_style_for_contrast(swapped_style)
+                    # Apply corrected style
+                    self.stylize(corrected_style, index, index + 1)
+
+    @staticmethod
+    def convert_color_to_colour(color: Color) -> ColourColor:
+        """Convert a color to its equivalent colour representation."""
+        if not isinstance(color, Color):
+            raise TypeError("Input must be a rich.color.Color instance")
+        triplet = color.get_truecolor()
+        rgb = (triplet.red / 255, triplet.green / 255, triplet.blue / 255)
+        return ColourColor(rgb=rgb)
 
 
 if __name__ == "__main__":
@@ -171,7 +259,7 @@ if __name__ == "__main__":
         """Print the first example with a gradient."""
         colors = ["#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
 
-        def example1_text(colors: Sequence[ColorInputType] = colors) -> RichText:
+        def example1_text(colors: Sequence[ColorType] = colors) -> RichText:
             """Generate example text with a simple two-color gradient."""
             example1_text = Text(
                 'rich-gradient makes it easy to create text with smooth multi-color gradients! \
@@ -186,7 +274,7 @@ Overflow handling\n\t- Custom styles and spans',
             example1_text.highlight_regex(r"rich-gradient|\brich", "bold white")
             return example1_text
 
-        def example1_title(colors: Sequence[ColorInputType] = colors) -> RichText:
+        def example1_title(colors: Sequence[ColorType] = colors) -> RichText:
             """Generate example title text with a gradient."""
             example1_title = Text(
                 "Example 1",
@@ -342,6 +430,7 @@ interpolate between two or more colors. This means you can specify a list of col
 two colors and Text will generate a smooth gradient between them."
     )
     text5 = Text(long_text, colors=colors5, style="bold", justify="center")
+
     console.print(
         Panel(
             text5,

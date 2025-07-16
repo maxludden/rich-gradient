@@ -1,4 +1,4 @@
-from typing import List, Optional, Sequence, cast
+from typing import List, Optional, Sequence, Tuple, cast
 
 from rich.align import AlignMethod
 from rich.color import Color, ColorParseError
@@ -10,7 +10,7 @@ from rich.traceback import install as tr_install
 from rich_color_ext import install
 
 from rich_gradient.spectrum import Spectrum
-from rich_gradient.text import ColorInputType, Text
+from rich_gradient.text import ColorType, Text
 
 install()
 console = Console()
@@ -45,7 +45,7 @@ class Rule(RichRule):
         self,
         title: Optional[str],
         title_style: StyleType = Style.parse("bold"),
-        colors: Optional[List[ColorInputType]] = None,
+        colors: Optional[List[ColorType]] = None,
         thickness: int = 2,
         style: StyleType = NULL_STYLE,
         rainbow: bool = False,
@@ -130,7 +130,7 @@ class Rule(RichRule):
 
     def _parse_colors(
         self,
-        colors: Sequence[ColorInputType],
+        colors: Sequence[ColorType],
         rainbow: bool,
         hues: int,
     ) -> List[str]:
@@ -175,6 +175,7 @@ class Rule(RichRule):
                 ) from ce
         return _colors
 
+
 def example():
     console = Console(width=80, record=True)
     comment_style = Style.parse("dim italic")
@@ -201,59 +202,57 @@ When no colors are provided, it defaults to a random gradient. ↑",
     )
     console.print(
         Text.assemble(*[
-            RichText(
-                "↑ This Rule is left-aligned, with a thickness of 1. ↑",
-                style=comment_style,
-                end="\n\n",
-            ),
-            RichText(
-                " \n\nWhen colors are provided, the gradient is generated using the provided colors: ",
-                style=comment_style,
-                end="",
+            Text(
+                "↑ This Rule is left-aligned, with a thickness of 1. When colors are provided, the gradient is generated using the provided colors: ",
+                colors=["#F00", "#F90", "#FF0"],
+                style="dim italic",
             ),
             RichText("#F00", style=Style.parse("bold italic #ff0000"), end=""),
             RichText(", ", style=comment_style, end=""),
             RichText("#F90", style=Style.parse("bold italic #FF9900"), end=""),
             RichText(", ", style=comment_style, end=""),
             RichText("#FF0", style=Style.parse("bold italic #FFFF00"), end=""),
-            RichText(" ↑", style=comment_style),
         ]),
         justify="left",
     )
     console.line(3)
+
+    COLORS3 = [
+        "deeppink",
+        "purple",
+        "violet",
+        "blue",
+        "dodgerblue"
+    ]
 
     console.print(
         Rule(
             title="Right-aligned Rule",
             align="right",
             thickness=2,
-            colors=["deeppink", "purple", "violet", "blue", "dodgerblue"],
+            colors=[color for color in COLORS3],
         )
     )
-    purple_explanation = Text.assemble(*[
-        RichText("↑ ", style="bold white", end=" "),
-        RichText(
-            "This Rule is right-aligned, with a thickness of 2. ",
-            style=comment_style,
-            end=" ",
-        ),
-        RichText("↑ ", style="bold white", end=" "),
-        RichText(
-            "\n\nWhen colors are provided, the gradient is generated using the provided colors: ",
-            style=comment_style,
-            end="",
-        ),
-        RichText("deeppink", style=Style.parse("bold italic deeppink"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("purple", style=Style.parse("bold italic purple"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("violet", style=Style.parse("bold italic violet"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("blue", style=Style.parse("bold italic blue"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("dodgerblue", style=Style.parse("bold italic dodgerblue"), end=""),
-        RichText(" ↑ ", style=comment_style),
-    ])
+    purple_explanation = Text.assemble(
+        *[
+            Text(
+                "↑  This Rule is right-aligned, with a thickness of 2. When colors are \
+provided, the gradient is generated using the provided colors: ",
+                colors=[color for color in COLORS3],
+                style="dim italic",
+                end=" ",
+            ),
+            RichText("deeppink", style=Style.parse("bold italic deeppink"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("purple", style=Style.parse("bold italic purple"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("violet", style=Style.parse("bold italic violet"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("blue", style=Style.parse("bold italic blue"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("dodgerblue", style=Style.parse("bold italic dodgerblue"), end="")
+        ]
+    )
     console.print(purple_explanation, justify="right")
 
     console.line(3)
@@ -265,14 +264,30 @@ When no colors are provided, it defaults to a random gradient. ↑",
             title_style="b u white",
         )
     )
-    console.print(
-        RichText(
-            "↑ This Rule is centered, with a thickness of 3. \
-When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ↑",
-            style="dim italic",
-        ),
-        justify="center",
+
+    center_desc: Text = Text(
+        "↑ [i]This rule is[/i] [b]centered[/b][i], with a[/i] [b]thickness[/b] [i]of[/i] [b]3.[/b]\n\
+When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ",
+        style="dim",
     )
+    center_desc.highlight_words(
+        [
+            "centered",
+            "thickness",
+            "3",
+            "rainbow"
+        ],
+        style=Style.parse("not dim")
+    )
+    center_desc.highlight_words(
+        ["=", "`"],
+        style=Style.parse("bold not dim orange")
+    )
+    center_desc.highlight_words(
+        ["True"],
+        style=Style.parse("bold not dim white")
+    )
+    console.print(center_desc, justify="center")
     console.line(3)
 
     console.print(
@@ -284,11 +299,12 @@ When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ↑",
         )
     )
     console.print(
-        RichText(
+        Text(
             "↑ This Rule has no title, but still has a gradient rule. ↑",
-            style=comment_style,
+            colors=["#F00", "#F90", "#FF0"],
+            style="dim italic",
         ),
-        justify="left",
+        justify="center",
     )
     console.line(3)
 
