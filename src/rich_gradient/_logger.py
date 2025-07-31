@@ -14,13 +14,12 @@ if TYPE_CHECKING:
 console: Console = get_console()
 tr_install(console=console)
 
-LOGS_DIR = Path.cwd() / "logs"
-if not LOGS_DIR.exists():
-    LOGS_DIR.mkdir(exist_ok=True)
-TRACE_LOG_FILE = LOGS_DIR / "trace.log"
-
-def get_logger():
+def get_logger(enabled: bool = True) -> 'Logger':
     logger.remove()
+    LOGS_DIR = Path.cwd() / "logs"
+    if not LOGS_DIR.exists():
+        LOGS_DIR.mkdir(exist_ok=True)
+    TRACE_LOG_FILE = LOGS_DIR / "trace.log"
     log = logger.bind(name="rich_gradient")
     log.add(
         TRACE_LOG_FILE,
