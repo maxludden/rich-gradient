@@ -7,7 +7,6 @@ authors = [{ name = "Max Ludden", email = "dev@maxludden.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
-    "lorem-text>=3.0",
     "rich>=14.0.0",
     "rich-color-ext==0.1.3",
 ]
