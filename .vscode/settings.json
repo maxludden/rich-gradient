@@ -104,10 +104,14 @@
         "voluptate"
     ],
     "cSpell.ignoreWords": [
+        "Interp",
         "aabbcc",
+        "adipiscing",
+        "lerp",
         "mollit",
         "notacolor",
         "renderables",
         "wrappable"
-    ]
+    ],
+    "wolf.disableHotModeWarning": true
 }
