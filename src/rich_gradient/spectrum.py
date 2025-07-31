@@ -4,6 +4,7 @@ from typing import Dict, List, Tuple
 
 from rich import get_console
 from rich.color import Color
+from rich.color_triplet import ColorTriplet
 from rich.console import Console
 from rich.style import Style
 from rich.table import Table
@@ -15,48 +16,25 @@ console: Console = get_console()
 tr_install(console=console)
 install()
 
-# A smoother, evenly spaced color spectrum (hue wheel) for gradients
-SPECTRUM_COLORS: Tuple[str, ...] = (
-    "#FF0000",  # red
-    "#FF4000",  # reddish-orange
-    "#FF8000",  # orange
-    "#FFBF00",  # amber
-    "#FFFF00",  # yellow
-    "#BFFF00",  # yellow-green
-    "#80FF00",  # lime-green
-    "#40FF00",  # green
-    "#00FF40",  # spring green
-    "#00FF80",  # aquamarine
-    "#00FFBF",  # turquoise
-    "#00FFFF",  # cyan
-    "#00BFFF",  # skyblue
-    "#0080FF",  # blue
-    "#668CFF",  # cobalt (brighter)
-    "#8A7DFF",  # indigo (balanced)
-    "#B388FF",  # violet (high contrast)
-    "#D966FF",  # magenta
-)
 SPECTRUM_NAMES: Dict[str, str] = {
     "#FF0000": "red",
-    "#FF4000": "reddish-orange",
-    "#FF8000": "orange",
-    "#FFBF00": "amber",
+    "#FF5500": "tomato",
+    "#FF9900": "orange",
+    "#FFCC00": "light-orange",
     "#FFFF00": "yellow",
-    "#BFFF00": "yellow-green",
-    "#80FF00": "lime-green",
-    "#40FF00": "green",
-    "#00FF40": "spring-green",
-    "#00FF80": "aquamarine",
-    "#00FFBF": "turquoise",
+    "#AAFF00": "green",
+    "#00FF00": "lime",
+    "#00FF99": "sea-green",
     "#00FFFF": "cyan",
-    "#00BFFF": "skyblue",
-    "#0080FF": "blue",
-    "#668CFF": "cobalt",
-    "#8A7DFF": "indigo",
-    "#B388FF": "violet",
-    "#D966FF": "magenta",
+    "#00CCFF": "powerderblue",
+    "#0088FF": "sky-blue",
+    "#5066FF": "blue",
+    "#A066FF": "purple",
+    "#C030FF": "violet",
+    "#FF00FF": "magenta",
+    "#FF00AA": "pink",
+    "#FF0055": "hot-pink"
 }
-
 # Ensure no color is paired with a white foreground, even when reversed.
 # This is handled by always using the color itself as the foreground,
 # and never setting foreground to white in style creation.
@@ -64,26 +42,31 @@ SPECTRUM_NAMES: Dict[str, str] = {
 
 class Spectrum:
     """Create a list of concurrent Color and/or Style instances.
-
     Args:
-        length (int): Number of colors to generate. Defaults to 18.
+        hues (int): Number of colors to generate. Defaults to 18.
         invert (bool, optional): If True, reverse the generated list. Defaults to False.
-        bold (bool, optional): If True, apply bold style. Defaults to False.
-        italic (bool, optional): If True, apply italic style. Defaults to False.
-        underline (bool, optional): If True, apply underline style. Defaults to False.
+
+    Raises:
+        ValueError: If hues is less than 2.
+
+    Attributes:
+        colors (List[Color]): List of Color instances.
+        triplets (List[ColorTriplet]): List of ColorTriplet instances.
+        styles (List[Style]): List of Style instances.
+        names (List[str]): List of color names corresponding to the colors.
     """
 
-    def __init__(self, hues: int = 18, invert: bool = False) -> None:
+    def __init__(self, hues: int = 17, invert: bool = False) -> None:
         """Initialize the Spectrum with a specified number of hues and optional inversion."""
         if hues < 2:
             raise ValueError("hues must be at least 2")
 
         # Generate a random cycle of colors from the spectrum
-        colors: List[Color] = [Color.parse(color) for color in SPECTRUM_COLORS]
+        colors: List[Color] = [Color.parse(color) for color in SPECTRUM_NAMES.keys()]
         color_cycle = cycle(colors)
 
         # Skip a random number of colors to add variability
-        for _ in range(randint(1, 16)):
+        for _ in range(randint(1, 18)):
             next(color_cycle)
 
         # Create a list of colors based on the specified number of hues
@@ -122,32 +105,19 @@ class Spectrum:
         self._colors = value
 
     @property
+    def triplets(self) -> List[ColorTriplet]:
+        """Return the list of ColorTriplet instances."""
+        return [color.get_truecolor() for color in self._colors]
+
+    @property
     def styles(self) -> List[Style]:
         """Return the list of Style instances."""
         return self._styles
-
-    @styles.setter
-    def styles(self, value: List[Style]) -> None:
-        """Set the list of Style instances."""
-        if not isinstance(value, list) or not all(isinstance(s, Style) for s in value):
-            raise ValueError("styles must be a list of Style instances")
-        if len(value) < 2:
-            raise ValueError("styles must contain at least two Style instances")
-        self._styles = value
 
     @property
     def names(self) -> List[str]:
         """Return the list of color names."""
         return self._names
-
-    @names.setter
-    def names(self, value: List[str]) -> None:
-        """Set the list of color names."""
-        if not isinstance(value, list) or not all(isinstance(n, str) for n in value):
-            raise ValueError("names must be a list of strings")
-        if len(value) < 2:
-            raise ValueError("names must contain at least two strings")
-        self._names = value
 
     def __repr__(self) -> str:
         """Return a string representation of the Spectrum."""
@@ -219,6 +189,8 @@ class Spectrum:
 def example():
     """Generate a rich table with all of the colors in the Spectrum."""
     console.clear()
+    console.line(2)
+    console.print(f'Number of colors in the spectrum: [bold magenta]{len(SPECTRUM_NAMES)}[/]')
     console.line(2)
     spectrum = Spectrum()
     console.print(spectrum)

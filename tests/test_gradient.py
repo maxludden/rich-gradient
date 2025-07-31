@@ -1,12 +1,9 @@
-# No changes needed in this file (tests/test_gradient.py) as the instructions apply to a different file (tests/test_spectrum.py).
-# Outputting the original file content unchanged.
-
 import pytest
 from rich.console import Console
 from rich.panel import Panel
 from rich.style import Style
 from rich.segment import Segment
-from rich_gradient.gradient import Gradient
+from rich_gradient._gradient import Gradient
 
 
 @pytest.mark.parametrize("rainbow", [True, False])

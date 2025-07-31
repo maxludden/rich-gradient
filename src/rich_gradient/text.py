@@ -1,7 +1,5 @@
 from typing import List, Optional, Sequence, Tuple, TypeAlias, Union
 
-from color_contrast import ModulationMode, modulate
-from colour import Color as ColourColor
 from rich import get_console
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
