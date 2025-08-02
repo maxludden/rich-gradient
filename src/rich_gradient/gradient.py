@@ -44,26 +44,30 @@ class Gradient(JupyterMixin):
 
     def __init__(
         self,
+        # --- Rendering-related ---
         renderables: Optional[
             Union[str, ConsoleRenderable, List[ConsoleRenderable]]
         ] = None,
-        colors: Optional[List[ColorType]] = None,
-        bg_colors: Optional[List[ColorType]] = None,
-        *,
-        console: Optional[Console] = None,
-        hues: int = 3,
-        rainbow: bool = False,
         expand: bool = False,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
         show_quit_panel: bool = False,
         repeat_scale: float = 2.0,
-        # animation-related:
+        *,
+        console: Optional[Console] = None,
+        # --- Color-related ---
+        colors: Optional[List[ColorType]] = None,
+        bg_colors: Optional[List[ColorType]] = None,
+        hues: int = 3,
+        rainbow: bool = False,
+        background: bool = False,
+        # --- Animation-related ---
         animated: bool = False,
         auto_start: bool = True,
         auto_refresh: bool = True,
         refresh_per_second: float = 20.0,
         speed: int = 2,
+        # --- Console/Debug options ---
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
@@ -78,23 +82,11 @@ class Gradient(JupyterMixin):
         self.justify = justify
         self.vertical_justify = vertical_justify
         self.show_quit_panel = show_quit_panel
+        self.background = background
 
-        # --- Fix: handle string input ---
-        if renderables is None:
-            renderables = []
-        elif isinstance(renderables, str):
-            from rich_gradient.text import Text
-
-            renderables = [Text(renderables, colors=colors)]
-        elif isinstance(renderables, list):
-            renderables = [
-                (Text(r, colors=colors) if isinstance(r, str) else r)
-                for r in renderables
-            ]
-        self.renderables = renderables
+        self.renderables = self._normalize_renderables(renderables, colors)
         self.colors = colors or []
         self.bg_colors = bg_colors or []
-
         # Animation related
         self.animated = animated
         self.auto_refresh = auto_refresh
@@ -123,6 +115,24 @@ class Gradient(JupyterMixin):
             self.console = self.live.console
         if self.animated and auto_start:
             self.start()
+        self._active_stops = self._initialize_color_stops()
+
+    def _normalize_renderables(
+        self, renderables: Optional[Union[str, ConsoleRenderable, List[ConsoleRenderable]]], colors: Optional[List[ColorType]]
+    ) -> List[ConsoleRenderable]:
+        from rich_gradient.text import Text
+
+        if renderables is None:
+            return []
+        if isinstance(renderables, str):
+            return [Text(renderables, colors=colors)]
+        if isinstance(renderables, list):
+            return [(Text(r, colors=colors) if isinstance(r, str) else r) for r in renderables]
+        return [renderables]
+
+    def _initialize_color_stops(self) -> List[ColorTriplet]:
+        source = self.bg_colors if self.background else self.colors
+        return [source[0], source[0]] if len(source) == 1 else source
 
     @property
     def renderables(self) -> List[ConsoleRenderable]:
@@ -236,7 +246,9 @@ class Gradient(JupyterMixin):
         width = options.max_width
         content = Group(*self.renderables)
         if self.show_quit_panel:
-            panel = Panel("Press [bold]Ctrl+C[/bold] to quit.", expand=False)
+            panel = Panel(
+                "Press [bold]Ctrl+C[/bold] to stop.", expand=False
+            )  # <-- changed here
             content = Group(content, Align(panel, align="right"))
         lines = console.render_lines(content, options, pad=True, new_lines=False)
         for line_idx, segments in enumerate(lines):
@@ -409,6 +421,27 @@ class Gradient(JupyterMixin):
         finally:
             self._running = False
 
+    # Add this method for test compatibility
+    def _color_at(self, pos: int, width: int, span: int) -> str:
+        """Return the hex color at a given position."""
+        stops = self._active_stops
+        frac = self._compute_fraction(pos, width, span)
+        r, g, b = self._interpolate_color(frac, stops)
+        return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+
+    # Add this method for test compatibility
+    def _styled(self, original: Style, color: str) -> Style:
+        """Return a Style with the given color or bgcolor, preserving original."""
+        if self.background:
+            return original + Style(bgcolor=color)
+        else:
+            return original + Style(color=color)
+
+    # Add this method for test compatibility
+    def _interpolated_color(self, frac: float, stops: list, n: int):
+        """Return the interpolated color at a fraction (for test)."""
+        return self._interpolate_color(frac, stops)
+
 
 if __name__ == "__main__":
     # Example usage
@@ -417,6 +450,7 @@ if __name__ == "__main__":
         [Panel("This is an animated gradient")],
         colors=["#f00", "#f90", "#ff0"],
         animated=True,
+        speed=50,
         show_quit_panel=False,
     )
     if isinstance(gradient, Gradient):

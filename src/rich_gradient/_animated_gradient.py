@@ -288,7 +288,7 @@ if __name__ == "__main__":
     console = get_console()
 
     animated_gradient = AnimatedGradient(
-        repeat_scale=2.0,
+        repeat_scale=1.0,
         renderables=[
             RichText("This is an animated gradient example."),
             NewLine(),

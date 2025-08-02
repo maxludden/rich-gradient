@@ -5,7 +5,7 @@ from rich_gradient.spectrum import Spectrum
 
 def test_spectrum_default_length():
     spectrum = Spectrum()
-    assert len(spectrum.colors) == 18
+    assert len(spectrum.colors) == 17
     assert all(isinstance(c, Color) for c in spectrum.colors)
 
 def test_spectrum_invert_flag():

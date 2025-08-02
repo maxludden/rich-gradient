@@ -7,8 +7,9 @@ from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.control import strip_control_codes
 from rich.panel import Panel
 from rich.style import Style, StyleType
-from rich.text import Span, TextType
+from rich.text import Span
 from rich.text import Text as RichText
+from rich.text import TextType
 from rich_color_ext import install
 
 from rich_gradient.spectrum import Spectrum
@@ -80,7 +81,7 @@ class Text(RichText):
             tab_size=tab_size,
             spans=parsed_spans,
         )
-        self.colors= self.parse_colors(colors, hues, rainbow)
+        self.colors = self.parse_colors(colors, hues, rainbow)
         self.bgcolors = self.parse_bgcolors(bgcolors, hues)
 
         # Handle the single-color and single-background case: apply style directly and return early
@@ -97,24 +98,24 @@ class Text(RichText):
         self.apply_gradient()
 
     @property
-    def colors(self) -> Sequence[Color]:
+    def colors(self) -> list[Color]:
         """Return the list of colors in the gradient."""
-        return self._colors
+        return list(self._colors) if self._colors else []
 
     @colors.setter
     def colors(self, value: Optional[Sequence[Color]]) -> None:
         """Set the list of colors in the gradient."""
-        self._colors = value or []
+        self._colors = list(value) if value else []
 
     @property
-    def bgcolors(self) -> Sequence[Color]:
+    def bgcolors(self) -> list[Color]:
         """Return the list of background colors in the gradient."""
-        return self._bgcolors
+        return list(self._bgcolors) if self._bgcolors else []
 
     @bgcolors.setter
     def bgcolors(self, value: Optional[Sequence[Color]]) -> None:
         """Set the list of background colors in the gradient."""
-        self._bgcolors = value or []
+        self._bgcolors = list(value) if value else []
 
     @staticmethod
     def parse_colors(
@@ -138,12 +139,9 @@ class Text(RichText):
         # Support 3-digit hex colors and all string representations via Color.parse
         return [c if isinstance(c, Color) else Color.parse(c) for c in colors]
 
-
-
     def parse_bgcolors(
-        self,
-        bgcolors: Optional[Sequence[ColorType]] = None,
-        hues: int = 5) -> List[Color]:
+        self, bgcolors: Optional[Sequence[ColorType]] = None, hues: int = 5
+    ) -> List[Color]:
         """Parse and return a list of background colors for the gradient.
         Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, and Color objects.
         Args:
@@ -156,7 +154,6 @@ class Text(RichText):
             self._interpolate_bgcolors = False
             return [Color.parse("default")] * len(self.colors)
 
-
         if len(bgcolors) == 1:
             # If only one background color is provided, repeat it for each character
             self._interpolate_bgcolors = False
@@ -165,9 +162,11 @@ class Text(RichText):
         self._interpolate_bgcolors = True
         return [c if isinstance(c, Color) else Color.parse(c) for c in bgcolors]
 
-
-    def interpolate_colors(self, colors: Optional[Sequence[Color]]) -> List[Color]:
+    def interpolate_colors(
+        self, colors: Optional[Sequence[Color]] = None
+    ) -> list[Color]:
         """Interpolate colors in the gradient."""
+        colors = list(colors) if colors is not None else self.colors
         if not colors:
             raise ValueError("No colors to interpolate")
         # Prepare the text and handle edge cases
@@ -230,8 +229,6 @@ class Text(RichText):
             self.stylize(span_style, index, index + 1)
 
 
-
-
 if __name__ == "__main__":
     # Example usage
     console = Console()
@@ -250,7 +247,7 @@ can make use of all the features rich.text.Text provides including:\n\n\t- [bold
 \n\t- [strike]strikethrough text[/strike]\n\t- [reverse]reverse text[/reverse]\n\t- Text alignment\n\t- \
 Overflow handling\n\t- Custom styles and spans',
                 colors=colors,
-                bgcolors=["#000"]
+                bgcolors=["#000"],
             )
             example1_text.highlight_regex(r"rich.text.Text", "bold  cyan")
             example1_text.highlight_regex(r"rich-gradient|\brich", "bold white")
