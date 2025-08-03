@@ -231,7 +231,7 @@ class Text(RichText):
 
 if __name__ == "__main__":
     # Example usage
-    console = Console()
+    console = Console(record=True, width=64)
 
     def gradient_example1() -> None:
         """Print the first example with a gradient."""
@@ -256,7 +256,7 @@ Overflow handling\n\t- Custom styles and spans',
         def example1_title(colors: Sequence[ColorType] = colors) -> RichText:
             """Generate example title text with a gradient."""
             example1_title = Text(
-                "Example 1",
+                "Built on rich.text.Text",
                 colors=colors,
                 style="bold",
                 justify="center",
@@ -272,8 +272,8 @@ Overflow handling\n\t- Custom styles and spans',
             )
         )
         console.save_svg(
-            "docs/img/v0.2.1/gradient_example1.svg",
-            title="gradient_example_1",
+            "docs/img/v0.3.3/built_on_rich_text.svg",
+            title="rich-gradient",
             unique_id="gradient_example_1",
             theme=GRADIENT_TERMINAL_THEME,
         )
@@ -292,7 +292,7 @@ generate a random gradient for you. Random gradients are generated from a \
 Automatically generated gradients are always generated with consecutive colors.",
                 ),
                 title=Text(
-                    "Example 2",
+                    "Basic Text Usage",
                     style="bold",
                 ),
                 padding=(1, 4),
@@ -300,8 +300,8 @@ Automatically generated gradients are always generated with consecutive colors."
             )
         )
         console.save_svg(
-            "docs/img/v0.2.1/gradient_example2.svg",
-            title="gradient_example_2",
+            "docs/img/v0.3.3/basic_text_usage.svg",
+            title="rich-gradient",
             unique_id="gradient_example_2",
             theme=GRADIENT_TERMINAL_THEME,
         )
@@ -320,7 +320,7 @@ This will generate a gradient with the full spectrum of colors.",
                     rainbow=True,
                 ),
                 title=Text(
-                    "Example 3",
+                    "Rainbow Text",
                     style="bold",
                 ),
                 padding=(1, 4),
@@ -328,8 +328,8 @@ This will generate a gradient with the full spectrum of colors.",
             )
         )
         console.save_svg(
-            "docs/img/v0.2.1/gradient_example3.svg",
-            title="gradient_example_3",
+            "docs/img/v0.3.3/text_rainbow.svg",
+            title="rich-gradient",
             unique_id="gradient_example_3",
             theme=GRADIENT_TERMINAL_THEME,
         )
@@ -337,7 +337,7 @@ This will generate a gradient with the full spectrum of colors.",
     gradient_example3()
     # Example 4: Custom color stops with hex codes
 
-    def gradient_example4() -> None:
+    def gradient_example4(save: bool = True) -> None:
         """Print the fourth example with custom color stops."""
         specified_colors: Text = Text(
             text="""If you like to specify your own \
@@ -381,11 +381,12 @@ is superfluous!\n\nThis gradient uses:
             r"rich_gradient\.color\.Color|rich_gradient\.style\.Style|rich\.color\.Color|'|white",
             style="italic white",
         )
+        console = Console(record=True, width=64) if save else Console(width=64)
         console.print(
             Panel(
                 specified_colors,
                 title=Text(
-                    "Example 4",
+                    "Color Formats",
                     style="bold",
                 ),
                 padding=(1, 4),
@@ -393,8 +394,8 @@ is superfluous!\n\nThis gradient uses:
             )
         )
         console.save_svg(
-            "docs/img/v0.2.1/gradient_example4.svg",
-            title="gradient_example_4",
+            "docs/img/v0.3.3/gradient_example4.svg",
+            title="rich-gradient",
             unique_id="gradient_example_4",
             theme=GRADIENT_TERMINAL_THEME,
         )
@@ -416,15 +417,15 @@ two colors and Text will generate a smooth gradient between them."
             padding=(1, 4),
             width=64,
             title=Text(
-                "Example 5",
+                "Two Color Gradient Text",
                 style="bold white",
             ),
             border_style="bold cyan",
         )
     )
     console.save_svg(
-        "docs/img/v0.2.1/gradient_example5.svg",
-        title="gradient_example_5",
+        "docs/img/v0.3.3/two_color_gradient.svg",
+        title="rich-gradient",
         unique_id="gradient_example_5",
         theme=GRADIENT_TERMINAL_THEME,
     )

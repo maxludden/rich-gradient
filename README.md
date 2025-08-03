@@ -61,7 +61,7 @@ If you want a bit more control of the gradient, you can specify the colors you w
 
 Color can be parsed from a variety of formats including:
 
-![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](https://maxludden.github.io/rich-gradient/img/color_formats.svg)
+![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](/docs/img/v0.3.3/color_formats.png)
 
 #### Example Code
 
@@ -77,7 +77,7 @@ console.print(
 )
 ```
 
-![Two Color Gradient](crun)
+![Two Color Gradient](docs/img/v0.3.3/two_color_gradient.svg)
 
 ---
 
@@ -85,7 +85,7 @@ console.print(
 
 ```python
 console.print(
-    Gradient(
+    Text(
         "This a gradient uses four specific colors.",
         colors=["red", "#ff9900", "#ff0", "Lime"],
         justify="center"
@@ -105,7 +105,7 @@ If four colors isn't enough, you can use the 'rainbow' parameter to generate a r
 
 ```python
 console.print(
-    Gradient(
+    Text(
         "This is a rainbow gradient.",
         rainbow=True,
         justify="center"
