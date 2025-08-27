@@ -2,6 +2,7 @@ from typing import List, Optional, Sequence, Tuple, cast
 
 from rich.align import AlignMethod
 from rich.color import Color, ColorParseError
+from rich.color_triplet import ColorTriplet
 from rich.console import Console, ConsoleOptions, RenderResult
 from rich.rule import Rule as RichRule
 from rich.style import NULL_STYLE, Style, StyleType
@@ -32,7 +33,9 @@ class Rule(RichRule):
     Args:
         title (Optional[str]): The text to display as the title.
         title_style (StyleType, optional): The style to apply to the title text. Defaults to NULL_STYLE.
-        colors (List[ColorType], optional): A list of color strings for the gradient. Defaults to empty list.
+        colors (Sequence[ColorType], optional): A sequence of colors for the gradient. Each color may be a
+            string understood by ``rich.color.Color.parse`` (e.g., "red", "#ff0000"), a ``Color`` instance,
+            or an RGB tuple. Defaults to empty list.
         thickness (int, optional): Thickness level of the rule (0 to 3). Defaults to 2.
         style (StyleType, optional): The style of the rule line. Defaults to NULL_STYLE.
         rainbow (bool, optional): If True, use a rainbow gradient regardless of colors. Defaults to False.
@@ -45,7 +48,7 @@ class Rule(RichRule):
         self,
         title: Optional[str],
         title_style: StyleType = Style.parse("bold"),
-        colors: Optional[List[ColorType]] = None,
+        colors: Optional[Sequence[ColorType]] = None,
         thickness: int = 2,
         style: StyleType = NULL_STYLE,
         rainbow: bool = False,
@@ -137,39 +140,43 @@ class Rule(RichRule):
         """Parse colors for the gradient.
 
         Args:
-            colors (List[ColorType]): A list of color strings.
+            colors (Sequence[ColorType]): A sequence of colors supplied as strings, ``Color`` objects,
+                ``ColorTriplet`` instances or RGB tuples.
             rainbow (bool): If True, use a rainbow gradient.
             hues (int): Number of hues in the gradient.
+
         Raises:
-            ValueError: If any color is not a valid string.
-            ColorParseError: If a color string cannot be parsed.
+            ValueError: If fewer than two colors are provided when colors are specified.
+            ColorParseError: If a provided color value cannot be interpreted.
 
         Returns:
             List[str]: A list of hex color strings for the gradient.
         """
-        # Use full rainbow spectrum if rainbow flag is set, or if insufficient colors
         if rainbow:
             return Spectrum(hues).hex
-        _colors: List[str] = []
+
         if colors and len(colors) < 2:
             raise ValueError(
                 "At least two colors are required for a gradient. ",
-                "Please provide a list of at least two color strings.",
+                "Please provide a list of at least two color values.",
                 f"Received: {colors=}",
             )
+
         if not colors:
-            # If no colors provided, generate a random gradient
             return Spectrum(hues).hex
+
+        _colors: List[str] = []
         for color in colors:
-            # Validate color is a string
-            if not isinstance(color, str):
-                raise ValueError(
-                    f"Invalid color: {color}. Please provide a valid color string."
-                )
             try:
-                # Convert color string to hex format
-                _colors.append(Color.parse(color).get_truecolor().hex)
-            except ColorParseError as ce:
+                if isinstance(color, Color):
+                    _colors.append(color.get_truecolor().hex)
+                elif isinstance(color, ColorTriplet):
+                    _colors.append(color.hex)
+                elif isinstance(color, tuple) and len(color) == 3:
+                    _colors.append(ColorTriplet(*color).hex)
+                else:
+                    _colors.append(Color.parse(color).get_truecolor().hex)
+            except (ColorParseError, TypeError, ValueError) as ce:
                 raise ColorParseError(
                     f"Invalid color: {color}. Please provide a valid color string."
                 ) from ce
