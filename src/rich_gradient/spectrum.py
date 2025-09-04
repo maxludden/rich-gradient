@@ -16,33 +16,33 @@ console: Console = get_console()
 tr_install(console=console)
 
 SPECTRUM_NAMES: Dict[str, str] = {
-    "#FF0000": "red",
-    "#FF5500": "tomato",
-    "#FF9900": "orange",
-    "#FFCC00": "light-orange",
-    "#FFFF00": "yellow",
-    "#AAFF00": "green",
-    "#00FF00": "lime",
-    "#00FF99": "sea-green",
-    "#00FFFF": "cyan",
-    "#00CCFF": "powderblue",
-    "#0088FF": "sky-blue",
-    "#5066FF": "blue",
-    "#A066FF": "purple",
-    "#C030FF": "violet",
-    "#FF00FF": "magenta",
-    "#FF00AA": "pink",
-    "#FF0055": "hot-pink",
+    "#FF0000": "red",  # 1
+    "#FF5500": "tomato",  # 2
+    "#FF9900": "orange",  # 3
+    "#FFCC00": "light-orange",  # 4
+    "#FFFF00": "yellow",  # 5
+    "#AAFF00": "green",  # 6
+    "#00FF00": "lime",  # 7
+    "#00FF99": "sea-green",  # 8
+    "#00FFFF": "cyan",  # 9
+    "#00CCFF": "powderblue",  # 10
+    "#0088FF": "sky-blue",  # 11
+    "#5066FF": "blue",  # 12
+    "#A066FF": "purple",  # 13
+    "#C030FF": "violet",  # 14
+    "#FF00FF": "magenta",  # 15
+    "#FF00AA": "pink",  # 16
+    "#FF0055": "hot-pink",  # 17
 }
-# Ensure no color is paired with a white foreground, even when reversed.
-# This is handled by always using the color itself as the foreground,
-# and never setting foreground to white in style creation.
+# Ensure no color is paired with a white foreground when style is
+# reversed. This is handled by always using the color itself as the
+# foreground, and never setting foreground to white in style creation.
 
 
 class Spectrum:
     """Create a list of concurrent Color and/or Style instances.
     Args:
-        hues (int): Number of colors to generate. Defaults to 18.
+        hues (int): Number of colors to generate. Defaults to 17.
         invert (bool, optional): If True, reverse the generated list. Defaults to False.
         seed (Optional[int], optional): If provided, sets the random seed for deterministic color order.
     """
@@ -74,7 +74,9 @@ class Spectrum:
             for color in self._colors
         ]
         self.hex = [color.get_truecolor().hex.upper() for color in self._colors]
-        self._iterator = iter(self._colors)
+        # Do not maintain a stateful iterator; Spectrum is an iterable, not a stateful iterator.
+        # If consumers need an iterator, they should call iter(spectrum).
+        # self._iterator = iter(self._colors)
 
     @property
     def colors(self) -> List[Color]:
@@ -126,10 +128,6 @@ class Spectrum:
     def __iter__(self):
         """Return an iterator over the colors in the Spectrum."""
         return iter(self.colors)
-
-    def __next__(self):
-        """Return the next color in the Spectrum (stateful)."""
-        return next(self._iterator)
 
     def __rich__(self) -> Table:
         """Return a rich Table representation of the Spectrum."""

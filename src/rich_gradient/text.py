@@ -1,11 +1,12 @@
-from typing import List, Optional, Sequence, Tuple, TypeAlias, Union
+from typing import Iterable, List, Optional, Sequence, Tuple, TypeAlias, Union
 
 from rich import get_console
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
-from rich.console import Console, JustifyMethod, OverflowMethod
+from rich.console import Console, JustifyMethod, OverflowMethod, RenderResult
 from rich.control import strip_control_codes
 from rich.panel import Panel
+from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Span, TextType
 from rich.text import Text as RichText
@@ -142,7 +143,19 @@ class Text(RichText):
         if colors is None or len(colors) == 0:
             return Spectrum(hues).colors
         # Support 3-digit hex colors and all string representations via Color.parse
-        return [c if isinstance(c, Color) else Color.parse(c) for c in colors]
+        parsed: List[Color] = []
+        for c in colors:
+            if isinstance(c, Color):
+                parsed.append(c)
+            elif isinstance(c, ColorTriplet):
+                parsed.append(Color.from_rgb(c.red, c.green, c.blue))
+            elif isinstance(c, tuple) and len(c) == 3:
+                parsed.append(Color.from_rgb(int(c[0]), int(c[1]), int(c[2])))
+            elif isinstance(c, str):
+                parsed.append(Color.parse(c))
+            else:
+                raise ColorParseError(f"Unsupported color value: {c}")
+        return parsed
 
     def parse_bgcolors(
         self, bgcolors: Optional[Sequence[ColorType]] = None, hues: int = 5
@@ -157,15 +170,36 @@ class Text(RichText):
         """
         if bgcolors is None or len(bgcolors) == 0:
             self._interpolate_bgcolors = False
-            return [Color.parse("default")] * len(self.colors)
+            # Default to transparent/default background per character count
+            return [Color.parse("default")] * max(1, len(self.colors))
 
         if len(bgcolors) == 1:
-            # If only one background color is provided, repeat it for each character
+            # If only one background color is provided, do not interpolate
             self._interpolate_bgcolors = False
-            return [Color.parse(bgcolors[0])] * len(self.colors)
-        # Support 3-digit hex colors and all string representations via Color.parse
+            c = bgcolors[0]
+            if isinstance(c, Color):
+                return [c] * max(1, len(self.colors))
+            if isinstance(c, tuple) and len(c) == 3:
+                return [Color.from_rgb(int(c[0]), int(c[1]), int(c[2]))] * max(
+                    1, len(self.colors)
+                )
+            return [Color.parse(str(c))] * max(1, len(self.colors))
+
+        # Multiple bgcolors: interpolate across provided stops
         self._interpolate_bgcolors = True
-        return [c if isinstance(c, Color) else Color.parse(c) for c in bgcolors]
+        parsed_bg: List[Color] = []
+        for c in bgcolors:
+            if isinstance(c, Color):
+                parsed_bg.append(c)
+            elif isinstance(c, ColorTriplet):
+                parsed_bg.append(Color.from_rgb(c.red, c.green, c.blue))
+            elif isinstance(c, tuple) and len(c) == 3:
+                parsed_bg.append(Color.from_rgb(int(c[0]), int(c[1]), int(c[2])))
+            elif isinstance(c, str):
+                parsed_bg.append(Color.parse(c))
+            else:
+                raise ColorParseError(f"Unsupported background color: {c}")
+        return parsed_bg
 
     def interpolate_colors(
         self, colors: Optional[Sequence[Color]] = None
@@ -232,6 +266,25 @@ class Text(RichText):
             span_style = Style(color=color, bgcolor=bgcolor)
             # Stylize the single character range
             self.stylize(span_style, index, index + 1)
+
+    def __rich_console__(self, console: Console, options) -> Iterable[Segment]:
+        """Wrap parent __rich_console__ and suppress trailing end Segment for empty text.
+
+        Delegate to console.render for nested renderables so we can filter final Segment instances
+        that represent the trailing `end` for empty text.
+        """
+        for render_output in super().__rich_console__(console, options):
+            if isinstance(render_output, Segment):
+                # For empty Text, filter out both the empty text Segment and the trailing end Segment.
+                if self.plain == "" and render_output.text in ("", self.end):
+                    continue
+                yield render_output
+            else:
+                # Render nested renderable to segments, filter as needed
+                for seg in console.render(render_output, options):
+                    if self.plain == "" and seg.text in ("", self.end):
+                        continue
+                    yield seg
 
 
 if __name__ == "__main__":

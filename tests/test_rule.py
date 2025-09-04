@@ -47,16 +47,11 @@ def test_gradient_rule_rainbow_colors():
 
 
 def test_gradient_rule_color_validation():
-<<<<<<< Updated upstream
-    with pytest.raises(ColorParseError):
-        Rule(title="BadColor", colors=["#f00", "not-a-color"])
-=======
     """
     Test that Rule raises ValueError for invalid color input.
     """
     with pytest.raises(ValueError):
         Rule(title="BadColor", colors=["not-a-color"])
->>>>>>> Stashed changes
 
 
 def test_gradient_rule_invalid_thickness():

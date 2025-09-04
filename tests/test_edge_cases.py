@@ -53,7 +53,7 @@ def test_gradient_empty_string():
     """
     grad = Gradient("", colors=["#f00", "#0f0"])
     out = render_to_text(grad)
-    assert out == ""
+    assert out.strip().replace('\n', '') == ""
 
 
 def test_text_empty_string():

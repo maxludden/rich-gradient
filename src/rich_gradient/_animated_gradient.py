@@ -127,7 +127,7 @@ class AnimatedGradient(BaseGradient):
             expand=expand,
             justify=justify,
             vertical_justify=vertical_justify,
-            show_quit_panel=True,
+            show_quit_panel=show_quit_panel,
             repeat_scale=repeat_scale,
         )
         self._cycle = 0.0

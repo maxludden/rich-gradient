@@ -38,33 +38,17 @@ class GradientTheme(Theme):
     def theme(self, theme: Theme = Theme(DEFAULT_STYLES)) -> None:
         self._theme = theme
 
-    # @property
-    # def styles(self) -> Dict[str, StyleType]:
-    #     """The styles of the the theme."""
-    #     if self._styles is None:
-    #         self._styles: Dict[str, StyleType] = DEFAULT_STYLES
-    #     return self._styles
-
-    # @styles.setter
-    # def styles(self, styles: Dict[str, StyleType] = DEFAULT_STYLES) -> None:
-    #     """Set the style of the theme.
-
-    #     Args:
-    #         style(Dict[str, StyleType]): The styles of the theme."""
-    #     assert styles, "Cannot set styles to None."
-    #     self._style: Dict[str, StyleType] = styles
-
     def __call__(self) -> Theme:
         return self.theme
 
     def __repr__(self) -> str:
-        return f"GradientTheme({self.styles!r})"
+        return f"GradientTheme({self._styles!r})"
 
     def __rich__(self) -> Table:
         return styles_table()
 
     def __getitem__(self, name: str) -> Style:
-        return Style.parse(str(self.styles[name]))
+        return Style.parse(str(self._styles[name]))
 
     @classmethod
     def get_theme_table(cls) -> Table:

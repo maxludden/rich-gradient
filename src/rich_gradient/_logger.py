@@ -59,10 +59,11 @@ def get_logger(
 
     def rich_console_sink(msg):
         try:
-            console.log(
-                Text(msg, style=Style(color=style, bold=True)),
-                markup=True,
-            )
+            # If msg is already a string, wrap it in Text for styled console output.
+            if isinstance(msg, Text):
+                console.log(msg)
+            else:
+                console.log(Text(str(msg), style=Style(color=style, bold=True)))
         except Exception as e:
             console.log(f"Logger console sink error: {e}", style="bold red")
 

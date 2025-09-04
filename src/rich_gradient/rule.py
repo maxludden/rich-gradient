@@ -108,8 +108,15 @@ class Rule(RichRule):
         )
         # Render the base rule to get segments
         rule_segments = console.render(base_rule, options=options)
-        # Concatenate segment texts to form the full rule text
-        rule_text = "".join(seg.text for seg in rule_segments)
+        # Concatenate segment texts to form the full rule text (filter to Segment-like objects)
+        rule_text_parts: List[str] = []
+        for seg in rule_segments:
+            try:
+                text = seg.text
+            except Exception:
+                continue
+            rule_text_parts.append(text)
+        rule_text = "".join(rule_text_parts)
 
         # If no title style, render the gradient text directly
         if self.title_style == NULL_STYLE:
@@ -155,9 +162,7 @@ class Rule(RichRule):
 
         if colors and len(colors) < 2:
             raise ValueError(
-                "At least two colors are required for a gradient. ",
-                "Please provide a list of at least two color values.",
-                f"Received: {colors=}",
+                f"At least two colors are required for a gradient. Please provide at least two color values. Received: {colors!r}"
             )
 
         if not colors:

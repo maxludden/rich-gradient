@@ -274,6 +274,11 @@ class BaseGradient(JupyterMixin):
             Measurement: Combined width constraints.
         """
         measurements = [Measurement.get(console, options, r) for r in self.renderables]
+        if not measurements:
+            # No renderables — return a reasonable default measurement.
+            # Min width is 0; max width is the available maximum from options.
+            return Measurement(0, options.max_width or 0)
+
         min_width = min(m.minimum for m in measurements)
         max_width = max(m.maximum for m in measurements)
         return Measurement(min_width, max_width)
@@ -294,7 +299,8 @@ class BaseGradient(JupyterMixin):
         width = options.max_width
         content = Group(*self.renderables)
         if self.show_quit_panel:
-            panel = Panel("Press [bold]Ctrl+C[/bold] to stop.", expand=False)
+            # Use a Rich Text renderable so the bracketed markup tags remain literal in the output
+            panel = Panel(RichText("Press [bold]Ctrl+C[/bold] to stop."), expand=False)
             content = Group(content, Align(panel, align="right"))
 
         lines = console.render_lines(content, options, pad=True, new_lines=False)
@@ -364,7 +370,11 @@ class BaseGradient(JupyterMixin):
         Returns:
             Fraction between 0.0 and 1.0.
         """
-        total_width = span * self.repeat_scale
+        total_width = (span or 0) * (self.repeat_scale or 1.0)
+        if total_width <= 0:
+            # Avoid division by zero; return phase-only fraction.
+            return self.phase % 1.0
+
         base = (position + width / 2) / total_width
         return (base + self.phase) % 1.0
 

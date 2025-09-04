@@ -254,9 +254,8 @@ class Gradient(JupyterMixin):
         width = options.max_width
         content = Group(*self.renderables)
         if self.show_quit_panel:
-            panel = Panel(
-                "Press [bold]Ctrl+C[/bold] to stop.", expand=False
-            )  # <-- changed here
+            # Use a Rich Text renderable so the bracketed markup tags remain literal in the output
+            panel = Panel(RichText("Press [bold]Ctrl+C[/bold] to stop."), expand=False)
             content = Group(content, Align(panel, align="right"))
         lines = console.render_lines(content, options, pad=True, new_lines=False)
         for line_idx, segments in enumerate(lines):
