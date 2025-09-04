@@ -1,0 +1,413 @@
+<svg class="rich-terminal" viewBox="0 0 799 342.79999999999995" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .gradient_example_2-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .gradient_example_2-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .gradient_example_2-r1 { fill: #ffffff }
+.gradient_example_2-r2 { fill: #ffffff;font-weight: bold }
+.gradient_example_2-r3 { fill: #a066ff;font-weight: bold }
+.gradient_example_2-r4 { fill: #a857ff;font-weight: bold }
+.gradient_example_2-r5 { fill: #b149ff;font-weight: bold }
+.gradient_example_2-r6 { fill: #b93aff;font-weight: bold }
+.gradient_example_2-r7 { fill: #c42cff;font-weight: bold }
+.gradient_example_2-r8 { fill: #d520ff;font-weight: bold }
+.gradient_example_2-r9 { fill: #e513ff;font-weight: bold }
+.gradient_example_2-r10 { fill: #f606ff;font-weight: bold }
+.gradient_example_2-r11 { fill: #ff00f3;font-weight: bold }
+.gradient_example_2-r12 { fill: #ff00dd;font-weight: bold }
+.gradient_example_2-r13 { fill: #ff00c6;font-weight: bold }
+.gradient_example_2-r14 { fill: #ff00af;font-weight: bold }
+.gradient_example_2-r15 { fill: #ff0099;font-weight: bold }
+.gradient_example_2-r16 { fill: #ff0082;font-weight: bold }
+.gradient_example_2-r17 { fill: #ff006b;font-weight: bold }
+.gradient_example_2-r18 { fill: #ff0055;font-weight: bold }
+.gradient_example_2-r19 { fill: #00ff99 }
+.gradient_example_2-r20 { fill: #00ff9a }
+.gradient_example_2-r21 { fill: #00ff9b }
+.gradient_example_2-r22 { fill: #00ff9c }
+.gradient_example_2-r23 { fill: #00ff9d }
+.gradient_example_2-r24 { fill: #00ff9e }
+.gradient_example_2-r25 { fill: #00ff9f }
+.gradient_example_2-r26 { fill: #00ffa0 }
+.gradient_example_2-r27 { fill: #00ffa2 }
+.gradient_example_2-r28 { fill: #00ffa3 }
+.gradient_example_2-r29 { fill: #00ffa4 }
+.gradient_example_2-r30 { fill: #00ffa5 }
+.gradient_example_2-r31 { fill: #00ffa6 }
+.gradient_example_2-r32 { fill: #00ffa7 }
+.gradient_example_2-r33 { fill: #00ffa8;text-decoration: underline; }
+.gradient_example_2-r34 { fill: #00ffa9;text-decoration: underline; }
+.gradient_example_2-r35 { fill: #00ffab;text-decoration: underline; }
+.gradient_example_2-r36 { fill: #00ffac;text-decoration: underline; }
+.gradient_example_2-r37 { fill: #00ffad;text-decoration: underline; }
+.gradient_example_2-r38 { fill: #00ffae;text-decoration: underline; }
+.gradient_example_2-r39 { fill: #00ffaf;text-decoration: underline; }
+.gradient_example_2-r40 { fill: #00ffb0;text-decoration: underline; }
+.gradient_example_2-r41 { fill: #00ffb1;text-decoration: underline; }
+.gradient_example_2-r42 { fill: #00ffb2;text-decoration: underline; }
+.gradient_example_2-r43 { fill: #00ffb4;text-decoration: underline; }
+.gradient_example_2-r44 { fill: #00ffb5;text-decoration: underline; }
+.gradient_example_2-r45 { fill: #00ffb6;text-decoration: underline; }
+.gradient_example_2-r46 { fill: #00ffb7;text-decoration: underline; }
+.gradient_example_2-r47 { fill: #00ffb8;text-decoration: underline; }
+.gradient_example_2-r48 { fill: #00ffb9;text-decoration: underline; }
+.gradient_example_2-r49 { fill: #00ffba;text-decoration: underline; }
+.gradient_example_2-r50 { fill: #00ffbc;text-decoration: underline; }
+.gradient_example_2-r51 { fill: #00ffbd;text-decoration: underline; }
+.gradient_example_2-r52 { fill: #00ffbe;text-decoration: underline; }
+.gradient_example_2-r53 { fill: #00ffbf;text-decoration: underline; }
+.gradient_example_2-r54 { fill: #00ffc0;text-decoration: underline; }
+.gradient_example_2-r55 { fill: #00ffc1;text-decoration: underline; }
+.gradient_example_2-r56 { fill: #00ffc2 }
+.gradient_example_2-r57 { fill: #00ffc3 }
+.gradient_example_2-r58 { fill: #00ffc5 }
+.gradient_example_2-r59 { fill: #00ffc6 }
+.gradient_example_2-r60 { fill: #00ffc7 }
+.gradient_example_2-r61 { fill: #00ffc8 }
+.gradient_example_2-r62 { fill: #00ffc9 }
+.gradient_example_2-r63 { fill: #00ffca }
+.gradient_example_2-r64 { fill: #00ffcb }
+.gradient_example_2-r65 { fill: #00ffcc }
+.gradient_example_2-r66 { fill: #00ffce }
+.gradient_example_2-r67 { fill: #00ffcf }
+.gradient_example_2-r68 { fill: #00ffd0 }
+.gradient_example_2-r69 { fill: #00ffd1 }
+.gradient_example_2-r70 { fill: #00ffd2 }
+.gradient_example_2-r71 { fill: #00ffd3 }
+.gradient_example_2-r72 { fill: #00ffd4 }
+.gradient_example_2-r73 { fill: #00ffd6 }
+.gradient_example_2-r74 { fill: #00ffd7 }
+.gradient_example_2-r75 { fill: #00ffd8 }
+.gradient_example_2-r76 { fill: #00ffd9 }
+.gradient_example_2-r77 { fill: #00ffda }
+.gradient_example_2-r78 { fill: #00ffdb }
+.gradient_example_2-r79 { fill: #00ffdc }
+.gradient_example_2-r80 { fill: #00ffdd }
+.gradient_example_2-r81 { fill: #00ffdf }
+.gradient_example_2-r82 { fill: #00ffe0 }
+.gradient_example_2-r83 { fill: #00ffe1 }
+.gradient_example_2-r84 { fill: #00ffe2 }
+.gradient_example_2-r85 { fill: #00ffe3 }
+.gradient_example_2-r86 { fill: #00ffe4 }
+.gradient_example_2-r87 { fill: #00ffe5 }
+.gradient_example_2-r88 { fill: #00ffe6 }
+.gradient_example_2-r89 { fill: #00ffe8 }
+.gradient_example_2-r90 { fill: #00ffe9 }
+.gradient_example_2-r91 { fill: #00ffea }
+.gradient_example_2-r92 { fill: #00ffeb }
+.gradient_example_2-r93 { fill: #00ffec }
+.gradient_example_2-r94 { fill: #00ffed }
+.gradient_example_2-r95 { fill: #00ffee }
+.gradient_example_2-r96 { fill: #00fff0 }
+.gradient_example_2-r97 { fill: #00fff1 }
+.gradient_example_2-r98 { fill: #00fff2 }
+.gradient_example_2-r99 { fill: #00fff3 }
+.gradient_example_2-r100 { fill: #00fff4 }
+.gradient_example_2-r101 { fill: #00fff5 }
+.gradient_example_2-r102 { fill: #00fff6 }
+.gradient_example_2-r103 { fill: #00fff7 }
+.gradient_example_2-r104 { fill: #00fff9 }
+.gradient_example_2-r105 { fill: #00fffa }
+.gradient_example_2-r106 { fill: #00fffb }
+.gradient_example_2-r107 { fill: #00fffc }
+.gradient_example_2-r108 { fill: #00fffd }
+.gradient_example_2-r109 { fill: #00fffe }
+.gradient_example_2-r110 { fill: #00feff }
+.gradient_example_2-r111 { fill: #00fdff }
+.gradient_example_2-r112 { fill: #00fcff }
+.gradient_example_2-r113 { fill: #00fbff }
+.gradient_example_2-r114 { fill: #00faff }
+.gradient_example_2-r115 { fill: #00f9ff }
+.gradient_example_2-r116 { fill: #00f8ff }
+.gradient_example_2-r117 { fill: #00f7ff }
+.gradient_example_2-r118 { fill: #00f6ff }
+.gradient_example_2-r119 { fill: #00f5ff }
+.gradient_example_2-r120 { fill: #00f4ff }
+.gradient_example_2-r121 { fill: #00f3ff }
+.gradient_example_2-r122 { fill: #00f2ff }
+.gradient_example_2-r123 { fill: #00f1ff }
+.gradient_example_2-r124 { fill: #00f0ff }
+.gradient_example_2-r125 { fill: #00efff }
+.gradient_example_2-r126 { fill: #00eeff }
+.gradient_example_2-r127 { fill: #00edff }
+.gradient_example_2-r128 { fill: #00ecff }
+.gradient_example_2-r129 { fill: #00ebff }
+.gradient_example_2-r130 { fill: #00eaff }
+.gradient_example_2-r131 { fill: #00e9ff }
+.gradient_example_2-r132 { fill: #00e8ff }
+.gradient_example_2-r133 { fill: #00e7ff }
+.gradient_example_2-r134 { fill: #00e6ff }
+.gradient_example_2-r135 { fill: #00e5ff }
+.gradient_example_2-r136 { fill: #00e4ff }
+.gradient_example_2-r137 { fill: #00e3ff }
+.gradient_example_2-r138 { fill: #00e2ff }
+.gradient_example_2-r139 { fill: #00e1ff }
+.gradient_example_2-r140 { fill: #00e0ff }
+.gradient_example_2-r141 { fill: #00dfff }
+.gradient_example_2-r142 { fill: #00deff }
+.gradient_example_2-r143 { fill: #00ddff }
+.gradient_example_2-r144 { fill: #00dcff }
+.gradient_example_2-r145 { fill: #00dbff }
+.gradient_example_2-r146 { fill: #00daff }
+.gradient_example_2-r147 { fill: #00d9ff }
+.gradient_example_2-r148 { fill: #00d8ff }
+.gradient_example_2-r149 { fill: #00d7ff }
+.gradient_example_2-r150 { fill: #00d6ff }
+.gradient_example_2-r151 { fill: #00d5ff }
+.gradient_example_2-r152 { fill: #00d4ff }
+.gradient_example_2-r153 { fill: #00d3ff }
+.gradient_example_2-r154 { fill: #00d2ff }
+.gradient_example_2-r155 { fill: #00d1ff }
+.gradient_example_2-r156 { fill: #00d0ff }
+.gradient_example_2-r157 { fill: #00cfff }
+.gradient_example_2-r158 { fill: #00ceff }
+.gradient_example_2-r159 { fill: #00cdff }
+.gradient_example_2-r160 { fill: #00ccff }
+.gradient_example_2-r161 { fill: #00cbff }
+.gradient_example_2-r162 { fill: #00caff }
+.gradient_example_2-r163 { fill: #00c9ff }
+.gradient_example_2-r164 { fill: #00c8ff }
+.gradient_example_2-r165 { fill: #00c7ff }
+.gradient_example_2-r166 { fill: #00c6ff }
+.gradient_example_2-r167 { fill: #00c5ff }
+.gradient_example_2-r168 { fill: #00c4ff }
+.gradient_example_2-r169 { fill: #00c3ff }
+.gradient_example_2-r170 { fill: #00c2ff }
+.gradient_example_2-r171 { fill: #00c1ff }
+.gradient_example_2-r172 { fill: #00c0ff }
+.gradient_example_2-r173 { fill: #00bfff }
+.gradient_example_2-r174 { fill: #00beff }
+.gradient_example_2-r175 { fill: #00bdff }
+.gradient_example_2-r176 { fill: #00bcff }
+.gradient_example_2-r177 { fill: #00bbff }
+.gradient_example_2-r178 { fill: #00baff }
+.gradient_example_2-r179 { fill: #00b9ff }
+.gradient_example_2-r180 { fill: #00b8ff }
+.gradient_example_2-r181 { fill: #00b7ff;font-weight: bold }
+.gradient_example_2-r182 { fill: #00b6ff;font-weight: bold }
+.gradient_example_2-r183 { fill: #00b5ff;font-weight: bold }
+.gradient_example_2-r184 { fill: #00b4ff;font-weight: bold }
+.gradient_example_2-r185 { fill: #00b3ff;font-weight: bold }
+.gradient_example_2-r186 { fill: #00b2ff;font-weight: bold }
+.gradient_example_2-r187 { fill: #00b1ff }
+.gradient_example_2-r188 { fill: #00b0ff }
+.gradient_example_2-r189 { fill: #00afff }
+.gradient_example_2-r190 { fill: #00aeff }
+.gradient_example_2-r191 { fill: #00adff }
+.gradient_example_2-r192 { fill: #00acff }
+.gradient_example_2-r193 { fill: #00abff }
+.gradient_example_2-r194 { fill: #00aaff }
+.gradient_example_2-r195 { fill: #00a9ff }
+.gradient_example_2-r196 { fill: #00a8ff }
+.gradient_example_2-r197 { fill: #00a7ff }
+.gradient_example_2-r198 { fill: #00a6ff }
+.gradient_example_2-r199 { fill: #00a5ff }
+.gradient_example_2-r200 { fill: #00a4ff }
+.gradient_example_2-r201 { fill: #00a3ff }
+.gradient_example_2-r202 { fill: #00a2ff }
+.gradient_example_2-r203 { fill: #00a1ff }
+.gradient_example_2-r204 { fill: #00a0ff }
+.gradient_example_2-r205 { fill: #009fff }
+.gradient_example_2-r206 { fill: #009eff }
+.gradient_example_2-r207 { fill: #009dff }
+.gradient_example_2-r208 { fill: #009cff }
+.gradient_example_2-r209 { fill: #009bff }
+.gradient_example_2-r210 { fill: #009aff }
+.gradient_example_2-r211 { fill: #0099ff }
+.gradient_example_2-r212 { fill: #0098ff }
+.gradient_example_2-r213 { fill: #0097ff }
+.gradient_example_2-r214 { fill: #0096ff }
+.gradient_example_2-r215 { fill: #0095ff }
+.gradient_example_2-r216 { fill: #0094ff }
+.gradient_example_2-r217 { fill: #0093ff }
+.gradient_example_2-r218 { fill: #0092ff }
+.gradient_example_2-r219 { fill: #0091ff }
+.gradient_example_2-r220 { fill: #0090ff }
+.gradient_example_2-r221 { fill: #008fff }
+.gradient_example_2-r222 { fill: #008eff }
+.gradient_example_2-r223 { fill: #008dff }
+.gradient_example_2-r224 { fill: #008cff }
+.gradient_example_2-r225 { fill: #008bff }
+.gradient_example_2-r226 { fill: #008aff }
+.gradient_example_2-r227 { fill: #0089ff }
+.gradient_example_2-r228 { fill: #0088ff }
+.gradient_example_2-r229 { fill: #0087ff }
+.gradient_example_2-r230 { fill: #0187ff }
+.gradient_example_2-r231 { fill: #0286ff }
+.gradient_example_2-r232 { fill: #0386ff }
+.gradient_example_2-r233 { fill: #0486ff }
+.gradient_example_2-r234 { fill: #0585ff }
+.gradient_example_2-r235 { fill: #0685ff }
+.gradient_example_2-r236 { fill: #0784ff }
+.gradient_example_2-r237 { fill: #0884ff }
+.gradient_example_2-r238 { fill: #0984ff }
+.gradient_example_2-r239 { fill: #0983ff }
+.gradient_example_2-r240 { fill: #0a83ff }
+.gradient_example_2-r241 { fill: #0b83ff }
+.gradient_example_2-r242 { fill: #0c82ff }
+.gradient_example_2-r243 { fill: #0d82ff }
+.gradient_example_2-r244 { fill: #0e81ff }
+.gradient_example_2-r245 { fill: #0f81ff }
+.gradient_example_2-r246 { fill: #1081ff }
+.gradient_example_2-r247 { fill: #1180ff }
+.gradient_example_2-r248 { fill: #127fff }
+.gradient_example_2-r249 { fill: #137fff }
+.gradient_example_2-r250 { fill: #147fff }
+.gradient_example_2-r251 { fill: #157eff }
+.gradient_example_2-r252 { fill: #167eff }
+.gradient_example_2-r253 { fill: #177eff }
+.gradient_example_2-r254 { fill: #187dff }
+.gradient_example_2-r255 { fill: #197dff }
+.gradient_example_2-r256 { fill: #197cff }
+.gradient_example_2-r257 { fill: #1a7cff }
+.gradient_example_2-r258 { fill: #1b7cff }
+.gradient_example_2-r259 { fill: #1c7bff }
+.gradient_example_2-r260 { fill: #1d7bff }
+.gradient_example_2-r261 { fill: #1e7bff }
+.gradient_example_2-r262 { fill: #1f7aff }
+.gradient_example_2-r263 { fill: #207aff }
+.gradient_example_2-r264 { fill: #2179ff }
+.gradient_example_2-r265 { fill: #2279ff }
+.gradient_example_2-r266 { fill: #2378ff }
+.gradient_example_2-r267 { fill: #2478ff }
+.gradient_example_2-r268 { fill: #2578ff }
+.gradient_example_2-r269 { fill: #2677ff }
+.gradient_example_2-r270 { fill: #2777ff }
+.gradient_example_2-r271 { fill: #2876ff }
+.gradient_example_2-r272 { fill: #2976ff }
+.gradient_example_2-r273 { fill: #2a75ff }
+.gradient_example_2-r274 { fill: #2b75ff }
+.gradient_example_2-r275 { fill: #2c75ff }
+.gradient_example_2-r276 { fill: #2d74ff }
+.gradient_example_2-r277 { fill: #2e74ff }
+.gradient_example_2-r278 { fill: #2f73ff }
+.gradient_example_2-r279 { fill: #3073ff }
+.gradient_example_2-r280 { fill: #3172ff }
+.gradient_example_2-r281 { fill: #3272ff }
+.gradient_example_2-r282 { fill: #3372ff }
+.gradient_example_2-r283 { fill: #3471ff }
+.gradient_example_2-r284 { fill: #3571ff }
+.gradient_example_2-r285 { fill: #3670ff }
+.gradient_example_2-r286 { fill: #3770ff }
+.gradient_example_2-r287 { fill: #3870ff }
+.gradient_example_2-r288 { fill: #386fff }
+.gradient_example_2-r289 { fill: #396fff }
+.gradient_example_2-r290 { fill: #3a6fff }
+.gradient_example_2-r291 { fill: #3b6eff }
+.gradient_example_2-r292 { fill: #3c6eff }
+.gradient_example_2-r293 { fill: #3d6dff }
+.gradient_example_2-r294 { fill: #3e6dff }
+.gradient_example_2-r295 { fill: #3f6dff }
+.gradient_example_2-r296 { fill: #406cff }
+.gradient_example_2-r297 { fill: #416cff }
+.gradient_example_2-r298 { fill: #426bff }
+.gradient_example_2-r299 { fill: #436bff }
+.gradient_example_2-r300 { fill: #446aff }
+.gradient_example_2-r301 { fill: #456aff }
+.gradient_example_2-r302 { fill: #466aff }
+.gradient_example_2-r303 { fill: #4769ff }
+.gradient_example_2-r304 { fill: #4869ff }
+.gradient_example_2-r305 { fill: #4968ff }
+.gradient_example_2-r306 { fill: #4a68ff }
+.gradient_example_2-r307 { fill: #4b67ff }
+.gradient_example_2-r308 { fill: #4c67ff }
+.gradient_example_2-r309 { fill: #4d67ff }
+.gradient_example_2-r310 { fill: #4e66ff }
+.gradient_example_2-r311 { fill: #4f66ff }
+.gradient_example_2-r312 { fill: #5066ff }
+    </style>
+
+    <defs>
+    <clipPath id="gradient_example_2-clip-terminal">
+      <rect x="0" y="0" width="779.8" height="291.79999999999995" />
+    </clipPath>
+    <clipPath id="gradient_example_2-line-0">
+    <rect x="0" y="1.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-1">
+    <rect x="0" y="25.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-2">
+    <rect x="0" y="50.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-3">
+    <rect x="0" y="74.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-4">
+    <rect x="0" y="99.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-5">
+    <rect x="0" y="123.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-6">
+    <rect x="0" y="147.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-7">
+    <rect x="0" y="172.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-8">
+    <rect x="0" y="196.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-9">
+    <rect x="0" y="221.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="gradient_example_2-line-10">
+    <rect x="0" y="245.5" width="780.8" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="797" height="340.8" rx="8"/><text class="gradient_example_2-title" fill="#ffffff" text-anchor="middle" x="398" y="27">rich-gradient</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#gradient_example_2-clip-terminal)">
+    
+    <g class="gradient_example_2-matrix">
+    <text class="gradient_example_2-r1" x="0" y="20" textLength="24.4" clip-path="url(#gradient_example_2-line-0)">╭─</text><text class="gradient_example_2-r1" x="24.4" y="20" textLength="256.2" clip-path="url(#gradient_example_2-line-0)">─────────────────────</text><text class="gradient_example_2-r3" x="292.8" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">B</text><text class="gradient_example_2-r4" x="305" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">a</text><text class="gradient_example_2-r5" x="317.2" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">s</text><text class="gradient_example_2-r6" x="329.4" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">i</text><text class="gradient_example_2-r7" x="341.6" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">c</text><text class="gradient_example_2-r9" x="366" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">T</text><text class="gradient_example_2-r10" x="378.2" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">e</text><text class="gradient_example_2-r11" x="390.4" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">x</text><text class="gradient_example_2-r12" x="402.6" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">t</text><text class="gradient_example_2-r14" x="427" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">U</text><text class="gradient_example_2-r15" x="439.2" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">s</text><text class="gradient_example_2-r16" x="451.4" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">a</text><text class="gradient_example_2-r17" x="463.6" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">g</text><text class="gradient_example_2-r18" x="475.8" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">e</text><text class="gradient_example_2-r1" x="500.2" y="20" textLength="256.2" clip-path="url(#gradient_example_2-line-0)">─────────────────────</text><text class="gradient_example_2-r1" x="756.4" y="20" textLength="24.4" clip-path="url(#gradient_example_2-line-0)">─╮</text><text class="gradient_example_2-r1" x="780.8" y="20" textLength="12.2" clip-path="url(#gradient_example_2-line-0)">
+</text><text class="gradient_example_2-r1" x="0" y="44.4" textLength="12.2" clip-path="url(#gradient_example_2-line-1)">│</text><text class="gradient_example_2-r1" x="768.6" y="44.4" textLength="12.2" clip-path="url(#gradient_example_2-line-1)">│</text><text class="gradient_example_2-r1" x="780.8" y="44.4" textLength="12.2" clip-path="url(#gradient_example_2-line-1)">
+</text><text class="gradient_example_2-r1" x="0" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">│</text><text class="gradient_example_2-r19" x="61" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">T</text><text class="gradient_example_2-r20" x="73.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">o</text><text class="gradient_example_2-r22" x="97.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">g</text><text class="gradient_example_2-r23" x="109.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r24" x="122" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">n</text><text class="gradient_example_2-r25" x="134.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r26" x="146.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">r</text><text class="gradient_example_2-r27" x="158.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">a</text><text class="gradient_example_2-r28" x="170.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">t</text><text class="gradient_example_2-r29" x="183" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r31" x="207.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">a</text><text class="gradient_example_2-r33" x="231.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">r</text><text class="gradient_example_2-r34" x="244" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">i</text><text class="gradient_example_2-r35" x="256.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">c</text><text class="gradient_example_2-r36" x="268.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">h</text><text class="gradient_example_2-r37" x="280.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">_</text><text class="gradient_example_2-r38" x="292.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">g</text><text class="gradient_example_2-r39" x="305" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">r</text><text class="gradient_example_2-r40" x="317.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">a</text><text class="gradient_example_2-r41" x="329.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">d</text><text class="gradient_example_2-r42" x="341.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">i</text><text class="gradient_example_2-r43" x="353.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r44" x="366" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">n</text><text class="gradient_example_2-r45" x="378.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">t</text><text class="gradient_example_2-r46" x="390.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">.</text><text class="gradient_example_2-r47" x="402.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">t</text><text class="gradient_example_2-r48" x="414.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r49" x="427" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">x</text><text class="gradient_example_2-r50" x="439.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">t</text><text class="gradient_example_2-r51" x="451.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">.</text><text class="gradient_example_2-r52" x="463.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">T</text><text class="gradient_example_2-r53" x="475.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r54" x="488" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">x</text><text class="gradient_example_2-r55" x="500.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">t</text><text class="gradient_example_2-r57" x="524.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">i</text><text class="gradient_example_2-r58" x="536.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">n</text><text class="gradient_example_2-r59" x="549" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">s</text><text class="gradient_example_2-r60" x="561.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">t</text><text class="gradient_example_2-r61" x="573.4" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">a</text><text class="gradient_example_2-r62" x="585.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">n</text><text class="gradient_example_2-r63" x="597.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">c</text><text class="gradient_example_2-r64" x="610" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">e</text><text class="gradient_example_2-r65" x="622.2" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">,</text><text class="gradient_example_2-r67" x="646.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">a</text><text class="gradient_example_2-r68" x="658.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">l</text><text class="gradient_example_2-r69" x="671" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">l</text><text class="gradient_example_2-r1" x="768.6" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">│</text><text class="gradient_example_2-r1" x="780.8" y="68.8" textLength="12.2" clip-path="url(#gradient_example_2-line-2)">
+</text><text class="gradient_example_2-r1" x="0" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">│</text><text class="gradient_example_2-r71" x="61" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">y</text><text class="gradient_example_2-r72" x="73.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">o</text><text class="gradient_example_2-r73" x="85.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">u</text><text class="gradient_example_2-r75" x="109.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">n</text><text class="gradient_example_2-r76" x="122" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">e</text><text class="gradient_example_2-r77" x="134.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">e</text><text class="gradient_example_2-r78" x="146.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">d</text><text class="gradient_example_2-r80" x="170.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">i</text><text class="gradient_example_2-r81" x="183" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">s</text><text class="gradient_example_2-r83" x="207.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">t</text><text class="gradient_example_2-r84" x="219.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">o</text><text class="gradient_example_2-r86" x="244" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">p</text><text class="gradient_example_2-r87" x="256.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">a</text><text class="gradient_example_2-r88" x="268.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">s</text><text class="gradient_example_2-r89" x="280.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">s</text><text class="gradient_example_2-r91" x="305" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">i</text><text class="gradient_example_2-r92" x="317.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">t</text><text class="gradient_example_2-r94" x="341.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">a</text><text class="gradient_example_2-r96" x="366" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">s</text><text class="gradient_example_2-r97" x="378.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">t</text><text class="gradient_example_2-r98" x="390.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">r</text><text class="gradient_example_2-r99" x="402.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">i</text><text class="gradient_example_2-r100" x="414.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">n</text><text class="gradient_example_2-r101" x="427" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">g</text><text class="gradient_example_2-r102" x="439.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">.</text><text class="gradient_example_2-r104" x="463.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">I</text><text class="gradient_example_2-r105" x="475.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">f</text><text class="gradient_example_2-r107" x="500.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">n</text><text class="gradient_example_2-r108" x="512.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">o</text><text class="gradient_example_2-r110" x="536.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">c</text><text class="gradient_example_2-r110" x="549" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">o</text><text class="gradient_example_2-r111" x="561.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">l</text><text class="gradient_example_2-r112" x="573.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">o</text><text class="gradient_example_2-r112" x="585.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">r</text><text class="gradient_example_2-r113" x="597.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">s</text><text class="gradient_example_2-r114" x="622.2" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">a</text><text class="gradient_example_2-r114" x="634.4" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">r</text><text class="gradient_example_2-r115" x="646.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">e</text><text class="gradient_example_2-r1" x="768.6" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">│</text><text class="gradient_example_2-r1" x="780.8" y="93.2" textLength="12.2" clip-path="url(#gradient_example_2-line-3)">
+</text><text class="gradient_example_2-r1" x="0" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">│</text><text class="gradient_example_2-r116" x="61" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">s</text><text class="gradient_example_2-r117" x="73.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">p</text><text class="gradient_example_2-r117" x="85.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">e</text><text class="gradient_example_2-r118" x="97.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">c</text><text class="gradient_example_2-r118" x="109.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">i</text><text class="gradient_example_2-r119" x="122" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">f</text><text class="gradient_example_2-r120" x="134.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">i</text><text class="gradient_example_2-r120" x="146.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">e</text><text class="gradient_example_2-r121" x="158.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">d</text><text class="gradient_example_2-r122" x="183" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">i</text><text class="gradient_example_2-r122" x="195.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">t</text><text class="gradient_example_2-r123" x="219.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">w</text><text class="gradient_example_2-r124" x="231.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">i</text><text class="gradient_example_2-r125" x="244" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">l</text><text class="gradient_example_2-r125" x="256.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">l</text><text class="gradient_example_2-r126" x="280.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">a</text><text class="gradient_example_2-r127" x="292.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">u</text><text class="gradient_example_2-r127" x="305" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">t</text><text class="gradient_example_2-r128" x="317.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">o</text><text class="gradient_example_2-r129" x="329.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">m</text><text class="gradient_example_2-r129" x="341.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">a</text><text class="gradient_example_2-r130" x="353.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">t</text><text class="gradient_example_2-r130" x="366" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">i</text><text class="gradient_example_2-r131" x="378.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">c</text><text class="gradient_example_2-r131" x="390.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">a</text><text class="gradient_example_2-r132" x="402.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">l</text><text class="gradient_example_2-r133" x="414.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">l</text><text class="gradient_example_2-r133" x="427" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">y</text><text class="gradient_example_2-r134" x="451.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">g</text><text class="gradient_example_2-r135" x="463.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">e</text><text class="gradient_example_2-r135" x="475.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">n</text><text class="gradient_example_2-r136" x="488" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">e</text><text class="gradient_example_2-r136" x="500.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">r</text><text class="gradient_example_2-r137" x="512.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">a</text><text class="gradient_example_2-r138" x="524.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">t</text><text class="gradient_example_2-r138" x="536.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">e</text><text class="gradient_example_2-r139" x="561.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">a</text><text class="gradient_example_2-r140" x="585.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">r</text><text class="gradient_example_2-r141" x="597.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">a</text><text class="gradient_example_2-r142" x="610" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">n</text><text class="gradient_example_2-r142" x="622.2" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">d</text><text class="gradient_example_2-r143" x="634.4" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">o</text><text class="gradient_example_2-r143" x="646.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">m</text><text class="gradient_example_2-r1" x="768.6" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">│</text><text class="gradient_example_2-r1" x="780.8" y="117.6" textLength="12.2" clip-path="url(#gradient_example_2-line-4)">
+</text><text class="gradient_example_2-r1" x="0" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">│</text><text class="gradient_example_2-r144" x="61" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">g</text><text class="gradient_example_2-r145" x="73.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">r</text><text class="gradient_example_2-r146" x="85.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">a</text><text class="gradient_example_2-r146" x="97.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">d</text><text class="gradient_example_2-r147" x="109.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">i</text><text class="gradient_example_2-r147" x="122" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">e</text><text class="gradient_example_2-r148" x="134.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">n</text><text class="gradient_example_2-r148" x="146.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">t</text><text class="gradient_example_2-r149" x="170.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">f</text><text class="gradient_example_2-r150" x="183" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">o</text><text class="gradient_example_2-r151" x="195.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">r</text><text class="gradient_example_2-r152" x="219.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">y</text><text class="gradient_example_2-r152" x="231.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">o</text><text class="gradient_example_2-r153" x="244" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">u</text><text class="gradient_example_2-r153" x="256.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">.</text><text class="gradient_example_2-r155" x="280.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">R</text><text class="gradient_example_2-r155" x="292.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">a</text><text class="gradient_example_2-r156" x="305" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">n</text><text class="gradient_example_2-r156" x="317.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">d</text><text class="gradient_example_2-r157" x="329.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">o</text><text class="gradient_example_2-r157" x="341.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">m</text><text class="gradient_example_2-r159" x="366" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">g</text><text class="gradient_example_2-r159" x="378.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">r</text><text class="gradient_example_2-r160" x="390.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">a</text><text class="gradient_example_2-r160" x="402.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">d</text><text class="gradient_example_2-r161" x="414.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">i</text><text class="gradient_example_2-r162" x="427" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">e</text><text class="gradient_example_2-r162" x="439.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">n</text><text class="gradient_example_2-r163" x="451.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">t</text><text class="gradient_example_2-r164" x="463.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">s</text><text class="gradient_example_2-r165" x="488" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">a</text><text class="gradient_example_2-r166" x="500.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">r</text><text class="gradient_example_2-r167" x="512.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">e</text><text class="gradient_example_2-r168" x="536.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">g</text><text class="gradient_example_2-r169" x="549" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">e</text><text class="gradient_example_2-r170" x="561.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">n</text><text class="gradient_example_2-r171" x="573.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">e</text><text class="gradient_example_2-r171" x="585.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">r</text><text class="gradient_example_2-r172" x="597.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">a</text><text class="gradient_example_2-r173" x="610" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">t</text><text class="gradient_example_2-r174" x="622.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">e</text><text class="gradient_example_2-r174" x="634.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">d</text><text class="gradient_example_2-r176" x="658.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">f</text><text class="gradient_example_2-r177" x="671" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">r</text><text class="gradient_example_2-r177" x="683.2" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">o</text><text class="gradient_example_2-r178" x="695.4" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">m</text><text class="gradient_example_2-r1" x="768.6" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">│</text><text class="gradient_example_2-r1" x="780.8" y="142" textLength="12.2" clip-path="url(#gradient_example_2-line-5)">
+</text><text class="gradient_example_2-r1" x="0" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">│</text><text class="gradient_example_2-r180" x="61" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">a</text><text class="gradient_example_2-r181" x="85.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">S</text><text class="gradient_example_2-r182" x="97.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">p</text><text class="gradient_example_2-r183" x="109.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">e</text><text class="gradient_example_2-r183" x="122" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">c</text><text class="gradient_example_2-r184" x="134.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">t</text><text class="gradient_example_2-r185" x="146.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">r</text><text class="gradient_example_2-r186" x="158.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">u</text><text class="gradient_example_2-r186" x="170.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">m</text><text class="gradient_example_2-r188" x="195.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">w</text><text class="gradient_example_2-r189" x="207.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">h</text><text class="gradient_example_2-r190" x="219.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">i</text><text class="gradient_example_2-r190" x="231.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">c</text><text class="gradient_example_2-r191" x="244" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">h</text><text class="gradient_example_2-r193" x="268.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">i</text><text class="gradient_example_2-r193" x="280.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">s</text><text class="gradient_example_2-r195" x="305" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">a</text><text class="gradient_example_2-r196" x="329.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">c</text><text class="gradient_example_2-r197" x="341.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">y</text><text class="gradient_example_2-r198" x="353.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">c</text><text class="gradient_example_2-r199" x="366" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">l</text><text class="gradient_example_2-r199" x="378.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">e</text><text class="gradient_example_2-r201" x="402.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">o</text><text class="gradient_example_2-r202" x="414.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">f</text><text class="gradient_example_2-r203" x="439.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">1</text><text class="gradient_example_2-r204" x="451.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">8</text><text class="gradient_example_2-r205" x="475.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">c</text><text class="gradient_example_2-r206" x="488" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">o</text><text class="gradient_example_2-r207" x="500.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">l</text><text class="gradient_example_2-r208" x="512.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">o</text><text class="gradient_example_2-r208" x="524.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">r</text><text class="gradient_example_2-r209" x="536.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">s</text><text class="gradient_example_2-r211" x="561.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">t</text><text class="gradient_example_2-r211" x="573.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">h</text><text class="gradient_example_2-r212" x="585.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">a</text><text class="gradient_example_2-r213" x="597.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">t</text><text class="gradient_example_2-r214" x="622.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">s</text><text class="gradient_example_2-r215" x="634.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">p</text><text class="gradient_example_2-r216" x="646.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">a</text><text class="gradient_example_2-r217" x="658.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">n</text><text class="gradient_example_2-r218" x="683.2" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">t</text><text class="gradient_example_2-r219" x="695.4" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">h</text><text class="gradient_example_2-r220" x="707.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">e</text><text class="gradient_example_2-r1" x="768.6" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">│</text><text class="gradient_example_2-r1" x="780.8" y="166.4" textLength="12.2" clip-path="url(#gradient_example_2-line-6)">
+</text><text class="gradient_example_2-r1" x="0" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">│</text><text class="gradient_example_2-r221" x="61" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">f</text><text class="gradient_example_2-r222" x="73.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">u</text><text class="gradient_example_2-r223" x="85.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">l</text><text class="gradient_example_2-r223" x="97.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">l</text><text class="gradient_example_2-r225" x="122" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">R</text><text class="gradient_example_2-r226" x="134.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">G</text><text class="gradient_example_2-r226" x="146.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">B</text><text class="gradient_example_2-r228" x="170.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">c</text><text class="gradient_example_2-r229" x="183" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">o</text><text class="gradient_example_2-r230" x="195.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">l</text><text class="gradient_example_2-r230" x="207.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">o</text><text class="gradient_example_2-r231" x="219.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">r</text><text class="gradient_example_2-r233" x="244" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">s</text><text class="gradient_example_2-r234" x="256.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">p</text><text class="gradient_example_2-r235" x="268.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">a</text><text class="gradient_example_2-r236" x="280.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">c</text><text class="gradient_example_2-r237" x="292.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">e</text><text class="gradient_example_2-r238" x="305" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">.</text><text class="gradient_example_2-r240" x="329.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">A</text><text class="gradient_example_2-r241" x="341.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">u</text><text class="gradient_example_2-r242" x="353.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">t</text><text class="gradient_example_2-r243" x="366" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">o</text><text class="gradient_example_2-r244" x="378.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">m</text><text class="gradient_example_2-r245" x="390.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">a</text><text class="gradient_example_2-r246" x="402.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">t</text><text class="gradient_example_2-r247" x="414.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">i</text><text class="gradient_example_2-r247" x="427" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">c</text><text class="gradient_example_2-r248" x="439.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">a</text><text class="gradient_example_2-r249" x="451.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">l</text><text class="gradient_example_2-r250" x="463.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">l</text><text class="gradient_example_2-r251" x="475.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">y</text><text class="gradient_example_2-r253" x="500.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">g</text><text class="gradient_example_2-r254" x="512.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">e</text><text class="gradient_example_2-r255" x="524.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">n</text><text class="gradient_example_2-r256" x="536.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">e</text><text class="gradient_example_2-r257" x="549" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">r</text><text class="gradient_example_2-r258" x="561.2" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">a</text><text class="gradient_example_2-r259" x="573.4" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">t</text><text class="gradient_example_2-r260" x="585.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">e</text><text class="gradient_example_2-r261" x="597.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">d</text><text class="gradient_example_2-r1" x="768.6" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">│</text><text class="gradient_example_2-r1" x="780.8" y="190.8" textLength="12.2" clip-path="url(#gradient_example_2-line-7)">
+</text><text class="gradient_example_2-r1" x="0" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">│</text><text class="gradient_example_2-r263" x="61" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">g</text><text class="gradient_example_2-r264" x="73.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">r</text><text class="gradient_example_2-r264" x="85.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">a</text><text class="gradient_example_2-r265" x="97.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">d</text><text class="gradient_example_2-r266" x="109.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">i</text><text class="gradient_example_2-r267" x="122" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r268" x="134.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">n</text><text class="gradient_example_2-r269" x="146.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">t</text><text class="gradient_example_2-r270" x="158.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">s</text><text class="gradient_example_2-r271" x="183" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">a</text><text class="gradient_example_2-r272" x="195.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">r</text><text class="gradient_example_2-r273" x="207.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r275" x="231.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">a</text><text class="gradient_example_2-r276" x="244" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">l</text><text class="gradient_example_2-r277" x="256.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">w</text><text class="gradient_example_2-r278" x="268.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">a</text><text class="gradient_example_2-r279" x="280.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">y</text><text class="gradient_example_2-r279" x="292.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">s</text><text class="gradient_example_2-r281" x="317.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">g</text><text class="gradient_example_2-r282" x="329.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r283" x="341.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">n</text><text class="gradient_example_2-r284" x="353.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r285" x="366" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">r</text><text class="gradient_example_2-r286" x="378.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">a</text><text class="gradient_example_2-r287" x="390.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">t</text><text class="gradient_example_2-r288" x="402.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r289" x="414.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">d</text><text class="gradient_example_2-r291" x="439.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">w</text><text class="gradient_example_2-r292" x="451.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">i</text><text class="gradient_example_2-r293" x="463.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">t</text><text class="gradient_example_2-r294" x="475.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">h</text><text class="gradient_example_2-r296" x="500.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">c</text><text class="gradient_example_2-r296" x="512.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">o</text><text class="gradient_example_2-r297" x="524.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">n</text><text class="gradient_example_2-r298" x="536.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">s</text><text class="gradient_example_2-r299" x="549" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r300" x="561.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">c</text><text class="gradient_example_2-r301" x="573.4" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">u</text><text class="gradient_example_2-r302" x="585.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">t</text><text class="gradient_example_2-r303" x="597.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">i</text><text class="gradient_example_2-r304" x="610" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">v</text><text class="gradient_example_2-r304" x="622.2" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">e</text><text class="gradient_example_2-r1" x="768.6" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">│</text><text class="gradient_example_2-r1" x="780.8" y="215.2" textLength="12.2" clip-path="url(#gradient_example_2-line-8)">
+</text><text class="gradient_example_2-r1" x="0" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">│</text><text class="gradient_example_2-r306" x="61" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">c</text><text class="gradient_example_2-r307" x="73.2" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">o</text><text class="gradient_example_2-r308" x="85.4" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">l</text><text class="gradient_example_2-r309" x="97.6" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">o</text><text class="gradient_example_2-r310" x="109.8" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">r</text><text class="gradient_example_2-r311" x="122" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">s</text><text class="gradient_example_2-r312" x="134.2" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">.</text><text class="gradient_example_2-r1" x="768.6" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">│</text><text class="gradient_example_2-r1" x="780.8" y="239.6" textLength="12.2" clip-path="url(#gradient_example_2-line-9)">
+</text><text class="gradient_example_2-r1" x="0" y="264" textLength="12.2" clip-path="url(#gradient_example_2-line-10)">│</text><text class="gradient_example_2-r1" x="768.6" y="264" textLength="12.2" clip-path="url(#gradient_example_2-line-10)">│</text><text class="gradient_example_2-r1" x="780.8" y="264" textLength="12.2" clip-path="url(#gradient_example_2-line-10)">
+</text><text class="gradient_example_2-r1" x="0" y="288.4" textLength="780.8" clip-path="url(#gradient_example_2-line-11)">╰──────────────────────────────────────────────────────────────╯</text><text class="gradient_example_2-r1" x="780.8" y="288.4" textLength="12.2" clip-path="url(#gradient_example_2-line-11)">
+</text>
+    </g>
+    </g>
+</svg>

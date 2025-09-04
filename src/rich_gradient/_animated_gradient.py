@@ -25,8 +25,8 @@ from rich.table import Column, Table
 from rich.text import Text as RichText
 from rich_color_ext import install as color_ext_install
 
-from rich_gradient.spectrum import Spectrum
 from rich_gradient._base_gradient import BaseGradient
+from rich_gradient.spectrum import Spectrum
 
 __all__ = [
     "AnimatedGradient",
@@ -37,7 +37,8 @@ __all__ = [
 GAMMA_CORRECTION = 2.2
 ColorType: TypeAlias = Union[str, Color, ColorTriplet]
 
-color_ext_install()
+# rich_color_ext is installed at package import time
+
 
 class AnimatedGradient(BaseGradient):
     """A gradient that animates over time using `rich.live.Live`.
@@ -242,46 +243,46 @@ class AnimatedGradient(BaseGradient):
         finally:
             self._running = False
 
-            class Gradient:
-                """Factory class that returns a BaseGradient or AnimatedGradient depending on input."""
 
-                def __new__(
-                    cls,
-                    *args,
-                    animated: bool = False,
-                    auto: bool = True,
-                    refresh_per_second: float = 30.0,
-                    **kwargs,
-                ):
-                    # If explicitly requested, use AnimatedGradient
-                    if (
-                        animated
-                        or kwargs.get("auto_refresh", False)
-                        or kwargs.get("refresh_per_second", None)
-                    ):
-                        return AnimatedGradient(
-                            *args,
-                            refresh_per_second=kwargs.pop(
-                                "refresh_per_second", refresh_per_second
-                            ),
-                            auto_refresh=kwargs.pop("auto_refresh", True),
-                            **kwargs,
-                        )
-                    # If auto=True and a likely animation arg is present, use AnimatedGradient
-                    if auto and (
-                        kwargs.get("rainbow", False)
-                        or kwargs.get("show_quit_panel", False)
-                    ):
-                        return AnimatedGradient(
-                            *args,
-                            refresh_per_second=kwargs.pop(
-                                "refresh_per_second", refresh_per_second
-                            ),
-                            auto_refresh=kwargs.pop("auto_refresh", True),
-                            **kwargs,
-                        )
-                    # Otherwise, use BaseGradient
-                    return BaseGradient(*args, **kwargs)
+class Gradient:
+    """Factory class that returns a BaseGradient or AnimatedGradient depending on input.
+
+    This preserves the public `Gradient` constructor while dispatching to
+    AnimatedGradient when 'animated' or animation-like args are passed.
+    """
+
+    def __new__(
+        cls,
+        *args,
+        animated: bool = False,
+        auto: bool = True,
+        refresh_per_second: float = 30.0,
+        **kwargs,
+    ):
+        # If explicitly requested, use AnimatedGradient
+        if (
+            animated
+            or kwargs.get("auto_refresh", False)
+            or kwargs.get("refresh_per_second", None)
+        ):
+            return AnimatedGradient(
+                *args,
+                refresh_per_second=kwargs.pop("refresh_per_second", refresh_per_second),
+                auto_refresh=kwargs.pop("auto_refresh", True),
+                **kwargs,
+            )
+        # If auto=True and a likely animation arg is present, use AnimatedGradient
+        if auto and (
+            kwargs.get("rainbow", False) or kwargs.get("show_quit_panel", False)
+        ):
+            return AnimatedGradient(
+                *args,
+                refresh_per_second=kwargs.pop("refresh_per_second", refresh_per_second),
+                auto_refresh=kwargs.pop("auto_refresh", True),
+                **kwargs,
+            )
+        # Otherwise, use BaseGradient
+        return BaseGradient(*args, **kwargs)
 
 
 if __name__ == "__main__":

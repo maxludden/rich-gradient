@@ -7,16 +7,15 @@ from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.control import strip_control_codes
 from rich.panel import Panel
 from rich.style import Style, StyleType
-from rich.text import Span
+from rich.text import Span, TextType
 from rich.text import Text as RichText
-from rich.text import TextType
 from rich_color_ext import install
 
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 ColorType: TypeAlias = Union[str, Color, ColorTriplet, Tuple[int, int, int]]
-install()
+# rich_color_ext is installed at package import time
 
 
 class Text(RichText):
@@ -55,6 +54,8 @@ class Text(RichText):
             markup (bool): If True, parse Rich markup tags in the input text.
             spans (Optional[Sequence[Span]]): A list of spans to apply to the text.
         """
+
+        # Parse the input text with or without markup
         if markup:
             parsed_text = RichText.from_markup(
                 text=str(text), style=style, justify=justify, overflow=overflow
@@ -66,11 +67,14 @@ class Text(RichText):
                 justify=justify,
                 overflow=overflow,
             )
+
+        # Extract parsed attributes
         plain = parsed_text.plain
         parsed_justify = parsed_text.justify
         parsed_overflow = parsed_text.overflow
         parsed_spans = parsed_text._spans
 
+        # Initialize the parent class
         super().__init__(
             plain,
             style=style,
@@ -81,6 +85,7 @@ class Text(RichText):
             tab_size=tab_size,
             spans=parsed_spans,
         )
+        self._interpolate_bgcolors = False  # Ensure flag is always initialized
         self.colors = self.parse_colors(colors, hues, rainbow)
         self.bgcolors = self.parse_bgcolors(bgcolors, hues)
 
@@ -402,18 +407,22 @@ is superfluous!\n\nThis gradient uses:
 
     gradient_example4()
 
-    # Example 5: Long text with a smooth gradient
-    colors5 = ["magenta", "cyan"]
-    long_text = (
+
+def long_text_example() -> None:
+    """Example 5: Long text with a smooth gradient."""
+    long_text_colors = ["magenta", "cyan"]
+    long_text_str = (
         "If you are picky about your colors, but prefer simpler gradients, Text will smoothly \
 interpolate between two or more colors. This means you can specify a list of colors, or even just \
 two colors and Text will generate a smooth gradient between them."
     )
-    text5 = Text(long_text, colors=colors5, style="bold", justify="center")
+    long_text = Text(
+        long_text_str, colors=long_text_colors, style="bold", justify="center"
+    )
 
     console.print(
         Panel(
-            text5,
+            long_text,
             padding=(1, 4),
             width=64,
             title=Text(
@@ -424,8 +433,8 @@ two colors and Text will generate a smooth gradient between them."
         )
     )
     console.save_svg(
-        "docs/img/v0.3.3/two_color_gradient.svg",
+        "docs/img/v0.3.3/long_text_2_color.svg",
         title="rich-gradient",
-        unique_id="gradient_example_5",
+        unique_id="long_text_2_color",
         theme=GRADIENT_TERMINAL_THEME,
     )

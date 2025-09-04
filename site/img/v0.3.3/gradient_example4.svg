@@ -34,19 +34,19 @@
 
     .gradient_example_4-r1 { fill: #ffffff }
 .gradient_example_4-r2 { fill: #ffffff;font-weight: bold }
-.gradient_example_4-r3 { fill: #ff5500;font-weight: bold }
-.gradient_example_4-r4 { fill: #ff6b00;font-weight: bold }
-.gradient_example_4-r5 { fill: #ff8200;font-weight: bold }
-.gradient_example_4-r6 { fill: #ff9900;font-weight: bold }
-.gradient_example_4-r7 { fill: #ffaa00;font-weight: bold }
-.gradient_example_4-r8 { fill: #ffbb00;font-weight: bold }
-.gradient_example_4-r9 { fill: #ffcc00;font-weight: bold }
-.gradient_example_4-r10 { fill: #ffdd00;font-weight: bold }
-.gradient_example_4-r11 { fill: #ffee00;font-weight: bold }
-.gradient_example_4-r12 { fill: #ffff00;font-weight: bold }
-.gradient_example_4-r13 { fill: #e2ff00;font-weight: bold }
-.gradient_example_4-r14 { fill: #c6ff00;font-weight: bold }
-.gradient_example_4-r15 { fill: #aaff00;font-weight: bold }
+.gradient_example_4-r3 { fill: #5066ff;font-weight: bold }
+.gradient_example_4-r4 { fill: #6a66ff;font-weight: bold }
+.gradient_example_4-r5 { fill: #8566ff;font-weight: bold }
+.gradient_example_4-r6 { fill: #a066ff;font-weight: bold }
+.gradient_example_4-r7 { fill: #aa54ff;font-weight: bold }
+.gradient_example_4-r8 { fill: #b542ff;font-weight: bold }
+.gradient_example_4-r9 { fill: #c030ff;font-weight: bold }
+.gradient_example_4-r10 { fill: #d51fff;font-weight: bold }
+.gradient_example_4-r11 { fill: #ea10ff;font-weight: bold }
+.gradient_example_4-r12 { fill: #ff00ff;font-weight: bold }
+.gradient_example_4-r13 { fill: #ff00e2;font-weight: bold }
+.gradient_example_4-r14 { fill: #ff00c6;font-weight: bold }
+.gradient_example_4-r15 { fill: #ff00aa;font-weight: bold }
 .gradient_example_4-r16 { fill: #800080 }
 .gradient_example_4-r17 { fill: #80007f }
 .gradient_example_4-r18 { fill: #80017f }

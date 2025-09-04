@@ -20,6 +20,7 @@
         ".cache": true,
         "retool.config.json": true
     },
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "python.analysis.diagnosticSeverityOverrides": {
         "reportUnusedImport": false
     },

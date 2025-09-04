@@ -1,6 +1,7 @@
 from itertools import cycle
 from random import randint
-from typing import Dict, List, Tuple
+from random import seed as random_seed
+from typing import Dict, List, Optional
 
 from rich import get_console
 from rich.color import Color
@@ -10,11 +11,9 @@ from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 from rich.traceback import install as tr_install
-from rich_color_ext import install
 
 console: Console = get_console()
 tr_install(console=console)
-install()
 
 SPECTRUM_NAMES: Dict[str, str] = {
     "#FF0000": "red",
@@ -26,14 +25,14 @@ SPECTRUM_NAMES: Dict[str, str] = {
     "#00FF00": "lime",
     "#00FF99": "sea-green",
     "#00FFFF": "cyan",
-    "#00CCFF": "powerderblue",
+    "#00CCFF": "powderblue",
     "#0088FF": "sky-blue",
     "#5066FF": "blue",
     "#A066FF": "purple",
     "#C030FF": "violet",
     "#FF00FF": "magenta",
     "#FF00AA": "pink",
-    "#FF0055": "hot-pink"
+    "#FF0055": "hot-pink",
 }
 # Ensure no color is paired with a white foreground, even when reversed.
 # This is handled by always using the color itself as the foreground,
@@ -45,50 +44,37 @@ class Spectrum:
     Args:
         hues (int): Number of colors to generate. Defaults to 18.
         invert (bool, optional): If True, reverse the generated list. Defaults to False.
-
-    Raises:
-        ValueError: If hues is less than 2.
-
-    Attributes:
-        colors (List[Color]): List of Color instances.
-        triplets (List[ColorTriplet]): List of ColorTriplet instances.
-        styles (List[Style]): List of Style instances.
-        names (List[str]): List of color names corresponding to the colors.
+        seed (Optional[int], optional): If provided, sets the random seed for deterministic color order.
     """
 
-    def __init__(self, hues: int = 17, invert: bool = False) -> None:
-        """Initialize the Spectrum with a specified number of hues and optional inversion."""
+    def __init__(
+        self, hues: int = 17, invert: bool = False, seed: Optional[int] = None
+    ) -> None:
+        """Initialize the Spectrum with a specified number of hues and optional inversion and seed."""
         if hues < 2:
             raise ValueError("hues must be at least 2")
-
+        if seed is not None:
+            random_seed(seed)
         # Generate a random cycle of colors from the spectrum
         colors: List[Color] = [Color.parse(color) for color in SPECTRUM_NAMES.keys()]
         color_cycle = cycle(colors)
-
         # Skip a random number of colors to add variability
         for _ in range(randint(1, 18)):
             next(color_cycle)
-
         # Create a list of colors based on the specified number of hues
         colors = [next(color_cycle) for _ in range(hues)]
         self._colors: List[Color] = colors
-
-        # If invert is True, reverse the order of colors
         if invert:
             self._colors.reverse()
-
-        # Create names and styles based on the colors
         self._names = [
             SPECTRUM_NAMES[color.get_truecolor().hex.upper()] for color in self._colors
         ]
-
-        # Create Style instances for each color
         self._styles = [
             Style(color=color, bold=False, italic=False, underline=False)
             for color in self._colors
         ]
-
         self.hex = [color.get_truecolor().hex.upper() for color in self._colors]
+        self._iterator = iter(self._colors)
 
     @property
     def colors(self) -> List[Color]:
@@ -142,8 +128,8 @@ class Spectrum:
         return iter(self.colors)
 
     def __next__(self):
-        """Return the next color in the Spectrum."""
-        return next(iter(self.colors))
+        """Return the next color in the Spectrum (stateful)."""
+        return next(self._iterator)
 
     def __rich__(self) -> Table:
         """Return a rich Table representation of the Spectrum."""
@@ -190,7 +176,9 @@ def example():
     """Generate a rich table with all of the colors in the Spectrum."""
     console.clear()
     console.line(2)
-    console.print(f'Number of colors in the spectrum: [bold magenta]{len(SPECTRUM_NAMES)}[/]')
+    console.print(
+        f"Number of colors in the spectrum: [bold magenta]{len(SPECTRUM_NAMES)}[/]"
+    )
     console.line(2)
     spectrum = Spectrum()
     console.print(spectrum)

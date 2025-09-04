@@ -35,12 +35,8 @@ from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style
 from rich.text import Text as RichText
-from rich_color_ext import install as color_ext_install
 
 from rich_gradient.spectrum import Spectrum
-
-# Ensure color extension is installed once at import time
-color_ext_install()
 
 # Type alias for accepted color inputs
 ColorType: TypeAlias = Union[str, Color, ColorTriplet]
@@ -149,7 +145,8 @@ class BaseGradient(JupyterMixin):
 
         # Loop smoothly by appending reversed middle stops
         if len(triplets) > 2:
-            triplets += list(reversed(triplets[1:-1]))
+            # Append reversed stops excluding final stop so gradient wraps smoothly
+            triplets += list(reversed(triplets[:-1]))
         self._foreground_colors = triplets
 
     @property
@@ -259,7 +256,8 @@ class BaseGradient(JupyterMixin):
                 triplets.append(Color.parse(c).get_truecolor())
             else:
                 raise ColorParseError(
-                    f"Unsupported color type: {type(c)}\n\tCould not parse color: {c}")
+                    f"Unsupported color type: {type(c)}\n\tCould not parse color: {c}"
+                )
         return triplets
 
     def __rich_measure__(
@@ -296,7 +294,7 @@ class BaseGradient(JupyterMixin):
         width = options.max_width
         content = Group(*self.renderables)
         if self.show_quit_panel:
-            panel = Panel("Press [bold]Ctrl+C[/bold] to quit.", expand=False)
+            panel = Panel("Press [bold]Ctrl+C[/bold] to stop.", expand=False)
             content = Group(content, Align(panel, align="right"))
 
         lines = console.render_lines(content, options, pad=True, new_lines=False)

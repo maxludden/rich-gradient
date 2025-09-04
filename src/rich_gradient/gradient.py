@@ -27,8 +27,7 @@ from rich_color_ext import install as color_ext_install
 
 from rich_gradient.spectrum import Spectrum
 
-# Ensure color extension is installed once at import time
-color_ext_install()
+# rich_color_ext is installed at package import time
 
 # Type alias for accepted color inputs
 ColorType: TypeAlias = Union[str, Color, ColorTriplet]
@@ -81,7 +80,8 @@ class Gradient(JupyterMixin):
         self.expand: bool = expand
         self.justify = justify
         self.vertical_justify = vertical_justify
-        self.show_quit_panel = show_quit_panel
+        # Ensure quit panel is shown by default for animated gradients unless explicitly disabled
+        self.show_quit_panel = bool(show_quit_panel or animated)
         self.background = background
 
         self.renderables = self._normalize_renderables(renderables, colors)
@@ -118,7 +118,9 @@ class Gradient(JupyterMixin):
         self._active_stops = self._initialize_color_stops()
 
     def _normalize_renderables(
-        self, renderables: Optional[Union[str, ConsoleRenderable, List[ConsoleRenderable]]], colors: Optional[List[ColorType]]
+        self,
+        renderables: Optional[Union[str, ConsoleRenderable, List[ConsoleRenderable]]],
+        colors: Optional[List[ColorType]],
     ) -> List[ConsoleRenderable]:
         from rich_gradient.text import Text
 
@@ -127,11 +129,17 @@ class Gradient(JupyterMixin):
         if isinstance(renderables, str):
             return [Text(renderables, colors=colors)]
         if isinstance(renderables, list):
-            return [(Text(r, colors=colors) if isinstance(r, str) else r) for r in renderables]
+            return [
+                (Text(r, colors=colors) if isinstance(r, str) else r)
+                for r in renderables
+            ]
         return [renderables]
 
     def _initialize_color_stops(self) -> List[ColorTriplet]:
         source = self.bg_colors if self.background else self.colors
+        # Safely handle empty color sources
+        if not source:
+            return []
         return [source[0], source[0]] if len(source) == 1 else source
 
     @property

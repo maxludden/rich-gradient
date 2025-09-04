@@ -1,3 +1,7 @@
+"""
+Test suite for Text class covering initialization, color parsing, interpolation, gradient application, and property setters.
+"""
+
 import pytest
 from rich.color import Color
 from rich.style import Style
@@ -8,6 +12,9 @@ from rich_gradient.text import Text
 
 # Helper for color equality (Color.__eq__ is not always implemented)
 def color_eq(c1, c2):
+    """
+    Helper to compare two Color objects by their truecolor value.
+    """
     return c1.get_truecolor() == c2.get_truecolor()
 
 
@@ -150,6 +157,9 @@ def test_text_init_and_properties(
     expected_plain,
     expected_colors_len,
 ):
+    """
+    Test Text initialization and property values for various input combinations.
+    """
     # Act
     t = Text(
         text=text,
@@ -192,6 +202,9 @@ def test_text_init_and_properties(
 def test_parse_colors(
     input_colors, hues, rainbow, expected_len, expected_type, case_id
 ):
+    """
+    Test Text.parse_colors for various input color formats and rainbow mode.
+    """
     # Act
     result = Text.parse_colors(colors=input_colors, hues=hues, rainbow=rainbow)
 
@@ -218,6 +231,9 @@ def test_parse_colors(
     ],
 )
 def test_interpolate_colors_non_empty(plain, colors, expected, case_id):
+    """
+    Test interpolate_colors returns correct number of colors for non-empty input.
+    """
     # Arrange
     t = Text(plain, colors=colors)
 
@@ -237,6 +253,9 @@ def test_interpolate_colors_non_empty(plain, colors, expected, case_id):
     ],
 )
 def test_interpolate_colors_empty(plain, colors, expected, case_id):
+    """
+    Test interpolate_colors returns empty list for empty text input.
+    """
     # Arrange
     t = Text(plain, colors=colors)
 
@@ -247,6 +266,9 @@ def test_interpolate_colors_empty(plain, colors, expected, case_id):
 
 
 def test_interpolate_colors_no_colors_raises():
+    """
+    Test interpolate_colors raises ValueError when no colors are provided.
+    """
     # Arrange
     t = Text("abc", colors=[])
     t.colors = []
@@ -265,6 +287,9 @@ def test_interpolate_colors_no_colors_raises():
     ],
 )
 def test_apply_gradient(plain, colors, expected_spans, case_id):
+    """
+    Test apply_gradient creates correct number of spans for each character in text.
+    """
     # Arrange
     t = Text(plain, colors=colors)
 
@@ -279,6 +304,9 @@ def test_apply_gradient(plain, colors, expected_spans, case_id):
 
 
 def test_colors_property_and_setter():
+    """
+    Test colors property and setter for correct assignment and type.
+    """
     # Arrange
     t = Text("hi", colors=["#f00", "#0f0"])
     # Act
@@ -290,6 +318,9 @@ def test_colors_property_and_setter():
 
 
 def test_colors_setter_none():
+    """
+    Test colors setter with None resets colors to empty list.
+    """
     # Arrange
     t = Text("hi", colors=["#f00"])
     # Act
@@ -299,6 +330,9 @@ def test_colors_setter_none():
 
 
 def test_repr_and_str():
+    """
+    Test __repr__ and __str__ methods include text content.
+    """
     # Arrange
     t = Text("hello", colors=["#f00", "#0f0"])
     # Act
@@ -319,6 +353,9 @@ def test_repr_and_str():
     ],
 )
 def test_colors_setter_various(colors, expected):
+    """
+    Test colors setter with None, empty, and single color values.
+    """
     # Arrange
     t = Text("hi", colors=["#f00"])
     # Act
