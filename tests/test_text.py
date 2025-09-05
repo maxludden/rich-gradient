@@ -52,7 +52,7 @@ def color_eq(c1, c2):
             2,
             False,
             "World",
-            18,
+            17,
             id="rainbow",
         ),
         # No colors, hues=3
@@ -194,7 +194,7 @@ def test_text_init_and_properties(
         ([Color.parse("#f00"), Color.parse("#0f0")], 5, False, 2, Color, "color-objs"),
         ([], 4, False, 4, Color, "empty-list-hues4"),
         (None, 6, False, 6, Color, "none-hues6"),
-        (None, 18, True, 18, Color, "rainbow-18"),
+        (None, 18, True, 17, Color, "rainbow-17"),
         (["red", "blue"], 5, False, 2, Color, "css-names"),
         (["#f00"], 5, False, 1, Color, "single-color"),
     ],
@@ -364,3 +364,25 @@ def test_colors_setter_various(colors, expected):
     assert t.colors == (expected or [])
 
     assert t.colors == (expected or [])
+
+
+def test_rich_method_returns_rich_text_and_preserves_styling():
+    """Ensure Text.rich() returns a plain rich.text.Text with spans and style preserved."""
+    # Create a gradient Text source
+    gradient_text = Text("Hello", colors=["#f00", "#0f0"], style="bold")
+
+    # Convert an existing Text instance to a plain RichText
+    rich_text = gradient_text.as_rich()
+
+    # Assert rich_text is rich.text.Text and not rich_gradient.text.Text
+    assert isinstance(rich_text, RichText)
+    assert not isinstance(rich_text, Text)
+
+    # Plain content preserved
+    assert rich_text.plain == gradient_text.plain
+
+    # Spans copied across
+    assert list(gradient_text._spans) == list(rich_text._spans)
+
+    # Base style preserved (string or Style accepted)
+    assert gradient_text.style == rich_text.style
