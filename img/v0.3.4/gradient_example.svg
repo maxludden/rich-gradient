@@ -33,124 +33,124 @@
     }
 
     .gradient_example-r1 { fill: #ffffff }
-.gradient_example-r2 { fill: #00ff3d;font-weight: bold }
-.gradient_example-r3 { fill: #00ff64;font-weight: bold }
-.gradient_example-r4 { fill: #00ff7f;font-weight: bold }
-.gradient_example-r5 { fill: #00ff94;font-weight: bold }
-.gradient_example-r6 { fill: #00ffb3;font-weight: bold }
-.gradient_example-r7 { fill: #00ffd0;font-weight: bold }
-.gradient_example-r8 { fill: #00ffe9;font-weight: bold }
-.gradient_example-r9 { fill: #00ffff;font-weight: bold }
-.gradient_example-r10 { fill: #00f2ff;font-weight: bold }
-.gradient_example-r11 { fill: #00e5ff;font-weight: bold }
-.gradient_example-r12 { fill: #00d7ff;font-weight: bold }
-.gradient_example-r13 { fill: #00c8ff;font-weight: bold }
-.gradient_example-r14 { fill: #00b8ff;font-weight: bold }
-.gradient_example-r15 { fill: #00a7ff;font-weight: bold }
-.gradient_example-r16 { fill: #0093ff;font-weight: bold }
-.gradient_example-r17 { fill: #2084ff;font-weight: bold }
-.gradient_example-r18 { fill: #347bff;font-weight: bold }
-.gradient_example-r19 { fill: #4272ff;font-weight: bold }
-.gradient_example-r20 { fill: #4d68ff;font-weight: bold }
-.gradient_example-r21 { fill: #6665ff;font-weight: bold }
-.gradient_example-r22 { fill: #7d65ff;font-weight: bold }
-.gradient_example-r23 { fill: #8f65ff;font-weight: bold }
-.gradient_example-r24 { fill: #a065ff;font-weight: bold }
-.gradient_example-r25 { fill: #a95bff;font-weight: bold }
-.gradient_example-r26 { fill: #b14eff;font-weight: bold }
-.gradient_example-r27 { fill: #ba3fff;font-weight: bold }
-.gradient_example-r28 { fill: #c42eff;font-weight: bold }
-.gradient_example-r29 { fill: #d727ff;font-weight: bold }
-.gradient_example-r30 { fill: #e81fff;font-weight: bold }
-.gradient_example-r31 { fill: #f713ff;font-weight: bold }
-.gradient_example-r32 { fill: #ff00f5;font-weight: bold }
-.gradient_example-r33 { fill: #ff00e1;font-weight: bold }
-.gradient_example-r34 { fill: #ff00cb;font-weight: bold }
-.gradient_example-r35 { fill: #ff00b1;font-weight: bold }
-.gradient_example-r36 { fill: #ff009d;font-weight: bold }
-.gradient_example-r37 { fill: #ff008a;font-weight: bold }
-.gradient_example-r38 { fill: #ff0073;font-weight: bold }
-.gradient_example-r39 { fill: #ff0055;font-weight: bold }
-.gradient_example-r40 { fill: #ff0049;font-weight: bold }
-.gradient_example-r41 { fill: #ff003c;font-weight: bold }
-.gradient_example-r42 { fill: #ff0028;font-weight: bold }
-.gradient_example-r43 { fill: #ff1800;font-weight: bold }
-.gradient_example-r44 { fill: #ff3300;font-weight: bold }
-.gradient_example-r45 { fill: #ff4300;font-weight: bold }
-.gradient_example-r46 { fill: #ff4f00;font-weight: bold }
-.gradient_example-r47 { fill: #ff6100;font-weight: bold }
-.gradient_example-r48 { fill: #ff7500;font-weight: bold }
-.gradient_example-r49 { fill: #ff8600;font-weight: bold }
-.gradient_example-r50 { fill: #ff9500;font-weight: bold }
-.gradient_example-r51 { fill: #ffa400;font-weight: bold }
-.gradient_example-r52 { fill: #ffb200;font-weight: bold }
-.gradient_example-r53 { fill: #ffbf00;font-weight: bold }
-.gradient_example-r54 { fill: #ffcc00;font-weight: bold }
-.gradient_example-r55 { fill: #ffdb00;font-weight: bold }
-.gradient_example-r56 { fill: #ffe800;font-weight: bold }
-.gradient_example-r57 { fill: #fff500;font-weight: bold }
-.gradient_example-r58 { fill: #faff00;font-weight: bold }
-.gradient_example-r59 { fill: #e6ff00;font-weight: bold }
-.gradient_example-r60 { fill: #d1ff00;font-weight: bold }
-.gradient_example-r61 { fill: #b8ff00;font-weight: bold }
-.gradient_example-r62 { fill: #00ff64 }
-.gradient_example-r63 { fill: #00ff7f }
-.gradient_example-r64 { fill: #00ff94 }
-.gradient_example-r65 { fill: #00ffb3 }
-.gradient_example-r66 { fill: #00ffd0 }
-.gradient_example-r67 { fill: #00ffe9 }
-.gradient_example-r68 { fill: #00ffff }
-.gradient_example-r69 { fill: #00f2ff }
-.gradient_example-r70 { fill: #00e5ff }
-.gradient_example-r71 { fill: #00d7ff }
-.gradient_example-r72 { fill: #00c8ff }
-.gradient_example-r73 { fill: #00b8ff }
-.gradient_example-r74 { fill: #00a7ff }
-.gradient_example-r75 { fill: #0093ff }
-.gradient_example-r76 { fill: #2084ff }
-.gradient_example-r77 { fill: #347bff }
-.gradient_example-r78 { fill: #4272ff }
-.gradient_example-r79 { fill: #4d68ff }
-.gradient_example-r80 { fill: #6665ff }
-.gradient_example-r81 { fill: #7d65ff }
-.gradient_example-r82 { fill: #8f65ff }
-.gradient_example-r83 { fill: #a065ff }
-.gradient_example-r84 { fill: #a95bff }
-.gradient_example-r85 { fill: #b14eff }
-.gradient_example-r86 { fill: #ba3fff }
-.gradient_example-r87 { fill: #c42eff }
-.gradient_example-r88 { fill: #d727ff }
-.gradient_example-r89 { fill: #e81fff }
-.gradient_example-r90 { fill: #f713ff }
-.gradient_example-r91 { fill: #ff00f5 }
-.gradient_example-r92 { fill: #ff00e1 }
-.gradient_example-r93 { fill: #ff00cb }
-.gradient_example-r94 { fill: #ff00b1 }
-.gradient_example-r95 { fill: #ff009d }
-.gradient_example-r96 { fill: #ff008a }
-.gradient_example-r97 { fill: #ff0073 }
-.gradient_example-r98 { fill: #ff0055 }
-.gradient_example-r99 { fill: #ff0049 }
-.gradient_example-r100 { fill: #ff003c }
-.gradient_example-r101 { fill: #ff0028 }
-.gradient_example-r102 { fill: #ff1800 }
-.gradient_example-r103 { fill: #ff3300 }
-.gradient_example-r104 { fill: #ff4300 }
-.gradient_example-r105 { fill: #ff4f00 }
-.gradient_example-r106 { fill: #ff6100 }
-.gradient_example-r107 { fill: #ff7500 }
-.gradient_example-r108 { fill: #ff8600 }
-.gradient_example-r109 { fill: #ff9500 }
-.gradient_example-r110 { fill: #ffa400 }
-.gradient_example-r111 { fill: #ffb200 }
-.gradient_example-r112 { fill: #ffbf00 }
-.gradient_example-r113 { fill: #ffcc00 }
-.gradient_example-r114 { fill: #ffdb00 }
-.gradient_example-r115 { fill: #ffe800 }
-.gradient_example-r116 { fill: #fff500 }
-.gradient_example-r117 { fill: #faff00 }
-.gradient_example-r118 { fill: #e6ff00 }
-.gradient_example-r119 { fill: #d1ff00 }
+.gradient_example-r2 { fill: #00c4ff;font-weight: bold }
+.gradient_example-r3 { fill: #00b4ff;font-weight: bold }
+.gradient_example-r4 { fill: #00a2ff;font-weight: bold }
+.gradient_example-r5 { fill: #008dff;font-weight: bold }
+.gradient_example-r6 { fill: #2682ff;font-weight: bold }
+.gradient_example-r7 { fill: #3879ff;font-weight: bold }
+.gradient_example-r8 { fill: #4570ff;font-weight: bold }
+.gradient_example-r9 { fill: #5065ff;font-weight: bold }
+.gradient_example-r10 { fill: #6c65ff;font-weight: bold }
+.gradient_example-r11 { fill: #8265ff;font-weight: bold }
+.gradient_example-r12 { fill: #9465ff;font-weight: bold }
+.gradient_example-r13 { fill: #a263ff;font-weight: bold }
+.gradient_example-r14 { fill: #ab58ff;font-weight: bold }
+.gradient_example-r15 { fill: #b44bff;font-weight: bold }
+.gradient_example-r16 { fill: #bc3aff;font-weight: bold }
+.gradient_example-r17 { fill: #c92cff;font-weight: bold }
+.gradient_example-r18 { fill: #db26ff;font-weight: bold }
+.gradient_example-r19 { fill: #ec1dff;font-weight: bold }
+.gradient_example-r20 { fill: #fb0eff;font-weight: bold }
+.gradient_example-r21 { fill: #ff00f0;font-weight: bold }
+.gradient_example-r22 { fill: #ff00dc;font-weight: bold }
+.gradient_example-r23 { fill: #ff00c5;font-weight: bold }
+.gradient_example-r24 { fill: #ff00aa;font-weight: bold }
+.gradient_example-r25 { fill: #ff0098;font-weight: bold }
+.gradient_example-r26 { fill: #ff0084;font-weight: bold }
+.gradient_example-r27 { fill: #ff006c;font-weight: bold }
+.gradient_example-r28 { fill: #ff0052;font-weight: bold }
+.gradient_example-r29 { fill: #ff0046;font-weight: bold }
+.gradient_example-r30 { fill: #ff0038;font-weight: bold }
+.gradient_example-r31 { fill: #ff0022;font-weight: bold }
+.gradient_example-r32 { fill: #ff2200;font-weight: bold }
+.gradient_example-r33 { fill: #ff3800;font-weight: bold }
+.gradient_example-r34 { fill: #ff4600;font-weight: bold }
+.gradient_example-r35 { fill: #ff5200;font-weight: bold }
+.gradient_example-r36 { fill: #ff6700;font-weight: bold }
+.gradient_example-r37 { fill: #ff7a00;font-weight: bold }
+.gradient_example-r38 { fill: #ff8a00;font-weight: bold }
+.gradient_example-r39 { fill: #ff9900;font-weight: bold }
+.gradient_example-r40 { fill: #ffa800;font-weight: bold }
+.gradient_example-r41 { fill: #ffb600;font-weight: bold }
+.gradient_example-r42 { fill: #ffc300;font-weight: bold }
+.gradient_example-r43 { fill: #ffcf00;font-weight: bold }
+.gradient_example-r44 { fill: #ffde00;font-weight: bold }
+.gradient_example-r45 { fill: #ffec00;font-weight: bold }
+.gradient_example-r46 { fill: #fff800;font-weight: bold }
+.gradient_example-r47 { fill: #f5ff00;font-weight: bold }
+.gradient_example-r48 { fill: #e1ff00;font-weight: bold }
+.gradient_example-r49 { fill: #cbff00;font-weight: bold }
+.gradient_example-r50 { fill: #b1ff00;font-weight: bold }
+.gradient_example-r51 { fill: #99ff00;font-weight: bold }
+.gradient_example-r52 { fill: #7fff00;font-weight: bold }
+.gradient_example-r53 { fill: #5dff00;font-weight: bold }
+.gradient_example-r54 { fill: #00ff00;font-weight: bold }
+.gradient_example-r55 { fill: #00ff53;font-weight: bold }
+.gradient_example-r56 { fill: #00ff72;font-weight: bold }
+.gradient_example-r57 { fill: #00ff8a;font-weight: bold }
+.gradient_example-r58 { fill: #00ffa2;font-weight: bold }
+.gradient_example-r59 { fill: #00ffc2;font-weight: bold }
+.gradient_example-r60 { fill: #00ffdd;font-weight: bold }
+.gradient_example-r61 { fill: #00fff4;font-weight: bold }
+.gradient_example-r62 { fill: #00b4ff }
+.gradient_example-r63 { fill: #00a2ff }
+.gradient_example-r64 { fill: #008dff }
+.gradient_example-r65 { fill: #2682ff }
+.gradient_example-r66 { fill: #3879ff }
+.gradient_example-r67 { fill: #4570ff }
+.gradient_example-r68 { fill: #5065ff }
+.gradient_example-r69 { fill: #6c65ff }
+.gradient_example-r70 { fill: #8265ff }
+.gradient_example-r71 { fill: #9465ff }
+.gradient_example-r72 { fill: #a263ff }
+.gradient_example-r73 { fill: #ab58ff }
+.gradient_example-r74 { fill: #b44bff }
+.gradient_example-r75 { fill: #bc3aff }
+.gradient_example-r76 { fill: #c92cff }
+.gradient_example-r77 { fill: #db26ff }
+.gradient_example-r78 { fill: #ec1dff }
+.gradient_example-r79 { fill: #fb0eff }
+.gradient_example-r80 { fill: #ff00f0 }
+.gradient_example-r81 { fill: #ff00dc }
+.gradient_example-r82 { fill: #ff00c5 }
+.gradient_example-r83 { fill: #ff00aa }
+.gradient_example-r84 { fill: #ff0098 }
+.gradient_example-r85 { fill: #ff0084 }
+.gradient_example-r86 { fill: #ff006c }
+.gradient_example-r87 { fill: #ff0052 }
+.gradient_example-r88 { fill: #ff0046 }
+.gradient_example-r89 { fill: #ff0038 }
+.gradient_example-r90 { fill: #ff0022 }
+.gradient_example-r91 { fill: #ff2200 }
+.gradient_example-r92 { fill: #ff3800 }
+.gradient_example-r93 { fill: #ff4600 }
+.gradient_example-r94 { fill: #ff5200 }
+.gradient_example-r95 { fill: #ff6700 }
+.gradient_example-r96 { fill: #ff7a00 }
+.gradient_example-r97 { fill: #ff8a00 }
+.gradient_example-r98 { fill: #ff9900 }
+.gradient_example-r99 { fill: #ffa800 }
+.gradient_example-r100 { fill: #ffb600 }
+.gradient_example-r101 { fill: #ffc300 }
+.gradient_example-r102 { fill: #ffcf00 }
+.gradient_example-r103 { fill: #ffde00 }
+.gradient_example-r104 { fill: #ffec00 }
+.gradient_example-r105 { fill: #fff800 }
+.gradient_example-r106 { fill: #f5ff00 }
+.gradient_example-r107 { fill: #e1ff00 }
+.gradient_example-r108 { fill: #cbff00 }
+.gradient_example-r109 { fill: #b1ff00 }
+.gradient_example-r110 { fill: #99ff00 }
+.gradient_example-r111 { fill: #7fff00 }
+.gradient_example-r112 { fill: #5dff00 }
+.gradient_example-r113 { fill: #00ff00 }
+.gradient_example-r114 { fill: #00ff53 }
+.gradient_example-r115 { fill: #00ff72 }
+.gradient_example-r116 { fill: #00ff8a }
+.gradient_example-r117 { fill: #00ffa2 }
+.gradient_example-r118 { fill: #00ffc2 }
+.gradient_example-r119 { fill: #00ffdd }
     </style>
 
     <defs>

@@ -514,7 +514,7 @@ pre {
 
 .red {
     color: rgb(255, 0, 0);
-    
+
 }
 
 .deeppink {
@@ -525,7 +525,9 @@ pre {
     color: rgb(255, 0, 175)
 }
 
-
+.rebeccapurple {
+    color: rgb(102, 51, 153);
+}
 
 #spacer {
     padding: 30px;
@@ -690,6 +692,13 @@ pre {
     background: #5f00ff;
     padding: 5px;
     border-radius: 5px;
+}
+
+.rebeccapurple {
+    color: #ffffff;
+    background: rgb(102, 51, 153);
+    padding: 5px;
+    border-radius: 10px;
 }
 
 .class-type {

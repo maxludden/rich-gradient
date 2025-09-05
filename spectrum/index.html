@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../text/">
+        <link rel="prev" href="../rule/">
       
       
-        <link rel="next" href="../rule/">
+        <link rel="next" href="../text_ref/">
       
       
       <link rel="icon" href="../img/rich-gradient-icon.svg">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Gradient - rich-gradient</title>
+        <title>Spectrum - rich-gradient</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gradient" class="md-skip">
+        <a href="#spectrum" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Gradient
+              Spectrum
             
           </span>
         </div>
@@ -349,19 +349,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../gradient/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -371,7 +362,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -403,10 +393,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../spectrum/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Spectrum
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -416,6 +427,35 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -621,49 +661,22 @@
   
 
 
-<h1 id="gradient">Gradient<a class="headerlink" href="#gradient" title="Permanent link">&para;</a></h1>
-<p>The <code>Gradient</code> class accepts any rich.console.ConsoleRenderable and
-prints it to a rich.console.Console instance in gradient color.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">panel</span> <span class="o">=</span> <span class="n">Panel</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="s2">&quot;If you are looking for a way to display more than </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="s2">a single line of text with a gradient, </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="s2">you can use the `Gradient` class to </span><span class="se">\</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="s2">create a gradient that can be applied to </span><span class="se">\</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="s2">multiple lines of text or any rich renderable object.&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Gradient Example&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">title_align</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">width</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Gradient</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">rainbow</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<h1 id="spectrum">Spectrum<a class="headerlink" href="#spectrum" title="Permanent link">&para;</a></h1>
+<p><code>rich_gradient.spectrum.Spectrum</code> provides a convenient way to generate and preview a palette of colors used throughout rich-gradient:</p>
+<ul>
+<li>Generates a list of Rich <code>Color</code> objects spanning the spectrum.</li>
+<li>Supports <code>hues</code> count, optional reversal, and a <code>seed</code> for deterministic order.</li>
+<li>Exposes <code>.colors</code>, <code>.triplets</code>, <code>.styles</code>, <code>.hex</code>, and <code>.names</code>.</li>
+<li>Renders as a Rich table when printed.</li>
+</ul>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich_gradient.spectrum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spectrum</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">(</span><span class="n">hues</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
 </span></code></pre></div>
-<!--
-If the image is not visible, try using the Markdown image syntax inside the div and add a style attribute for width. Some Markdown renderers (like MkDocs Material) do not support HTML <img> tags or style attributes directly. This approach works in most documentation tools.
--->
-<p><img alt="gradient_example" src="../img/v0.3.4/gradient_example.svg" /></p>
-<p>Or if you would like an animated gradient:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">console</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">panel</span> <span class="o">=</span> <span class="n">Panel</span><span class="p">(</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;This example demonstrates an animated gradient that shifts colors over time. </span><span class="se">\</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s2">You can use the `Gradient` class to create a gradient that can be applied to any </span><span class="se">\</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s2">rich renderable object, such as text or panels. The animation is achieved by </span><span class="se">\</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s2">incrementing the phase of the gradient.&quot;</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Animated Gradient&quot;</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">gradient</span> <span class="o">=</span> <span class="n">Gradient</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">rainbow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">animated</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">live_renderable</span> <span class="o">=</span> <span class="n">gradient</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Setup Live to refresh at ~30 FPS</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">live_renderable</span><span class="p">,</span> <span class="n">console</span><span class="o">=</span><span class="n">console</span><span class="p">,</span> <span class="n">refresh_per_second</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">):</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.03</span><span class="p">)</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            <span class="c1"># Increment phase to animate gradient shift</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            <span class="n">gradient</span><span class="o">.</span><span class="n">phase</span> <span class="o">+=</span> <span class="mf">0.2</span>
-</span></code></pre></div>
-<p><img alt="animated gradient" src="../img/animated_gradient.gif" /></p>
+<p><img alt="Spectrum Example" src="../img/v0.3.4/spectrum_example.svg" /></p>
 
 
 
