@@ -11,10 +11,13 @@ nav:
         - Text: "text.md"
         - Gradient: "gradient.md"
         - Rule: "rule.md"
+        - Spectrum: "spectrum.md"
     - References:
         - Text Reference: "text_ref.md"
         - Gradient Reference: "gradient_ref.md"
         - Rule Reference: "rule_ref.md"
+        - Spectrum Reference: "spectrum_ref.md"
+        - Theme Reference: "theme_ref.md"
     - Changelog: "CHANGELOG.md"
 
 theme:

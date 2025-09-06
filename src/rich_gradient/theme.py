@@ -12,6 +12,7 @@ from rich_gradient.default_styles import DEFAULT_STYLES, styles_table
 
 _ColorTuple = Tuple[int, int, int]
 
+__all__ = ["GRADIENT_TERMINAL_THEME", "GradientTheme"]
 
 class GradientTheme(Theme):
     """A container for style information used by 'rich.console.Console'.

@@ -22,11 +22,16 @@ If you pass `rich_gradient.text.Text` a string, it will print the string to the 
   </ul>
 </blockquote>
 
+- `bgcolors` (`List[ColorType]`) - A list of strings that can be parsed by `rich.color.Color to use as the color stops of the background of the style. If a single color is used - it is used for the entire background.
 -  `hues`: (`int`) - The number of color stops a gradient should use
 -  `rainbow`: (`bool`) - Whether to create a gradient that spans the entire spectrum. Defaults to `False`
 -  `markup`: (`bool`) - Whether to respect the inputs existing styles. Defaults  to `True`
 
 ---
+
+## Basic Usage of Text
+
+![basic text usage](img/v0.3.4/gradient_text_basic_usage.svg)
 
 ## Gradient Text with Specific Colors
 
@@ -36,7 +41,7 @@ To have more control over the gradient that is printed, you can pass the `colors
 -  `rich.color.Color` instances or names,
 -  any string or style that `rich.color.Color` can parse.
 
-![specific colors](img/specific_color_gradient.svg)
+![specific colors](img/v0.3.4/gradient_text_custom_colors.svg)
 
 ---
 
@@ -44,7 +49,7 @@ To have more control over the gradient that is printed, you can pass the `colors
 
 If four colors isn't enough, you can use the 'rainbow' parameter to generate a rainbow gradient that spans the entire spectrum of colors randomly.
 
-![Rainbow Gradient](img/rainbow_gradient_text.svg)
+![Rainbow Gradient](img/v0.3.4/gradient_text_rainbow_example.svg)
 <p style="text-align:right;margin-top: 0px;padding-top:0px;">*The rainbow gradient is generated randomly each time the code is run.</p>
 
 ---
@@ -54,4 +59,13 @@ If four colors isn't enough, you can use the 'rainbow' parameter to generate a r
 Since `rich_gradient.text.Text` is a subclass of `rich.text.Text`, you can still use all the same methods and parameters as you would.
 
 
-![Still Text](img/still_text.svg)
+![Still Text](img/v0.3.4/built_on_rich_text.svg)
+
+
+## `rich_gradient.text.Text → rich.text.Text`
+
+As the rendering of `rich_gradient.text.Text` and `rich.text.Text` are identical,
+`rich_gradient.text.Text` has a `.as_rich()` method to convert an instance into a styled
+`rich.text.text`.
+
+![Convert back to rich.text.Text](img/v0.3.4/return_gradient_text_as_rich_text.svg)

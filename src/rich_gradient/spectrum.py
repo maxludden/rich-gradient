@@ -1,21 +1,53 @@
+"""rich_gradient.spectrum
+
+Module providing a small color palette helper built on Rich.
+
+This module exposes:
+
+- SPECTRUM_COLORS: a mapping of hex color strings to human-friendly names.
+- Spectrum: a convenience class that builds lists of Rich Color, Style,
+    and ColorTriplet objects drawn from the spectrum. It is iterable and
+    implements __rich__ to render a preview table suitable for
+    `rich.console.Console.print`.py
+
+Notes on determinism and `seed`:
+- The `Spectrum` constructor accepts an optional `seed` argument. When
+    provided it calls the global `random.seed(seed)` to make the initial
+    random offset deterministic. That means the same `seed` + same
+    parameters will yield the same palette order, but it also affects the
+    global random state.
+- If you need determinism without altering global random state, use a
+    dedicated `random.Random` instance and adapt the implementation.
+
+Usage example:
+
+    from rich.console import Console
+    from rich_gradient.spectrum import Spectrum
+
+    console = Console()
+    spectrum = Spectrum(hues=8, seed=42)
+    console.print(spectrum)
+
+"""
+
+__all__ = ["SPECTRUM_COLORS", "Spectrum"]
+
 from itertools import cycle
 from random import randint
 from random import seed as random_seed
 from typing import Dict, List, Optional
 
-from rich import get_console
 from rich.color import Color
 from rich.color_triplet import ColorTriplet
-from rich.console import Console
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
-from rich.traceback import install as tr_install
+from rich_color_ext import install
 
-console: Console = get_console()
-tr_install(console=console)
+from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
+install()
 
-SPECTRUM_NAMES: Dict[str, str] = {
+SPECTRUM_COLORS: Dict[str, str] = {
     "#FF0000": "red",  # 1
     "#FF5500": "tomato",  # 2
     "#FF9900": "orange",  # 3
@@ -50,13 +82,23 @@ class Spectrum:
     def __init__(
         self, hues: int = 17, invert: bool = False, seed: Optional[int] = None
     ) -> None:
-        """Initialize the Spectrum with a specified number of hues and optional inversion and seed."""
+        """Initialize the Spectrum with a specified number of hues and optional inversion and seed.
+        Args:
+            hues (int): Number of colors to generate. Defaults to 17.
+            invert (bool, optional): If True, reverse the generated list. Defaults to False.
+            seed (Optional[int], optional): If provided, sets the random seed for deterministic color order.
+        Raises:
+            ValueError: If hues < 2.
+            ValueError: If seed is not None and not an integer.
+        Returns:
+            None
+        """
         if hues < 2:
             raise ValueError("hues must be at least 2")
         if seed is not None:
             random_seed(seed)
         # Generate a random cycle of colors from the spectrum
-        colors: List[Color] = [Color.parse(color) for color in SPECTRUM_NAMES.keys()]
+        colors: List[Color] = [Color.parse(color) for color in SPECTRUM_COLORS.keys()]
         color_cycle = cycle(colors)
         # Skip a random number of colors to add variability
         for _ in range(randint(1, 18)):
@@ -67,7 +109,7 @@ class Spectrum:
         if invert:
             self._colors.reverse()
         self._names = [
-            SPECTRUM_NAMES[color.get_truecolor().hex.upper()] for color in self._colors
+            SPECTRUM_COLORS[color.get_truecolor().hex.upper()] for color in self._colors
         ]
         self._styles = [
             Style(color=color, bold=False, italic=False, underline=False)
@@ -147,22 +189,22 @@ class Spectrum:
                 name.capitalize(),
                 Style(color=hex_code, bold=True),
                 no_wrap=True,
-                justify="center",
+                justify="left",
             )
             hex_text = Text(
                 f" {hex_code.upper()} ",
-                Style(bgcolor=hex_code, bold=True),
+                Style(bgcolor=hex_code, color="#000000", bold=True),
                 no_wrap=True,
                 justify="center",
             )
             rgb_text = Text.assemble(*[
                 Text("rgb", style=f"bold {hex_code}"),
                 Text("(", style="i white"),
-                Text(f"{red:>3}", style="#f00"),
+                Text(f"{red:>3}", style="#FF0000"),
                 Text(",", style="i #555"),
-                Text(f"{green:>3}", style="#0f0"),
+                Text(f"{green:>3}", style="#00FF00"),
                 Text(",", style="i #555"),
-                Text(f"{blue:>3}", style="#09f"),
+                Text(f"{blue:>3}", style="#00AAFF"),
                 Text(")", style="i white"),
             ])
             sample = Text("█" * 10, style=Style(color=hex_code, bold=True))
@@ -170,18 +212,31 @@ class Spectrum:
         return table
 
 
-def example():
+def example(save: bool = False) -> None:
     """Generate a rich table with all of the colors in the Spectrum."""
+    from rich.console import Console
+
+    console = Console(width=80)
+
     console.clear()
     console.line(2)
     console.print(
-        f"Number of colors in the spectrum: [bold magenta]{len(SPECTRUM_NAMES)}[/]"
+        f"Number of colors in the spectrum: [bold #FF00FF]{len(SPECTRUM_COLORS)}[/]"
     )
     console.line(2)
-    spectrum = Spectrum()
-    console.print(spectrum)
+    console = Console(record=True, width=64) if save else Console(width=80)
+    spectrum = Spectrum(seed=1)
+    console.print(spectrum, justify="center")
     console.line(2)
+
+    if save:
+        console.save_svg(
+            "docs/img/v0.3.4/spectrum_example.svg",
+            title="rich-gradient",
+            unique_id="spectrum_example",
+            theme=GRADIENT_TERMINAL_THEME
+        )
 
 
 if __name__ == "__main__":
-    example()
+    example(True)

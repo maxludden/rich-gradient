@@ -22,7 +22,7 @@ console.print(Gradient(panel, rainbow=True), justify="center")
 <!--
 If the image is not visible, try using the Markdown image syntax inside the div and add a style attribute for width. Some Markdown renderers (like MkDocs Material) do not support HTML <img> tags or style attributes directly. This approach works in most documentation tools.
 -->
-![gradient_example](img/gradient_example.svg)
+![gradient_example](img/v0.3.4/gradient_example.svg)
 
 Or if you would like an animated gradient:
 

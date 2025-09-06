@@ -1,0 +1,354 @@
+<svg class="rich-terminal" viewBox="0 0 799 757.5999999999999" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .text_example_6-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .text_example_6-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .text_example_6-r1 { fill: #ffffff }
+.text_example_6-r2 { fill: #00ccff;font-weight: bold }
+.text_example_6-r3 { fill: #00c3ff;font-weight: bold }
+.text_example_6-r4 { fill: #00bbff;font-weight: bold }
+.text_example_6-r5 { fill: #00b2ff;font-weight: bold }
+.text_example_6-r6 { fill: #00aaff;font-weight: bold }
+.text_example_6-r7 { fill: #00a1ff;font-weight: bold }
+.text_example_6-r8 { fill: #0099ff;font-weight: bold }
+.text_example_6-r9 { fill: #0090ff;font-weight: bold }
+.text_example_6-r10 { fill: #0088ff;font-weight: bold }
+.text_example_6-r11 { fill: #0a83ff;font-weight: bold }
+.text_example_6-r12 { fill: #147fff;font-weight: bold }
+.text_example_6-r13 { fill: #1e7bff;font-weight: bold }
+.text_example_6-r14 { fill: #2877ff;font-weight: bold }
+.text_example_6-r15 { fill: #3272ff;font-weight: bold }
+.text_example_6-r16 { fill: #3c6eff;font-weight: bold }
+.text_example_6-r17 { fill: #466aff;font-weight: bold }
+.text_example_6-r18 { fill: #5066ff;font-weight: bold }
+.text_example_6-r19 { fill: #5a66ff;font-weight: bold }
+.text_example_6-r20 { fill: #6466ff;font-weight: bold }
+.text_example_6-r21 { fill: #6e66ff;font-weight: bold }
+.text_example_6-r22 { fill: #7866ff;font-weight: bold }
+.text_example_6-r23 { fill: #8266ff;font-weight: bold }
+.text_example_6-r24 { fill: #8c66ff;font-weight: bold }
+.text_example_6-r25 { fill: #9666ff;font-weight: bold }
+.text_example_6-r26 { fill: #a066ff;font-weight: bold }
+.text_example_6-r27 { fill: #a45fff;font-weight: bold }
+.text_example_6-r28 { fill: #a858ff;font-weight: bold }
+.text_example_6-r29 { fill: #ac51ff;font-weight: bold }
+.text_example_6-r30 { fill: #b04bff;font-weight: bold }
+.text_example_6-r31 { fill: #b444ff;font-weight: bold }
+.text_example_6-r32 { fill: #b83dff;font-weight: bold }
+.text_example_6-r33 { fill: #bc36ff;font-weight: bold }
+.text_example_6-r34 { fill: #c030ff;font-weight: bold }
+.text_example_6-r35 { fill: #00ccff }
+.text_example_6-r36 { fill: #00caff }
+.text_example_6-r37 { fill: #00c8ff }
+.text_example_6-r38 { fill: #00c6ff }
+.text_example_6-r39 { fill: #00c4ff }
+.text_example_6-r40 { fill: #00c2ff }
+.text_example_6-r41 { fill: #00c0ff }
+.text_example_6-r42 { fill: #00beff }
+.text_example_6-r43 { fill: #00bdff }
+.text_example_6-r44 { fill: #00bbff }
+.text_example_6-r45 { fill: #00b9ff }
+.text_example_6-r46 { fill: #00b7ff }
+.text_example_6-r47 { fill: #00b5ff }
+.text_example_6-r48 { fill: #00b3ff }
+.text_example_6-r49 { fill: #00b1ff }
+.text_example_6-r50 { fill: #00b0ff }
+.text_example_6-r51 { fill: #00aeff }
+.text_example_6-r52 { fill: #00acff }
+.text_example_6-r53 { fill: #00aaff }
+.text_example_6-r54 { fill: #00a8ff }
+.text_example_6-r55 { fill: #00a6ff }
+.text_example_6-r56 { fill: #00a4ff }
+.text_example_6-r57 { fill: #00a3ff }
+.text_example_6-r58 { fill: #00a1ff }
+.text_example_6-r59 { fill: #009fff }
+.text_example_6-r60 { fill: #009dff }
+.text_example_6-r61 { fill: #009bff }
+.text_example_6-r62 { fill: #0099ff }
+.text_example_6-r63 { fill: #0097ff }
+.text_example_6-r64 { fill: #0095ff }
+.text_example_6-r65 { fill: #0094ff }
+.text_example_6-r66 { fill: #0092ff }
+.text_example_6-r67 { fill: #0090ff }
+.text_example_6-r68 { fill: #008eff }
+.text_example_6-r69 { fill: #008cff }
+.text_example_6-r70 { fill: #008aff }
+.text_example_6-r71 { fill: #0088ff }
+.text_example_6-r72 { fill: #0187ff }
+.text_example_6-r73 { fill: #0386ff }
+.text_example_6-r74 { fill: #0585ff }
+.text_example_6-r75 { fill: #0784ff }
+.text_example_6-r76 { fill: #0983ff }
+.text_example_6-r77 { fill: #0c82ff }
+.text_example_6-r78 { fill: #0e81ff }
+.text_example_6-r79 { fill: #1081ff }
+.text_example_6-r80 { fill: #1280ff }
+.text_example_6-r81 { fill: #147fff }
+.text_example_6-r82 { fill: #177eff }
+.text_example_6-r83 { fill: #197dff }
+.text_example_6-r84 { fill: #1b7cff }
+.text_example_6-r85 { fill: #1d7bff }
+.text_example_6-r86 { fill: #1f7aff }
+.text_example_6-r87 { fill: #2179ff }
+.text_example_6-r88 { fill: #2478ff }
+.text_example_6-r89 { fill: #2876ff }
+.text_example_6-r90 { fill: #2a75ff }
+.text_example_6-r91 { fill: #2c74ff }
+.text_example_6-r92 { fill: #2f73ff }
+.text_example_6-r93 { fill: #3173ff }
+.text_example_6-r94 { fill: #3372ff }
+.text_example_6-r95 { fill: #3571ff }
+.text_example_6-r96 { fill: #3770ff }
+.text_example_6-r97 { fill: #3a6fff }
+.text_example_6-r98 { fill: #3c6eff }
+.text_example_6-r99 { fill: #3e6dff }
+.text_example_6-r100 { fill: #406cff }
+.text_example_6-r101 { fill: #426bff }
+.text_example_6-r102 { fill: #456aff }
+.text_example_6-r103 { fill: #4769ff }
+.text_example_6-r104 { fill: #4968ff }
+.text_example_6-r105 { fill: #4b67ff }
+.text_example_6-r106 { fill: #4d66ff }
+.text_example_6-r107 { fill: #5066ff }
+.text_example_6-r108 { fill: #5266ff }
+.text_example_6-r109 { fill: #5466ff }
+.text_example_6-r110 { fill: #5666ff }
+.text_example_6-r111 { fill: #5866ff }
+.text_example_6-r112 { fill: #5a66ff }
+.text_example_6-r113 { fill: #5d66ff }
+.text_example_6-r114 { fill: #5f66ff }
+.text_example_6-r115 { fill: #6166ff }
+.text_example_6-r116 { fill: #6366ff }
+.text_example_6-r117 { fill: #6566ff }
+.text_example_6-r118 { fill: #6866ff }
+.text_example_6-r119 { fill: #6a66ff }
+.text_example_6-r120 { fill: #6c66ff }
+.text_example_6-r121 { fill: #6e66ff }
+.text_example_6-r122 { fill: #7066ff }
+.text_example_6-r123 { fill: #7366ff }
+.text_example_6-r124 { fill: #7566ff }
+.text_example_6-r125 { fill: #7766ff }
+.text_example_6-r126 { fill: #7966ff }
+.text_example_6-r127 { fill: #7b66ff }
+.text_example_6-r128 { fill: #7e66ff }
+.text_example_6-r129 { fill: #8066ff }
+.text_example_6-r130 { fill: #8266ff }
+.text_example_6-r131 { fill: #8466ff }
+.text_example_6-r132 { fill: #8666ff }
+.text_example_6-r133 { fill: #8866ff }
+.text_example_6-r134 { fill: #8b66ff }
+.text_example_6-r135 { fill: #8d66ff }
+.text_example_6-r136 { fill: #8f66ff }
+.text_example_6-r137 { fill: #9666ff }
+.text_example_6-r138 { fill: #9866ff }
+.text_example_6-r139 { fill: #9a66ff }
+.text_example_6-r140 { fill: #9c66ff }
+.text_example_6-r141 { fill: #9e66ff }
+.text_example_6-r142 { fill: #a065ff }
+.text_example_6-r143 { fill: #a163ff }
+.text_example_6-r144 { fill: #a262ff }
+.text_example_6-r145 { fill: #a360ff }
+.text_example_6-r146 { fill: #a35fff }
+.text_example_6-r147 { fill: #a45dff }
+.text_example_6-r148 { fill: #a55cff }
+.text_example_6-r149 { fill: #a65aff }
+.text_example_6-r150 { fill: #a759ff }
+.text_example_6-r151 { fill: #a857ff }
+.text_example_6-r152 { fill: #a956ff }
+.text_example_6-r153 { fill: #aa54ff }
+.text_example_6-r154 { fill: #aa53ff }
+.text_example_6-r155 { fill: #ab52ff }
+.text_example_6-r156 { fill: #ac50ff }
+.text_example_6-r157 { fill: #ad4fff }
+.text_example_6-r158 { fill: #ae4dff }
+.text_example_6-r159 { fill: #af4cff }
+.text_example_6-r160 { fill: #b04aff }
+.text_example_6-r161 { fill: #b147ff }
+.text_example_6-r162 { fill: #b246ff }
+.text_example_6-r163 { fill: #b344ff }
+.text_example_6-r164 { fill: #b443ff }
+.text_example_6-r165 { fill: #b541ff }
+.text_example_6-r166 { fill: #b640ff }
+.text_example_6-r167 { fill: #b73eff }
+.text_example_6-r168 { fill: #b83dff }
+.text_example_6-r169 { fill: #b83bff }
+.text_example_6-r170 { fill: #b93aff }
+.text_example_6-r171 { fill: #ba38ff }
+.text_example_6-r172 { fill: #bb37ff }
+.text_example_6-r173 { fill: #bc35ff }
+.text_example_6-r174 { fill: #bd34ff }
+.text_example_6-r175 { fill: #be32ff }
+.text_example_6-r176 { fill: #bf31ff }
+.text_example_6-r177 { fill: #c030ff }
+.text_example_6-r178 { fill: #ff4689 }
+.text_example_6-r179 { fill: #f8f8f2 }
+.text_example_6-r180 { fill: #66d9ef }
+.text_example_6-r181 { fill: #e6db74 }
+.text_example_6-r182 { fill: #ed007e }
+.text_example_6-r183 { fill: #a6e22e }
+.text_example_6-r184 { fill: #949491;font-style: italic; }
+.text_example_6-r185 { fill: #8be9fd;font-weight: bold }
+    </style>
+
+    <defs>
+    <clipPath id="text_example_6-clip-terminal">
+      <rect x="0" y="0" width="779.8" height="706.5999999999999" />
+    </clipPath>
+    <clipPath id="text_example_6-line-0">
+    <rect x="0" y="1.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-1">
+    <rect x="0" y="25.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-2">
+    <rect x="0" y="50.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-3">
+    <rect x="0" y="74.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-4">
+    <rect x="0" y="99.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-5">
+    <rect x="0" y="123.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-6">
+    <rect x="0" y="147.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-7">
+    <rect x="0" y="172.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-8">
+    <rect x="0" y="196.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-9">
+    <rect x="0" y="221.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-10">
+    <rect x="0" y="245.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-11">
+    <rect x="0" y="269.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-12">
+    <rect x="0" y="294.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-13">
+    <rect x="0" y="318.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-14">
+    <rect x="0" y="343.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-15">
+    <rect x="0" y="367.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-16">
+    <rect x="0" y="391.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-17">
+    <rect x="0" y="416.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-18">
+    <rect x="0" y="440.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-19">
+    <rect x="0" y="465.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-20">
+    <rect x="0" y="489.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-21">
+    <rect x="0" y="513.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-22">
+    <rect x="0" y="538.3" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-23">
+    <rect x="0" y="562.7" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-24">
+    <rect x="0" y="587.1" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-25">
+    <rect x="0" y="611.5" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-26">
+    <rect x="0" y="635.9" width="780.8" height="24.65"/>
+            </clipPath>
+<clipPath id="text_example_6-line-27">
+    <rect x="0" y="660.3" width="780.8" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#000000" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="797" height="755.6" rx="8"/><text class="text_example_6-title" fill="#ffffff" text-anchor="middle" x="398" y="27">rich-gradient</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#text_example_6-clip-terminal)">
+    <rect fill="#000000" x="61" y="221.1" width="658.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="245.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="134.2" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="146.4" y="245.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="195.2" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="207.4" y="245.5" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="292.8" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="305" y="245.5" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="390.4" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="402.6" y="245.5" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="475.8" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="488" y="245.5" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="573.4" y="245.5" width="122" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="269.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="134.2" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="146.4" y="269.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="195.2" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="207.4" y="269.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="256.2" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="268.4" y="269.9" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="341.6" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="353.8" y="269.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="402.6" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="414.8" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="439.2" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="451.4" y="269.9" width="97.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="549" y="269.9" width="146.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="294.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="294.3" width="610" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="294.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="318.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="318.7" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="134.2" y="318.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="146.4" y="318.7" width="158.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="305" y="318.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="317.2" y="318.7" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="366" y="318.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="378.2" y="318.7" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="427" y="318.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="439.2" y="318.7" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="512.4" y="318.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="524.6" y="318.7" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="573.4" y="318.7" width="122" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="318.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="343.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="343.1" width="610" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="343.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="367.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="367.5" width="158.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="244" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="256.2" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="268.4" y="367.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="317.2" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="329.4" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="341.6" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="353.8" y="367.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="402.6" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="414.8" y="367.5" width="280.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="367.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="391.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="391.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="134.2" y="391.9" width="549" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="683.2" y="391.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="391.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="416.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="416.3" width="329.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="414.8" y="416.3" width="280.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="416.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="440.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="440.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="97.6" y="440.7" width="597.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="440.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="465.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="465.1" width="610" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="465.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="489.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="489.5" width="109.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="195.2" y="489.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="207.4" y="489.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="219.6" y="489.5" width="97.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="317.2" y="489.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="329.4" y="489.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="341.6" y="489.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="353.8" y="489.5" width="158.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="512.4" y="489.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="524.6" y="489.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="573.4" y="489.5" width="122" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="489.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="513.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="513.9" width="610" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="513.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="538.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="538.3" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="134.2" y="538.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="146.4" y="538.3" width="109.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="256.2" y="538.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="268.4" y="538.3" width="427" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="538.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="562.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="562.7" width="610" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="562.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="587.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="587.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="109.8" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="122" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="134.2" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="146.4" y="587.1" width="61" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="207.4" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="219.6" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="231.8" y="587.1" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="280.6" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="292.8" y="587.1" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="341.6" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="353.8" y="587.1" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="402.6" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="414.8" y="587.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="427" y="587.1" width="268.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="587.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="611.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="85.4" y="611.5" width="610" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="695.4" y="611.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#000000" x="61" y="635.9" width="658.8" height="24.65" shape-rendering="crispEdges"/>
+    <g class="text_example_6-matrix">
+    <text class="text_example_6-r1" x="0" y="20" textLength="24.4" clip-path="url(#text_example_6-line-0)">╭─</text><text class="text_example_6-r1" x="24.4" y="20" textLength="158.6" clip-path="url(#text_example_6-line-0)">────────────&#160;</text><text class="text_example_6-r2" x="183" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">R</text><text class="text_example_6-r3" x="195.2" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">e</text><text class="text_example_6-r4" x="207.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">t</text><text class="text_example_6-r5" x="219.6" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">u</text><text class="text_example_6-r6" x="231.8" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">r</text><text class="text_example_6-r7" x="244" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">n</text><text class="text_example_6-r9" x="268.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">T</text><text class="text_example_6-r10" x="280.6" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">e</text><text class="text_example_6-r11" x="292.8" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">x</text><text class="text_example_6-r12" x="305" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">t</text><text class="text_example_6-r14" x="329.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">a</text><text class="text_example_6-r15" x="341.6" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">s</text><text class="text_example_6-r17" x="366" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">R</text><text class="text_example_6-r18" x="378.2" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">i</text><text class="text_example_6-r19" x="390.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">c</text><text class="text_example_6-r20" x="402.6" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">h</text><text class="text_example_6-r22" x="427" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">T</text><text class="text_example_6-r23" x="439.2" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">e</text><text class="text_example_6-r24" x="451.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">x</text><text class="text_example_6-r25" x="463.6" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">t</text><text class="text_example_6-r27" x="488" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">I</text><text class="text_example_6-r28" x="500.2" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">n</text><text class="text_example_6-r29" x="512.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">s</text><text class="text_example_6-r30" x="524.6" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">t</text><text class="text_example_6-r31" x="536.8" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">a</text><text class="text_example_6-r32" x="549" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">n</text><text class="text_example_6-r33" x="561.2" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">c</text><text class="text_example_6-r34" x="573.4" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">e</text><text class="text_example_6-r1" x="585.6" y="20" textLength="170.8" clip-path="url(#text_example_6-line-0)">&#160;─────────────</text><text class="text_example_6-r1" x="756.4" y="20" textLength="24.4" clip-path="url(#text_example_6-line-0)">─╮</text><text class="text_example_6-r1" x="780.8" y="20" textLength="12.2" clip-path="url(#text_example_6-line-0)">
+</text><text class="text_example_6-r1" x="0" y="44.4" textLength="12.2" clip-path="url(#text_example_6-line-1)">│</text><text class="text_example_6-r1" x="768.6" y="44.4" textLength="12.2" clip-path="url(#text_example_6-line-1)">│</text><text class="text_example_6-r1" x="780.8" y="44.4" textLength="12.2" clip-path="url(#text_example_6-line-1)">
+</text><text class="text_example_6-r1" x="0" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">│</text><text class="text_example_6-r35" x="61" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">I</text><text class="text_example_6-r36" x="73.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">f</text><text class="text_example_6-r38" x="97.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">y</text><text class="text_example_6-r39" x="109.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">o</text><text class="text_example_6-r40" x="122" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">u</text><text class="text_example_6-r41" x="134.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">&#x27;</text><text class="text_example_6-r42" x="146.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">d</text><text class="text_example_6-r44" x="170.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">l</text><text class="text_example_6-r45" x="183" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">i</text><text class="text_example_6-r46" x="195.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">k</text><text class="text_example_6-r47" x="207.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">e</text><text class="text_example_6-r49" x="231.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">t</text><text class="text_example_6-r50" x="244" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">o</text><text class="text_example_6-r52" x="268.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">r</text><text class="text_example_6-r53" x="280.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">e</text><text class="text_example_6-r54" x="292.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">t</text><text class="text_example_6-r55" x="305" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">u</text><text class="text_example_6-r56" x="317.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">r</text><text class="text_example_6-r57" x="329.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">n</text><text class="text_example_6-r59" x="353.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">a</text><text class="text_example_6-r61" x="378.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">r</text><text class="text_example_6-r62" x="390.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">i</text><text class="text_example_6-r63" x="402.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">c</text><text class="text_example_6-r64" x="414.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">h</text><text class="text_example_6-r65" x="427" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">_</text><text class="text_example_6-r66" x="439.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">g</text><text class="text_example_6-r67" x="451.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">r</text><text class="text_example_6-r68" x="463.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">a</text><text class="text_example_6-r69" x="475.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">d</text><text class="text_example_6-r70" x="488" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">i</text><text class="text_example_6-r71" x="500.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">e</text><text class="text_example_6-r72" x="512.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">n</text><text class="text_example_6-r73" x="524.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">t</text><text class="text_example_6-r74" x="536.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">.</text><text class="text_example_6-r75" x="549" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">t</text><text class="text_example_6-r76" x="561.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">e</text><text class="text_example_6-r77" x="573.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">x</text><text class="text_example_6-r78" x="585.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">t</text><text class="text_example_6-r79" x="597.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">.</text><text class="text_example_6-r80" x="610" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">T</text><text class="text_example_6-r81" x="622.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">e</text><text class="text_example_6-r82" x="634.4" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">x</text><text class="text_example_6-r83" x="646.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">t</text><text class="text_example_6-r85" x="671" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">a</text><text class="text_example_6-r86" x="683.2" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">s</text><text class="text_example_6-r88" x="707.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">a</text><text class="text_example_6-r1" x="768.6" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">│</text><text class="text_example_6-r1" x="780.8" y="68.8" textLength="12.2" clip-path="url(#text_example_6-line-2)">
+</text><text class="text_example_6-r1" x="0" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">│</text><text class="text_example_6-r89" x="61" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">r</text><text class="text_example_6-r90" x="73.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">i</text><text class="text_example_6-r91" x="85.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">c</text><text class="text_example_6-r92" x="97.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">h</text><text class="text_example_6-r93" x="109.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">.</text><text class="text_example_6-r94" x="122" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">t</text><text class="text_example_6-r95" x="134.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">e</text><text class="text_example_6-r96" x="146.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">x</text><text class="text_example_6-r97" x="158.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">t</text><text class="text_example_6-r98" x="170.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">.</text><text class="text_example_6-r99" x="183" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">T</text><text class="text_example_6-r100" x="195.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">e</text><text class="text_example_6-r101" x="207.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">x</text><text class="text_example_6-r102" x="219.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">t</text><text class="text_example_6-r104" x="244" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">i</text><text class="text_example_6-r105" x="256.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">n</text><text class="text_example_6-r106" x="268.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">s</text><text class="text_example_6-r107" x="280.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">t</text><text class="text_example_6-r108" x="292.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">a</text><text class="text_example_6-r109" x="305" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">n</text><text class="text_example_6-r110" x="317.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">c</text><text class="text_example_6-r111" x="329.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">e</text><text class="text_example_6-r112" x="341.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">,</text><text class="text_example_6-r114" x="366" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">y</text><text class="text_example_6-r115" x="378.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">o</text><text class="text_example_6-r116" x="390.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">u</text><text class="text_example_6-r118" x="414.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">c</text><text class="text_example_6-r119" x="427" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">a</text><text class="text_example_6-r120" x="439.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">n</text><text class="text_example_6-r122" x="463.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">d</text><text class="text_example_6-r123" x="475.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">o</text><text class="text_example_6-r125" x="500.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">s</text><text class="text_example_6-r126" x="512.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">o</text><text class="text_example_6-r128" x="536.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">w</text><text class="text_example_6-r129" x="549" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">i</text><text class="text_example_6-r130" x="561.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">t</text><text class="text_example_6-r131" x="573.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">h</text><text class="text_example_6-r133" x="597.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">t</text><text class="text_example_6-r134" x="610" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">h</text><text class="text_example_6-r135" x="622.2" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">e</text><text class="text_example_6-r136" x="634.4" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">:</text><text class="text_example_6-r1" x="768.6" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">│</text><text class="text_example_6-r1" x="780.8" y="93.2" textLength="12.2" clip-path="url(#text_example_6-line-3)">
+</text><text class="text_example_6-r1" x="0" y="117.6" textLength="12.2" clip-path="url(#text_example_6-line-4)">│</text><text class="text_example_6-r1" x="768.6" y="117.6" textLength="12.2" clip-path="url(#text_example_6-line-4)">│</text><text class="text_example_6-r1" x="780.8" y="117.6" textLength="12.2" clip-path="url(#text_example_6-line-4)">
+</text><text class="text_example_6-r1" x="0" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">│</text><text class="text_example_6-r138" x="109.8" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">-</text><text class="text_example_6-r140" x="134.2" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">.</text><text class="text_example_6-r141" x="146.4" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">a</text><text class="text_example_6-r142" x="158.6" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">s</text><text class="text_example_6-r143" x="170.8" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">_</text><text class="text_example_6-r144" x="183" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">r</text><text class="text_example_6-r145" x="195.2" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">i</text><text class="text_example_6-r146" x="207.4" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">c</text><text class="text_example_6-r147" x="219.6" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">h</text><text class="text_example_6-r148" x="231.8" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">(</text><text class="text_example_6-r149" x="244" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">)</text><text class="text_example_6-r151" x="268.4" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">m</text><text class="text_example_6-r152" x="280.6" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">e</text><text class="text_example_6-r153" x="292.8" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">t</text><text class="text_example_6-r154" x="305" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">h</text><text class="text_example_6-r155" x="317.2" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">o</text><text class="text_example_6-r156" x="329.4" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">d</text><text class="text_example_6-r158" x="353.8" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">o</text><text class="text_example_6-r159" x="366" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">r</text><text class="text_example_6-r1" x="768.6" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">│</text><text class="text_example_6-r1" x="780.8" y="142" textLength="12.2" clip-path="url(#text_example_6-line-5)">
+</text><text class="text_example_6-r1" x="0" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">│</text><text class="text_example_6-r162" x="109.8" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">-</text><text class="text_example_6-r164" x="134.2" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">.</text><text class="text_example_6-r165" x="146.4" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">r</text><text class="text_example_6-r166" x="158.6" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">i</text><text class="text_example_6-r167" x="170.8" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">c</text><text class="text_example_6-r168" x="183" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">h</text><text class="text_example_6-r170" x="207.4" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">p</text><text class="text_example_6-r171" x="219.6" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">r</text><text class="text_example_6-r172" x="231.8" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">o</text><text class="text_example_6-r173" x="244" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">p</text><text class="text_example_6-r174" x="256.2" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">e</text><text class="text_example_6-r175" x="268.4" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">r</text><text class="text_example_6-r176" x="280.6" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">t</text><text class="text_example_6-r177" x="292.8" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">y</text><text class="text_example_6-r1" x="768.6" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">│</text><text class="text_example_6-r1" x="780.8" y="166.4" textLength="12.2" clip-path="url(#text_example_6-line-6)">
+</text><text class="text_example_6-r1" x="0" y="190.8" textLength="12.2" clip-path="url(#text_example_6-line-7)">│</text><text class="text_example_6-r1" x="768.6" y="190.8" textLength="12.2" clip-path="url(#text_example_6-line-7)">│</text><text class="text_example_6-r1" x="780.8" y="190.8" textLength="12.2" clip-path="url(#text_example_6-line-7)">
+</text><text class="text_example_6-r1" x="0" y="215.2" textLength="12.2" clip-path="url(#text_example_6-line-8)">│</text><text class="text_example_6-r1" x="768.6" y="215.2" textLength="12.2" clip-path="url(#text_example_6-line-8)">│</text><text class="text_example_6-r1" x="780.8" y="215.2" textLength="12.2" clip-path="url(#text_example_6-line-8)">
+</text><text class="text_example_6-r1" x="0" y="239.6" textLength="12.2" clip-path="url(#text_example_6-line-9)">│</text><text class="text_example_6-r1" x="768.6" y="239.6" textLength="12.2" clip-path="url(#text_example_6-line-9)">│</text><text class="text_example_6-r1" x="780.8" y="239.6" textLength="12.2" clip-path="url(#text_example_6-line-9)">
+</text><text class="text_example_6-r1" x="0" y="264" textLength="12.2" clip-path="url(#text_example_6-line-10)">│</text><text class="text_example_6-r178" x="85.4" y="264" textLength="48.8" clip-path="url(#text_example_6-line-10)">from</text><text class="text_example_6-r179" x="146.4" y="264" textLength="48.8" clip-path="url(#text_example_6-line-10)">rich</text><text class="text_example_6-r179" x="195.2" y="264" textLength="12.2" clip-path="url(#text_example_6-line-10)">.</text><text class="text_example_6-r179" x="207.4" y="264" textLength="85.4" clip-path="url(#text_example_6-line-10)">console</text><text class="text_example_6-r179" x="292.8" y="264" textLength="12.2" clip-path="url(#text_example_6-line-10)">.</text><text class="text_example_6-r179" x="305" y="264" textLength="85.4" clip-path="url(#text_example_6-line-10)">Console</text><text class="text_example_6-r178" x="402.6" y="264" textLength="73.2" clip-path="url(#text_example_6-line-10)">import</text><text class="text_example_6-r179" x="488" y="264" textLength="85.4" clip-path="url(#text_example_6-line-10)">Console</text><text class="text_example_6-r1" x="768.6" y="264" textLength="12.2" clip-path="url(#text_example_6-line-10)">│</text><text class="text_example_6-r1" x="780.8" y="264" textLength="12.2" clip-path="url(#text_example_6-line-10)">
+</text><text class="text_example_6-r1" x="0" y="288.4" textLength="12.2" clip-path="url(#text_example_6-line-11)">│</text><text class="text_example_6-r178" x="85.4" y="288.4" textLength="48.8" clip-path="url(#text_example_6-line-11)">from</text><text class="text_example_6-r179" x="146.4" y="288.4" textLength="48.8" clip-path="url(#text_example_6-line-11)">rich</text><text class="text_example_6-r179" x="195.2" y="288.4" textLength="12.2" clip-path="url(#text_example_6-line-11)">.</text><text class="text_example_6-r179" x="207.4" y="288.4" textLength="48.8" clip-path="url(#text_example_6-line-11)">text</text><text class="text_example_6-r178" x="268.4" y="288.4" textLength="73.2" clip-path="url(#text_example_6-line-11)">import</text><text class="text_example_6-r179" x="353.8" y="288.4" textLength="48.8" clip-path="url(#text_example_6-line-11)">Text</text><text class="text_example_6-r180" x="414.8" y="288.4" textLength="24.4" clip-path="url(#text_example_6-line-11)">as</text><text class="text_example_6-r179" x="451.4" y="288.4" textLength="97.6" clip-path="url(#text_example_6-line-11)">RichText</text><text class="text_example_6-r1" x="768.6" y="288.4" textLength="12.2" clip-path="url(#text_example_6-line-11)">│</text><text class="text_example_6-r1" x="780.8" y="288.4" textLength="12.2" clip-path="url(#text_example_6-line-11)">
+</text><text class="text_example_6-r1" x="0" y="312.8" textLength="12.2" clip-path="url(#text_example_6-line-12)">│</text><text class="text_example_6-r1" x="768.6" y="312.8" textLength="12.2" clip-path="url(#text_example_6-line-12)">│</text><text class="text_example_6-r1" x="780.8" y="312.8" textLength="12.2" clip-path="url(#text_example_6-line-12)">
+</text><text class="text_example_6-r1" x="0" y="337.2" textLength="12.2" clip-path="url(#text_example_6-line-13)">│</text><text class="text_example_6-r178" x="85.4" y="337.2" textLength="48.8" clip-path="url(#text_example_6-line-13)">from</text><text class="text_example_6-r179" x="146.4" y="337.2" textLength="158.6" clip-path="url(#text_example_6-line-13)">rich_gradient</text><text class="text_example_6-r179" x="305" y="337.2" textLength="12.2" clip-path="url(#text_example_6-line-13)">.</text><text class="text_example_6-r179" x="317.2" y="337.2" textLength="48.8" clip-path="url(#text_example_6-line-13)">text</text><text class="text_example_6-r179" x="366" y="337.2" textLength="12.2" clip-path="url(#text_example_6-line-13)">.</text><text class="text_example_6-r179" x="378.2" y="337.2" textLength="48.8" clip-path="url(#text_example_6-line-13)">Text</text><text class="text_example_6-r178" x="439.2" y="337.2" textLength="73.2" clip-path="url(#text_example_6-line-13)">import</text><text class="text_example_6-r179" x="524.6" y="337.2" textLength="48.8" clip-path="url(#text_example_6-line-13)">Text</text><text class="text_example_6-r1" x="768.6" y="337.2" textLength="12.2" clip-path="url(#text_example_6-line-13)">│</text><text class="text_example_6-r1" x="780.8" y="337.2" textLength="12.2" clip-path="url(#text_example_6-line-13)">
+</text><text class="text_example_6-r1" x="0" y="361.6" textLength="12.2" clip-path="url(#text_example_6-line-14)">│</text><text class="text_example_6-r1" x="768.6" y="361.6" textLength="12.2" clip-path="url(#text_example_6-line-14)">│</text><text class="text_example_6-r1" x="780.8" y="361.6" textLength="12.2" clip-path="url(#text_example_6-line-14)">
+</text><text class="text_example_6-r1" x="0" y="386" textLength="12.2" clip-path="url(#text_example_6-line-15)">│</text><text class="text_example_6-r179" x="85.4" y="386" textLength="158.6" clip-path="url(#text_example_6-line-15)">gradient_text</text><text class="text_example_6-r179" x="244" y="386" textLength="12.2" clip-path="url(#text_example_6-line-15)">:</text><text class="text_example_6-r179" x="268.4" y="386" textLength="48.8" clip-path="url(#text_example_6-line-15)">Text</text><text class="text_example_6-r178" x="329.4" y="386" textLength="12.2" clip-path="url(#text_example_6-line-15)">=</text><text class="text_example_6-r179" x="353.8" y="386" textLength="48.8" clip-path="url(#text_example_6-line-15)">Text</text><text class="text_example_6-r179" x="402.6" y="386" textLength="12.2" clip-path="url(#text_example_6-line-15)">(</text><text class="text_example_6-r1" x="768.6" y="386" textLength="12.2" clip-path="url(#text_example_6-line-15)">│</text><text class="text_example_6-r1" x="780.8" y="386" textLength="12.2" clip-path="url(#text_example_6-line-15)">
+</text><text class="text_example_6-r1" x="0" y="410.4" textLength="12.2" clip-path="url(#text_example_6-line-16)">│</text><text class="text_example_6-r181" x="134.2" y="410.4" textLength="549" clip-path="url(#text_example_6-line-16)">&quot;&quot;&quot;This&#160;is&#160;a&#160;rich_gradient.text.Text&#160;instance</text><text class="text_example_6-r1" x="768.6" y="410.4" textLength="12.2" clip-path="url(#text_example_6-line-16)">│</text><text class="text_example_6-r1" x="780.8" y="410.4" textLength="12.2" clip-path="url(#text_example_6-line-16)">
+</text><text class="text_example_6-r1" x="0" y="434.8" textLength="12.2" clip-path="url(#text_example_6-line-17)">│</text><text class="text_example_6-r181" x="85.4" y="434.8" textLength="329.4" clip-path="url(#text_example_6-line-17)">&#160;&#160;&#160;&#160;(in&#160;gradient&#160;color).&quot;&quot;&quot;</text><text class="text_example_6-r1" x="768.6" y="434.8" textLength="12.2" clip-path="url(#text_example_6-line-17)">│</text><text class="text_example_6-r1" x="780.8" y="434.8" textLength="12.2" clip-path="url(#text_example_6-line-17)">
+</text><text class="text_example_6-r1" x="0" y="459.2" textLength="12.2" clip-path="url(#text_example_6-line-18)">│</text><text class="text_example_6-r179" x="85.4" y="459.2" textLength="12.2" clip-path="url(#text_example_6-line-18)">)</text><text class="text_example_6-r1" x="768.6" y="459.2" textLength="12.2" clip-path="url(#text_example_6-line-18)">│</text><text class="text_example_6-r1" x="780.8" y="459.2" textLength="12.2" clip-path="url(#text_example_6-line-18)">
+</text><text class="text_example_6-r1" x="0" y="483.6" textLength="12.2" clip-path="url(#text_example_6-line-19)">│</text><text class="text_example_6-r1" x="768.6" y="483.6" textLength="12.2" clip-path="url(#text_example_6-line-19)">│</text><text class="text_example_6-r1" x="780.8" y="483.6" textLength="12.2" clip-path="url(#text_example_6-line-19)">
+</text><text class="text_example_6-r1" x="0" y="508" textLength="12.2" clip-path="url(#text_example_6-line-20)">│</text><text class="text_example_6-r179" x="85.4" y="508" textLength="109.8" clip-path="url(#text_example_6-line-20)">rich_text</text><text class="text_example_6-r179" x="195.2" y="508" textLength="12.2" clip-path="url(#text_example_6-line-20)">:</text><text class="text_example_6-r179" x="219.6" y="508" textLength="97.6" clip-path="url(#text_example_6-line-20)">RichText</text><text class="text_example_6-r178" x="329.4" y="508" textLength="12.2" clip-path="url(#text_example_6-line-20)">=</text><text class="text_example_6-r179" x="353.8" y="508" textLength="158.6" clip-path="url(#text_example_6-line-20)">gradient_text</text><text class="text_example_6-r178" x="512.4" y="508" textLength="12.2" clip-path="url(#text_example_6-line-20)">.</text><text class="text_example_6-r179" x="524.6" y="508" textLength="48.8" clip-path="url(#text_example_6-line-20)">rich</text><text class="text_example_6-r1" x="768.6" y="508" textLength="12.2" clip-path="url(#text_example_6-line-20)">│</text><text class="text_example_6-r1" x="780.8" y="508" textLength="12.2" clip-path="url(#text_example_6-line-20)">
+</text><text class="text_example_6-r1" x="0" y="532.4" textLength="12.2" clip-path="url(#text_example_6-line-21)">│</text><text class="text_example_6-r1" x="768.6" y="532.4" textLength="12.2" clip-path="url(#text_example_6-line-21)">│</text><text class="text_example_6-r1" x="780.8" y="532.4" textLength="12.2" clip-path="url(#text_example_6-line-21)">
+</text><text class="text_example_6-r1" x="0" y="556.8" textLength="12.2" clip-path="url(#text_example_6-line-22)">│</text><text class="text_example_6-r179" x="85.4" y="556.8" textLength="48.8" clip-path="url(#text_example_6-line-22)">type</text><text class="text_example_6-r179" x="134.2" y="556.8" textLength="12.2" clip-path="url(#text_example_6-line-22)">(</text><text class="text_example_6-r179" x="146.4" y="556.8" textLength="109.8" clip-path="url(#text_example_6-line-22)">rich_text</text><text class="text_example_6-r179" x="256.2" y="556.8" textLength="12.2" clip-path="url(#text_example_6-line-22)">)</text><text class="text_example_6-r1" x="768.6" y="556.8" textLength="12.2" clip-path="url(#text_example_6-line-22)">│</text><text class="text_example_6-r1" x="780.8" y="556.8" textLength="12.2" clip-path="url(#text_example_6-line-22)">
+</text><text class="text_example_6-r1" x="0" y="581.2" textLength="12.2" clip-path="url(#text_example_6-line-23)">│</text><text class="text_example_6-r1" x="768.6" y="581.2" textLength="12.2" clip-path="url(#text_example_6-line-23)">│</text><text class="text_example_6-r1" x="780.8" y="581.2" textLength="12.2" clip-path="url(#text_example_6-line-23)">
+</text><text class="text_example_6-r1" x="0" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">│</text><text class="text_example_6-r178" x="85.4" y="605.6" textLength="24.4" clip-path="url(#text_example_6-line-24)">&gt;&gt;</text><text class="text_example_6-r178" x="109.8" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">&gt;</text><text class="text_example_6-r178" x="134.2" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">&lt;</text><text class="text_example_6-r180" x="146.4" y="605.6" textLength="61" clip-path="url(#text_example_6-line-24)">class</text><text class="text_example_6-r182" x="219.6" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">&#x27;</text><text class="text_example_6-r183" x="231.8" y="605.6" textLength="48.8" clip-path="url(#text_example_6-line-24)">rich</text><text class="text_example_6-r178" x="280.6" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">.</text><text class="text_example_6-r179" x="292.8" y="605.6" textLength="48.8" clip-path="url(#text_example_6-line-24)">text</text><text class="text_example_6-r178" x="341.6" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">.</text><text class="text_example_6-r179" x="353.8" y="605.6" textLength="48.8" clip-path="url(#text_example_6-line-24)">Text</text><text class="text_example_6-r181" x="402.6" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">&#x27;</text><text class="text_example_6-r181" x="414.8" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">&gt;</text><text class="text_example_6-r1" x="768.6" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">│</text><text class="text_example_6-r1" x="780.8" y="605.6" textLength="12.2" clip-path="url(#text_example_6-line-24)">
+</text><text class="text_example_6-r1" x="0" y="630" textLength="12.2" clip-path="url(#text_example_6-line-25)">│</text><text class="text_example_6-r1" x="768.6" y="630" textLength="12.2" clip-path="url(#text_example_6-line-25)">│</text><text class="text_example_6-r1" x="780.8" y="630" textLength="12.2" clip-path="url(#text_example_6-line-25)">
+</text><text class="text_example_6-r1" x="0" y="654.4" textLength="12.2" clip-path="url(#text_example_6-line-26)">│</text><text class="text_example_6-r1" x="768.6" y="654.4" textLength="12.2" clip-path="url(#text_example_6-line-26)">│</text><text class="text_example_6-r1" x="780.8" y="654.4" textLength="12.2" clip-path="url(#text_example_6-line-26)">
+</text><text class="text_example_6-r1" x="0" y="678.8" textLength="12.2" clip-path="url(#text_example_6-line-27)">│</text><text class="text_example_6-r1" x="768.6" y="678.8" textLength="12.2" clip-path="url(#text_example_6-line-27)">│</text><text class="text_example_6-r1" x="780.8" y="678.8" textLength="12.2" clip-path="url(#text_example_6-line-27)">
+</text><text class="text_example_6-r1" x="0" y="703.2" textLength="24.4" clip-path="url(#text_example_6-line-28)">╰─</text><text class="text_example_6-r1" x="24.4" y="703.2" textLength="475.8" clip-path="url(#text_example_6-line-28)">──────────────────────────────────────&#160;</text><text class="text_example_6-r184" x="500.2" y="703.2" textLength="73.2" clip-path="url(#text_example_6-line-28)">Type:&#160;</text><text class="text_example_6-r185" x="573.4" y="703.2" textLength="170.8" clip-path="url(#text_example_6-line-28)">rich.text.Text</text><text class="text_example_6-r1" x="756.4" y="703.2" textLength="24.4" clip-path="url(#text_example_6-line-28)">─╯</text><text class="text_example_6-r1" x="780.8" y="703.2" textLength="12.2" clip-path="url(#text_example_6-line-28)">
+</text>
+    </g>
+    </g>
+</svg>

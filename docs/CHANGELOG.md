@@ -6,7 +6,59 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--## [Unreleased]-->
-### v0.3.2 - 2025-06-26 | <span style="color: rgb(215, 255, 100)"> Added tests and renamed Rule</span>
+### v0.3.4 - 2025-09-03 | <span style="color: rgb(215, 255, 100)">Text.as_rich(), background gradients, spectrum + docs</span>
+
+#### v0.3.4 Added
+
+- Text
+  - `.as_rich()` method to return a plain `rich.text.Text` with all spans/styles preserved.
+  - `.rich` convenience property wrapping `as_rich()`.
+  - Background gradients via `bgcolors=`; multiple bg stops interpolate alongside foreground.
+  - Robust color normalization supporting `Color`, `ColorTriplet`, `(r,g,b)` tuples, CSS names, 3/6‑digit hex, and `rgb()` strings.
+- Spectrum
+  - Deterministic `seed`, color names, styles, hex accessors, and a rich preview table renderable.
+- Docs/Examples
+  - New SVG/PNG assets for gradient text examples under `docs/img/v0.3.4/` and updated spectrum preview.
+
+#### v0.3.4 Updated
+
+- Text
+  - Improved error types/messages and comprehensive module documentation.
+  - Single‑color fast‑path applies one composed `Style` across content for performance.
+  - Empty text rendering no longer emits a trailing newline/segment; nested renderables filtered accordingly.
+- Gradient and BaseGradient
+  - Gamma‑corrected color interpolation, smoother stop wrapping, explicit alignment validation, and safer measurement when no renderables.
+  - Support for `repeat_scale`/`phase` used by animated variants.
+- Rule
+  - Accepts colors as strings, `Color`, `ColorTriplet`, or RGB tuples with clearer validation and messages.
+  - Title style applied after gradient generation for accurate highlighting.
+- Package Init / Theme
+  - Install `rich-color-ext` on import and monkey‑patch `Console._collect_renderables` to suppress empty `Text` trailing newline.
+  - Theme helpers for consistent docs SVG generation (`GRADIENT_TERMINAL_THEME`).
+- README/Docs
+  - Expanded examples and color‑format visuals; refreshed links and images.
+
+#### v0.3.4 Fixed
+
+- Suppressed stray newline output when rendering empty gradient `Text` (affects console capture/recorded SVGs).
+
+### v0.3.3 - 2025-08-27 | <span style="color: rgb(215, 255, 100)"> Added tests and Fixed Bugs</span>
+
+#### v0.3.3 Updated
+
+- Enhanced rendering and color handling in gradient components
+- Refactored rich-gradient for improved structure and functionality
+  - Reorganized imports in `__init__.py` for clarity.
+  - Updated AnimatedGradient to ensure color extension is installed at package import time.
+  - Enhanced BaseGradient to improve gradient wrapping logic and error handling.
+  - Improved logger utility with better error handling and configuration options.
+  - Adjusted Gradient class to ensure quit panel behavior is consistent and intuitive.
+  - Added comprehensive tests for edge cases in Gradient and Text classes, including long text, unicode handling, and color validation.
+  - Enhanced Spectrum class to support color generation with optional seed for reproducibility.
+  - Improved Text class to ensure proper initialization and color parsing.
+  - Updated test suites for Gradient and Spectrum to cover additional scenarios and edge cases.
+
+### v0.3.2 <span style="color: rgb(215, 255, 100)"> Added tests and Fixed Bugs</span>
 
 #### v0.3.2 Removed
 

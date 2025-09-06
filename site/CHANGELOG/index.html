@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../rule_ref/">
+        <link rel="prev" href="../theme_ref/">
       
       
       
@@ -385,6 +385,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spectrum/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spectrum
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -494,6 +516,50 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spectrum_ref/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Spectrum Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theme_ref/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Theme Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -556,13 +622,79 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v032-2025-06-26-added-tests-and-renamed-rule" class="md-nav__link">
+  <a href="#v034-2025-09-03-textas_rich-background-gradients-spectrum-docs" class="md-nav__link">
     <span class="md-ellipsis">
-      v0.3.2 - 2025-06-26 | Added tests and renamed Rule
+      v0.3.4 - 2025-09-03 | Text.as_rich(), background gradients, spectrum + docs
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="v0.3.2 - 2025-06-26 | Added tests and renamed Rule">
+    <nav class="md-nav" aria-label="v0.3.4 - 2025-09-03 | Text.as_rich(), background gradients, spectrum + docs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v034-added" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.4 Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v034-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.4 Updated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v034-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.4 Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v033-2025-08-27-added-tests-and-fixed-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.3 - 2025-08-27 | Added tests and Fixed Bugs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.3.3 - 2025-08-27 | Added tests and Fixed Bugs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v033-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.3 Updated
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v032-added-tests-and-fixed-bugs" class="md-nav__link">
+    <span class="md-ellipsis">
+      v0.3.2 Added tests and Fixed Bugs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.3.2 Added tests and Fixed Bugs">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -947,7 +1079,57 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <!--## [Unreleased]-->
-<h3 id="v032-2025-06-26-added-tests-and-renamed-rule">v0.3.2 - 2025-06-26 | <span style="color: rgb(215, 255, 100)"> Added tests and renamed Rule</span><a class="headerlink" href="#v032-2025-06-26-added-tests-and-renamed-rule" title="Permanent link">&para;</a></h3>
+<h3 id="v034-2025-09-03-textas_rich-background-gradients-spectrum-docs">v0.3.4 - 2025-09-03 | <span style="color: rgb(215, 255, 100)">Text.as_rich(), background gradients, spectrum + docs</span><a class="headerlink" href="#v034-2025-09-03-textas_rich-background-gradients-spectrum-docs" title="Permanent link">&para;</a></h3>
+<h4 id="v034-added">v0.3.4 Added<a class="headerlink" href="#v034-added" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Text</li>
+<li><code>.as_rich()</code> method to return a plain <code>rich.text.Text</code> with all spans/styles preserved.</li>
+<li><code>.rich</code> convenience property wrapping <code>as_rich()</code>.</li>
+<li>Background gradients via <code>bgcolors=</code>; multiple bg stops interpolate alongside foreground.</li>
+<li>Robust color normalization supporting <code>Color</code>, <code>ColorTriplet</code>, <code>(r,g,b)</code> tuples, CSS names, 3/6‑digit hex, and <code>rgb()</code> strings.</li>
+<li>Spectrum</li>
+<li>Deterministic <code>seed</code>, color names, styles, hex accessors, and a rich preview table renderable.</li>
+<li>Docs/Examples</li>
+<li>New SVG/PNG assets for gradient text examples under <code>docs/img/v0.3.4/</code> and updated spectrum preview.</li>
+</ul>
+<h4 id="v034-updated">v0.3.4 Updated<a class="headerlink" href="#v034-updated" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Text</li>
+<li>Improved error types/messages and comprehensive module documentation.</li>
+<li>Single‑color fast‑path applies one composed <code>Style</code> across content for performance.</li>
+<li>Empty text rendering no longer emits a trailing newline/segment; nested renderables filtered accordingly.</li>
+<li>Gradient and BaseGradient</li>
+<li>Gamma‑corrected color interpolation, smoother stop wrapping, explicit alignment validation, and safer measurement when no renderables.</li>
+<li>Support for <code>repeat_scale</code>/<code>phase</code> used by animated variants.</li>
+<li>Rule</li>
+<li>Accepts colors as strings, <code>Color</code>, <code>ColorTriplet</code>, or RGB tuples with clearer validation and messages.</li>
+<li>Title style applied after gradient generation for accurate highlighting.</li>
+<li>Package Init / Theme</li>
+<li>Install <code>rich-color-ext</code> on import and monkey‑patch <code>Console._collect_renderables</code> to suppress empty <code>Text</code> trailing newline.</li>
+<li>Theme helpers for consistent docs SVG generation (<code>GRADIENT_TERMINAL_THEME</code>).</li>
+<li>README/Docs</li>
+<li>Expanded examples and color‑format visuals; refreshed links and images.</li>
+</ul>
+<h4 id="v034-fixed">v0.3.4 Fixed<a class="headerlink" href="#v034-fixed" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Suppressed stray newline output when rendering empty gradient <code>Text</code> (affects console capture/recorded SVGs).</li>
+</ul>
+<h3 id="v033-2025-08-27-added-tests-and-fixed-bugs">v0.3.3 - 2025-08-27 | <span style="color: rgb(215, 255, 100)"> Added tests and Fixed Bugs</span><a class="headerlink" href="#v033-2025-08-27-added-tests-and-fixed-bugs" title="Permanent link">&para;</a></h3>
+<h4 id="v033-updated">v0.3.3 Updated<a class="headerlink" href="#v033-updated" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Enhanced rendering and color handling in gradient components</li>
+<li>Refactored rich-gradient for improved structure and functionality</li>
+<li>Reorganized imports in <code>__init__.py</code> for clarity.</li>
+<li>Updated AnimatedGradient to ensure color extension is installed at package import time.</li>
+<li>Enhanced BaseGradient to improve gradient wrapping logic and error handling.</li>
+<li>Improved logger utility with better error handling and configuration options.</li>
+<li>Adjusted Gradient class to ensure quit panel behavior is consistent and intuitive.</li>
+<li>Added comprehensive tests for edge cases in Gradient and Text classes, including long text, unicode handling, and color validation.</li>
+<li>Enhanced Spectrum class to support color generation with optional seed for reproducibility.</li>
+<li>Improved Text class to ensure proper initialization and color parsing.</li>
+<li>Updated test suites for Gradient and Spectrum to cover additional scenarios and edge cases.</li>
+</ul>
+<h3 id="v032-added-tests-and-fixed-bugs">v0.3.2 <span style="color: rgb(215, 255, 100)"> Added tests and Fixed Bugs</span><a class="headerlink" href="#v032-added-tests-and-fixed-bugs" title="Permanent link">&para;</a></h3>
 <h4 id="v032-removed">v0.3.2 Removed<a class="headerlink" href="#v032-removed" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Dev Dependencies</li>

@@ -53,17 +53,17 @@ console.print(Gradient("Hello, World!")
 
 ---
 
-### Gradient Text with Specific Colors
+## Gradient Text with Specific Colors
 
 If you want a bit more control of the gradient, you can specify the colors you want to use in the gradient by passing them as a list of colors to the `colors` parameter.
 
-#### Color Formats
+### Color Formats
 
 Color can be parsed from a variety of formats including:
 
-![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](/docs/img/v0.3.3/color_formats.png)
+![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](/docs/img/v0.3.4/gradient_text_custom_colors.svg)
 
-#### Example Code
+### Example Code
 
 #### Specific Two-Color Gradient Example
 

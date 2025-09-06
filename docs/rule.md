@@ -71,12 +71,12 @@ console.print(
 
 ## Thickness
 
-The `Rule` class add the ability to determine the thickness of the rule. Valid values are:
+The `Rule` class supports configurable thickness. Valid integer values are:
 
-1. `thin` (`─`)
-2. `double` (`═`)
-3. `medium` (`━`) (default)
-4. `thick` (`█`)
+0. `thin` (`─`)
+1. `double` (`═`)
+2. `medium` (`━`) (default)
+3. `thick` (`█`)
 
 
 ### Thin Rule
@@ -85,7 +85,7 @@ The `Rule` class add the ability to determine the thickness of the rule. Valid v
 console.print(
     Rule(
         "This is a thin rule",
-        thickness=1
+        thickness=0
     )
 )
 ```
@@ -98,7 +98,7 @@ console.print(
 console.print(
     Rule(
         "This is a double-line rule",
-        thickness=2
+        thickness=1
     )
 )
 ```
@@ -111,7 +111,7 @@ console.print(
 console.print(
     Rule(
         "This is a medium rule",
-        thickness=3
+        thickness=2
     )
 )
 ```
@@ -124,7 +124,7 @@ console.print(
 console.print(
     Rule(
         "This is a thick rule",
-        thickness=4
+        thickness=3
     )
 )
 ```
