@@ -16,3 +16,6 @@ src/rich_gradient/examples/example_rule.py
 .mypy_cache/
 out/
 lolcat.py
+cspell.json
+.cspell/
+.cspell.json

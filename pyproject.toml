@@ -1,6 +1,6 @@
 [project]
 name = "rich-gradient"
-version = "0.3.4"
+version = "0.3.5"
 description = "A gradient generator for the Rich library."
 readme = "README.md"
 authors = [{ name = "Max Ludden", email = "dev@maxludden.com" }]
@@ -11,8 +11,6 @@ dependencies = [
     "rich-color-ext==0.1.3",
 ]
 
-[project.scripts]
-rich-gradient = "rich_gradient:main"
 
 [build-system]
 requires = ["hatchling"]

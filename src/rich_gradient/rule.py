@@ -180,7 +180,7 @@ class Rule(RichRule):
                 else:
                     _colors.append(Color.parse(color).get_truecolor().hex)
             except (ColorParseError, TypeError, ValueError) as ce:
-                raise ColorParseError(
+                raise TypeError(
                     f"Invalid color: {color}. Please provide a valid color string."
                 ) from ce
         return _colors

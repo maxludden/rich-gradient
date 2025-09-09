@@ -115,5 +115,6 @@
         "renderables",
         "wrappable"
     ],
-    "wolf.disableHotModeWarning": true
+    "wolf.disableHotModeWarning": true,
+    "chatgpt.openOnStartup": true
 }

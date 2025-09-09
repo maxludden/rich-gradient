@@ -1,7 +1,7 @@
 import threading
 import time
 from threading import Event, RLock, Thread
-from typing import Any, Callable, List, Optional, TypeAlias, Union, cast
+from typing import List, Optional, TypeAlias, Union, cast
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -13,7 +13,6 @@ from rich.console import (
     ConsoleOptions,
     ConsoleRenderable,
     Group,
-    NewLine,
     RenderResult,
 )
 from rich.jupyter import JupyterMixin
@@ -23,7 +22,6 @@ from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style
 from rich.text import Text as RichText
-from rich_color_ext import install as color_ext_install
 
 from rich_gradient.spectrum import Spectrum
 
@@ -72,22 +70,103 @@ class Gradient(JupyterMixin):
         redirect_stderr: bool = False,
         disable: bool = False,
     ) -> None:
-        self.console: Console = console or get_console()
-        self.hues: int = max(hues, 2)
-        self.rainbow: bool = rainbow
-        self.repeat_scale: float = repeat_scale
-        self.phase: float = 0.0
-        self.expand: bool = expand
-        self.justify = justify
-        self.vertical_justify = vertical_justify
-        # Ensure quit panel is shown by default for animated gradients unless explicitly disabled
-        self.show_quit_panel = bool(show_quit_panel or animated)
-        self.background = background
+        """Initialize a new Gradient instance.
 
+        Sets up the gradient with rendering, color, and animation options. The
+        gradient can be static or animated, and supports a variety of
+        customization options for appearance and behavior.
+
+        Args:
+            renderables: Optional string, renderable, or list of renderables to display with the gradient.
+            expand: Whether to expand the gradient to fill available space.
+            justify: Horizontal alignment method.
+            vertical_justify: Vertical alignment method.
+            show_quit_panel: Whether to show the quit panel.
+            repeat_scale: Scale factor for repeating the gradient.
+            console: Optional Console instance to use for rendering.
+            colors: List of colors for the gradient foreground.
+            bg_colors: List of colors for the gradient background.
+            hues: Number of hues to use in the gradient.
+            rainbow: Whether to use a rainbow color spectrum.
+            background: Whether to apply the gradient to the background.
+            animated: Whether the gradient should be animated.
+            auto_start: Whether to automatically start animation if animated.
+            auto_refresh: Whether to automatically refresh the display.
+            refresh_per_second: Refresh rate for animation.
+            speed: Animation speed.
+            transient: Whether the Live context should be transient.
+            redirect_stdout: Whether to redirect stdout to the console.
+            redirect_stderr: Whether to redirect stderr to the console.
+            disable: Whether to disable rendering.
+
+        """
+        self._init_rendering(
+            console, expand, justify, vertical_justify, show_quit_panel, repeat_scale, background
+        )
+        self._init_colors(colors, bg_colors, hues, rainbow)
+        self._init_animation(
+            animated, auto_refresh, refresh_per_second, speed, transient, redirect_stdout, redirect_stderr, disable
+        )
         self.renderables = self._normalize_renderables(renderables, colors)
         self.colors = colors or []
         self.bg_colors = bg_colors or []
-        # Animation related
+        if self.animated and auto_start:
+            self.start()
+        self._active_stops = self._initialize_color_stops()
+
+    def _init_rendering(
+        self,
+        console: Optional[Console],
+        expand: bool,
+        justify: AlignMethod,
+        vertical_justify: VerticalAlignMethod,
+        show_quit_panel: bool,
+        repeat_scale: float,
+        background: bool,
+    ) -> None:
+        """Initialize rendering-related properties for the Gradient.
+
+        Sets up the console, alignment, expansion, and other display options for the gradient.
+
+        Args:
+            console: Optional Console instance to use for rendering.
+            expand: Whether to expand the gradient to fill available space.
+            justify: Horizontal alignment method.
+            vertical_justify: Vertical alignment method.
+            show_quit_panel: Whether to show the quit panel.
+            repeat_scale: Scale factor for repeating the gradient.
+            background: Whether to apply the gradient to the background.
+        """
+        self.console: Console = console or get_console()
+        self.expand: bool = expand
+        self.justify = justify
+        self.vertical_justify = vertical_justify
+        self.show_quit_panel = bool(show_quit_panel)
+        self.repeat_scale: float = repeat_scale
+        self.background = background
+        self.phase: float = 0.0
+
+    def _init_colors(
+        self,
+        colors: Optional[List[ColorType]],
+        bg_colors: Optional[List[ColorType]],
+        hues: int,
+        rainbow: bool,
+    ) -> None:
+        self.hues: int = max(hues, 2)
+        self.rainbow: bool = rainbow
+
+    def _init_animation(
+        self,
+        animated: bool,
+        auto_refresh: bool,
+        refresh_per_second: float,
+        speed: int,
+        transient: bool,
+        redirect_stdout: bool,
+        redirect_stderr: bool,
+        disable: bool,
+    ) -> None:
         self.animated = animated
         self.auto_refresh = auto_refresh
         self.refresh_per_second = refresh_per_second
@@ -103,7 +182,6 @@ class Gradient(JupyterMixin):
         self._lock = RLock()
         self.live: Optional[Live] = None
         if self.animated:
-            # Live must exist before we set / forward console
             self.live = Live(
                 console=self.console,
                 auto_refresh=self.auto_refresh,
@@ -113,9 +191,6 @@ class Gradient(JupyterMixin):
                 redirect_stderr=self.redirect_stderr,
             )
             self.console = self.live.console
-        if self.animated and auto_start:
-            self.start()
-        self._active_stops = self._initialize_color_stops()
 
     def _normalize_renderables(
         self,

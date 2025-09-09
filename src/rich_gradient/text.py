@@ -1,164 +1,13 @@
 """
 rich_gradient.text
-
-High-level overview
--------------------
+~~~~~~~~~~~~~~~~~~
 This module provides a Rich-compatible Text subclass that adds per-character
 gradient coloring and optional background-color gradients on top of the
 rich.text.Text functionality. It preserves all of rich.text.Text's features
 (spans, markup parsing, justification, overflow handling, highlighting, etc.)
 while enabling smooth multi-stop gradients, rainbow generation, and single-color
 optimizations.
-
-Primary class
--------------
-Text (subclass of rich.text.Text)
-    A drop-in replacement for rich.text.Text that can be constructed with
-    color stops (foreground and optional background) and will apply an
-    interpolated color to each character.
-
-Key features
-------------
-- Accepts many color formats: rich.color.Color instances, ColorTriplet, 3-tuples
-    of ints, CSS names ("red", "springgreen"), 3- and 6-digit hex ("#f00",
-    "#ff0000"), and rgb() strings ("rgb(255, 0, 0)"). Parsing is delegated to
-    rich.color.Color.parse and extended by `rich-color-ext` plugin.
-- Gradient stops: supply 2+ colors to produce a smooth gradient; two colors
-    create a linear blend from start to end across the text.
-- Rainbow mode: pass rainbow=True to use a full-spectrum (17-color) rainbow.
-- Automatic palette: when no colors are provided, a Spectrum is used to pick
-    `hues` colors (default hues=5). If rainbow=True, hues is ignored in favor of
-    the full rainbow spectrum.
-- Background color support: supply bgcolors similar to colors. If a single
-    background color is supplied it is applied uniformly; if multiple background
-    stops are supplied they are interpolated alongside the foreground colors.
-- Single-color optimization: when both a single foreground and a single
-    background color are supplied, the class applies a single Style with that
-    color/bgcolor to all characters (avoids per-character spans).
-- Empty-text rendering: prevents emitting the trailing newline/end segment for
-    an empty Text instance when rendering to avoid extraneous segments in some
-    rendering contexts.
-
-Public API (high-level)
------------------------
-- class Text(
-    text: TextType = "",
-    colors: Optional[Sequence[ColorType]] = None,
-    *,
-    rainbow: bool = False,
-    hues: int = 5,
-    style: StyleType = "",
-    justify: JustifyMethod = "default",
-    overflow: OverflowMethod = "fold",
-    no_wrap: bool = False,
-    end: str = "\\n",
-    tab_size: int = 4,
-    bgcolors: Optional[Sequence[ColorType]] = None,
-    markup: bool = True,
-    spans: Optional[Sequence[Span]] = None)
-
-Constructor arguments and behavior:
-- text: textual content; can contain rich markup when markup=True.
-- colors: sequence of color stops. If omitted, a Spectrum is used (hues
-    entries). If rainbow=True, a fixed full-spectrum rainbow is used.
-- rainbow: generate a rainbow spectrum (overrides colors/hues).
-- hues: number of hues to generate when colors is not supplied.
-- style: base style applied to text (merged with per-character colors).
-- bgcolors: sequence of background color stops. If None or empty, the
-    background defaults to "default" (transparent) and is not interpolated.
-    One background color acts as a uniform background; multiple entries cause
-    interpolation across characters.
-- markup: whether to parse rich markup in the input text.
-- spans: optional initial spans (delegated to rich.text.Text).
-
-Notes:
-- If exactly one foreground and one background color are provided, the
-    implementation creates a single composed Style(color, bgcolor) and applies
-    it across the whole text rather than generating per-character spans.
-- Per-character coloring is created by interpolating colors across the
-    text length and stylizing each character range with the computed color.
-
-- parse_colors(colors, hues=5, rainbow=False) -> List[Color]
-    Parse a sequence of color-like values into rich.color.Color objects or
-    generate a Spectrum. Raises ColorParseError for unsupported values and
-    ValueError if hues < 2 when no colors are supplied and rainbow is False.
-
-- parse_bgcolors(bgcolors, hues=5) -> List[Color]
-    Parse background color stops. Sets an internal _interpolate_bgcolors flag.
-    If no bgcolors are provided, returns a list containing "default" repeated
-    len(colors) times and does not interpolate.
-
-- interpolate_colors(colors=None) -> list[Color]
-    Interpolates the supplied list of rich.color.Color objects across the
-    current text length and returns a Color for each character. When only one
-    color is supplied, it is repeated for each character. Raises ValueError if
-    no colors are available or if the text is empty (returns [] for empty text).
-
-- apply_gradient()
-    Applies the interpolated foreground and background colors as Style spans
-    over each character in the underlying rich.text.Text. Uses the single-color
-    optimization when possible.
-
-- __rich_console__(console, options)
-    Delegates to the parent implementation but filters out the trailing end
-    Segment for empty text to avoid emitting empty or extraneous final segments.
-    Also correctly renders nested renderables to segments and applies the same
-    filtering.
-
-Errors and exceptions
----------------------
-- ColorParseError: raised when a provided color string/value cannot be parsed.
-- ValueError: raised for invalid function arguments (e.g. hues < 2 when needed,
-    or no colors supplied to interpolation).
-
-Dependencies
-------------
-- rich (rich.text.Text, rich.color.Color, rich.style.Style, Console, Segment, etc.)
-- Spectrum and GRADIENT_TERMINAL_THEME from rich_gradient.spectrum and
-    rich_gradient.theme (used for automatic palettes and example rendering).
-- Optionally rich-color-ext (installed on package import) to extend color parsing.
-
-Usage examples
---------------
-Basic usage:
-    text = Text("Hello World", colors=["magenta", "cyan"], style="bold")
-    console.print(text)
-
-Rainbow:
-    text = Text("All the colors", rainbow=True)
-
-Single background color:
-    text = Text("Hello", colors=["#ff0", "#0ff"], bgcolors=["#000"])
-
-Notes for maintainers
----------------------
-- Keep single-color fast-path in sync with style-merging semantics used by
-    rich.Style to ensure that any provided style is honored and merged with the
-    color/bgcolor.
-- The interpolation algorithm uses integer rounding per-channel to construct
-    new truecolor Color instances; this mirrors typical gradient behavior and
-    provides deterministic results across runs.
-- Tests should cover: color parsing (many formats), single-stop behavior,
-    multi-stop interpolation, background interpolation flagging, empty-text
-    rendering, and rainbow/hues fallbacks.
-
-    _summary_
-
-    Raises:
-        ColorParseError: _description_
-        ValueError: _description_
-        ColorParseError: _description_
-        ColorParseError: _description_
-        ColorParseError: _description_
-        ValueError: _description_
-
-    Returns:
-        _type_: _description_
-
-    Yields:
-        _type_: _description_
 """
-
 from typing import Iterable, List, Optional, Sequence, Tuple, TypeAlias, Union
 
 from rich.color import Color, ColorParseError
@@ -204,14 +53,15 @@ class Text(RichText):
             rainbow (bool): If True, generate a rainbow spectrum.
             hues (int): The number of hues to generate if colors are not provided.
             style (StyleType): The style of the text.
-            justify (JustifyMethod): Justification method for the text.
-            overflow (OverflowMethod): Overflow method for the text.
-            no_wrap (bool): If True, disable wrapping of the text.
-            end (str): The string to append at the end of the text. Default is a newline.
-            tab_size (int): The number of spaces for a tab character.
-            bgcolors (Optional[List[ColorType]]): A list of background colors as Color instances
-            markup (bool): If True, parse Rich markup tags in the input text.
-            spans (Optional[Sequence[Span]]): A list of spans to apply to the text.
+            justify (JustifyMethod): Justification method for the text. Defaults to `default`.
+            overflow (OverflowMethod): Overflow method for the text. Defaults to `fold`.
+            no_wrap (bool): If True, disable wrapping of the text. Defaults to False.
+            end (str): The string to append at the end of the text. Default is a newline (`\\n`).
+            tab_size (int): The number of spaces for a tab character. Defaults to 4.
+            bgcolors (Optional[List[ColorType]]): A list of background colors as Color \
+instances. Defaults to None.
+            markup (bool): If True, parse Rich markup tags in the input text. Defaults to True.
+            spans (Optional[Sequence[Span]]): A list of spans to apply to the text. Defaults to None.
         """
 
         # Parse the input text with or without markup
