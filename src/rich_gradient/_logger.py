@@ -6,7 +6,6 @@ Provides a Rich-styled, rotating, compressed log file and console output via log
 from pathlib import Path
 from typing import Optional
 
-import loguru
 from loguru import logger
 from rich import get_console
 from rich.console import Console
