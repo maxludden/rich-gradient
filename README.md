@@ -35,6 +35,40 @@ uv add rich-gradient
 pip install rich-gradient
 ```
 
+## CLI Usage
+
+After installation, a `rich-gradient` command is available. It works similarly to `rich-cli` but focuses on gradients.
+
+- Print gradient text from argument:
+
+  `rich-gradient "Hello [b]world[/b]!" --colors magenta gold1 #0f0`
+
+- Read from a file or stdin:
+
+  `rich-gradient --file README.md`
+
+  `cat README.md | rich-gradient -`
+
+- Animate with a rainbow:
+
+  `rich-gradient "Animated gradient" --rainbow --animated --fps 20`
+
+- Wrap in a panel with title:
+
+  `rich-gradient "Panel content" --panel --title "Gradient Panel"`
+
+- Draw a gradient rule:
+
+  `rich-gradient rule --title "Section" --colors deeppink,purple,violet --thickness 2 --align right`
+
+- Render a file with syntax highlighting:
+
+  `rich-gradient file path/to/app.py --line-numbers`
+
+- Render Markdown:
+
+  `rich-gradient markdown "# Hello\n\nThis is **Markdown**."`
+
 ## Usage
 
 ### Basic Gradient Text Example
@@ -46,7 +80,7 @@ from rich.console import Console
 from rich_gradient import Gradient
 
 console = Console()
-console.print(Gradient("Hello, World!")
+console.print(Gradient("Hello, World!"))
 ```
 
 ![Hello, World!](https://maxludden.github.io/rich-gradient/img/hello_world.svg)

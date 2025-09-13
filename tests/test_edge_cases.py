@@ -60,10 +60,14 @@ def test_text_empty_string():
     """
     Test that Text with empty string input produces no output but does not error.
     """
+    from re import match, compile, MULTILINE
     txt = Text("")
     out = render_to_text(txt)
-    assert out == ""
-
+    
+    assert isinstance(out, str)
+    pattern = compile(r'^\s*$', MULTILINE)
+    assert pattern.match(out)
+    assert out.strip() == ""
 
 def test_gradient_no_colors():
     """

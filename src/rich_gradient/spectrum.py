@@ -33,8 +33,7 @@ Usage example:
 __all__ = ["SPECTRUM_COLORS", "Spectrum"]
 
 from itertools import cycle
-from random import randint
-from random import seed as random_seed
+from random import Random
 from typing import Dict, List, Optional
 
 from rich.color import Color
@@ -42,10 +41,7 @@ from rich.color_triplet import ColorTriplet
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
-from rich_color_ext import install
-
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
-install()
 
 SPECTRUM_COLORS: Dict[str, str] = {
     "#FF0000": "red",  # 1
@@ -95,13 +91,13 @@ class Spectrum:
         """
         if hues < 2:
             raise ValueError("hues must be at least 2")
-        if seed is not None:
-            random_seed(seed)
+        # Use a dedicated RNG to avoid mutating global random state
+        rng = Random(seed)
         # Generate a random cycle of colors from the spectrum
         colors: List[Color] = [Color.parse(color) for color in SPECTRUM_COLORS.keys()]
         color_cycle = cycle(colors)
-        # Skip a random number of colors to add variability
-        for _ in range(randint(1, 18)):
+        # Skip a pseudo-random number of colors to add variability, deterministically per seed
+        for _ in range(rng.randint(1, 18)):
             next(color_cycle)
         # Create a list of colors based on the specified number of hues
         colors = [next(color_cycle) for _ in range(hues)]

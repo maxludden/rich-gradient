@@ -1,4 +1,3 @@
-# Monkey-patch rich.console.Console._collect_renderables to special-case empty rich_gradient.Text
 from typing import List, cast
 
 import rich.console as _rc

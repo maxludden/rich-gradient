@@ -254,11 +254,10 @@ at least 2. Invalid hues value: {hues}"
     def interpolate_colors(
         self, colors: Optional[Sequence[Color]] = None
     ) -> list[Color]:
-        """Interpolate colors in the gradient."""
+        """Interpolate colors across the text using gamma-correct blending."""
         colors = list(colors) if colors is not None else self.colors
         if not colors:
             raise ValueError("No colors to interpolate")
-        # Prepare the text and handle edge cases
 
         text = self.plain
         length = len(text)
@@ -268,34 +267,35 @@ at least 2. Invalid hues value: {hues}"
         if num_colors == 1:
             return [colors[0]] * length
 
-        # Compute number of segments between colors
         segments = num_colors - 1
         result: List[Color] = []
 
-        # For each character, determine its position and blend accordingly
+        GAMMA = 2.2
+
+        def to_linear(v: int) -> float:
+            return (v / 255.0) ** GAMMA
+
+        def to_srgb(x: float) -> int:
+            return int(((x ** (1.0 / GAMMA)) * 255.0))
+
         for i in range(length):
-            # Normalized position along the entire text
             pos = i / (length - 1) if length > 1 else 0.0
-            # Determine which two colors to blend between
-            float_index = pos * segments
-            index = int(float_index)
-            # Clamp to valid segment range
-            if index >= segments:
-                index = segments - 1
+            fidx = pos * segments
+            idx = int(fidx)
+            if idx >= segments:
+                idx = segments - 1
                 t = 1.0
             else:
-                t = float_index - index
+                t = fidx - idx
 
-            start = colors[index]
-            end = colors[index + 1]
-            triplet1 = start.get_truecolor()
-            triplet2 = end.get_truecolor()
+            c0 = colors[idx].get_truecolor()
+            c1 = colors[idx + 1].get_truecolor()
 
-            # Interpolate each RGB component
-            r = int(triplet1.red + (triplet2.red - triplet1.red) * t)
-            g = int(triplet1.green + (triplet2.green - triplet1.green) * t)
-            b = int(triplet1.blue + (triplet2.blue - triplet1.blue) * t)
+            lr = to_linear(c0.red) + (to_linear(c1.red) - to_linear(c0.red)) * t
+            lg = to_linear(c0.green) + (to_linear(c1.green) - to_linear(c0.green)) * t
+            lb = to_linear(c0.blue) + (to_linear(c1.blue) - to_linear(c0.blue)) * t
 
+            r, g, b = to_srgb(lr), to_srgb(lg), to_srgb(lb)
             result.append(Color.from_rgb(r, g, b))
 
         return result
@@ -359,11 +359,14 @@ at least 2. Invalid hues value: {hues}"
         return self.as_rich()
 
     def __rich_console__(self, console: Console, options) -> Iterable[Segment]:
-        """Wrap parent __rich_console__ and suppress trailing end Segment for empty text.
+        """Render Text while suppressing any output for empty content.
 
-        Delegate to console.render for nested renderables so we can filter final Segment instances
-        that represent the trailing `end` for empty text.
+        For empty plain text, yield no segments at all (no stray newlines).
+        Otherwise, delegate to the parent implementation and filter a final
+        trailing `end` segment as required.
         """
+        if self.plain == "":
+            return
         for render_output in super().__rich_console__(console, options):
             if isinstance(render_output, Segment):
                 # For empty Text, filter out both the empty text Segment and the trailing end Segment.

@@ -23,7 +23,7 @@ from rich.segment import Segment
 from rich.style import Style
 from rich.table import Column, Table
 from rich.text import Text as RichText
-from rich_color_ext import install as color_ext_install
+# rich-color-ext is installed in package __init__
 
 from rich_gradient._base_gradient import BaseGradient
 from rich_gradient.spectrum import Spectrum
@@ -92,6 +92,7 @@ class AnimatedGradient(BaseGradient):
         speed: int = 4,
         show_quit_panel: bool = True,
         repeat_scale: float = 2.0,  # Scale factor to stretch the color stops across a wider span
+        background: bool = False,
     ) -> None:
         assert refresh_per_second > 0, "refresh_per_second must be greater than 0"
         self._lock = RLock()
@@ -120,7 +121,7 @@ class AnimatedGradient(BaseGradient):
         super().__init__(
             renderables=renderables or [],
             colors=colors,
-            bg_colors=bg_colors or ["#000000"],
+            bg_colors=bg_colors,
             console=self.live.console,
             hues=hues,
             rainbow=rainbow,
@@ -129,6 +130,7 @@ class AnimatedGradient(BaseGradient):
             vertical_justify=vertical_justify,
             show_quit_panel=show_quit_panel,
             repeat_scale=repeat_scale,
+            background=background,
         )
         self._cycle = 0.0
 

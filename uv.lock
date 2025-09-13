@@ -609,20 +609,20 @@ wheels = [
 
 [[package]]
 name = "rich-color-ext"
-version = "0.1.3"
+version = "0.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
     { name = "rich" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/30/54/74ef0e1f57b87b71a3c425dc3ba69c3a308279ffb4ed38bdeffc789f655d/rich_color_ext-0.1.3.tar.gz", hash = "sha256:501296cb66d75413f29a25cee1606a1fd38ead2d95c97428e5b226d679a6ea7d", size = 19044, upload-time = "2025-06-22T05:19:56.663Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c3/5f/b1d43c38dbeb06166570a02000dd80c82c3c6cb923e8663f547cc6442372/rich_color_ext-0.1.4.tar.gz", hash = "sha256:7c5aaf93d9ba06e839e7e4a0c5cdc917b2e1339343070433a415353fb3cf152f", size = 19486, upload-time = "2025-09-05T10:12:50.368Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7e/23/85eb38396873b3ee89ee51ef7412ec184457baa7aec6e4e0ddf4dde2b8de/rich_color_ext-0.1.3-py3-none-any.whl", hash = "sha256:7a09915f2f58d30aa616b216d684e777c9ac8fbd80e0824408457b3e5404c06b", size = 8528, upload-time = "2025-06-22T05:19:55.683Z" },
+    { url = "https://files.pythonhosted.org/packages/23/ac/37a28e1f90c38a3322f67fe0f265ebde294518a1bc1826e2627fa238129d/rich_color_ext-0.1.4-py3-none-any.whl", hash = "sha256:11ed3ab21ecc3b83e0e99c0a141300650118e2ab5178eeff805ea30612b23ea9", size = 8700, upload-time = "2025-09-05T10:12:49.233Z" },
 ]
 
 [[package]]
 name = "rich-gradient"
-version = "0.3.4"
+version = "0.3.6"
 source = { editable = "." }
 dependencies = [
     { name = "loguru" },
@@ -644,7 +644,7 @@ dev = [
 requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "rich", specifier = ">=14.0.0" },
-    { name = "rich-color-ext", specifier = "==0.1.3" },
+    { name = "rich-color-ext", specifier = ">=0.1.4" },
 ]
 
 [package.metadata.requires-dev]

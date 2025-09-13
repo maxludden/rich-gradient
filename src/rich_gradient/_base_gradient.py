@@ -69,6 +69,7 @@ class BaseGradient(JupyterMixin):
         vertical_justify: VerticalAlignMethod = "top",
         show_quit_panel: bool = False,
         repeat_scale: float = 2.0,
+        background: bool = False,
     ) -> None:
         """
         Initialize a BaseGradient instance.
@@ -100,11 +101,13 @@ class BaseGradient(JupyterMixin):
         self.justify = justify  # setter will validate
         self.vertical_justify = vertical_justify  # setter will validate
         self.show_quit_panel = show_quit_panel  # setter via property
+        self.background: bool = bool(background)
         if renderables is None:
             renderables = []
         self.renderables = renderables
         self.colors = colors or []
         self.bg_colors = bg_colors or []
+        self._active_stops = self._initialize_color_stops()
 
     @property
     def renderables(self) -> List[ConsoleRenderable]:
@@ -347,6 +350,16 @@ class BaseGradient(JupyterMixin):
             Style with appropriate foreground and/or background colors.
         """
         frac = self._compute_fraction(position, width, span)
+        # If background mode is enabled, apply gradient to background only.
+        if self.background:
+            active = self.bg_colors if self.bg_colors else self.colors
+            if not active:
+                return Style()
+            r, g, b = self._interpolate_color(frac, active)
+            bg_style = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+            return Style(bgcolor=bg_style)
+
+        # Default: apply gradient to foreground; background uses bg_colors if provided.
         fg_style = ""
         bg_style = ""
         if self.colors:
@@ -433,6 +446,40 @@ class BaseGradient(JupyterMixin):
             Combined Style.
         """
         return original + gradient_style if original else gradient_style
+
+    # -----------------
+    # Test helper parity
+    # -----------------
+    def _initialize_color_stops(self) -> List[ColorTriplet]:
+        """Initialize the active color stops based on mode and provided stops.
+
+        If only one stop is provided, duplicate it to create a smooth segment pair.
+        """
+        source = self.bg_colors if self.background else self.colors
+        if not source:
+            return []
+        return [source[0], source[0]] if len(source) == 1 else source
+
+    def _color_at(self, pos: int, width: int, span: int) -> str:
+        """Return the hex color at a given position (for tests)."""
+        stops = self._active_stops
+        if not stops:
+            return "#000000"
+        frac = self._compute_fraction(pos, width, span)
+        r, g, b = self._interpolate_color(frac, stops)
+        return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+
+    def _styled(self, original: Style, color: str) -> Style:
+        """Return a Style with the given color or bgcolor, preserving original (for tests)."""
+        return (
+            original + Style(bgcolor=color)
+            if self.background
+            else original + Style(color=color)
+        )
+
+    def _interpolated_color(self, frac: float, stops: list, n: int):
+        """Return the interpolated color at a fraction (for tests)."""
+        return self._interpolate_color(frac, stops)
 
 
 if __name__ == "__main__":
