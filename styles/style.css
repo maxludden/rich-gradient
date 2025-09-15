@@ -8,218 +8,251 @@
 */
 
 /* Typography */
+.badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.badges .badge {
+    height: 20px;
+}
+
 .md-typeset h1,
 .md-typeset h2,
 .md-typeset h3,
 .md-typeset h4,
 .md-typeset h5,
 .md-typeset h6 {
-  font-family: "Urbanist", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.2px;
+    font-family: "Urbanist", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
 .md-typeset h1 {
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
 }
 
 .md-typeset h2.doc.doc-heading {
-  /* Signatures / member headings */
-  margin: 1.25rem 0 0.25rem;
-  padding: 0;
-  font-size: 1.15rem;
-  line-height: 1.4;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: .5rem;
+    /* Signatures / member headings */
+    margin: 1.25rem 0 0.25rem;
+    padding: 0;
+    font-size: 1.15rem;
+    line-height: 1.4;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
 }
 
 .md-typeset h2.doc.doc-heading code {
-  font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.95rem;
-  background: var(--md-code-bg-color);
-  display: block;              /* make signature block-like */
-  white-space: pre-wrap;       /* preserve spaces, allow wrapping */
-  overflow-wrap: anywhere;     /* wrap long tokens if needed */
-  padding: .5rem .6rem;
-  border-radius: 6px;
-  border: 1px solid var(--md-typeset-table-color);
+    font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    background: var(--md-code-bg-color);
+    display: block;
+    /* make signature block-like */
+    white-space: pre-wrap;
+    /* preserve spaces, allow wrapping */
+    overflow-wrap: anywhere;
+    /* wrap long tokens if needed */
+    padding: .5rem .6rem;
+    border-radius: 6px;
+    border: 1px solid var(--md-typeset-table-color);
 }
 
 .md-typeset h2.doc.doc-heading .headerlink {
-  color: var(--md-default-fg-color--light);
+    color: var(--md-default-fg-color--light);
 }
 
 /* Code and inline code */
 .md-typeset code {
-  font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  background-color: var(--md-code-bg-color);
-  padding: .15rem .35rem;
-  border-radius: 4px;
+    font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background-color: var(--md-code-bg-color);
+    padding: .15rem .35rem;
+    border-radius: 4px;
 }
 
 .md-typeset pre code {
-  padding: 0; /* handled by code block container */
-  background: transparent;
+    padding: 0;
+    /* handled by code block container */
+    background: #00000033;
+    padding:25px;
 }
 
 /* Card-like containers for objects */
 .md-typeset .doc.doc-object {
-  margin: 0.75rem 0 1rem;
-  border: 1px solid var(--md-typeset-table-color);
-  border-radius: 8px;
-  background-color: var(--md-typeset-table-color--light);
+    margin: 0.75rem 0 1rem;
+    border: 1px solid var(--md-typeset-table-color);
+    border-radius: 8px;
+    background-color: var(--md-typeset-table-color--light);
 }
 
-.md-typeset .doc.doc-object > .doc.doc-contents {
-  padding: 0.5rem 0.9rem 0.9rem;
+.md-typeset .doc.doc-object>.doc.doc-contents {
+    padding: 0.5rem 0.9rem 0.9rem;
 }
 
-.md-typeset .doc.doc-object > .doc.doc-heading {
-  margin: 0;
-  padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid var(--md-typeset-table-color);
-  background: transparent;
+.md-typeset .doc.doc-object>.doc.doc-heading {
+    margin: 0;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--md-typeset-table-color);
+    background: transparent;
 }
 
 /* Base/parent class line */
 .md-typeset .doc.doc-class-bases {
-  color: var(--md-default-fg-color--light);
-  margin: 0.2rem 0 0.6rem;
+    color: var(--md-default-fg-color--light);
+    margin: 0.2rem 0 0.6rem;
 }
 
 /* Children (methods, attributes) spacing */
 .md-typeset .doc.doc-children {
-  margin-top: 0.5rem;
-  padding: 0.25rem 0.1rem 0.1rem;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.1rem 0.1rem;
 }
 
-.md-typeset .doc.doc-children > .doc.doc-object {
-  margin: 0.5rem 0 0.75rem;
+.md-typeset .doc.doc-children>.doc.doc-object {
+    margin: 0.5rem 0 0.75rem;
 }
 
 /* Parameter/return tables created by mkdocstrings */
 .md-typeset .doc table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 1px solid var(--md-typeset-table-color);
-  border-radius: 6px;
-  overflow: hidden;
-  font-size: 0.95rem;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--md-typeset-table-color);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 0.95rem;
 }
 
 /* Turn only the 4-column "Parameters" table into an "Args:" list */
-.md-typeset .doc p:has(> .doc-section-title) + table:has(thead th:nth-child(4))::before {
-  content: "Args:";
-  display: block;
-  font-weight: 700;
-  margin: .4rem .6rem 0;
+.md-typeset .doc p:has(> .doc-section-title)+table:has(thead th:nth-child(4))::before {
+    content: "Args:";
+    display: block;
+    font-weight: 700;
+    margin: .4rem .6rem 0;
 }
 
-.md-typeset .doc p:has(+ table:has(thead th:nth-child(4))) { display: none; }
+.md-typeset .doc p:has(+ table:has(thead th:nth-child(4))) {
+    display: none;
+}
 
-.md-typeset .doc table:has(thead th:nth-child(4)) thead { display: none; }
+.md-typeset .doc table:has(thead th:nth-child(4)) thead {
+    display: none;
+}
 
 .md-typeset .doc thead th {
-  background: var(--md-typeset-table-color);
-  color: var(--md-default-fg-color);
-  text-align: left;
-  font-weight: 700;
-  padding: .5rem .75rem;
+    background: var(--md-typeset-table-color);
+    color: var(--md-default-fg-color);
+    text-align: left;
+    font-weight: 700;
+    padding: .5rem .75rem;
 }
 
 .md-typeset .doc tbody td {
-  border-top: 1px solid var(--md-typeset-table-color--light);
-  padding: .5rem .75rem;
-  vertical-align: top;
+    border-top: 1px solid var(--md-typeset-table-color--light);
+    padding: .5rem .75rem;
+    vertical-align: top;
 }
 
-.md-typeset .doc table:has(thead th:nth-child(4)) tbody tr { display: block; padding: .45rem .35rem; }
-.md-typeset .doc table:has(thead th:nth-child(4)) tbody tr + tr { border-top: 1px solid var(--md-typeset-table-color); }
-.md-typeset .doc table:has(thead th:nth-child(4)) tbody tr:nth-child(odd) { background: transparent; }
+.md-typeset .doc table:has(thead th:nth-child(4)) tbody tr {
+    display: block;
+    padding: .45rem .35rem;
+}
+
+.md-typeset .doc table:has(thead th:nth-child(4)) tbody tr+tr {
+    border-top: 1px solid var(--md-typeset-table-color);
+}
+
+.md-typeset .doc table:has(thead th:nth-child(4)) tbody tr:nth-child(odd) {
+    background: transparent;
+}
 
 /* Param name */
 .md-typeset .doc table:has(thead th:nth-child(4)) tbody td:nth-child(1) {
-  display: block;
-  padding-bottom: .1rem;
-  font-weight: 700;
+    display: block;
+    padding-bottom: .1rem;
+    font-weight: 700;
 }
 
 /* Param type */
 .md-typeset .doc table:has(thead th:nth-child(4)) tbody td:nth-child(2) {
-  display: block;
-  color: var(--md-default-fg-color--light);
-  font-size: .9rem;
-  padding-top: 0;
+    display: block;
+    color: var(--md-default-fg-color--light);
+    font-size: .9rem;
+    padding-top: 0;
 }
 
 /* Description */
 .md-typeset .doc table:has(thead th:nth-child(4)) tbody td:nth-child(3) {
-  display: block;
-  margin-top: .15rem;
+    display: block;
+    margin-top: .15rem;
 }
 
 /* Default value */
 .md-typeset .doc table:has(thead th:nth-child(4)) tbody td:nth-child(4) {
-  display: block;
-  margin-top: .15rem;
+    display: block;
+    margin-top: .15rem;
 }
+
 .md-typeset .doc table:has(thead th:nth-child(4)) tbody td:nth-child(4)::before {
-  content: "Defaults to ";
-  color: var(--md-default-fg-color--light);
+    content: "Defaults to ";
+    color: var(--md-default-fg-color--light);
 }
 
 /* Pills for labels (e.g., staticmethod, property) */
 .md-typeset .doc .doc-labels {
-  display: inline-flex;
-  gap: .35rem;
+    display: inline-flex;
+    gap: .35rem;
 }
 
 .md-typeset .doc .doc-label {
-  display: inline-block;
-  padding: .1rem .4rem;
-  border-radius: 999px;
-  font-size: .75rem;
-  line-height: 1.2;
-  background: color-mix(in srgb, var(--md-accent-fg-color) 20%, transparent);
-  border: 1px solid color-mix(in srgb, var(--md-accent-fg-color) 50%, transparent);
-  color: var(--md-accent-fg-color);
+    display: inline-block;
+    padding: .1rem .4rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    line-height: 1.2;
+    background: color-mix(in srgb, var(--md-accent-fg-color) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--md-accent-fg-color) 50%, transparent);
+    color: var(--md-accent-fg-color);
 }
 
 /* Source code details block */
-.md-typeset details.quote > summary {
-  background: var(--md-typeset-table-color--light);
-  border: 1px solid var(--md-typeset-table-color);
-  padding: .4rem .6rem;
-  border-radius: 6px;
+.md-typeset details.quote>summary {
+    background: var(--md-typeset-table-color--light);
+    border: 1px solid var(--md-typeset-table-color);
+    padding: .4rem .6rem;
+    border-radius: 6px;
 }
 
-.md-typeset details.quote[open] > summary {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+.md-typeset details.quote[open]>summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.md-typeset details.quote > .highlight,
-.md-typeset details.quote > .language-python.highlight {
-  border: 1px solid var(--md-typeset-table-color);
-  border-top: 0;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+.md-typeset details.quote>.highlight,
+.md-typeset details.quote>.language-python.highlight {
+    border: 1px solid var(--md-typeset-table-color);
+    border-top: 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 /* Muted section labels like "Parameters:" and "Returns:" */
 .md-typeset .doc .doc-section-title {
-  color: var(--md-default-fg-color--light);
-  font-weight: 600;
+    color: var(--md-default-fg-color--light);
+    font-weight: 600;
 }
 
 /* Keep versions and banners subtle if used */
 .version {
-  color: var(--md-accent-fg-color);
-  font-weight: 600;
+    color: var(--md-accent-fg-color);
+    font-weight: 600;
 }
 
-.banner { width: 100%; }
+.banner {
+    width: 100%;
+}

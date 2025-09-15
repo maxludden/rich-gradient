@@ -501,6 +501,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../base_gradient_ref/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Base Gradient Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../animated_gradient_ref/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Animated Gradient Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../rule_ref/" class="md-nav__link">
         
   
@@ -1127,33 +1171,58 @@
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2 id="unreleased">[Unreleased]<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<h3 id="v036-2025-09-10-consolidated-gradient-rng-fix-gamma-correct-text-docstests">v0.3.6 - 2025-09-10 | Consolidated Gradient, RNG fix, gamma-correct Text, docs/tests<a class="headerlink" href="#v036-2025-09-10-consolidated-gradient-rng-fix-gamma-correct-text-docstests" title="Permanent link">&para;</a></h3>
+<h3 id="v036-2025-09-10-consolidated-gradient-rng-fix-gamma-correct-text-docstests">v0.3.6 - 2025-09-10 |  <span style="color: rgb(215, 255, 100)">Consolidated Gradient, RNG fix, gamma-correct Text, docs/tests</span><a class="headerlink" href="#v036-2025-09-10-consolidated-gradient-rng-fix-gamma-correct-text-docstests" title="Permanent link">&para;</a></h3>
 <h4 id="added-changed">Added / Changed<a class="headerlink" href="#added-changed" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Gradient</li>
+<li>Gradient<ul>
 <li>Consolidated to a single public factory (<code>rich_gradient.gradient.Gradient</code>) that returns <code>BaseGradient</code> or <code>AnimatedGradient</code> internally.</li>
 <li>Kept test helper methods by adding equivalents to <code>BaseGradient</code> (<code>_color_at</code>, <code>_styled</code>, <code>_interpolated_color</code>) and <code>_active_stops</code> initialization.</li>
 <li>Added <code>background=</code> support to <code>BaseGradient</code>/<code>AnimatedGradient</code> for parity with previous API.</li>
-<li>Text</li>
+</ul>
+</li>
+<li>Text<ul>
 <li>Interpolates colors with gamma-correct blending for visual consistency with <code>Gradient</code>.</li>
-<li>Spectrum</li>
+</ul>
+</li>
+<li>Spectrum<ul>
 <li>Uses a dedicated <code>random.Random(seed)</code> instance to avoid mutating global RNG state; behavior is deterministic per seed without side effects.</li>
-<li>Rule</li>
+</ul>
+</li>
+<li>Rule<ul>
 <li>Normalized invalid color errors to <code>ValueError</code> for consistency.</li>
-<li>Package Init</li>
+</ul>
+</li>
+<li>Package Init<ul>
 <li>Centralized <code>rich-color-ext</code> install to package init; removed duplicate installs from other modules.</li>
-<li>Repo Hygiene</li>
+</ul>
+</li>
+<li>Repo Hygiene<ul>
 <li>Removed committed build artifacts (<code>dist/</code>) and static site (<code>site/</code>) from source; they remain in <code>.gitignore</code>.</li>
-<li>Docs / Examples / Tests</li>
+</ul>
+</li>
+<li>Docs / Examples / Tests<ul>
 <li>README basic example fixed (missing parenthesis).</li>
 <li>Benchmark test now measures actual console printing safely.</li>
-<li>CLI</li>
+</ul>
+</li>
+<li>CLI<ul>
 <li>Relaxed <code>--justify</code> and <code>--overflow</code> option annotations from <code>Literal[...]</code> to <code>str</code> with explicit validation for broader Typer/Click compatibility.</li>
 <li>Pinned dependencies to stabilize CLI behavior: <code>typer&gt;=0.12.5,&lt;0.13</code> and <code>click&gt;=8.1.7,&lt;9.0.0</code>.</li>
-<li>Tests</li>
+</ul>
+</li>
+<li>Tests<ul>
 <li>Made CLI tests portable across Click/Typer versions by removing <code>mix_stderr</code> usage and accepting warnings from stdout or stderr.</li>
-<li>Cleanup</li>
+</ul>
+</li>
+<li>Cleanup<ul>
 <li>Removed duplicate internal <code>Gradient</code> factory leftover in <code>_animated_gradient.py</code>; the public factory now lives in <code>rich_gradient/gradient.py</code>.</li>
+</ul>
+</li>
+<li>Docs<ul>
+<li>Added _base_gradient_ref.md for referencing BaseGradient</li>
+<li>Added _animated_gradient_ref.md for referencing AnimatedGradient</li>
+</ul>
+</li>
 </ul>
 <h4 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h4>
 <ul>
