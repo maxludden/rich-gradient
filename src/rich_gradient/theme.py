@@ -15,18 +15,20 @@ _ColorTuple = Tuple[int, int, int]
 __all__ = ["GRADIENT_TERMINAL_THEME", "GradientTheme"]
 
 class GradientTheme(Theme):
-    """A container for style information used by 'rich.console.Console'.
+    """A container for style information used by ``rich.console.Console``.
 
     Args:
-        styles (Dict[str, Style], optional): A mapping of style names on to \
-            styles. Defaults to None for a theme with no styles.
-        inherit (bool, optional): Inherit default styles. Defaults to True.
+        styles (Dict[str, StyleType], optional): Mapping of style names to
+            style definitions. Defaults to ``DEFAULT_STYLES``.
+
+    Notes:
+        The theme always inherits Rich's default styles (``inherit=True``).
     """
 
     # styles: Dict[str, Style] = {}
 
     def __init__(self, styles: Dict[str, StyleType] = DEFAULT_STYLES) -> None:
-        """Initialize the GradientTheme with default styles."""
+        """Initialize the theme with the given styles."""
         super().__init__(styles=styles, inherit=True)
         self._theme: Theme = Theme(DEFAULT_STYLES)
         self._styles: Dict[str, StyleType] = styles

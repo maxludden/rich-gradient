@@ -5,33 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<!--## [Unreleased]-->
-### v0.3.6 - 2025-09-10 | Consolidated Gradient, RNG fix, gamma-correct Text, docs/tests
+## [Unreleased]
+
+### v0.3.6 - 2025-09-10 |  <span style="color: rgb(215, 255, 100)">Consolidated Gradient, RNG fix, gamma-correct Text, docs/tests</span>
 
 #### Added / Changed
 
 - Gradient
-  - Consolidated to a single public factory (`rich_gradient.gradient.Gradient`) that returns `BaseGradient` or `AnimatedGradient` internally.
-  - Kept test helper methods by adding equivalents to `BaseGradient` (`_color_at`, `_styled`, `_interpolated_color`) and `_active_stops` initialization.
-  - Added `background=` support to `BaseGradient`/`AnimatedGradient` for parity with previous API.
+    - Consolidated to a single public factory (`rich_gradient.gradient.Gradient`) that returns `BaseGradient` or `AnimatedGradient` internally.
+    - Kept test helper methods by adding equivalents to `BaseGradient` (`_color_at`, `_styled`, `_interpolated_color`) and `_active_stops` initialization.
+    - Added `background=` support to `BaseGradient`/`AnimatedGradient` for parity with previous API.
 - Text
-  - Interpolates colors with gamma-correct blending for visual consistency with `Gradient`.
+    - Interpolates colors with gamma-correct blending for visual consistency with `Gradient`.
 - Spectrum
-  - Uses a dedicated `random.Random(seed)` instance to avoid mutating global RNG state; behavior is deterministic per seed without side effects.
+    - Uses a dedicated `random.Random(seed)` instance to avoid mutating global RNG state; behavior is deterministic per seed without side effects.
 - Rule
-  - Normalized invalid color errors to `ValueError` for consistency.
+    - Normalized invalid color errors to `ValueError` for consistency.
 - Package Init
-  - Centralized `rich-color-ext` install to package init; removed duplicate installs from other modules.
+    - Centralized `rich-color-ext` install to package init; removed duplicate installs from other modules.
 - Repo Hygiene
-  - Removed committed build artifacts (`dist/`) and static site (`site/`) from source; they remain in `.gitignore`.
+    - Removed committed build artifacts (`dist/`) and static site (`site/`) from source; they remain in `.gitignore`.
 - Docs / Examples / Tests
-  - README basic example fixed (missing parenthesis).
-  - Benchmark test now measures actual console printing safely.
+    - README basic example fixed (missing parenthesis).
+    - Benchmark test now measures actual console printing safely.
+- CLI
+    - Relaxed `--justify` and `--overflow` option annotations from `Literal[...]` to `str` with explicit validation for broader Typer/Click compatibility.
+    - Pinned dependencies to stabilize CLI behavior: `typer>=0.12.5,<0.13` and `click>=8.1.7,<9.0.0`.
+- Tests
+    - Made CLI tests portable across Click/Typer versions by removing `mix_stderr` usage and accepting warnings from stdout or stderr.
+- Cleanup
+    - Removed duplicate internal `Gradient` factory leftover in `_animated_gradient.py`; the public factory now lives in `rich_gradient/gradient.py`.
+- Docs
+    - Added _base_gradient_ref.md for referencing BaseGradient
+    - Added _animated_gradient_ref.md for referencing AnimatedGradient
+
 
 #### Fixed
 
 - Eliminated duplicate Gradient implementations that could drift out of sync.
 - Avoided global RNG seeding in `Spectrum` that could affect host applications.
+
+
 ### v0.3.4 - 2025-09-03 | <span style="color: rgb(215, 255, 100)">Text.as_rich(), background gradients, spectrum + docs</span>
 
 #### v0.3.4 Added

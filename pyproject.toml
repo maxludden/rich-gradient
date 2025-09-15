@@ -9,6 +9,9 @@ dependencies = [
     "loguru>=0.7.3",
     "rich>=14.0.0",
     "rich-color-ext>=0.1.4",
+    # Pin Typer/Click to stable, compatible ranges to avoid CLI test brittleness
+    "typer>=0.12.5,<0.13",
+    "click>=8.1.7,<9.0.0",
 ]
 
 
@@ -28,6 +31,9 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rich_gradient"]
+
+[project.scripts]
+rich-gradient = "rich_gradient.cli:app"
 
 
 [tool.ruff]

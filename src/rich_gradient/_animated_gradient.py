@@ -44,31 +44,33 @@ class AnimatedGradient(BaseGradient):
     """A gradient that animates over time using `rich.live.Live`.
 
     Args:
-        renderables(List(ConsoleRenderable, optional)): List of renderables to apply the gradient to.
-        colors(List[ColorType], optional): List of colors to use in the gradient.
-        bg_colors(List[ColorType], optional): List of background colors to use in the gradient.
-        auto_refresh(bool): Whether to automatically refresh the Live context. Defaults to True.
-        refresh_per_second(float): How many times per second to refresh the Live context. Defaults to 30.0.
-        console(Console, optional): The console to use for rendering. Defaults to the global console.
-        transient(bool): Whether to keep the Live context transient (not clearing on stop). Defaults to False.
-        redirect_stdout(bool): Whether to redirect stdout to the Live context. Defaults to False.
-        redirect_stderr(bool): Whether to redirect stderr to the Live context. Defaults to False.
-        disable(bool): Whether to disable the gradient rendering. Defaults to False.
-        expand(bool): Whether to expand the gradient to fill the console width/height. Defaults to False.
-        justify(AlignMethod): How to justify the gradient text. Defaults to "left".
-        vertical_justify(VerticalAlignMethod): How to vertically justify the gradient text. Defaults to "top".
-        hues(int): Number of hues to use in the gradient. Defaults to 5.
-        rainbow(bool): Whether to use a rainbow gradient. Defaults to False.
-        speed(int): Speed of the animation in milliseconds. Defaults to 2.
-        repeat_scale(float): Scale factor to stretch the color stops across a wider span. Defaults to 2.0.
+        renderables (Optional[List[ConsoleRenderable]]): Renderables to apply the gradient to.
+        colors (Optional[List[ColorType]]): Foreground color stops for the gradient.
+        bg_colors (Optional[List[ColorType]]): Background color stops for the gradient.
+        auto_refresh (bool): Automatically refresh the Live context. Defaults to True.
+        refresh_per_second (float): Refresh rate for the Live context. Defaults to 30.0.
+        console (Optional[Console]): Console to use for rendering. Defaults to the global console.
+        transient (bool): Keep Live transient (don’t clear on stop). Defaults to False.
+        redirect_stdout (bool): Redirect stdout to Live. Defaults to False.
+        redirect_stderr (bool): Redirect stderr to Live. Defaults to False.
+        disable (bool): Disable rendering. Defaults to False.
+        expand (bool): Expand to fill console width/height. Defaults to False.
+        justify (AlignMethod): Horizontal justification. Defaults to "left".
+        vertical_justify (VerticalAlignMethod): Vertical justification. Defaults to "top".
+        hues (int): Number of hues when auto-generating colors. Defaults to 5.
+        rainbow (bool): Use a rainbow gradient. Defaults to False.
+        speed (int): Animation speed in milliseconds. Defaults to 4.
+        show_quit_panel (bool): Show a quit instructions panel. Defaults to True.
+        repeat_scale (float): Stretch color stops across a wider span. Defaults to 2.0.
+        background (bool): Apply gradient to background instead of foreground. Defaults to False.
 
-    Usage:
-        ag = AnimatedGradient(renderables=["Hello"], rainbow=True)
-        ag.run()  # blocks until Ctrl+C
+    Examples:
+        >>> ag = AnimatedGradient(renderables=["Hello"], rainbow=True)
+        >>> ag.run()  # blocks until Ctrl+C
 
-        # or as a context manager
-        with AnimatedGradient(renderables=["Hi"], rainbow=True) as ag:
-            time.sleep(2)
+        Or as a context manager:
+        >>> with AnimatedGradient(renderables=["Hi"], rainbow=True) as ag:
+        ...     time.sleep(2)
     """
 
     def __init__(
@@ -246,45 +248,8 @@ class AnimatedGradient(BaseGradient):
             self._running = False
 
 
-class Gradient:
-    """Factory class that returns a BaseGradient or AnimatedGradient depending on input.
-
-    This preserves the public `Gradient` constructor while dispatching to
-    AnimatedGradient when 'animated' or animation-like args are passed.
-    """
-
-    def __new__(
-        cls,
-        *args,
-        animated: bool = False,
-        auto: bool = True,
-        refresh_per_second: float = 30.0,
-        **kwargs,
-    ):
-        # If explicitly requested, use AnimatedGradient
-        if (
-            animated
-            or kwargs.get("auto_refresh", False)
-            or kwargs.get("refresh_per_second", None)
-        ):
-            return AnimatedGradient(
-                *args,
-                refresh_per_second=kwargs.pop("refresh_per_second", refresh_per_second),
-                auto_refresh=kwargs.pop("auto_refresh", True),
-                **kwargs,
-            )
-        # If auto=True and a likely animation arg is present, use AnimatedGradient
-        if auto and (
-            kwargs.get("rainbow", False) or kwargs.get("show_quit_panel", False)
-        ):
-            return AnimatedGradient(
-                *args,
-                refresh_per_second=kwargs.pop("refresh_per_second", refresh_per_second),
-                auto_refresh=kwargs.pop("auto_refresh", True),
-                **kwargs,
-            )
-        # Otherwise, use BaseGradient
-        return BaseGradient(*args, **kwargs)
+## Note: The public Gradient factory now lives in `rich_gradient/gradient.py`.
+## Keeping a duplicate here risks confusion, so it has been removed.
 
 
 if __name__ == "__main__":

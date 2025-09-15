@@ -15,6 +15,8 @@ nav:
     - References:
         - Text Reference: "text_ref.md"
         - Gradient Reference: "gradient_ref.md"
+        - Base Gradient Reference: "base_gradient_ref.md"
+        - Animated Gradient Reference: "animated_gradient_ref.md"
         - Rule Reference: "rule_ref.md"
         - Spectrum Reference: "spectrum_ref.md"
         - Theme Reference: "theme_ref.md"

@@ -1,9 +1,11 @@
 # [![rich-gradient](https://maxludden.github.io/rich-gradient/img/rich-gradient.svg)](https://maxludden.github.io/rich-gradient/)
 
-[![Python](https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12-blue)](https://www.python.org/)
-[![PyPI](https://img.shields.io/pypi/v/rich-gradient)](https://pypi.org/project/rich_gradient/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/rich-gradient)](https://pypi.org/project/rich-gradient/)
-[![uv](https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e)](https://github.com/astral-sh/uv)
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12-blue" alt="Python versions"></a>
+  <a href="https://pypi.org/project/rich_gradient/"><img src="https://img.shields.io/pypi/v/rich-gradient" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/rich-gradient/"><img src="https://img.shields.io/pypi/dm/rich-gradient" alt="PyPI downloads"></a>
+  <a href="https://github.com/astral-sh/uv"><img src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt="uv badge"></a>
+</p>
 
 ![gradient example](https://maxludden.github.io/rich-gradient/img/gradient.svg)
 
@@ -37,37 +39,39 @@ pip install rich-gradient
 
 ## CLI Usage
 
-After installation, a `rich-gradient` command is available. It works similarly to `rich-cli` but focuses on gradients.
+The package ships with a Typer-based CLI. The first command is `text`, which prints gradient-styled text. More commands may be added over time.
 
-- Print gradient text from argument:
+### Quick examples
 
-  `rich-gradient "Hello [b]world[/b]!" --colors magenta gold1 #0f0`
+- Print gradient text with two color stops:
 
-- Read from a file or stdin:
+  `rich-gradient text "Hello [b]world[/b]!" -c magenta -c cyan`
 
-  `rich-gradient --file README.md`
+- Rainbow gradient (auto-generated colors):
 
-  `cat README.md | rich-gradient -`
+  `rich-gradient text "Rainbow!" --rainbow`
 
-- Animate with a rainbow:
+- Read from stdin:
 
-  `rich-gradient "Animated gradient" --rainbow --animated --fps 20`
+  `echo "From stdin" | rich-gradient text`
 
-- Wrap in a panel with title:
+- Wrap in a panel with a title:
 
-  `rich-gradient "Panel content" --panel --title "Gradient Panel"`
+  `rich-gradient text "Panel content" --panel --title "Gradient Panel"`
 
-- Draw a gradient rule:
+- Save to SVG (uses the project terminal theme):
 
-  `rich-gradient rule --title "Section" --colors deeppink,purple,violet --thickness 2 --align right`
+  `rich-gradient text "Save me" --save-svg out/example.svg`
 
-- Render a file with syntax highlighting:
+### Common options
 
-  `rich-gradient file path/to/app.py --line-numbers`
-
-- Render Markdown:
-
-  `rich-gradient markdown "# Hello\n\nThis is **Markdown**."`
+- `-c/--color`: Repeat to add multiple foreground color stops.
+- `-b/--bgcolor`: Repeat for background color stops.
+- `--rainbow`, `--hues`: Auto-generate a palette if colors aren’t provided.
+- `--style`, `--justify`, `--overflow`, `--no-wrap/--wrap`, `--end`, `--tab-size`, `--markup/--no-markup`.
+- `--panel`, `--title`: Wrap output in a panel with optional title.
+- `--width`: Console width. `--record`: enable recording.
+- `--save-svg PATH`: Save the current render as SVG.
 
 ## Usage
 

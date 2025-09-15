@@ -319,20 +319,11 @@ at least 2. Invalid hues value: {hues}"
 
 
     def as_rich(self) -> RichText:
-        """Return a plain ``rich.text.Text`` instance with styles and spans applied.
+        """Return a plain ``rich.text.Text`` with styles and spans applied.
 
-        Args:
-            value (Text | TextType): Either an instance of this class (``Text``)
-                or a text-like value (``TextType``). If a non-``Text`` value is provided
-                a new ``Text`` will be constructed using any provided ``kwargs`` and
-                then converted.
-            kwargs (Any): Forwarded to the constructor when `value` is not already a
-                ``Text`` instance.
-
-        The returned object is a ``rich.text.Text`` (the base class) containing the
-        same plain content and spans/styles as the source. This is useful when a
-        consumer specifically needs an instance of the base ``rich.text.Text``
-        instead of the gradient-aware subclass.
+        This converts the current gradient-aware ``Text`` into a base
+        ``rich.text.Text`` carrying the same plain content and span/style
+        information. Useful when a consumer specifically needs the base type.
         """
         # Create a plain RichText that mirrors the source content and layout
         rich_text = RichText(
