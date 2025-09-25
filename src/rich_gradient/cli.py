@@ -200,8 +200,7 @@ def main(
     ),
 ) -> None:
     """rich-gradient command line interface."""
-    if version:
-        pass
+    return
 
 
 if __name__ == "__main__":

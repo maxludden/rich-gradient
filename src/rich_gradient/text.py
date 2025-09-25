@@ -35,6 +35,7 @@ class Text(RichText):
         self,
         text: TextType = "",
         colors: Optional[Sequence[ColorType]] = None,
+        *,
         rainbow: bool = False,
         hues: int = 5,
         style: StyleType = "",
@@ -155,15 +156,14 @@ instances. Defaults to None.
         """
         try:
             if isinstance(value, Color):
-                color = value
+                return value
             elif isinstance(value, ColorTriplet):
-                color = Color.from_rgb(value.red, value.green, value.blue)
+                return Color.from_rgb(value.red, value.green, value.blue)
             elif isinstance(value, tuple) and len(value) == 3:
                 r, g, b = value
-                color = Color.from_rgb(int(r), int(g), int(b))
+                return Color.from_rgb(int(r), int(g), int(b))
             else:
-                color = Color.parse(str(value))
-            return color
+                return Color.parse(str(value))
         except ColorParseError as cpe:
             raise ColorParseError(
                 f"Failed to parse and normalize color: {value}"
