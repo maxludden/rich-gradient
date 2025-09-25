@@ -1,6 +1,6 @@
 """A container for style information, used by `gradient.Gradient'."""
 
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 from rich.console import Console
 from rich.style import Style, StyleType
@@ -13,6 +13,7 @@ from rich_gradient.default_styles import DEFAULT_STYLES, styles_table
 _ColorTuple = Tuple[int, int, int]
 
 __all__ = ["GRADIENT_TERMINAL_THEME", "GradientTheme"]
+
 
 class GradientTheme(Theme):
     """A container for style information used by ``rich.console.Console``.
@@ -27,14 +28,17 @@ class GradientTheme(Theme):
 
     # styles: Dict[str, Style] = {}
 
-    def __init__(self, styles: Dict[str, StyleType] = DEFAULT_STYLES) -> None:
+    def __init__(self, styles: Optional[Dict[str, StyleType]] = None) -> None:
         """Initialize the theme with the given styles."""
+        if styles is None:
+            styles = dict(DEFAULT_STYLES)
         super().__init__(styles=styles, inherit=True)
         self._theme: Theme = Theme(DEFAULT_STYLES)
         self._styles: Dict[str, StyleType] = styles
 
     @property
     def theme(self) -> Theme:
+        """Return the current theme instance used for styling."""
         return self._theme
 
     @theme.setter
@@ -85,7 +89,7 @@ GRADIENT_TERMINAL_THEME = TerminalTheme(
 )
 
 if __name__ == "__main__":  # pragma: no cover
-    theme = GradientTheme()
-    console = Console(theme=theme.theme)
+    themes = GradientTheme()
+    console = Console(theme=themes.theme)
 
-    console.print(theme.get_theme_table(), justify="center")
+    console.print(themes.get_theme_table(), justify="center")

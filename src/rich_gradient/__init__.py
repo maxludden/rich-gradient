@@ -1,3 +1,5 @@
+"""rich_gradient"""
+
 from typing import List, cast
 
 import rich.console as _rc
@@ -19,6 +21,8 @@ __all__ = [
     "GRADIENT_TERMINAL_THEME",
     "Spectrum",
 ]
+
+__version__ = "0.3.7"
 
 # Install rich_color_ext
 install()
