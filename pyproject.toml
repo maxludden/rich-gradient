@@ -1,6 +1,5 @@
 [project]
 name = "rich-gradient"
-version = "0.3.6"
 description = "A gradient generator for the Rich library."
 readme = "README.md"
 authors = [{ name = "Max Ludden", email = "dev@maxludden.com" }]
@@ -9,11 +8,17 @@ dependencies = [
     "loguru>=0.7.3",
     "rich>=14.0.0",
     "rich-color-ext>=0.1.4",
-    # Pin Typer/Click to stable, compatible ranges to avoid CLI test brittleness
-    "typer>=0.12.5,<0.13",
-    "click>=8.1.7,<9.0.0",
+    "typer>=0.19.2,<0.20",
 ]
+dynamic = ["version"]
 
+
+[project.urls]
+Homepage = "https://github.com/maxludden/rich-gradient"
+Documentation = "https://maxludden.github.io/rich-gradient"
+Repository = "https://github.com/maxludden/rich-gradient"
+Issues = "https://github.com/maxludden/rich-gradient/issues"
+Changelog = "https://maxludden.github.io/rich-gradient/CHANGELOG/"
 
 [build-system]
 requires = ["hatchling"]
@@ -31,6 +36,9 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rich_gradient"]
+
+[tool.hatch.version]
+path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
 rich-gradient = "rich_gradient.cli:app"

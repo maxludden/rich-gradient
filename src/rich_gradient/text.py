@@ -8,6 +8,7 @@ rich.text.Text functionality. It preserves all of rich.text.Text's features
 while enabling smooth multi-stop gradients, rainbow generation, and single-color
 optimizations.
 """
+
 from typing import Iterable, List, Optional, Sequence, Tuple, TypeAlias, Union
 
 from rich.color import Color, ColorParseError
@@ -17,8 +18,9 @@ from rich.control import strip_control_codes
 from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style, StyleType
-from rich.text import Span, TextType
+from rich.text import Span
 from rich.text import Text as RichText
+from rich.text import TextType
 
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -61,7 +63,8 @@ class Text(RichText):
             bgcolors (Optional[List[ColorType]]): A list of background colors as Color \
 instances. Defaults to None.
             markup (bool): If True, parse Rich markup tags in the input text. Defaults to True.
-            spans (Optional[Sequence[Span]]): A list of spans to apply to the text. Defaults to None.
+            spans (Optional[Sequence[Span]]): A list of spans to apply to the text. \
+            Defaults to None.
         """
 
         # Parse the input text with or without markup
@@ -106,8 +109,7 @@ instances. Defaults to None.
                 parsed_style = Style.parse(style)
             elif isinstance(style, Style):
                 parsed_style = style
-            else:
-                parsed_style = Style.parse(str(style))
+            parsed_style = Style.parse(str(style))
             style_with_color = (
                 Style(color=self.colors[0], bgcolor=self.bgcolors[0]) + parsed_style
             )
@@ -219,9 +221,11 @@ at least 2. Invalid hues value: {hues}"
         self, bgcolors: Optional[Sequence[ColorType]] = None, hues: int = 5
     ) -> List[Color]:
         """Parse and return a list of background colors for the gradient.
-        Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, and Color objects.
+        Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, \
+        and Color objects.
         Args:
-            bgcolors (Optional[Sequence[ColorType | Color]]): A list of background colors as Color instances or strings.
+            bgcolors (Optional[Sequence[ColorType | Color]]): A list of background colors as \
+            Color instances or strings.
             hues (int): The number of hues to generate if bgcolors are not provided.
         Returns:
             List[Color]: A list of Color objects for background colors.
@@ -317,7 +321,6 @@ at least 2. Invalid hues value: {hues}"
             # Stylize the single character range
             self.stylize(span_style, index, index + 1)
 
-
     def as_rich(self) -> RichText:
         """Return a plain ``rich.text.Text`` with styles and spans applied.
 
@@ -360,7 +363,8 @@ at least 2. Invalid hues value: {hues}"
             return
         for render_output in super().__rich_console__(console, options):
             if isinstance(render_output, Segment):
-                # For empty Text, filter out both the empty text Segment and the trailing end Segment.
+                # For empty Text,
+                # filter out both the empty text Segment and the trailing end Segment.
                 if self.plain == "" and render_output.text in ("", self.end):
                     continue
                 yield render_output
@@ -387,7 +391,8 @@ if __name__ == "__main__":
 It is built on top of the amazing rich library, subclassing rich.text.Text. As such, you \
 can make use of all the features rich.text.Text provides including:\n\n\t- [bold]bold text[/bold]\
 \n\t- [italic]italic text[/italic]\n\t- [underline]underline text[/underline]" \
-\n\t- [strike]strikethrough text[/strike]\n\t- [reverse]reverse text[/reverse]\n\t- Text alignment\n\t- \
+\n\t- [strike]strikethrough text[/strike]\n\t- [reverse]\
+reverse text[/reverse]\n\t- Text alignment\n\t- \
 Overflow handling\n\t- Custom styles and spans',
                 colors=colors,
                 bgcolors=["#000"],

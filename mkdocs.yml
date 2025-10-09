@@ -62,6 +62,12 @@ plugins:
 - mkdocstrings
 - search
 
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/maxludden
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/rich-gradient
 extra_css:
     - "styles/style.css"
     - "styles/extra.css"

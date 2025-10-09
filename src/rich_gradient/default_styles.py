@@ -1,3 +1,4 @@
+#!/bin/env python3
 """A container for the default styles used by GradientConsole."""
 
 from __future__ import annotations
@@ -5,12 +6,12 @@ from __future__ import annotations
 from typing import Dict, Optional
 
 from rich.console import Console
+from rich.default_styles import DEFAULT_STYLES as RICH_DEFAULT_STYLES
 from rich.style import Style, StyleType
 from rich.table import Table
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install as tr_install
-from rich.default_styles import DEFAULT_STYLES as RICH_DEFAULT_STYLES
 
 global DEFAULT_STYLES
 DEFAULT_STYLES: dict[str, StyleType] = {
@@ -225,7 +226,7 @@ DEFAULT_STYLES: dict[str, StyleType] = {
     "logging.level.success": Style(color="#afff00", bold=True),
     "logging.level.warning": Style(color="#ffff00", italic=True),
     "logging.level.error": Style(color="#ff3300", bold=True),
-    "logging.level.critical": Style(color="#eeeeee",bgcolor="#990000", bold=True),
+    "logging.level.critical": Style(color="#eeeeee", bgcolor="#990000", bold=True),
     "log.level": Style.null(),
     "log.time": Style(color="#00ffff", dim=True),
     "log.message": Style.null(),
@@ -239,7 +240,7 @@ DEFAULT_STYLES: dict[str, StyleType] = {
     "repr.error": Style(color="#ff0000", bold=True),
     "repr.str": Style(color="#99ff00", italic=False, bold=False),
     "repr.brace": Style(color="#DDDDDD", bold=True),
-    "repr.comma": Style(color= "#555555", bold=True),
+    "repr.comma": Style(color="#555555", bold=True),
     "repr.ipv4": Style(bold=True, color="#00ff00"),
     "repr.ipv6": Style(bold=True, color="#00ff00"),
     "repr.eui48": Style(bold=True, color="#00ff00"),

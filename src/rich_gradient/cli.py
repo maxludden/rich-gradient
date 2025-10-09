@@ -7,19 +7,22 @@ Provides a `text` command to print gradient-styled text.
 from __future__ import annotations
 
 import sys
-from typing import List, Optional
 from pathlib import Path
+from typing import List, Optional
 
 import typer
+from rich.color import ColorParseError
 from rich.console import Console
 from rich.panel import Panel
 
-from rich_gradient import Text
-from rich.color import ColorParseError
+from rich_gradient import Text, __version__
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-
-app = typer.Typer(help="rich-gradient CLI")
+app = typer.Typer(
+    help="rich-gradient CLI",
+    no_args_is_help=True,
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
 
 
 @app.command("text")
@@ -141,7 +144,11 @@ def text_cmd(
 
     # If saving SVG, Console must be created with record=True
     effective_record = record or (save_svg is not None)
-    console = Console(width=width, record=effective_record) if width else Console(record=effective_record)
+    console = (
+        Console(width=width, record=effective_record)
+        if width
+        else Console(record=effective_record)
+    )
 
     if title and not panel:
         typer.echo("Warning: --title has no effect without --panel", err=True)
@@ -167,7 +174,7 @@ def text_cmd(
         )
 
 
-def _version_callback(value: bool):
+def print_version(ctx: typer.Context, value: bool) -> None:
     """Display the version of rich-gradient and exit if requested.
 
     If the version flag is provided, prints the package version and exits the CLI. If the version cannot be determined, prints 'unknown' instead.
@@ -175,14 +182,9 @@ def _version_callback(value: bool):
     Args:
         value: Boolean indicating whether the version flag was provided.
     """
-    if not value:
+    if not value or ctx.resilient_parsing:
         return
-    try:
-        from importlib.metadata import version
-
-        typer.echo(version("rich-gradient"))
-    except Exception:
-        typer.echo("unknown")
+    typer.echo(f"rich-gradient, version: {__version__}")
     raise typer.Exit()
 
 
@@ -190,12 +192,13 @@ def _version_callback(value: bool):
 def main(
     version: Optional[bool] = typer.Option(
         None,
+        "-v",
         "--version",
-        callback=_version_callback,
+        callback=print_version,
         is_eager=True,
-        help="Show version and exit.",
+        help="Print version and exit.",
     ),
-):
+) -> None:
     """rich-gradient command line interface."""
     return
 
