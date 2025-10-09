@@ -11,9 +11,14 @@ from pathlib import Path
 from typing import List, Optional
 
 import typer
+from rich.align import Align
 from rich.color import ColorParseError
 from rich.console import Console
+from rich import box
 from rich.panel import Panel
+from rich.rule import Rule
+from rich.table import Table
+from rich.text import Text as RichText
 
 from rich_gradient import Text, __version__
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -21,11 +26,88 @@ from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 app = typer.Typer(
     help="rich-gradient CLI",
     no_args_is_help=True,
-    context_settings={"help_option_names": ["-h", "--help"]},
+    context_settings={"help_option_names": []},
 )
 
 
-@app.command("text")
+def _build_header() -> Text:
+    """Return a gradient styled header for the CLI help screen."""
+
+    return Text(
+        text="Rich Gradient CLI",
+        colors=["#38bdf8", "#a855f7", "#f97316", "#fb7185"],
+        style="bold",
+        justify="center",
+    )
+
+
+def _render_main_help(console: Console) -> None:
+    """Render a custom help screen that mirrors the Rich CLI aesthetic."""
+
+    console.print(Align.center(_build_header()))
+    console.print(Align.center(RichText.from_markup(f"[dim]Version {__version__}[/dim]")))
+    console.print()
+    console.print(Rule(style="#a855f7"))
+    console.print(RichText.from_markup("[bold]Usage[/bold]"))
+    console.print("  rich-gradient [OPTIONS] COMMAND [ARGS]...")
+    console.print()
+
+    options_table = Table.grid(padding=(0, 2))
+    options_table.add_column(justify="right", style="cyan", no_wrap=True)
+    options_table.add_column(style="magenta", no_wrap=True)
+    options_table.add_column(style="white")
+    options_table.add_row("--version", "-v", "Print version and exit.")
+    options_table.add_row(
+        "--install-completion",
+        "",
+        "Install completion for the current shell.",
+    )
+    options_table.add_row(
+        "--show-completion",
+        "",
+        "Show completion for the current shell, to copy or customize the installation.",
+    )
+    options_table.add_row("--help", "-h", "Show this message and exit.")
+    console.print(
+        Panel.fit(
+            options_table,
+            title="Options",
+            border_style="#38bdf8",
+            box=box.SQUARE,
+        )
+    )
+    console.print()
+
+    commands_table = Table.grid(padding=(0, 2))
+    commands_table.add_column(justify="right", style="cyan", no_wrap=True)
+    commands_table.add_column(style="white")
+    commands_table.add_row("text", "Print gradient-styled text to the console.")
+    console.print(
+        Panel.fit(
+            commands_table,
+            title="Commands",
+            border_style="#f97316",
+            box=box.SQUARE,
+        )
+    )
+    console.print()
+    console.print(
+        RichText.from_markup(
+            "Tip: Run [bold cyan]rich-gradient text --help[/bold cyan] for gradient specific options."
+        )
+    )
+
+
+def _help_callback(ctx: typer.Context, value: Optional[bool]) -> None:
+    """Display the custom help screen when the global help flag is used."""
+
+    if not value or ctx.resilient_parsing:
+        return
+    _render_main_help(Console())
+    raise typer.Exit()
+
+
+@app.command("text", context_settings={"help_option_names": ["-h", "--help"]})
 def text_cmd(
     text: Optional[str] = typer.Argument(
         None,
@@ -188,18 +270,30 @@ def print_version(ctx: typer.Context, value: bool) -> None:
     raise typer.Exit()
 
 
-@app.callback()
+@app.callback(add_help_option=False)
 def main(
+    ctx: typer.Context,
     version: Optional[bool] = typer.Option(
         None,
         "-v",
         "--version",
         callback=print_version,
         is_eager=True,
+        expose_value=False,
         help="Print version and exit.",
+    ),
+    help_option: Optional[bool] = typer.Option(
+        None,
+        "-h",
+        "--help",
+        callback=_help_callback,
+        is_eager=True,
+        expose_value=False,
+        help="Show this message and exit.",
     ),
 ) -> None:
     """rich-gradient command line interface."""
+    del ctx
     return
 
 
