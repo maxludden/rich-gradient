@@ -30,18 +30,24 @@ Usage example:
 
 """
 
-__all__ = ["SPECTRUM_COLORS", "Spectrum"]
+__all__ = [
+    "SPECTRUM_COLORS",
+    "Spectrum",
+    "GradientTheme"
+]
 
 from itertools import cycle
 from random import Random
 from typing import Dict, List, Optional
 
+from rich.console import Console
 from rich.color import Color
 from rich.color_triplet import ColorTriplet
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
+
 
 SPECTRUM_COLORS: Dict[str, str] = {
     "#FF0000": "red",  # 1
@@ -71,18 +77,30 @@ class Spectrum:
     """Create a list of concurrent Color and/or Style instances.
     Args:
         hues (int): Number of colors to generate. Defaults to 17.
-        invert (bool, optional): If True, reverse the generated list. Defaults to False.
-        seed (Optional[int], optional): If provided, sets the random seed for deterministic color order.
+        invert (bool, optional): If True, reverse the generated list.
+            Defaults to False.
+        seed (Optional[int], optional): If provided, sets the random \
+seed for deterministic color order.
+    Raises:
+        ValueError: If hues < 2.
+        ValueError: If seed is not None and not an integer.
+    Properties:
+        colors (List[Color]): List of Color instances.
+        names (List[str]): List of color names.
+        
     """
 
     def __init__(
         self, hues: int = 17, invert: bool = False, seed: Optional[int] = None
     ) -> None:
-        """Initialize the Spectrum with a specified number of hues and optional inversion and seed.
+        """Initialize the Spectrum with a specified number of hues and optional \
+inversion and seed.
         Args:
             hues (int): Number of colors to generate. Defaults to 17.
-            invert (bool, optional): If True, reverse the generated list. Defaults to False.
-            seed (Optional[int], optional): If provided, sets the random seed for deterministic color order.
+            invert (bool, optional): If True, reverse the generated list.
+                Defaults to False.
+            seed (Optional[int], optional): If provided, sets the random seed for \
+deterministic color order.
         Raises:
             ValueError: If hues < 2.
             ValueError: If seed is not None and not an integer.
@@ -94,11 +112,12 @@ class Spectrum:
         # Use a dedicated RNG to avoid mutating global random state
         rng = Random(seed)
         # Generate a random cycle of colors from the spectrum
-        colors: List[Color] = [Color.parse(color) for color in SPECTRUM_COLORS.keys()]
+        colors: List[Color] = [Color.parse(color) for color in SPECTRUM_COLORS]
         color_cycle = cycle(colors)
         # Skip a pseudo-random number of colors to add variability, deterministically per seed
         for _ in range(rng.randint(1, 18)):
             next(color_cycle)
+
         # Create a list of colors based on the specified number of hues
         colors = [next(color_cycle) for _ in range(hues)]
         self._colors: List[Color] = colors
@@ -112,9 +131,7 @@ class Spectrum:
             for color in self._colors
         ]
         self.hex = [color.get_truecolor().hex.upper() for color in self._colors]
-        # Do not maintain a stateful iterator; Spectrum is an iterable, not a stateful iterator.
-        # If consumers need an iterator, they should call iter(spectrum).
-        # self._iterator = iter(self._colors)
+
 
     @property
     def colors(self) -> List[Color]:
@@ -210,8 +227,6 @@ class Spectrum:
 
 def example(save: bool = False) -> None:
     """Generate a rich table with all of the colors in the Spectrum."""
-    from rich.console import Console
-
     console = Console(width=80)
 
     console.clear()
