@@ -7,7 +7,9 @@ Provides a `text` command to print gradient-styled text.
 from __future__ import annotations
 
 import sys
+from io import StringIO
 from pathlib import Path
+from time import sleep
 from typing import List, Optional, Union
 
 import typer
@@ -15,12 +17,18 @@ from rich.align import Align
 from rich.color import ColorParseError
 from rich.console import Console, ConsoleRenderable, RichCast
 from rich import box
+from rich.live import Live
+from rich.markdown import Markdown
+from rich.markup import render as render_markup
 from rich.panel import Panel
-from rich.rule import Rule
+from rich.progress import BarColumn, Progress, TaskProgressColumn, TextColumn, TimeElapsedColumn
+from rich.prompt import Prompt
+from rich.rule import Rule as RichRule
+from rich.syntax import Syntax
 from rich.table import Table
 from rich.text import Text as RichText
 
-from rich_gradient import Text, __version__
+from rich_gradient import Gradient, Rule as GradientRule, Text, __version__
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 
@@ -73,11 +81,20 @@ def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleR
     return value
 
 
+DEMO_COLORS: list[str] = ["#38bdf8", "#a855f7", "#f97316", "#fb7185"]
+
+
 app = typer.Typer(
     help="rich-gradient CLI",
     no_args_is_help=True,
     context_settings={"help_option_names": []},
 )
+
+
+def _demo_text(message: str, *, style: str = "", end: str = "\n") -> Text:
+    """Return gradient text using the shared demo color palette."""
+
+    return Text(message, colors=DEMO_COLORS, style=style, end=end)
 
 
 def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
@@ -137,7 +154,7 @@ def _render_main_help(console: Console) -> None:
     console.print(Align.center(_build_header()))
     console.print(Align.center(RichText.from_markup(f"[dim]Version {__version__}[/dim]")))
     console.print()
-    console.print(Rule(style="#a855f7"))
+    console.print(RichRule(style="#a855f7"))
     console.print(RichText.from_markup("[bold]Usage[/bold]"))
     console.print("  rich-gradient [OPTIONS] COMMAND [ARGS]...")
     console.print()
@@ -172,6 +189,17 @@ def _render_main_help(console: Console) -> None:
     commands_table.add_column(justify="right", style="cyan", no_wrap=True)
     commands_table.add_column(style="white")
     commands_table.add_row("text", "Print gradient-styled text to the console.")
+    commands_table.add_row("gradient", "Display gradient banners using the Gradient renderable.")
+    commands_table.add_row("rule", "Render a gradient-enhanced horizontal rule.")
+    commands_table.add_row("panel", "Show a panel that wraps gradient text.")
+    commands_table.add_row("table", "Render a table with gradient content.")
+    commands_table.add_row("progress", "Run a short progress demonstration with gradients.")
+    commands_table.add_row("syntax", "Highlight source code within a gradient frame.")
+    commands_table.add_row("markdown", "Render Markdown content with gradient framing.")
+    commands_table.add_row("markup", "Demonstrate Rich markup parsed into gradient text.")
+    commands_table.add_row("box", "Preview a selection of Rich box styles in gradients.")
+    commands_table.add_row("prompts", "Simulate prompts styled with gradient text.")
+    commands_table.add_row("live", "Stream live updates with gradient styling.")
     console.print(
         Panel.fit(
             commands_table,
@@ -344,6 +372,217 @@ def text_cmd(
             unique_id="cli_text",
             theme=GRADIENT_TERMINAL_THEME,
         )
+
+
+@app.command("gradient", context_settings={"help_option_names": ["-h", "--help"]})
+def gradient_cmd() -> None:
+    """Render sample banners using the Gradient renderable."""
+
+    console = Console()
+    banner = Gradient(
+        [
+            _demo_text("Gradient Showcase", style="bold"),
+            Text(
+                "Smoothly blend colors across multiple renderables.",
+                colors=list(reversed(DEMO_COLORS)),
+            ),
+        ],
+        colors=DEMO_COLORS,
+        justify="center",
+        expand=True,
+    )
+    console.print(banner)
+
+
+@app.command("rule", context_settings={"help_option_names": ["-h", "--help"]})
+def rule_cmd() -> None:
+    """Showcase the gradient-enabled rule implementation."""
+
+    console = Console()
+    console.print(GradientRule("Gradient Rule", rainbow=True, thickness=1))
+    console.print(
+        _demo_text(
+            "Gradient rules are perfect for separating sections.",
+            style="italic",
+        )
+    )
+
+
+@app.command("panel", context_settings={"help_option_names": ["-h", "--help"]})
+def panel_cmd() -> None:
+    """Display a panel filled with gradient text."""
+
+    console = Console()
+    panel = Panel(
+        _demo_text(
+            "Panels can frame gradient text for call-outs and highlights.",
+        ),
+        title=_demo_text("Gradient Panel", style="bold", end=""),
+        border_style=DEMO_COLORS[0],
+        box=box.ROUNDED,
+    )
+    console.print(panel)
+
+
+@app.command("table", context_settings={"help_option_names": ["-h", "--help"]})
+def table_cmd() -> None:
+    """Render a table that includes gradient-enhanced cells."""
+
+    console = Console()
+    table = Table(
+        title=_demo_text("Gradient Table", style="bold", end=""),
+        box=box.SIMPLE_HEAD,
+        expand=True,
+    )
+    table.add_column(_demo_text("Feature", style="bold", end=""))
+    table.add_column(_demo_text("Description", style="bold", end=""))
+    table.add_row(
+        _demo_text("Color stops", end=""),
+        Text(
+            "Blend multiple colors across content.",
+            colors=list(reversed(DEMO_COLORS)),
+            end="",
+        ),
+    )
+    table.add_row(
+        _demo_text("Backgrounds", end=""),
+        _demo_text("Add gradient backgrounds for extra depth.", end=""),
+    )
+    console.print(table)
+
+
+@app.command("progress", context_settings={"help_option_names": ["-h", "--help"]})
+def progress_cmd() -> None:
+    """Run a short progress example accented with gradient text."""
+
+    console = Console()
+    intro = _demo_text("Starting gradient progress demo…")
+    console.print(intro)
+    with Progress(
+        TextColumn("{task.description}", justify="left"),
+        BarColumn(bar_width=None),
+        TaskProgressColumn(),
+        TimeElapsedColumn(),
+        console=console,
+        transient=True,
+    ) as progress:
+        task_id = progress.add_task("Applying colors", total=3)
+        for step in range(3):
+            progress.update(task_id, description=f"Applying colors step {step + 1}")
+            sleep(0.05)
+            progress.advance(task_id)
+    console.print(_demo_text("Gradient progress complete!"))
+
+
+@app.command("syntax", context_settings={"help_option_names": ["-h", "--help"]})
+def syntax_cmd() -> None:
+    """Render a Syntax block inside a gradient frame."""
+
+    console = Console()
+    code_sample = """def blend(colors):\n    return ' → '.join(colors)"""
+    syntax = Syntax(code_sample, "python", line_numbers=True, word_wrap=True)
+    console.print(
+        Gradient(
+            [
+                _demo_text("Gradient Syntax", style="bold"),
+                syntax,
+            ],
+            colors=DEMO_COLORS,
+            expand=True,
+        )
+    )
+
+
+@app.command("markdown", context_settings={"help_option_names": ["-h", "--help"]})
+def markdown_cmd() -> None:
+    """Render Markdown content with gradient styling."""
+
+    console = Console()
+    markdown = Markdown(
+        """# Gradient Markdown\n\n- Smooth transitions\n- Vibrant palettes\n- Easy CLI demos"""
+    )
+    console.print(
+        Gradient(
+            [markdown],
+            colors=list(reversed(DEMO_COLORS)),
+            expand=True,
+        )
+    )
+
+
+@app.command("markup", context_settings={"help_option_names": ["-h", "--help"]})
+def markup_cmd() -> None:
+    """Demonstrate Rich markup parsed into gradient text."""
+
+    console = Console()
+    markup_message = "[bold]Rich[/bold] [italic]markup[/italic] meets gradients!"
+    parsed = render_markup(markup_message)
+    gradient_text = Text(
+        parsed.plain,
+        colors=DEMO_COLORS,
+        spans=list(parsed.spans),
+        markup=False,
+    )
+    console.print(gradient_text)
+
+
+@app.command("box", context_settings={"help_option_names": ["-h", "--help"]})
+def box_cmd() -> None:
+    """Preview several box styles with gradient text."""
+
+    console = Console()
+    samples = [
+        ("ROUNDED", box.ROUNDED),
+        ("HEAVY", box.HEAVY),
+        ("DOUBLE", box.DOUBLE),
+    ]
+    for label, box_type in samples:
+        console.print(
+            Panel(
+                _demo_text(f"{label.title()} borders pair nicely with gradients."),
+                title=_demo_text(label, style="bold", end=""),
+                border_style=DEMO_COLORS[1],
+                box=box_type,
+            )
+        )
+
+
+@app.command("prompts", context_settings={"help_option_names": ["-h", "--help"]})
+def prompts_cmd() -> None:
+    """Simulate prompt interaction using gradient-styled questions."""
+
+    console = Console()
+    prompt_text = _demo_text("What's your favorite gradient palette? ", end="")
+    fake_input = StringIO("Aurora Borealis\n")
+    response = Prompt.ask(
+        prompt_text,
+        console=console,
+        stream=fake_input,
+        default="Aurora Borealis",
+        show_default=True,
+    )
+    console.print(_demo_text(f"Simulated response: {response}"))
+
+
+@app.command("live", context_settings={"help_option_names": ["-h", "--help"]})
+def live_cmd() -> None:
+    """Update live content with gradient-rich messages."""
+
+    console = Console()
+    messages = [
+        _demo_text("Preparing live gradient demo…", end=""),
+        _demo_text("Streaming colorful updates…", end=""),
+        _demo_text("Live rendering complete!", end=""),
+    ]
+    with Live(
+        Panel(messages[0], border_style=DEMO_COLORS[0], box=box.ROUNDED),
+        console=console,
+        refresh_per_second=6,
+    ) as live:
+        for message in messages[1:]:
+            sleep(0.05)
+            live.update(Panel(message, border_style=DEMO_COLORS[2], box=box.ROUNDED))
+    console.print(_demo_text("Exited live rendering session."))
 
 
 def print_version(ctx: typer.Context, value: bool) -> None:
