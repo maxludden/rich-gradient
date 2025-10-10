@@ -8,12 +8,12 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import typer
 from rich.align import Align
 from rich.color import ColorParseError
-from rich.console import Console
+from rich.console import Console, ConsoleRenderable, RichCast
 from rich import box
 from rich.panel import Panel
 from rich.rule import Rule
@@ -22,6 +22,56 @@ from rich.text import Text as RichText
 
 from rich_gradient import Text, __version__
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
+
+
+def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
+    """Cast any str, RichCast, or ConsoleRenderable into a valid console renderable.
+    
+    This function normalizes various input types into a ConsoleRenderable that can
+    be displayed by Rich's Console.
+    
+    Args:
+        value: The input to parse. Can be:
+            - str: Converted to RichText with markup parsing enabled
+            - RichCast: An object with a __rich__() method that returns a renderable
+            - ConsoleRenderable: Already a valid renderable, returned as-is
+    
+    Returns:
+        ConsoleRenderable: A valid renderable object for Rich's Console
+        
+    Raises:
+        TypeError: If the value is not one of the accepted types
+    
+    Examples:
+        >>> parse_renderable("Hello, [bold]World[/bold]!")
+        Text('Hello, World!')
+        
+        >>> from rich.panel import Panel
+        >>> parse_renderable(Panel("Content"))
+        Panel(...)
+        
+        >>> class CustomRenderable:
+        ...     def __rich__(self):
+        ...         return Text("Custom")
+        >>> parse_renderable(CustomRenderable())
+        Text('Custom')
+    """
+    # If it's a string, convert to RichText with markup parsing
+    if isinstance(value, str):
+        return RichText.from_markup(value)
+    
+    # If it's a RichCast (has __rich__ method), call it to get the renderable
+    if hasattr(value, "__rich__"):
+        result = value.__rich__()
+        # Recursively parse the result in case __rich__ returns a string or another RichCast
+        if isinstance(result, str):
+            return RichText.from_markup(result)
+        return result
+    
+    # If it's already a ConsoleRenderable, return it as-is
+    # This includes Text, Panel, Table, etc.
+    return value
+
 
 app = typer.Typer(
     help="rich-gradient CLI",
