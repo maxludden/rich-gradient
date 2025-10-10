@@ -80,6 +80,46 @@ app = typer.Typer(
 )
 
 
+def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
+    """Cast a str, RichCast, or ConsoleRenderable into a valid ConsoleRenderable.
+    
+    Args:
+        value: A string, RichCast object, or ConsoleRenderable to convert.
+        
+    Returns:
+        ConsoleRenderable: A valid console renderable object.
+        
+    Raises:
+        TypeError: If the value cannot be converted to a ConsoleRenderable.
+    """
+    # If it's already a ConsoleRenderable, return it as-is
+    if isinstance(value, ConsoleRenderable):
+        return value
+    
+    # If it's a string, convert to RichText with markup support
+    if isinstance(value, str):
+        return RichText.from_markup(value)
+    
+    # If it's a RichCast, call __rich__() to get the renderable
+    if hasattr(value, "__rich__"):
+        result = value.__rich__()
+        # The result might be another RichCast, str, or ConsoleRenderable
+        # Recursively parse it to ensure we get a ConsoleRenderable
+        if isinstance(result, (str, ConsoleRenderable)) or hasattr(result, "__rich__"):
+            return parse_renderable(result)
+        else:
+            raise TypeError(
+                f"RichCast.__rich__() returned {type(result).__name__}, "
+                "expected str, RichCast, or ConsoleRenderable"
+            )
+    
+    # If none of the above, raise an error
+    raise TypeError(
+        f"Cannot parse {type(value).__name__} to ConsoleRenderable. "
+        "Expected str, RichCast, or ConsoleRenderable."
+    )
+
+
 def _build_header() -> Text:
     """Return a gradient styled header for the CLI help screen."""
 
