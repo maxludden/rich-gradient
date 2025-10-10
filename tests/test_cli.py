@@ -267,7 +267,7 @@ def test_cli_prompts_command():
 
     result = runner.invoke(app, ["prompts"])
     assert result.exit_code == 0
-    assert "Simulated response" in result.stdout
+    assert "Aurora Borealis" in result.stdout
 
 
 def test_cli_live_command():
