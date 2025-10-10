@@ -1,15 +1,30 @@
 [project]
 name = "rich-gradient"
-description = "A gradient generator for the Rich library."
+description = "A gradient generator for the Rich library (and CLI tool)."
 readme = "README.md"
 authors = [{ name = "Max Ludden", email = "dev@maxludden.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
-    "rich>=14.0.0",
+    "rich==14.2",
     "rich-color-ext>=0.1.4",
     "typer>=0.19.2,<0.20",
 ]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+keywords = ["rich", "gradient", "cli", "terminal", "colors", "python"]
 dynamic = ["version"]
 
 
@@ -19,6 +34,7 @@ Documentation = "https://maxludden.github.io/rich-gradient"
 Repository = "https://github.com/maxludden/rich-gradient"
 Issues = "https://github.com/maxludden/rich-gradient/issues"
 Changelog = "https://maxludden.github.io/rich-gradient/CHANGELOG/"
+
 
 [build-system]
 requires = ["hatchling"]
@@ -42,7 +58,7 @@ path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
 rich-gradient = "rich_gradient.cli:app"
-
+richg = "rich_gradient.cli:app"
 
 [tool.ruff]
 ignore = [

@@ -11,6 +11,7 @@ optimizations.
 
 from typing import Iterable, List, Optional, Sequence, Tuple, TypeAlias, Union
 
+from rich import inspect
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
 from rich.console import Console, JustifyMethod, OverflowMethod
@@ -23,7 +24,7 @@ from rich.text import Text as RichText
 from rich.text import TextType
 
 from rich_gradient.spectrum import Spectrum
-from rich_gradient.theme import GRADIENT_TERMINAL_THEME
+from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 
 ColorType: TypeAlias = Union[str, Color, ColorTriplet, Tuple[int, int, int]]
 
@@ -100,7 +101,7 @@ instances. Defaults to None.
         self._interpolate_bgcolors = False  # Ensure flag is always initialized
         # Normalize color inputs into rich.color.Color instances
         self.colors = self.parse_colors(colors, hues, rainbow)
-        self.bgcolors = self.parse_bgcolors(bgcolors, hues)
+        self.bgcolors = self.parse_bgcolors(bgcolors)
 
         # Handle the single-color and single-background case: apply style directly and return early
         if len(self.colors) == 1 and len(self.bgcolors) == 1:
@@ -218,7 +219,7 @@ at least 2. Invalid hues value: {hues}"
         return parsed
 
     def parse_bgcolors(
-        self, bgcolors: Optional[Sequence[ColorType]] = None, hues: int = 5
+        self, bgcolors: Optional[Sequence[ColorType]] = None
     ) -> List[Color]:
         """Parse and return a list of background colors for the gradient.
         Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, \
@@ -256,7 +257,9 @@ at least 2. Invalid hues value: {hues}"
         return parsed_bg
 
     def interpolate_colors(
-        self, colors: Optional[Sequence[Color]] = None
+        self,
+        colors: Optional[Sequence[Color]] = None,
+        gamma: float = 2.2,
     ) -> list[Color]:
         """Interpolate colors across the text using gamma-correct blending."""
         colors = list(colors) if colors is not None else self.colors
@@ -274,13 +277,11 @@ at least 2. Invalid hues value: {hues}"
         segments = num_colors - 1
         result: List[Color] = []
 
-        GAMMA = 2.2
-
         def to_linear(v: int) -> float:
-            return (v / 255.0) ** GAMMA
+            return (v / 255.0) ** gamma
 
         def to_srgb(x: float) -> int:
-            return int(((x ** (1.0 / GAMMA)) * 255.0))
+            return int(((x ** (1.0 / gamma)) * 255.0))
 
         for i in range(length):
             pos = i / (length - 1) if length > 1 else 0.0
@@ -339,12 +340,7 @@ at least 2. Invalid hues value: {hues}"
             tab_size=self.tab_size,
         )
 
-        # Copy internal spans from the source into the returned RichText.
-        # Using the internal _spans attribute is acceptable here since both
-        # classes share the same underlying implementation in rich.
-        for span in getattr(self, "_spans", []):
-            rich_text._spans.append(span)
-
+        rich_text.spans.extend(self.spans)
         return rich_text
 
     @property
@@ -378,13 +374,19 @@ at least 2. Invalid hues value: {hues}"
 
 if __name__ == "__main__":
     # Example usage
-    console = Console(record=True, width=64)
+    _console = Console(
+        record=True,
+        width=64,
+        theme=GradientTheme()
+    )
 
-    def gradient_text_example1() -> None:
+    def gradient_text_explanation() -> None:
         """Print the first example with a gradient."""
-        colors = ["#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
+        colors = ("#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF")
 
-        def example1_text(colors: Sequence[ColorType] = colors) -> RichText:
+        def example1_text( # pylint: disable:dangerous-default-value
+            colors: Sequence[ColorType] = colors
+        ) -> RichText:
             """Generate example text with a simple two-color gradient."""
             example1_text = Text(
                 'rich-gradient makes it easy to create text with smooth multi-color gradients! \
@@ -411,7 +413,7 @@ Overflow handling\n\t- Custom styles and spans',
             )
             return example1_title
 
-        console.print(
+        _console.print(
             Panel(
                 example1_text(),
                 width=64,
@@ -419,18 +421,16 @@ Overflow handling\n\t- Custom styles and spans',
                 padding=(1, 4),
             )
         )
-        console.save_svg(
+        _console.save_svg(
             "docs/img/v0.3.4/built_on_rich_text.svg",
             title="rich-gradient",
             unique_id="text_example_1",
             theme=GRADIENT_TERMINAL_THEME,
         )
 
-    gradient_text_example1()
-
     def gradient_text_basic_usage() -> None:
         """Print the second example with a random gradient."""
-        console.print(
+        _console.print(
             Panel(
                 Text(
                     "To generate a [u]rich_gradient.text.Text[/u] instance, all you need \
@@ -447,18 +447,16 @@ Automatically generated gradients are always generated with consecutive colors."
                 width=64,
             )
         )
-        console.save_svg(
+        _console.save_svg(
             "docs/img/v0.3.4/gradient_text_basic_usage.svg",
             title="rich-gradient",
             unique_id="text_example_2",
             theme=GRADIENT_TERMINAL_THEME,
         )
 
-    gradient_text_basic_usage()
-
     def gradient_text_rainbow_example() -> None:
         """Print the third example with a rainbow gradient."""
-        console.print(
+        _console.print(
             Panel(
                 Text(
                     "If you like lots of colors, but don't want to write them all yourself... \
@@ -475,14 +473,12 @@ This will generate a gradient with the full spectrum of colors.",
                 width=64,
             )
         )
-        console.save_svg(
+        _console.save_svg(
             "docs/img/v0.3.4/gradient_text_rainbow_example.svg",
             title="rich-gradient",
             unique_id="text_example_3",
             theme=GRADIENT_TERMINAL_THEME,
         )
-
-    gradient_text_rainbow_example()
 
     # Example 4: Custom color stops with hex codes
     def gradient_text_custom_colors(save: bool = True) -> None:
@@ -548,8 +544,6 @@ is superfluous!\n\nThis gradient uses:
             theme=GRADIENT_TERMINAL_THEME,
         )
 
-    gradient_text_custom_colors()
-
     def long_text_example() -> None:
         """Example 5: Long text with a smooth gradient."""
         long_text_colors = ["magenta", "cyan"]
@@ -569,7 +563,7 @@ excepteur voluptate duis exercitation occaecat."
             long_text_str, colors=long_text_colors, style="bold", justify="center"
         )
 
-        console.print(
+        _console.print(
             Panel(
                 long_text,
                 padding=(1, 4),
@@ -581,9 +575,14 @@ excepteur voluptate duis exercitation occaecat."
                 border_style="bold cyan",
             )
         )
-        console.save_svg(
+        _console.save_svg(
             "docs/img/v0.3.4/long_text_with_two_color_gradient.svg",
             title="rich-gradient",
             unique_id="text_example_5",
             theme=GRADIENT_TERMINAL_THEME,
         )
+    inspect(gradient_text_explanation(), value=True)
+    gradient_text_custom_colors()
+    gradient_text_basic_usage()
+    gradient_text_rainbow_example()
+    gradient_text_custom_colors()

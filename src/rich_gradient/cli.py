@@ -9,11 +9,12 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 from typing import List, Optional
+from typing_extensions import Annotated
 
 import typer
 from rich.align import Align
 from rich.color import ColorParseError
-from rich.console import Console
+from rich.console import Console, ConsoleRenderable, RenderableType
 from rich import box
 from rich.panel import Panel
 from rich.rule import Rule
@@ -27,18 +28,41 @@ app = typer.Typer(
     help="rich-gradient CLI",
     no_args_is_help=True,
     context_settings={"help_option_names": []},
+    rich_markup_mode="rich"
 )
 
 
-def _build_header() -> Text:
+def _build_header() -> RichText:
     """Return a gradient styled header for the CLI help screen."""
 
-    return Text(
-        text="Rich Gradient CLI",
-        colors=["#38bdf8", "#a855f7", "#f97316", "#fb7185"],
-        style="bold",
-        justify="center",
-    )
+    header_parts = [
+            Text(
+                text="Rich Gradient ",
+                colors=[
+                    "#38bdf8",
+                    "#a855f7",
+                    "#f97316",
+                    "#fb7185"
+                ],
+                style="bold"
+            ),
+            Text(
+                'CLI v',
+                style='bold white'
+            ),
+            Text(
+                f"{__version__}",
+                colors=[
+                    "#0f0",
+                    "#0ff",
+                    "#09f",
+                ],
+                style="italic"
+            )
+        ]
+    header = RichText.assemble(*header_parts)
+    return header
+
 
 
 def _render_main_help(console: Console) -> None:
@@ -93,7 +117,8 @@ def _render_main_help(console: Console) -> None:
     console.print()
     console.print(
         RichText.from_markup(
-            "Tip: Run [bold cyan]rich-gradient text --help[/bold cyan] for gradient specific options."
+            "Tip: Run [bold cyan]rich-gradient text --help[/bold cyan] for gradient \
+specific options."
         )
     )
 
@@ -106,14 +131,31 @@ def _help_callback(ctx: typer.Context, value: Optional[bool]) -> None:
     _render_main_help(Console())
     raise typer.Exit()
 
+def parse_renderable(value: RenderableType) -> ConsoleRenderable:
+    """Parse a str, rich renderable, rich_gradient.text.Text, or rich_gradient.\
+    gradient.Gradient into a valid RichRenderable."""
+    
 
-@app.command("text", context_settings={"help_option_names": ["-h", "--help"]})
-def text_cmd(
-    text: Optional[str] = typer.Argument(
-        None,
-        help="Text to print. If omitted, reads from stdin.",
-        show_default=False,
-    ),
+
+@app.command(
+        "print",
+        context_settings={
+            "help_option_names": [
+                "-h",
+                "--help"
+            ]
+        }
+    )
+def print_cmd(
+    renderable: Annotated[
+        ConsoleRenderable,
+        typer.Argument(
+            parser=parse_renderable)]
+            help="The renderable to print. If not provided, will print help screen.",
+            show_default=False,
+
+        ),
+    ],
     color: List[str] = typer.Option(
         [], "--color", "-c", help="Foreground color stop. Repeat for multiple."
     ),
@@ -170,12 +212,13 @@ def text_cmd(
     """Print gradient-styled text to the console."""
 
     # Read from stdin if no positional text is provided
-    if text is None:
-        if not sys.stdin.isatty():
-            text = sys.stdin.read()
-        else:
-            typer.echo("No text provided and stdin is empty.", err=True)
-            raise typer.Exit(code=1)
+    if renderable is None:
+
+        # if not sys.stdin.isatty():
+        #     renderable = sys.stdin.read()
+        # else:
+        #     typer.echo("No text provided and stdin is empty.", err=True)
+        #     raise typer.Exit(code=1)
 
     # Normalize color inputs: use None when not provided, otherwise lists
     colors_arg = color or None
@@ -244,7 +287,7 @@ def text_cmd(
         # Ensure directory exists
         try:
             save_svg.parent.mkdir(parents=True, exist_ok=True)
-        except Exception:
+        except OSError:
             # Non-fatal; Console will raise below if path invalid
             pass
         # Persist the recorded render to SVG using the project's terminal theme
@@ -259,18 +302,45 @@ def text_cmd(
 def print_version(ctx: typer.Context, value: bool) -> None:
     """Display the version of rich-gradient and exit if requested.
 
-    If the version flag is provided, prints the package version and exits the CLI. If the version cannot be determined, prints 'unknown' instead.
+    If the version flag is provided, prints the package version and exits the CLI.
+        If the version cannot be determined, prints 'unknown' instead.
 
     Args:
         value: Boolean indicating whether the version flag was provided.
     """
     if not value or ctx.resilient_parsing:
         return
-    typer.echo(f"rich-gradient, version: {__version__}")
+    console = Console()
+    rich_gradient_text: Text = Text(
+        'rich-gradient ',
+        colors=[
+            '#f00',
+            '#f90',
+            '#ff0',
+            '#9f0'
+        ],
+        style='bold'
+    )
+    version: Text = Text(
+        f'{__version__}',
+        colors=[
+            '#0f0',
+            '#0ff',
+            '#09f'
+        ],
+        style='italic'
+    )
+    console.print(
+        RichText.assemble(
+            rich_gradient_text,
+            RichText(' v', style='bold white'),
+            version
+        )
+    )
     raise typer.Exit()
 
 
-@app.callback(add_help_option=False)
+@app.callback(no_args_is_help=True)
 def main(
     ctx: typer.Context,
     version: Optional[bool] = typer.Option(
