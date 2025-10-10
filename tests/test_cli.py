@@ -141,3 +141,50 @@ def test_cli_invalid_color_exits_with_error():
     result = runner.invoke(app, ["text", "Bad", "-c", "#GGGGGG"])
     assert result.exit_code != 0
     assert "Error:" in result.stdout or "Error:" in result.stderr
+
+
+def test_parse_renderable_with_string():
+    """Test parse_renderable with string input."""
+    result = parse_renderable("Hello, [bold]World[/bold]!")
+    assert isinstance(result, RichText)
+    assert result.plain == "Hello, World!"
+
+
+def test_parse_renderable_with_console_renderable():
+    """Test parse_renderable with ConsoleRenderable (Panel) input."""
+    panel = Panel("Test content", title="Test")
+    result = parse_renderable(panel)
+    assert result is panel  # Should return the same object
+    assert isinstance(result, Panel)
+
+
+def test_parse_renderable_with_richcast():
+    """Test parse_renderable with RichCast (object with __rich__ method)."""
+    class CustomRenderable:
+        def __rich__(self):
+            return RichText("Custom content")
+    
+    custom = CustomRenderable()
+    result = parse_renderable(custom)
+    assert isinstance(result, RichText)
+    assert result.plain == "Custom content"
+
+
+def test_parse_renderable_with_richcast_returning_string():
+    """Test parse_renderable with RichCast that returns a string."""
+    class StringRichCast:
+        def __rich__(self):
+            return "[green]Green text[/green]"
+    
+    string_cast = StringRichCast()
+    result = parse_renderable(string_cast)
+    assert isinstance(result, RichText)
+    assert result.plain == "Green text"
+
+
+def test_parse_renderable_with_richtext():
+    """Test parse_renderable with RichText input."""
+    text = RichText("Direct text", style="bold")
+    result = parse_renderable(text)
+    assert result is text  # Should return the same object
+    assert isinstance(result, RichText)
