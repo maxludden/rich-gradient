@@ -188,3 +188,91 @@ def test_parse_renderable_with_richtext():
     result = parse_renderable(text)
     assert result is text  # Should return the same object
     assert isinstance(result, RichText)
+
+
+def test_cli_gradient_command():
+    """Gradient command should render gradient showcase text."""
+
+    result = runner.invoke(app, ["gradient"])
+    assert result.exit_code == 0
+    assert "Gradient Showcase" in result.stdout
+
+
+def test_cli_rule_command():
+    """Rule command should print explanatory text alongside the gradient rule."""
+
+    result = runner.invoke(app, ["rule"])
+    assert result.exit_code == 0
+    assert "Gradient rules are perfect for separating sections." in result.stdout
+
+
+def test_cli_panel_command():
+    """Panel command should wrap gradient text in a panel output."""
+
+    result = runner.invoke(app, ["panel"])
+    assert result.exit_code == 0
+    assert "Panels can frame gradient text for call-outs and highlights." in result.stdout
+
+
+def test_cli_table_command():
+    """Table command should render gradient table content."""
+
+    result = runner.invoke(app, ["table"])
+    assert result.exit_code == 0
+    assert "Color stops" in result.stdout
+
+
+def test_cli_progress_command():
+    """Progress command should complete successfully with summary text."""
+
+    result = runner.invoke(app, ["progress"])
+    assert result.exit_code == 0
+    assert "Gradient progress complete!" in result.stdout
+
+
+def test_cli_syntax_command():
+    """Syntax command should include its gradient heading."""
+
+    result = runner.invoke(app, ["syntax"])
+    assert result.exit_code == 0
+    assert "Gradient Syntax" in result.stdout
+
+
+def test_cli_markdown_command():
+    """Markdown command should emit the markdown heading text."""
+
+    result = runner.invoke(app, ["markdown"])
+    assert result.exit_code == 0
+    assert "Gradient Markdown" in result.stdout
+
+
+def test_cli_markup_command():
+    """Markup command should parse markup and print the resulting text."""
+
+    result = runner.invoke(app, ["markup"])
+    assert result.exit_code == 0
+    assert "Rich markup meets gradients!" in result.stdout
+
+
+def test_cli_box_command():
+    """Box command should render descriptive gradient text."""
+
+    result = runner.invoke(app, ["box"])
+    assert result.exit_code == 0
+    assert "borders pair nicely with gradients" in result.stdout
+
+
+def test_cli_prompts_command():
+    """Prompts command should simulate a prompt and echo the response."""
+
+    result = runner.invoke(app, ["prompts"])
+    assert result.exit_code == 0
+    assert "Simulated response" in result.stdout
+
+
+def test_cli_live_command():
+    """Live command should finish and print its closing message."""
+
+    result = runner.invoke(app, ["live"])
+    assert result.exit_code == 0
+    assert "Exited live rendering session." in result.stdout
