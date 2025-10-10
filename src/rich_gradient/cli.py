@@ -10,12 +10,12 @@ import sys
 from io import StringIO
 from pathlib import Path
 from time import sleep
-from typing import List, Optional, Union
+from typing import List, Optional, Union, cast
 
 import typer
 from rich.align import Align
 from rich.color import ColorParseError
-from rich.console import Console, ConsoleRenderable, RichCast
+from rich.console import Console, ConsoleRenderable, RichCast, JustifyMethod, OverflowMethod
 from rich import box
 from rich.live import Live
 from rich.markdown import Markdown
@@ -34,30 +34,30 @@ from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
     """Cast any str, RichCast, or ConsoleRenderable into a valid console renderable.
-    
+
     This function normalizes various input types into a ConsoleRenderable that can
     be displayed by Rich's Console.
-    
+
     Args:
         value: The input to parse. Can be:
             - str: Converted to RichText with markup parsing enabled
             - RichCast: An object with a __rich__() method that returns a renderable
             - ConsoleRenderable: Already a valid renderable, returned as-is
-    
+
     Returns:
         ConsoleRenderable: A valid renderable object for Rich's Console
-        
+
     Raises:
         TypeError: If the value is not one of the accepted types
-    
+
     Examples:
         >>> parse_renderable("Hello, [bold]World[/bold]!")
         Text('Hello, World!')
-        
+
         >>> from rich.panel import Panel
         >>> parse_renderable(Panel("Content"))
         Panel(...)
-        
+
         >>> class CustomRenderable:
         ...     def __rich__(self):
         ...         return Text("Custom")
@@ -67,7 +67,7 @@ def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleR
     # If it's a string, convert to RichText with markup parsing
     if isinstance(value, str):
         return RichText.from_markup(value)
-    
+
     # If it's a RichCast (has __rich__ method), call it to get the renderable
     if hasattr(value, "__rich__"):
         result = value.__rich__()
@@ -75,7 +75,7 @@ def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleR
         if isinstance(result, str):
             return RichText.from_markup(result)
         return result
-    
+
     # If it's already a ConsoleRenderable, return it as-is
     # This includes Text, Panel, Table, etc.
     return value
@@ -99,24 +99,24 @@ def _demo_text(message: str, *, style: str = "", end: str = "\n") -> Text:
 
 def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
     """Cast a str, RichCast, or ConsoleRenderable into a valid ConsoleRenderable.
-    
+
     Args:
         value: A string, RichCast object, or ConsoleRenderable to convert.
-        
+
     Returns:
         ConsoleRenderable: A valid console renderable object.
-        
+
     Raises:
         TypeError: If the value cannot be converted to a ConsoleRenderable.
     """
     # If it's already a ConsoleRenderable, return it as-is
     if isinstance(value, ConsoleRenderable):
         return value
-    
+
     # If it's a string, convert to RichText with markup support
     if isinstance(value, str):
         return RichText.from_markup(value)
-    
+
     # If it's a RichCast, call __rich__() to get the renderable
     if hasattr(value, "__rich__"):
         result = value.__rich__()
@@ -129,7 +129,7 @@ def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleR
                 f"RichCast.__rich__() returned {type(result).__name__}, "
                 "expected str, RichCast, or ConsoleRenderable"
             )
-    
+
     # If none of the above, raise an error
     raise TypeError(
         f"Cannot parse {type(value).__name__} to ConsoleRenderable. "
@@ -316,7 +316,7 @@ def text_cmd(
             + ", ".join(sorted(valid_overflow)),
             err=True,
         )
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=3)
 
     # Build the gradient Text with friendly error handling
     try:
@@ -327,8 +327,8 @@ def text_cmd(
             rainbow=rainbow,
             hues=hues,
             style=style,
-            justify=justify,  # type: ignore[arg-type]
-            overflow=overflow,  # type: ignore[arg-type]
+            justify=cast(JustifyMethod, justify),
+            overflow=cast(OverflowMethod, overflow),
             no_wrap=no_wrap,
             end=end,
             tab_size=tab_size,
@@ -337,10 +337,10 @@ def text_cmd(
         )
     except (ColorParseError, ValueError, TypeError) as e:
         typer.echo(f"Error: {e}", err=True)
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=4)
     except Exception as e:  # pragma: no cover - defensive
         typer.echo(f"Unexpected error: {e}", err=True)
-        raise typer.Exit(code=2)
+        raise typer.Exit(code=5)
 
     # If saving SVG, Console must be created with record=True
     effective_record = record or (save_svg is not None)
@@ -362,7 +362,7 @@ def text_cmd(
         # Ensure directory exists
         try:
             save_svg.parent.mkdir(parents=True, exist_ok=True)
-        except Exception:
+        except Exception:  # pylint: disable=W0718:broad-exception-caught
             # Non-fatal; Console will raise below if path invalid
             pass
         # Persist the recorded render to SVG using the project's terminal theme
