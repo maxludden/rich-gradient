@@ -116,5 +116,6 @@
         "wrappable"
     ],
     "wolf.disableHotModeWarning": true,
-    "chatgpt.openOnStartup": true
+    "chatgpt.openOnStartup": true,
+    "python.analysis.autoImportCompletions": true
 }

@@ -1,14 +1,12 @@
-# rich_gradient/_base_gradient.py
+# rich_gradient/gradient.py
 
 """
-BaseGradient module for rich-gradient.
+Gradient module for rich-gradient.
 
-This module defines the BaseGradient class, which provides the core logic for
+This module defines the Gradient class, which provides the core logic for
 rendering color gradients in the terminal using the Rich library. It supports
 foreground and background gradients, color interpolation with gamma
-correction, and flexible alignment options. The BaseGradient class is
-intended to be subclassed or used as a foundation for more specialized
-gradient renderables.
+correction, and flexible alignment options.
 """
 
 from __future__ import annotations
@@ -838,3 +836,4 @@ codes,\n\t- RGB triplets (rich.color.ColorTriplet)",
         ),
         justify="center"
     )
+# rich_gradient/gradient.py
