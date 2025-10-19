@@ -89,29 +89,11 @@ def test_text_no_colors():
 
 def test_gradient_background_true():
     """
-    Test that Gradient with background=True applies background color and produces output.
+    Test that Gradient with explicit background colors produces output.
     """
-    grad = Gradient("BG", colors=["#f00", "#0f0"], background=True)
+    grad = Gradient("BG", colors=["#f00", "#0f0"], bg_colors=["#001122", "#334455"])
     out = render_to_text(grad)
     assert "BG" in out
-
-
-def test_gradient_show_quit_panel():
-    """
-    Test that Gradient with show_quit_panel=True includes quit panel text in output.
-    """
-    grad = Gradient("Quit", colors=["#f00", "#0f0"], show_quit_panel=True)
-    out = render_to_text(grad)
-    assert "Press [bold]Ctrl+C[/bold] to stop." in out
-
-
-def test_gradient_hide_quit_panel():
-    """
-    Test that Gradient with show_quit_panel=False does not include quit panel text in output.
-    """
-    grad = Gradient("No Quit", colors=["#f00", "#0f0"], show_quit_panel=False)
-    out = render_to_text(grad)
-    assert "Press [bold]Ctrl+C[/bold] to stop." not in out
 
 
 def test_gradient_animated_static():

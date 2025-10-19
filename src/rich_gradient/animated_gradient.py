@@ -1,32 +1,33 @@
+"""A module providing an AnimatedGradient class for creating animated
+gradients in the terminal using Rich."""
+
 import time
 from threading import Event, RLock, Thread
-from typing import Any, Callable, List, Optional, TypeAlias, Union, cast
+from typing import (
+    Any,
+    Callable,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    TypeAlias,
+    Union,
+    cast,
+)
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
-from rich.cells import get_character_cell_size
-from rich.color import Color, ColorParseError
+from rich.color import Color
 from rich.color_triplet import ColorTriplet
-from rich.console import (
-    Console,
-    ConsoleOptions,
-    ConsoleRenderable,
-    Group,
-    NewLine,
-    RenderResult,
-)
-from rich.jupyter import JupyterMixin
+from rich.console import Console, ConsoleRenderable
 from rich.live import Live
-from rich.measure import Measurement
 from rich.panel import Panel
-from rich.segment import Segment
-from rich.style import Style
-from rich.table import Column, Table
 from rich.text import Text as RichText
+
+from rich_gradient.gradient import Gradient
+
 # rich-color-ext is installed in package __init__
 
-from rich_gradient._base_gradient import BaseGradient
-from rich_gradient.spectrum import Spectrum
 
 __all__ = [
     "AnimatedGradient",
@@ -40,7 +41,7 @@ ColorType: TypeAlias = Union[str, Color, ColorTriplet]
 # rich_color_ext is installed at package import time
 
 
-class AnimatedGradient(BaseGradient):
+class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
 
     Args:
@@ -60,9 +61,9 @@ class AnimatedGradient(BaseGradient):
         hues (int): Number of hues when auto-generating colors. Defaults to 5.
         rainbow (bool): Use a rainbow gradient. Defaults to False.
         speed (int): Animation speed in milliseconds. Defaults to 4.
-        show_quit_panel (bool): Show a quit instructions panel. Defaults to True.
         repeat_scale (float): Stretch color stops across a wider span. Defaults to 2.0.
-        background (bool): Apply gradient to background instead of foreground. Defaults to False.
+        highlight_words: Optional configurations for word highlighting.
+        highlight_regex: Optional configurations for regex highlighting.
 
     Examples:
         >>> ag = AnimatedGradient(renderables=["Hello"], rainbow=True)
@@ -75,7 +76,7 @@ class AnimatedGradient(BaseGradient):
 
     def __init__(
         self,
-        renderables: Optional[List[ConsoleRenderable]] = None,
+        renderables: Optional[List[ConsoleRenderable] | ConsoleRenderable | str] = None,
         colors: Optional[List[ColorType]] = None,
         bg_colors: Optional[List[ColorType]] = None,
         *,
@@ -92,9 +93,9 @@ class AnimatedGradient(BaseGradient):
         hues: int = 5,
         rainbow: bool = False,
         speed: int = 4,
-        show_quit_panel: bool = True,
         repeat_scale: float = 2.0,  # Scale factor to stretch the color stops across a wider span
-        background: bool = False,
+        highlight_words: Mapping[Any, Any] | Sequence[Any] | None = None,
+        highlight_regex: Mapping[Any, Any] | Sequence[Any] | None = None,
     ) -> None:
         assert refresh_per_second > 0, "refresh_per_second must be greater than 0"
         self._lock = RLock()
@@ -130,9 +131,9 @@ class AnimatedGradient(BaseGradient):
             expand=expand,
             justify=justify,
             vertical_justify=vertical_justify,
-            show_quit_panel=show_quit_panel,
             repeat_scale=repeat_scale,
-            background=background,
+            highlight_words=highlight_words,
+            highlight_regex=highlight_regex,
         )
         self._cycle = 0.0
 
@@ -145,10 +146,12 @@ class AnimatedGradient(BaseGradient):
     # -----------------
     @property
     def live_console(self) -> Console:
+        """Get the console used by the Live instance."""
         return self.live.console
 
     @live_console.setter
     def live_console(self, value: Console) -> None:
+        """Set the console used by the Live instance."""
         self.live.console = value
 
     # -----------------
@@ -204,8 +207,6 @@ class AnimatedGradient(BaseGradient):
             if not self.renderables:
                 raise AssertionError("No renderables set for the gradient")
 
-            # BaseGradient.__rich_console__ applies the gradient to *everything* it renders, including
-
             return Align(
                 self,
                 align=self.justify,
@@ -253,22 +254,16 @@ class AnimatedGradient(BaseGradient):
 
 
 if __name__ == "__main__":
-    console = get_console()
+    _console = get_console()
 
     animated_gradient = AnimatedGradient(
-        repeat_scale=1.0,
-        renderables=[
-            RichText("This is an animated gradient example."),
-            NewLine(),
-            Panel(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                title="Animated Gradient Example",
-            ),
-        ],
+        Panel(
+            "This is a panel with a gradient!",
+            title="Animated Gradient Example",
+            padding=(1, 2),
+        ),
         rainbow=True,
-        auto_refresh=True,
-        refresh_per_second=20,
-        console=console,
-        transient=False,
+        highlight_words={"Animated Gradient Example": "bold white"},
+        repeat_scale=4.0,
     )
     animated_gradient.run()
