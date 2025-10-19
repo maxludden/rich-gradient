@@ -14,20 +14,14 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, List, Optional, TypeAlias, Union, Tuple
+from typing import Any, List, Optional, Tuple, TypeAlias, Union
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
 from rich.cells import get_character_cell_size
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
-from rich.console import (
-    Console,
-    ConsoleOptions,
-    ConsoleRenderable,
-    Group,
-    RenderResult,
-)
+from rich.console import Console, ConsoleOptions, ConsoleRenderable, Group, RenderResult
 from rich.jupyter import JupyterMixin
 from rich.measure import Measurement
 from rich.panel import Panel
@@ -48,16 +42,17 @@ class _HighlightRule:
     kind: str  # "words" or "regex"
     style: Style
     words: tuple[str, ...] = ()
-    case_sensitive: bool = False
+    case_sensitive: bool = True
     pattern: re.Pattern[str] | None = None
+
 
 HighlightWordsType: TypeAlias = Union[
     Mapping[str, StyleType],
     Sequence[Tuple[str | Sequence[str], StyleType, bool]],
 ]
 HighlightRegexType: TypeAlias = Union[
-    Mapping[str | re.Pattern, StyleType],
-    Sequence[Tuple[str | re.Pattern, StyleType, int]],
+    Mapping[str, StyleType],
+    Sequence[Tuple[str, StyleType, int]],
 ]
 
 
@@ -71,6 +66,7 @@ class Gradient(JupyterMixin):
     Attributes:
         console: Console instance used for rendering.
     """
+
     # Gamma correction exponent for linear interpolation
     _GAMMA_CORRECTION: float = 2.2
 
@@ -83,9 +79,9 @@ class Gradient(JupyterMixin):
         console: Optional[Console] = None,
         hues: int = 5,
         rainbow: bool = False,
-        expand: bool = False,
+        expand: bool = True,
         justify: AlignMethod = "left",
-        vertical_justify: VerticalAlignMethod = "top",
+        vertical_justify: VerticalAlignMethod = "middle",
         repeat_scale: float = 2.0,
         highlight_words: Optional[HighlightWordsType] = None,
         highlight_regex: Optional[HighlightRegexType] = None,
@@ -248,11 +244,10 @@ class Gradient(JupyterMixin):
         Raises:
             ValueError: If method is invalid.
         """
-        if isinstance(method, str) and method.lower() in {"top", "center", "bottom"}:
+        if isinstance(method, str) and method.lower() in {"top", "middle", "bottom"}:
             self._vertical_justify = method.lower()  # type: ignore
         else:
             raise ValueError(f"Invalid vertical justify method: {method}")
-
 
     @staticmethod
     def _to_color_triplets(colors: List[ColorType]) -> List[ColorTriplet]:
@@ -425,9 +420,7 @@ class Gradient(JupyterMixin):
         return (base + self.phase) % 1.0
 
     def _interpolate_color(
-        self,
-        frac: float,
-        color_stops: list[ColorTriplet]
+        self, frac: float, color_stops: list[ColorTriplet]
     ) -> tuple[float, float, float]:
         """
         Interpolate color in linear light space with gamma correction.
@@ -517,15 +510,15 @@ class Gradient(JupyterMixin):
             if "style" not in payload:
                 raise ValueError("highlight word mapping payload must include 'style'.")
             style: StyleType = payload["style"]
-            case_sensitive = bool(payload.get("case_sensitive", False))
+            case_sensitive = bool(payload.get("case_sensitive", True))
         elif isinstance(payload, (list, tuple)):
             if not payload:
                 raise ValueError("highlight word tuple payload cannot be empty.")
             style = payload[0]
-            case_sensitive = bool(payload[1]) if len(payload) > 1 else False
+            case_sensitive = bool(payload[1]) if len(payload) > 1 else True
         else:
             style = payload
-            case_sensitive = False
+            case_sensitive = True
         return words, style, case_sensitive
 
     def _normalize_word_sequence_entry(
@@ -538,7 +531,7 @@ class Gradient(JupyterMixin):
                 )
             words = self._normalize_words_spec(entry["words"])
             style: StyleType = entry["style"]
-            case_sensitive = bool(entry.get("case_sensitive", False))
+            case_sensitive = bool(entry.get("case_sensitive", True))
             return words, style, case_sensitive
         if isinstance(entry, (list, tuple)):
             if len(entry) < 2 or len(entry) > 3:
@@ -547,7 +540,7 @@ class Gradient(JupyterMixin):
                 )
             words = self._normalize_words_spec(entry[0])
             style: StyleType = entry[1]
-            case_sensitive = bool(entry[2]) if len(entry) == 3 else False
+            case_sensitive = bool(entry[2]) if len(entry) == 3 else True
             return words, style, case_sensitive
         raise TypeError(
             "highlight_words sequence entries must be dicts or tuples describing the highlight."
@@ -561,7 +554,9 @@ class Gradient(JupyterMixin):
         if isinstance(words, Sequence) and not isinstance(words, (str, bytes)):
             normalized = tuple(str(word) for word in words if str(word))
             if not normalized:
-                raise ValueError("Word sequences must contain at least one non-empty string.")
+                raise ValueError(
+                    "Word sequences must contain at least one non-empty string."
+                )
             return normalized
         raise TypeError("Highlight words must be a string or a sequence of strings.")
 
@@ -596,7 +591,9 @@ class Gradient(JupyterMixin):
         pattern = self._normalize_pattern_spec(pattern_spec)
         if isinstance(payload, Mapping):
             if "style" not in payload:
-                raise ValueError("highlight regex mapping payload must include 'style'.")
+                raise ValueError(
+                    "highlight regex mapping payload must include 'style'."
+                )
             style: StyleType = payload["style"]
             flags = int(payload.get("flags", 0))
         elif isinstance(payload, (list, tuple)):
@@ -648,7 +645,7 @@ class Gradient(JupyterMixin):
         words: Sequence[str],
         style: StyleType,
         *,
-        case_sensitive: bool = False,
+        case_sensitive: bool = True,
     ) -> "Gradient":
         """
         Highlight occurrences of the provided words with an additional style \
@@ -657,7 +654,7 @@ class Gradient(JupyterMixin):
         Args:
             words: Iterable of words to highlight.
             style: Style to overlay on matched words.
-            case_sensitive: Whether matching is case-sensitive. Defaults to False.
+            case_sensitive: Whether matching is case-sensitive. Defaults to True.
 
         Returns:
             The gradient instance (for chaining).
@@ -695,7 +692,9 @@ class Gradient(JupyterMixin):
             The gradient instance (for chaining).
         """
         highlight_style = self._coerce_highlight_style(style)
-        compiled = pattern if isinstance(pattern, re.Pattern) else re.compile(pattern, flags)
+        compiled = (
+            pattern if isinstance(pattern, re.Pattern) else re.compile(pattern)
+        )
         self._highlight_rules.append(
             _HighlightRule(
                 kind="regex",
@@ -731,14 +730,38 @@ class Gradient(JupyterMixin):
                         if index == -1:
                             break
                         end = index + len(target)
-                        self._apply_highlight_range(highlight_map, index, end, rule.style)
+                        self._apply_highlight_range(
+                            highlight_map, index, end, rule.style
+                        )
                         start = index + len(target)
             elif rule.kind == "regex" and rule.pattern is not None:
                 for match in rule.pattern.finditer(text):
-                    start, end = match.span()
-                    if start == end:
-                        continue
-                    self._apply_highlight_range(highlight_map, start, end, rule.style)
+                    # If the regex contains capture groups, apply highlighting only
+                    # to the spans of those groups. Otherwise, fall back to the
+                    # whole match span. This prevents surrounding border characters
+                    # (used in title/subtitle patterns) from being styled.
+                    try:
+                        groups = match.groups()
+                    except Exception:
+                        groups = ()
+                    if groups:
+                        for gi in range(
+                            1, match.lastindex + 1 if match.lastindex else 0
+                        ):
+                            gspan = match.span(gi)
+                            gstart, gend = gspan
+                            if gstart == -1 or gstart == gend:
+                                continue
+                            self._apply_highlight_range(
+                                highlight_map, gstart, gend, rule.style
+                            )
+                    else:
+                        start, end = match.span()
+                        if start == end:
+                            continue
+                        self._apply_highlight_range(
+                            highlight_map, start, end, rule.style
+                        )
         return highlight_map
 
     @staticmethod
@@ -812,7 +835,7 @@ class Gradient(JupyterMixin):
 
 if __name__ == "__main__":
     # Example BaseGradient Usage
-    _console=Console()
+    _console = Console()
     _console.print(
         Gradient(
             renderables=Panel(
@@ -822,18 +845,19 @@ in [i]smooth[/i], [b]gradient[/b] color.\nIf no explicit colors are given, a spe
 colors is generated based on hue.\n\n[b]BaseGradient[/b] can parse \
 and render gradients from:\n\t- CSS3 named colors,\n\t- 3 and 6 digit hex \
 codes,\n\t- RGB triplets (rich.color.ColorTriplet)",
-                    justify="left"
+                    justify="left",
                 ),
                 title="Color Parsing",
-                expand=False
+                expand=False,
+                title_align="left",
             ),
             highlight_words={
-                "Color Parsing": "bold white",
+                # "Color Parsing": "bold white",
                 "hue": "bold white"
             },
             highlight_regex={r"\w+\.\w+": "bold white", r"\w+\.\w+\.\w+": "bold white"},
-            justify='left'
+            justify="left",
         ),
-        justify="center"
+        justify="center",
     )
 # rich_gradient/gradient.py

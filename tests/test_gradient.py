@@ -96,6 +96,27 @@ def test_gradient_highlight_words_applies_style():
     """
     console = Console()
     gradient = Gradient("Hello World", colors=["#f00", "#0f0"])
+    gradient.highlight_words(["World"], style="bold")
+    segments = list(gradient.__rich_console__(console, console.options))
+    characters: list[tuple[str, Style | None]] = []
+    for seg in segments:
+        for ch in seg.text:
+            if ch == "\n":
+                continue
+            characters.append((ch, seg.style))
+    plain = "".join(ch for ch, _ in characters)
+    start = plain.find("World")
+    assert start != -1, "Highlight target word not found in rendered output."
+    world_chars = characters[start : start + 5]
+    assert all(style is not None and style.bold for _, style in world_chars)
+
+
+def test_gradient_highlight_words_case_insensitive_override():
+    """
+    Test that case-insensitive matching remains available when requested.
+    """
+    console = Console()
+    gradient = Gradient("Hello World", colors=["#f00", "#0f0"])
     gradient.highlight_words(["world"], style="bold", case_sensitive=False)
     segments = list(gradient.__rich_console__(console, console.options))
     characters: list[tuple[str, Style | None]] = []
@@ -104,8 +125,8 @@ def test_gradient_highlight_words_applies_style():
             if ch == "\n":
                 continue
             characters.append((ch, seg.style))
-    plain = "".join(ch for ch, _ in characters).lower()
-    start = plain.find("world")
+    plain = "".join(ch for ch, _ in characters)
+    start = plain.find("World")
     assert start != -1, "Highlight target word not found in rendered output."
     world_chars = characters[start : start + 5]
     assert all(style is not None and style.bold for _, style in world_chars)
