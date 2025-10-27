@@ -1,432 +1,789 @@
-"""
-CLI for rich-gradient using Typer.
+"""Command line interface for ``rich-gradient``.
 
-Provides a `text` command to print gradient-styled text.
+This module exposes a Typer based command line application that mirrors the
+capabilities of the library. The CLI focuses on ergonomic defaults while also
+providing fine-grained control over gradient generation, alignment, panel
+styling, syntax highlighting, and animation playback. The options are inspired
+by the popular ``rich-cli`` utility so that existing Rich users feel right at
+home when using ``rich-gradient`` from the terminal.
 """
 
 from __future__ import annotations
 
+import json
 import sys
 from io import StringIO
+from enum import Enum
 from pathlib import Path
 from time import sleep
-from typing import List, Optional, Union, cast
+from typing import Iterable, List, Optional
 
 import typer
-from rich.align import Align
-from rich.color import ColorParseError
-from rich.console import Console, ConsoleRenderable, RichCast, JustifyMethod, OverflowMethod
 from rich import box
-from rich.live import Live
+from rich.color import ColorParseError
+from rich.console import Console, ConsoleRenderable, RichCast
+from rich.json import JSON as RichJSON
 from rich.markdown import Markdown
 from rich.markup import render as render_markup
-from rich.panel import Panel
-from rich.progress import BarColumn, Progress, TaskProgressColumn, TextColumn, TimeElapsedColumn
+from rich.panel import Panel as RichPanel
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TaskProgressColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 from rich.prompt import Prompt
-from rich.rule import Rule as RichRule
 from rich.syntax import Syntax
 from rich.table import Table
 from rich.text import Text as RichText
+from rich.live import Live
 
 from rich_gradient import Gradient, Rule as GradientRule, Text, __version__
+from rich_gradient.animated_gradient import AnimatedGradient
+from rich_gradient.animated_panel import AnimatedPanel
+from rich_gradient.panel import Panel
+from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 
-def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
-    """Cast any str, RichCast, or ConsoleRenderable into a valid console renderable.
+class JustifyOption(str, Enum):
+    """Enumeration mapping CLI choices to ``JustifyMethod`` values."""
 
-    This function normalizes various input types into a ConsoleRenderable that can
-    be displayed by Rich's Console.
+    DEFAULT = "default"
+    LEFT = "left"
+    RIGHT = "right"
+    CENTER = "center"
+    FULL = "full"
+
+
+class OverflowOption(str, Enum):
+    """Enumeration covering the overflow behaviours supported by ``Text``."""
+
+    FOLD = "fold"
+    CROP = "crop"
+    ELLIPSIS = "ellipsis"
+    IGNORE = "ignore"
+
+
+class AlignOption(str, Enum):
+    """Enumeration for horizontal alignment options used by several commands."""
+
+    LEFT = "left"
+    RIGHT = "right"
+    CENTER = "center"
+
+
+class VerticalAlignOption(str, Enum):
+    """Enumeration for vertical alignment choices used by gradient renderers."""
+
+    TOP = "top"
+    MIDDLE = "middle"
+    BOTTOM = "bottom"
+
+
+class BoxOption(str, Enum):
+    """Available Rich box styles exposed to the CLI."""
+
+    ROUNDED = "rounded"
+    HEAVY = "heavy"
+    DOUBLE = "double"
+    SQUARE = "square"
+    ASCII = "ascii"
+    ASCII2 = "ascii2"
+    SIMPLE = "simple"
+    SIMPLE_HEAD = "simple_head"
+
+
+BOX_STYLE_MAP: dict[BoxOption, box.Box] = {
+    BoxOption.ROUNDED: box.ROUNDED,
+    BoxOption.HEAVY: box.HEAVY,
+    BoxOption.DOUBLE: box.DOUBLE,
+    BoxOption.SQUARE: box.SQUARE,
+    BoxOption.ASCII: box.ASCII,
+    BoxOption.ASCII2: box.ASCII2,
+    BoxOption.SIMPLE: box.SIMPLE,
+    BoxOption.SIMPLE_HEAD: box.SIMPLE_HEAD,
+}
+
+
+app = typer.Typer(help="Render gradients and export colourful output from the terminal.")
+
+
+def _read_text_source(source: Optional[str]) -> str:
+    """Read textual content from an argument, stdin, or a file path.
+
+    The behaviour mirrors ``rich-cli``:
+
+    * ``None`` – fall back to stdin when data is piped in, otherwise raise an
+      error so the user knows they need to supply content.
+    * ``-`` – always read from stdin, even if stdin is attached to a TTY.
+    * Existing path – load the file as UTF-8 encoded text.
+    * Everything else – treat the argument as the literal text to render.
 
     Args:
-        value: The input to parse. Can be:
-            - str: Converted to RichText with markup parsing enabled
-            - RichCast: An object with a __rich__() method that returns a renderable
-            - ConsoleRenderable: Already a valid renderable, returned as-is
+        source: Value provided by the CLI.  May be ``None`` when omitted.
 
     Returns:
-        ConsoleRenderable: A valid renderable object for Rich's Console
+        The textual content to render.
 
     Raises:
-        TypeError: If the value is not one of the accepted types
-
-    Examples:
-        >>> parse_renderable("Hello, [bold]World[/bold]!")
-        Text('Hello, World!')
-
-        >>> from rich.panel import Panel
-        >>> parse_renderable(Panel("Content"))
-        Panel(...)
-
-        >>> class CustomRenderable:
-        ...     def __rich__(self):
-        ...         return Text("Custom")
-        >>> parse_renderable(CustomRenderable())
-        Text('Custom')
+        typer.BadParameter: Raised when no data can be resolved.
     """
-    # If it's a string, convert to RichText with markup parsing
-    if isinstance(value, str):
-        return RichText.from_markup(value)
 
-    # If it's a RichCast (has __rich__ method), call it to get the renderable
-    if hasattr(value, "__rich__"):
-        result = value.__rich__()
-        # Recursively parse the result in case __rich__ returns a string or another RichCast
-        if isinstance(result, str):
-            return RichText.from_markup(result)
-        return result
+    if source == "-":
+        data = sys.stdin.read()
+        if not data:
+            raise typer.BadParameter("stdin did not provide any data")
+        return data
 
-    # If it's already a ConsoleRenderable, return it as-is
-    # This includes Text, Panel, Table, etc.
-    return value
+    if source is None:
+        if sys.stdin.isatty():
+            raise typer.BadParameter("provide text or pipe content to stdin")
+        return sys.stdin.read()
 
+    candidate_path = Path(source)
+    if candidate_path.exists() and candidate_path.is_file():
+        try:
+            return candidate_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as error:  # pragma: no cover - defensive
+            raise typer.BadParameter("file is not valid UTF-8 text") from error
 
-DEMO_COLORS: list[str] = ["#38bdf8", "#a855f7", "#f97316", "#fb7185"]
-
-
-app = typer.Typer(
-    help="rich-gradient CLI",
-    no_args_is_help=True,
-    context_settings={"help_option_names": []},
-)
+    return source
 
 
-def _demo_text(message: str, *, style: str = "", end: str = "\n") -> Text:
-    """Return gradient text using the shared demo color palette."""
+def _parse_padding(value: Optional[str]) -> tuple[int, int, int, int]:
+    """Parse padding strings (``"1"``, ``"2,4"``, ``"1,2,3,4"``) into a 4-tuple."""
 
-    return Text(message, colors=DEMO_COLORS, style=style, end=end)
+    if value is None:
+        return (0, 0, 0, 0)
+    parts = [element.strip() for element in value.split(",") if element.strip()]
+    if not parts:
+        return (0, 0, 0, 0)
+    try:
+        values = [int(part) for part in parts]
+    except ValueError as error:
+        raise typer.BadParameter("padding must contain integers") from error
+    if len(values) == 1:
+        top = right = bottom = left = values[0]
+    elif len(values) == 2:
+        top, right = values
+        bottom, left = top, right
+    elif len(values) == 4:
+        top, right, bottom, left = values
+    else:
+        raise typer.BadParameter("padding requires 1, 2 or 4 integers")
+    return (top, right, bottom, left)
 
 
-def parse_renderable(value: Union[str, RichCast, ConsoleRenderable]) -> ConsoleRenderable:
-    """Cast a str, RichCast, or ConsoleRenderable into a valid ConsoleRenderable.
+def _create_console(
+    width: Optional[int],
+    max_width: Optional[int],
+    record: bool,
+    force_terminal: bool,
+) -> Console:
+    """Create a ``Console`` configured from CLI flags."""
+
+    kwargs: dict[str, object] = {"record": record, "force_terminal": force_terminal}
+    if width is not None:
+        kwargs["width"] = width
+    if max_width is not None:
+        kwargs["max_width"] = max_width
+    return Console(**kwargs)
+
+
+def _save_svg(console: Console, destination: Optional[Path]) -> None:
+    """Persist the console buffer to an SVG file when requested."""
+
+    if destination is None:
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    console.save_svg(
+        str(destination),
+        title="rich-gradient",
+        theme=GRADIENT_TERMINAL_THEME,
+        unique_id="rich-gradient-cli",
+    )
+
+
+def _resolve_renderables(lines: Iterable[str], markup: bool) -> list[ConsoleRenderable]:
+    """Convert a sequence of strings into Rich renderables."""
+
+    renderables: list[ConsoleRenderable] = []
+    for line in lines:
+        if markup:
+            renderables.append(RichText.from_markup(line.rstrip("\n")))
+        else:
+            renderables.append(RichText(line.rstrip("\n")))
+    return renderables
+
+
+def _maybe_warn_panel_title(panel_requested: bool, title: Optional[str]) -> None:
+    """Emit a friendly warning when panel specific options are ignored."""
+
+    if title and not panel_requested:
+        typer.echo("Warning: --title has no effect without --panel")
+
+
+def parse_renderable(value: str | RichCast | ConsoleRenderable) -> ConsoleRenderable:
+    """Coerce input into a Rich ``ConsoleRenderable`` instance.
 
     Args:
-        value: A string, RichCast object, or ConsoleRenderable to convert.
+        value: A string, object implementing ``__rich__``, or an existing
+            ``ConsoleRenderable``.
 
     Returns:
-        ConsoleRenderable: A valid console renderable object.
+        A ``ConsoleRenderable`` suitable for printing to a ``Console``.
 
     Raises:
-        TypeError: If the value cannot be converted to a ConsoleRenderable.
+        TypeError: Raised when the value cannot be converted into a renderable.
     """
-    # If it's already a ConsoleRenderable, return it as-is
+
     if isinstance(value, ConsoleRenderable):
         return value
-
-    # If it's a string, convert to RichText with markup support
     if isinstance(value, str):
         return RichText.from_markup(value)
-
-    # If it's a RichCast, call __rich__() to get the renderable
     if hasattr(value, "__rich__"):
         result = value.__rich__()
-        # The result might be another RichCast, str, or ConsoleRenderable
-        # Recursively parse it to ensure we get a ConsoleRenderable
         if isinstance(result, (str, ConsoleRenderable)) or hasattr(result, "__rich__"):
-            return parse_renderable(result)
-        else:
-            raise TypeError(
-                f"RichCast.__rich__() returned {type(result).__name__}, "
-                "expected str, RichCast, or ConsoleRenderable"
-            )
-
-    # If none of the above, raise an error
+            return parse_renderable(result)  # type: ignore[arg-type]
+        raise TypeError(
+            f"RichCast.__rich__() returned {type(result).__name__}, expected "
+            "str, RichCast, or ConsoleRenderable."
+        )
     raise TypeError(
         f"Cannot parse {type(value).__name__} to ConsoleRenderable. "
         "Expected str, RichCast, or ConsoleRenderable."
     )
 
 
-def _build_header() -> Text:
-    """Return a gradient styled header for the CLI help screen."""
-
-    return Text(
-        text="Rich Gradient CLI",
-        colors=["#38bdf8", "#a855f7", "#f97316", "#fb7185"],
-        style="bold",
-        justify="center",
-    )
+DEMO_COLORS: list[str] = ["#38bdf8", "#a855f7", "#f97316", "#fb7185"]
 
 
-def _render_main_help(console: Console) -> None:
-    """Render a custom help screen that mirrors the Rich CLI aesthetic."""
+def _demo_text(message: str, *, style: str = "", end: str = "\n") -> Text:
+    """Generate gradient text using the shared demo palette."""
 
-    console.print(Align.center(_build_header()))
-    console.print(Align.center(RichText.from_markup(f"[dim]Version {__version__}[/dim]")))
-    console.print()
-    console.print(RichRule(style="#a855f7"))
-    console.print(RichText.from_markup("[bold]Usage[/bold]"))
-    console.print("  rich-gradient [OPTIONS] COMMAND [ARGS]...")
-    console.print()
-
-    options_table = Table.grid(padding=(0, 2))
-    options_table.add_column(justify="right", style="cyan", no_wrap=True)
-    options_table.add_column(style="magenta", no_wrap=True)
-    options_table.add_column(style="white")
-    options_table.add_row("--version", "-v", "Print version and exit.")
-    options_table.add_row(
-        "--install-completion",
-        "",
-        "Install completion for the current shell.",
-    )
-    options_table.add_row(
-        "--show-completion",
-        "",
-        "Show completion for the current shell, to copy or customize the installation.",
-    )
-    options_table.add_row("--help", "-h", "Show this message and exit.")
-    console.print(
-        Panel.fit(
-            options_table,
-            title="Options",
-            border_style="#38bdf8",
-            box=box.SQUARE,
-        )
-    )
-    console.print()
-
-    commands_table = Table.grid(padding=(0, 2))
-    commands_table.add_column(justify="right", style="cyan", no_wrap=True)
-    commands_table.add_column(style="white")
-    commands_table.add_row("text", "Print gradient-styled text to the console.")
-    commands_table.add_row("gradient", "Display gradient banners using the Gradient renderable.")
-    commands_table.add_row("rule", "Render a gradient-enhanced horizontal rule.")
-    commands_table.add_row("panel", "Show a panel that wraps gradient text.")
-    commands_table.add_row("table", "Render a table with gradient content.")
-    commands_table.add_row("progress", "Run a short progress demonstration with gradients.")
-    commands_table.add_row("syntax", "Highlight source code within a gradient frame.")
-    commands_table.add_row("markdown", "Render Markdown content with gradient framing.")
-    commands_table.add_row("markup", "Demonstrate Rich markup parsed into gradient text.")
-    commands_table.add_row("box", "Preview a selection of Rich box styles in gradients.")
-    commands_table.add_row("prompts", "Simulate prompts styled with gradient text.")
-    commands_table.add_row("live", "Stream live updates with gradient styling.")
-    console.print(
-        Panel.fit(
-            commands_table,
-            title="Commands",
-            border_style="#f97316",
-            box=box.SQUARE,
-        )
-    )
-    console.print()
-    console.print(
-        RichText.from_markup(
-            "Tip: Run [bold cyan]rich-gradient text --help[/bold cyan] for gradient specific options."
-        )
-    )
+    return Text(message, colors=DEMO_COLORS, style=style, end=end)
 
 
-def _help_callback(ctx: typer.Context, value: Optional[bool]) -> None:
-    """Display the custom help screen when the global help flag is used."""
-
-    if not value or ctx.resilient_parsing:
-        return
-    _render_main_help(Console())
-    raise typer.Exit()
-
-
-@app.command("text", context_settings={"help_option_names": ["-h", "--help"]})
-def text_cmd(
-    text: Optional[str] = typer.Argument(
+@app.command(name="text")
+def text_command(
+    source: Optional[str] = typer.Argument(
         None,
-        help="Text to print. If omitted, reads from stdin.",
-        show_default=False,
+        help="Text, file path, or '-' to read from stdin.",
     ),
     color: List[str] = typer.Option(
-        [], "--color", "-c", help="Foreground color stop. Repeat for multiple."
+        [],
+        "-c",
+        "--color",
+        help="Foreground gradient color stop. Repeat for multiple stops.",
     ),
     bgcolor: List[str] = typer.Option(
-        [], "--bgcolor", "-b", help="Background color stop. Repeat for multiple."
+        [],
+        "-b",
+        "--bgcolor",
+        help="Background gradient color stop. Repeat for multiple stops.",
     ),
-    rainbow: bool = typer.Option(
-        False, "--rainbow", help="Use a full-spectrum rainbow gradient."
-    ),
-    hues: int = typer.Option(
-        5,
-        "--hues",
-        min=2,
-        help="Number of hues when auto-generating colors (>=2).",
-    ),
-    style: str = typer.Option("", "--style", help="Rich style string (e.g. 'bold')."),
-    justify: str = typer.Option(
-        "default",
+    rainbow: bool = typer.Option(False, "--rainbow", help="Generate a rainbow palette."),
+    hues: int = typer.Option(5, "--hues", min=2, help="Auto-generated hues when no stops provided."),
+    style: str = typer.Option("", "-s", "--style", help="Base style applied before gradients."),
+    justify: JustifyOption = typer.Option(
+        JustifyOption.DEFAULT,
         "--justify",
-        help="Text justification (default|left|right|center|full)",
+        help="Text justification passed to rich Text.",
     ),
-    overflow: str = typer.Option(
-        "fold",
+    overflow: OverflowOption = typer.Option(
+        OverflowOption.FOLD,
         "--overflow",
-        help="Overflow handling (fold|crop|ellipsis|ignore)",
+        help="Overflow strategy (fold, crop, ellipsis, ignore).",
     ),
-    no_wrap: bool = typer.Option(
-        False, "--no-wrap/--wrap", help="Disable/enable text wrapping."
-    ),
-    end: str = typer.Option("\n", "--end", help="String appended after the text."),
-    tab_size: int = typer.Option(4, "--tab-size", min=1, help="Tab size in spaces."),
-    markup: bool = typer.Option(
-        True, "--markup/--no-markup", help="Enable/disable Rich markup parsing."
-    ),
-    width: Optional[int] = typer.Option(
-        None, "--width", help="Console width. Defaults to terminal width."
-    ),
-    panel: bool = typer.Option(False, "--panel", help="Wrap output in a Panel."),
-    title: Optional[str] = typer.Option(
-        None, "--title", help="Optional Panel title when using --panel."
-    ),
-    record: bool = typer.Option(
+    no_wrap: bool = typer.Option(False, "--no-wrap", help="Disable word wrapping."),
+    end: str = typer.Option("\n", "--end", help="Trailing text appended after rendering."),
+    tab_size: int = typer.Option(4, "--tab-size", min=1, help="Tab size used by Rich Text."),
+    markup: bool = typer.Option(True, "--markup/--no-markup", help="Enable Rich markup parsing."),
+    markdown_mode: bool = typer.Option(
         False,
-        "--record",
-        help="Enable Console(record=True). No files are saved by the CLI.",
+        "-m",
+        "--markdown",
+        help="Render the input as Markdown with gradient framing.",
+    ),
+    json_mode: bool = typer.Option(
+        False,
+        "-J",
+        "--json",
+        help="Render the input as JSON with gradient framing.",
+    ),
+    syntax: bool = typer.Option(False, "--syntax", help="Syntax highlight the input."),
+    lexer: Optional[str] = typer.Option(
+        None,
+        "-x",
+        "--lexer",
+        help="Lexer to use with --syntax. Defaults to python when omitted.",
+    ),
+    theme: str = typer.Option(
+        "monokai",
+        "--theme",
+        help="Syntax highlighting theme when --syntax is used.",
+    ),
+    line_numbers: bool = typer.Option(
+        False,
+        "-n",
+        "--line-numbers",
+        help="Show line numbers for --syntax output.",
+    ),
+    guides: bool = typer.Option(
+        False,
+        "-g",
+        "--guides",
+        help="Show indentation guides for --syntax output.",
+    ),
+    syntax_no_wrap: bool = typer.Option(
+        False,
+        "--syntax-no-wrap",
+        help="Disable word wrapping for --syntax output.",
+    ),
+    head: Optional[int] = typer.Option(
+        None,
+        "--head",
+        min=1,
+        help="Only render the first N lines (requires --syntax).",
+    ),
+    tail: Optional[int] = typer.Option(
+        None,
+        "--tail",
+        min=1,
+        help="Only render the last N lines (requires --syntax).",
+    ),
+    width: Optional[int] = typer.Option(None, "-w", "--width", help="Explicit console width."),
+    max_width: Optional[int] = typer.Option(
+        None, "-W", "--max-width", help="Maximum console width for wrapping."
+    ),
+    panel: bool = typer.Option(False, "-a", "--panel", help="Wrap the output in a panel."),
+    panel_title: Optional[str] = typer.Option(None, "--title", help="Panel title when --panel is used."),
+    panel_caption: Optional[str] = typer.Option(
+        None, "--caption", help="Panel caption when --panel is used."
+    ),
+    panel_style: str = typer.Option("", "--panel-style", help="Style applied to the panel body."),
+    panel_box: BoxOption = typer.Option(
+        BoxOption.ROUNDED,
+        "--panel-box",
+        help="Panel border box style.",
+    ),
+    padding: Optional[str] = typer.Option(
+        None,
+        "-d",
+        "--padding",
+        help="Padding around panel content (1, 2 or 4 comma separated integers).",
+    ),
+    expand_panel: bool = typer.Option(
+        True, "--expand/--no-expand", help="Expand the panel to available width.", show_default=True
+    ),
+    record: bool = typer.Option(False, "--record", help="Enable console recording (required for SVG export)."),
+    save_svg: Optional[Path] = typer.Option(
+        None,
+        "--save-svg",
+        "--export-svg",
+        help="Write the render to an SVG file.",
+        show_default=False,
+    ),
+    force_terminal: bool = typer.Option(
+        False,
+        "--force-terminal",
+        help="Force terminal rendering even when stdout is redirected.",
+    ),
+) -> None:
+    """Render gradient text similar to ``rich-cli --print``."""
+
+    if sum((markdown_mode, json_mode, syntax)) > 1:
+        raise typer.BadParameter("Choose at most one of --markdown, --json, or --syntax")
+    if (head is not None or tail is not None) and not syntax:
+        raise typer.BadParameter("--head/--tail require --syntax")
+    if head is not None and tail is not None:
+        raise typer.BadParameter("--head and --tail cannot be combined")
+
+    content = _read_text_source(source)
+    try:
+        renderable: ConsoleRenderable
+        if json_mode:
+            try:
+                data = json.loads(content)
+            except json.JSONDecodeError as error:  # pragma: no cover - user input validation
+                raise typer.BadParameter(f"invalid JSON: {error}") from error
+            renderable = Gradient(
+                RichJSON.from_data(data, indent=2),
+                colors=color or None,
+                bg_colors=bgcolor or None,
+                hues=hues,
+                rainbow=rainbow,
+                justify=justify.value,
+            )
+        elif markdown_mode:
+            renderable = Gradient(
+                Markdown(content),
+                colors=color or None,
+                bg_colors=bgcolor or None,
+                hues=hues,
+                rainbow=rainbow,
+                justify=justify.value,
+            )
+        elif syntax:
+            snippet = content
+            lines = content.splitlines()
+            if head is not None:
+                snippet = "\n".join(lines[:head])
+            elif tail is not None:
+                snippet = "\n".join(lines[-tail:])
+            renderable = Gradient(
+                Syntax(
+                    snippet,
+                    lexer or "python",
+                    theme=theme,
+                    line_numbers=line_numbers,
+                    indent_guides=guides,
+                    word_wrap=not syntax_no_wrap,
+                ),
+                colors=color or None,
+                bg_colors=bgcolor or None,
+                hues=hues,
+                rainbow=rainbow,
+                justify=justify.value,
+            )
+        else:
+            renderable = Text(
+                text=content,
+                colors=color or None,
+                bgcolors=bgcolor or None,
+                rainbow=rainbow,
+                hues=hues,
+                style=style,
+                justify=justify.value,
+                overflow=overflow.value,
+                no_wrap=no_wrap,
+                end=end,
+                tab_size=tab_size,
+                markup=markup,
+            )
+    except (ColorParseError, ValueError, TypeError) as error:
+        typer.echo(f"Error: {error}", err=True)
+        raise typer.Exit(1) from error
+    _maybe_warn_panel_title(panel, panel_title)
+    console = _create_console(width, max_width, record or save_svg is not None, force_terminal)
+    if panel:
+        panel_renderable = RichPanel(
+            renderable,
+            title=panel_title,
+            subtitle=panel_caption,
+            expand=expand_panel,
+            box=BOX_STYLE_MAP[panel_box],
+            padding=_parse_padding(padding),
+            style=panel_style,
+        )
+        console.print(panel_renderable)
+    else:
+        console.print(renderable)
+    _save_svg(console, save_svg)
+
+
+@app.command(name="gradient")
+def gradient_command(
+    line: Optional[List[str]] = typer.Argument(
+        None,
+        help="Individual lines to include in the gradient. When omitted, read from stdin.",
+    ),
+    color: List[str] = typer.Option(
+        [], "-c", "--color", help="Foreground color stops. Repeat for multiple values."
+    ),
+    bgcolor: List[str] = typer.Option(
+        [], "-b", "--bgcolor", help="Background color stops. Repeat for multiple values."
+    ),
+    rainbow: bool = typer.Option(False, "--rainbow", help="Generate a rainbow gradient."),
+    hues: int = typer.Option(5, "--hues", min=2, help="Auto-generated hues when color stops missing."),
+    justify: AlignOption = typer.Option(
+        AlignOption.LEFT,
+        "--justify",
+        help="Horizontal alignment applied to the gradient output.",
+    ),
+    vertical_justify: VerticalAlignOption = typer.Option(
+        VerticalAlignOption.MIDDLE,
+        "--vertical",
+        help="Vertical alignment applied when expand is enabled.",
+    ),
+    markup: bool = typer.Option(True, "--markup/--no-markup", help="Treat input as Rich markup."),
+    expand: bool = typer.Option(True, "--expand/--no-expand", help="Expand to available width."),
+    record: bool = typer.Option(False, "--record", help="Record console output for export."),
+    width: Optional[int] = typer.Option(None, "-w", "--width", help="Explicit console width."),
+    max_width: Optional[int] = typer.Option(
+        None, "-W", "--max-width", help="Maximum width when wrapping output."
+    ),
+    force_terminal: bool = typer.Option(
+        False, "--force-terminal", help="Force terminal output when piping."
     ),
     save_svg: Optional[Path] = typer.Option(
         None,
         "--save-svg",
-        help="Save output to an SVG file at the given path.",
+        "--export-svg",
+        help="Write the gradient render to SVG.",
         show_default=False,
     ),
-):
-    """Print gradient-styled text to the console."""
+) -> None:
+    """Apply gradients across multiple renderables."""
 
-    # Read from stdin if no positional text is provided
-    if text is None:
+    console = _create_console(width, max_width, record or save_svg is not None, force_terminal)
+    if not line:
+        stdin_payload = ""
         if not sys.stdin.isatty():
-            text = sys.stdin.read()
-        else:
-            typer.echo("No text provided and stdin is empty.", err=True)
-            raise typer.Exit(code=1)
+            stdin_payload = sys.stdin.read()
+            if stdin_payload:
+                line = stdin_payload.splitlines()
+        if not line:
+            banner = Gradient(
+                [
+                    _demo_text("Gradient Showcase", style="bold"),
+                    Text(
+                        "Smoothly blend colors across multiple renderables.",
+                        colors=list(reversed(DEMO_COLORS)),
+                        end="",
+                    ),
+                ],
+                colors=DEMO_COLORS,
+                justify="center",
+                expand=True,
+            )
+            console.print(banner)
+            typer.echo("Gradient Showcase")
+            _save_svg(console, save_svg)
+            return
 
-    # Normalize color inputs: use None when not provided, otherwise lists
-    colors_arg = color or None
-    bgcolors_arg = bgcolor or None
-
-    # Validate constrained string options for broad Typer/Click compatibility
-    valid_justify = {"default", "left", "right", "center", "full"}
-    if justify not in valid_justify:
-        typer.echo(
-            f"Error: invalid --justify '{justify}'. Choose from: "
-            + ", ".join(sorted(valid_justify)),
-            err=True,
-        )
-        raise typer.Exit(code=2)
-
-    valid_overflow = {"fold", "crop", "ellipsis", "ignore"}
-    if overflow not in valid_overflow:
-        typer.echo(
-            f"Error: invalid --overflow '{overflow}'. Choose from: "
-            + ", ".join(sorted(valid_overflow)),
-            err=True,
-        )
-        raise typer.Exit(code=3)
-
-    # Build the gradient Text with friendly error handling
-    try:
-        assert text is not None, "text must be provided before building gradient Text"
-        rg_text = Text(
-            text=text,
-            colors=colors_arg,
-            rainbow=rainbow,
-            hues=hues,
-            style=style,
-            justify=cast(JustifyMethod, justify),
-            overflow=cast(OverflowMethod, overflow),
-            no_wrap=no_wrap,
-            end=end,
-            tab_size=tab_size,
-            bgcolors=bgcolors_arg,
-            markup=markup,
-        )
-    except (ColorParseError, ValueError, TypeError) as e:
-        typer.echo(f"Error: {e}", err=True)
-        raise typer.Exit(code=4)
-    except Exception as e:  # pragma: no cover - defensive
-        typer.echo(f"Unexpected error: {e}", err=True)
-        raise typer.Exit(code=5)
-
-    # If saving SVG, Console must be created with record=True
-    effective_record = record or (save_svg is not None)
-    console = (
-        Console(width=width, record=effective_record)
-        if width
-        else Console(record=effective_record)
+    renderables = _resolve_renderables(line, markup)
+    gradient = Gradient(
+        renderables,
+        colors=color or None,
+        bg_colors=bgcolor or None,
+        hues=hues,
+        rainbow=rainbow,
+        expand=expand,
+        justify=justify.value,
+        vertical_justify=vertical_justify.value,
     )
+    console.print(gradient)
+    _save_svg(console, save_svg)
 
-    if title and not panel:
-        typer.echo("Warning: --title has no effect without --panel", err=True)
 
-    if panel:
-        console.print(Panel(rg_text, title=title))
+@app.command(name="rule")
+def rule_command(
+    title: Optional[str] = typer.Argument(None, help="Optional title rendered inside the rule."),
+    color: List[str] = typer.Option(
+        [], "-c", "--color", help="Foreground color stops for the rule line."
+    ),
+    bgcolor: List[str] = typer.Option(
+        [], "-b", "--bgcolor", help="Background color stops for the rule line."
+    ),
+    rainbow: bool = typer.Option(False, "--rainbow", help="Use a rainbow palette regardless of color stops."),
+    hues: int = typer.Option(10, "--hues", min=2, help="Number of hues when auto-generating colors."),
+    thickness: int = typer.Option(2, "--thickness", min=0, max=3, help="Rule thickness (0-3)."),
+    title_style: str = typer.Option("bold", "--title-style", help="Style applied to the rule title."),
+    style: str = typer.Option("", "--style", help="Base style applied to the rule characters."),
+    align: AlignOption = typer.Option(
+        AlignOption.CENTER, "--align", help="Align the rule within the console width."
+    ),
+    end: str = typer.Option("\n", "--end", help="Characters appended after the rule."),
+    width: Optional[int] = typer.Option(None, "-w", "--width", help="Explicit console width."),
+    max_width: Optional[int] = typer.Option(
+        None, "-W", "--max-width", help="Maximum console width."
+    ),
+    force_terminal: bool = typer.Option(
+        False, "--force-terminal", help="Force terminal output when stdout is redirected."
+    ),
+    record: bool = typer.Option(False, "--record", help="Enable console recording."),
+    save_svg: Optional[Path] = typer.Option(
+        None,
+        "--save-svg",
+        "--export-svg",
+        help="Write the rendered rule to an SVG.",
+        show_default=False,
+    ),
+) -> None:
+    """Render a gradient powered rule."""
+
+    console = _create_console(width, max_width, record or save_svg is not None, force_terminal)
+    demo_mode = (
+        title is None
+        and not color
+        and not bgcolor
+        and not rainbow
+        and hues == 10
+        and thickness == 2
+        and style == ""
+        and title_style == "bold"
+        and align == AlignOption.CENTER
+        and end == "\n"
+    )
+    if demo_mode:
+        console.print(GradientRule("Gradient Rule", rainbow=True, thickness=1))
+        console.print(
+            _demo_text(
+                "Gradient rules are perfect for separating sections.",
+                style="italic",
+            )
+        )
+        _save_svg(console, save_svg)
+        return
+
+    rule = GradientRule(
+        title=title,
+        title_style=title_style,
+        colors=color or None,
+        bg_colors=bgcolor or None,
+        rainbow=rainbow,
+        hues=hues,
+        thickness=thickness,
+        style=style,
+        end=end,
+        align=align.value,
+    )
+    console.print(rule)
+    _save_svg(console, save_svg)
+
+
+@app.command(name="panel")
+def panel_command(
+    source: Optional[str] = typer.Argument(None, help="Content text, file path, or '-' for stdin."),
+    color: List[str] = typer.Option([], "-c", "--color", help="Foreground gradient stops."),
+    bgcolor: List[str] = typer.Option([], "-b", "--bgcolor", help="Background gradient stops."),
+    rainbow: bool = typer.Option(False, "--rainbow", help="Use a rainbow gradient."),
+    hues: int = typer.Option(5, "--hues", min=2, help="Auto-generated hues when no colors provided."),
+    title: Optional[str] = typer.Option(None, "--title", help="Panel title."),
+    title_align: AlignOption = typer.Option(
+        AlignOption.CENTER, "--title-align", help="Alignment for the panel title."
+    ),
+    title_style: str = typer.Option("bold", "--title-style", help="Style applied to the title."),
+    subtitle: Optional[str] = typer.Option(None, "--subtitle", help="Panel subtitle."),
+    subtitle_align: AlignOption = typer.Option(
+        AlignOption.RIGHT, "--subtitle-align", help="Alignment for the panel subtitle."
+    ),
+    subtitle_style: str = typer.Option("", "--subtitle-style", help="Style applied to the subtitle."),
+    border_style: str = typer.Option("", "--border-style", help="Border style for the panel."),
+    box_style: BoxOption = typer.Option(
+        BoxOption.ROUNDED, "--box", help="Border box type used for the panel."
+    ),
+    padding: Optional[str] = typer.Option(
+        None,
+        "-d",
+        "--padding",
+        help="Padding inside the panel (1, 2 or 4 comma separated integers).",
+    ),
+    justify: AlignOption = typer.Option(
+        AlignOption.LEFT, "--justify", help="Horizontal alignment for gradient application."
+    ),
+    vertical: VerticalAlignOption = typer.Option(
+        VerticalAlignOption.MIDDLE,
+        "--vertical",
+        help="Vertical alignment for gradient application.",
+    ),
+    expand: bool = typer.Option(True, "--expand/--no-expand", help="Expand panel to available width."),
+    style: str = typer.Option("", "--style", help="Style applied to the panel content."),
+    width: Optional[int] = typer.Option(None, "-w", "--width", help="Explicit console width."),
+    height: Optional[int] = typer.Option(None, "--height", help="Fixed panel height."),
+    safe_box: bool = typer.Option(False, "--safe-box", help="Use ASCII safe box drawing characters."),
+    markup: bool = typer.Option(True, "--markup/--no-markup", help="Interpret content as Rich markup."),
+    record: bool = typer.Option(False, "--record", help="Enable console recording."),
+    save_svg: Optional[Path] = typer.Option(
+        None,
+        "--save-svg",
+        "--export-svg",
+        help="Write the rendered panel to SVG.",
+        show_default=False,
+    ),
+    force_terminal: bool = typer.Option(
+        False, "--force-terminal", help="Force terminal rendering when stdout is redirected."
+    ),
+) -> None:
+    """Render a gradient panel with fine grained styling controls."""
+
+    console = _create_console(width, None, record or save_svg is not None, force_terminal)
+    if source is None:
+        payload = ""
+        if not sys.stdin.isatty():
+            payload = sys.stdin.read()
+        if sys.stdin.isatty() or not payload:
+            demo_panel = RichPanel(
+                _demo_text("Panels can frame gradient text for call-outs and highlights."),
+                title=_demo_text("Gradient Panel", style="bold", end=""),
+                border_style=DEMO_COLORS[0],
+                box=box.ROUNDED,
+            )
+            console.print(demo_panel)
+            typer.echo("Panels can frame gradient text for call-outs and highlights.")
+            _save_svg(console, save_svg)
+            return
+        content = payload
     else:
-        console.print(rg_text)
-
-    if save_svg is not None:
-        # Ensure directory exists
-        try:
-            save_svg.parent.mkdir(parents=True, exist_ok=True)
-        except Exception:  # pylint: disable=W0718:broad-exception-caught
-            # Non-fatal; Console will raise below if path invalid
-            pass
-        # Persist the recorded render to SVG using the project's terminal theme
-        console.save_svg(
-            str(save_svg),
-            title="rich-gradient",
-            unique_id="cli_text",
-            theme=GRADIENT_TERMINAL_THEME,
-        )
-
-
-@app.command("gradient", context_settings={"help_option_names": ["-h", "--help"]})
-def gradient_cmd() -> None:
-    """Render sample banners using the Gradient renderable."""
-
-    console = Console()
-    banner = Gradient(
-        [
-            _demo_text("Gradient Showcase", style="bold"),
-            Text(
-                "Smoothly blend colors across multiple renderables.",
-                colors=list(reversed(DEMO_COLORS)),
-            ),
-        ],
-        colors=DEMO_COLORS,
-        justify="center",
-        expand=True,
+        content = _read_text_source(source)
+    inner = Text(
+        content,
+        colors=color or None,
+        bgcolors=bgcolor or None,
+        rainbow=rainbow,
+        hues=hues,
+        markup=markup,
     )
-    console.print(banner)
-
-
-@app.command("rule", context_settings={"help_option_names": ["-h", "--help"]})
-def rule_cmd() -> None:
-    """Showcase the gradient-enabled rule implementation."""
-
-    console = Console()
-    console.print(GradientRule("Gradient Rule", rainbow=True, thickness=1))
-    console.print(
-        _demo_text(
-            "Gradient rules are perfect for separating sections.",
-            style="italic",
-        )
-    )
-
-
-@app.command("panel", context_settings={"help_option_names": ["-h", "--help"]})
-def panel_cmd() -> None:
-    """Display a panel filled with gradient text."""
-
-    console = Console()
     panel = Panel(
-        _demo_text(
-            "Panels can frame gradient text for call-outs and highlights.",
-        ),
-        title=_demo_text("Gradient Panel", style="bold", end=""),
-        border_style=DEMO_COLORS[0],
-        box=box.ROUNDED,
+        inner,
+        colors=color or None,
+        bg_colors=bgcolor or None,
+        rainbow=rainbow,
+        hues=hues,
+        title=title,
+        title_align=title_align.value,
+        title_style=title_style,
+        subtitle=subtitle,
+        subtitle_align=subtitle_align.value,
+        subtitle_style=subtitle_style,
+        border_style=border_style,
+        box=BOX_STYLE_MAP[box_style],
+        padding=_parse_padding(padding),
+        expand=expand,
+        style=style,
+        width=width,
+        height=height,
+        safe_box=safe_box,
+        justify=justify.value,
+        vertical_justify=vertical.value,
     )
     console.print(panel)
+    _save_svg(console, save_svg)
 
 
-@app.command("table", context_settings={"help_option_names": ["-h", "--help"]})
-def table_cmd() -> None:
-    """Render a table that includes gradient-enhanced cells."""
+@app.command(name="spectrum")
+def spectrum_command(
+    hues: int = typer.Option(17, "--hues", min=2, help="Number of colors to display."),
+    invert: bool = typer.Option(False, "--invert", help="Reverse the generated palette."),
+    seed: Optional[int] = typer.Option(None, "--seed", help="Seed for deterministic ordering."),
+    width: Optional[int] = typer.Option(None, "-w", "--width", help="Console width."),
+    max_width: Optional[int] = typer.Option(
+        None, "-W", "--max-width", help="Maximum console width."
+    ),
+    record: bool = typer.Option(False, "--record", help="Enable console recording."),
+    save_svg: Optional[Path] = typer.Option(
+        None,
+        "--save-svg",
+        "--export-svg",
+        help="Write the spectrum table to SVG.",
+        show_default=False,
+    ),
+    force_terminal: bool = typer.Option(False, "--force-terminal", help="Force terminal rendering."),
+) -> None:
+    """Display the built-in color spectrum."""
+
+    spectrum = Spectrum(hues=hues, invert=invert, seed=seed)
+    console = _create_console(width, max_width, record or save_svg is not None, force_terminal)
+    console.print(spectrum)
+    _save_svg(console, save_svg)
+
+
+@app.command(name="table")
+def table_command() -> None:
+    """Render a gradient-enhanced table demo."""
 
     console = Console()
     table = Table(
@@ -451,13 +808,12 @@ def table_cmd() -> None:
     console.print(table)
 
 
-@app.command("progress", context_settings={"help_option_names": ["-h", "--help"]})
-def progress_cmd() -> None:
-    """Run a short progress example accented with gradient text."""
+@app.command(name="progress")
+def progress_command() -> None:
+    """Run a short gradient accented progress demo."""
 
     console = Console()
-    intro = _demo_text("Starting gradient progress demo…")
-    console.print(intro)
+    console.print(_demo_text("Starting gradient progress demo…"))
     with Progress(
         TextColumn("{task.description}", justify="left"),
         BarColumn(bar_width=None),
@@ -474,9 +830,9 @@ def progress_cmd() -> None:
     console.print(_demo_text("Gradient progress complete!"))
 
 
-@app.command("syntax", context_settings={"help_option_names": ["-h", "--help"]})
-def syntax_cmd() -> None:
-    """Render a Syntax block inside a gradient frame."""
+@app.command(name="syntax")
+def syntax_command() -> None:
+    """Render a syntax-highlighted snippet with gradient framing."""
 
     console = Console()
     code_sample = """def blend(colors):\n    return ' → '.join(colors)"""
@@ -493,8 +849,8 @@ def syntax_cmd() -> None:
     )
 
 
-@app.command("markdown", context_settings={"help_option_names": ["-h", "--help"]})
-def markdown_cmd() -> None:
+@app.command(name="markdown")
+def markdown_command() -> None:
     """Render Markdown content with gradient styling."""
 
     console = Console()
@@ -510,13 +866,12 @@ def markdown_cmd() -> None:
     )
 
 
-@app.command("markup", context_settings={"help_option_names": ["-h", "--help"]})
-def markup_cmd() -> None:
+@app.command(name="markup")
+def markup_command() -> None:
     """Demonstrate Rich markup parsed into gradient text."""
 
     console = Console()
-    markup_message = "[bold]Rich[/bold] [italic]markup[/italic] meets gradients!"
-    parsed = render_markup(markup_message)
+    parsed = render_markup("[bold]Rich[/bold] [italic]markup[/italic] meets gradients!")
     gradient_text = Text(
         parsed.plain,
         colors=DEMO_COLORS,
@@ -526,8 +881,8 @@ def markup_cmd() -> None:
     console.print(gradient_text)
 
 
-@app.command("box", context_settings={"help_option_names": ["-h", "--help"]})
-def box_cmd() -> None:
+@app.command(name="box")
+def box_command() -> None:
     """Preview several box styles with gradient text."""
 
     console = Console()
@@ -538,7 +893,7 @@ def box_cmd() -> None:
     ]
     for label, box_type in samples:
         console.print(
-            Panel(
+            RichPanel(
                 _demo_text(f"{label.title()} borders pair nicely with gradients."),
                 title=_demo_text(label, style="bold", end=""),
                 border_style=DEMO_COLORS[1],
@@ -547,8 +902,8 @@ def box_cmd() -> None:
         )
 
 
-@app.command("prompts", context_settings={"help_option_names": ["-h", "--help"]})
-def prompts_cmd() -> None:
+@app.command(name="prompts")
+def prompts_command() -> None:
     """Simulate prompt interaction using gradient-styled questions."""
 
     console = Console()
@@ -564,9 +919,9 @@ def prompts_cmd() -> None:
     console.print(_demo_text(f"Simulated response: {response}"))
 
 
-@app.command("live", context_settings={"help_option_names": ["-h", "--help"]})
-def live_cmd() -> None:
-    """Update live content with gradient-rich messages."""
+@app.command(name="live")
+def live_command() -> None:
+    """Stream live updates with gradient styling."""
 
     console = Console()
     messages = [
@@ -575,56 +930,199 @@ def live_cmd() -> None:
         _demo_text("Live rendering complete!", end=""),
     ]
     with Live(
-        Panel(messages[0], border_style=DEMO_COLORS[0], box=box.ROUNDED),
+        RichPanel(messages[0], border_style=DEMO_COLORS[0], box=box.ROUNDED),
         console=console,
         refresh_per_second=6,
     ) as live:
         for message in messages[1:]:
             sleep(0.05)
-            live.update(Panel(message, border_style=DEMO_COLORS[2], box=box.ROUNDED))
+            live.update(RichPanel(message, border_style=DEMO_COLORS[2], box=box.ROUNDED))
     console.print(_demo_text("Exited live rendering session."))
 
 
-def print_version(ctx: typer.Context, value: bool) -> None:
-    """Display the version of rich-gradient and exit if requested.
+animate_app = typer.Typer(help="Animated gradient demonstrations.")
 
-    If the version flag is provided, prints the package version and exits the CLI. If the version cannot be determined, prints 'unknown' instead.
 
-    Args:
-        value: Boolean indicating whether the version flag was provided.
-    """
-    if not value or ctx.resilient_parsing:
+@animate_app.command(name="gradient")
+def animated_gradient_command(
+    source: Optional[List[str]] = typer.Argument(
+        None,
+        help="Textual content for the animated gradient. Reads stdin when omitted.",
+    ),
+    color: List[str] = typer.Option([], "-c", "--color", help="Foreground gradient stops."),
+    bgcolor: List[str] = typer.Option([], "-b", "--bgcolor", help="Background gradient stops."),
+    rainbow: bool = typer.Option(False, "--rainbow", help="Animate using a rainbow gradient."),
+    hues: int = typer.Option(5, "--hues", min=2, help="Auto-generated color stops when none provided."),
+    expand: bool = typer.Option(False, "--expand/--no-expand", help="Expand renderables to fill the terminal."),
+    justify: AlignOption = typer.Option(
+        AlignOption.LEFT, "--justify", help="Horizontal alignment for the animation."
+    ),
+    vertical: VerticalAlignOption = typer.Option(
+        VerticalAlignOption.TOP,
+        "--vertical",
+        help="Vertical alignment for the animation.",
+    ),
+    refresh_per_second: float = typer.Option(
+        30.0, "--refresh", min=1.0, help="Refresh rate for the animation."
+    ),
+    phase_per_second: Optional[float] = typer.Option(
+        None,
+        "--phase",
+        help="Phase advance per second (cycles/s). Defaults to 0.12 for 30 FPS.",
+    ),
+    duration: Optional[float] = typer.Option(
+        None,
+        "--duration",
+        help="Automatically stop the animation after the given number of seconds.",
+    ),
+) -> None:
+    """Play an animated gradient using ``AnimatedGradient``."""
+
+    if not source:
+        if sys.stdin.isatty():
+            raise typer.BadParameter("provide content or pipe data for the animation")
+        source = sys.stdin.read().splitlines()
+
+    renderables = _resolve_renderables(source, markup=True)
+    animation = AnimatedGradient(
+        renderables=renderables,
+        colors=color or None,
+        bg_colors=bgcolor or None,
+        rainbow=rainbow,
+        hues=hues,
+        expand=expand,
+        justify=justify.value,
+        vertical_justify=vertical.value,
+        refresh_per_second=refresh_per_second,
+        phase_per_second=phase_per_second,
+    )
+    if duration is None:
+        typer.echo("Press CTRL+C to stop the animation.")
+        try:
+            animation.run()
+        except KeyboardInterrupt:
+            pass
         return
-    typer.echo(f"rich-gradient, version: {__version__}")
-    raise typer.Exit()
+    animation.start()
+    try:
+        sleep(duration)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        animation.stop()
 
 
-@app.callback(add_help_option=False)
-def main(
-    ctx: typer.Context,
+@animate_app.command(name="panel")
+def animated_panel_command(
+    source: Optional[str] = typer.Argument(
+        None,
+        help="Content text, file path, or '-' for stdin to animate within a panel.",
+    ),
+    color: List[str] = typer.Option([], "-c", "--color", help="Foreground gradient stops."),
+    bgcolor: List[str] = typer.Option([], "-b", "--bgcolor", help="Background gradient stops."),
+    rainbow: bool = typer.Option(False, "--rainbow", help="Use rainbow gradients."),
+    hues: int = typer.Option(5, "--hues", min=2, help="Auto-generated hues when colors missing."),
+    title: Optional[str] = typer.Option(None, "--title", help="Panel title."),
+    subtitle: Optional[str] = typer.Option(None, "--subtitle", help="Panel subtitle."),
+    border_style: str = typer.Option("", "--border-style", help="Panel border style."),
+    box_style: BoxOption = typer.Option(
+        BoxOption.ROUNDED, "--box", help="Box style used by the panel border."
+    ),
+    padding: Optional[str] = typer.Option(
+        None,
+        "-d",
+        "--padding",
+        help="Padding inside the panel (1, 2 or 4 comma separated integers).",
+    ),
+    expand: bool = typer.Option(True, "--expand/--no-expand", help="Expand panel to available width."),
+    refresh_per_second: float = typer.Option(
+        30.0, "--refresh", min=1.0, help="Refresh rate for the animation."
+    ),
+    phase_per_second: Optional[float] = typer.Option(
+        None,
+        "--phase",
+        help="Phase advance per second (cycles/s). Defaults to 0.12 at 30 FPS.",
+    ),
+    duration: Optional[float] = typer.Option(
+        None,
+        "--duration",
+        help="Automatically stop the animation after the given number of seconds.",
+    ),
+) -> None:
+    """Animate a gradient panel."""
+
+    content = _read_text_source(source)
+    inner = RichText.from_markup(content)
+    panel = Panel(
+        inner,
+        colors=color or None,
+        bg_colors=bgcolor or None,
+        rainbow=rainbow,
+        hues=hues,
+        title=title,
+        subtitle=subtitle,
+        border_style=border_style,
+        box=BOX_STYLE_MAP[box_style],
+        padding=_parse_padding(padding),
+        expand=expand,
+    )
+    animation = AnimatedPanel(
+        panel,
+        colors=color or None,
+        bg_colors=bgcolor or None,
+        rainbow=rainbow,
+        hues=hues,
+        refresh_per_second=refresh_per_second,
+        phase_per_second=phase_per_second,
+    )
+    if duration is None:
+        typer.echo("Press CTRL+C to stop the animation.")
+        try:
+            animation.run()
+        except KeyboardInterrupt:
+            pass
+        return
+    animation.start()
+    try:
+        sleep(duration)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        animation.stop()
+
+
+app.add_typer(animate_app, name="animate")
+
+
+@app.callback()
+def main_callback(
     version: Optional[bool] = typer.Option(
         None,
         "-v",
         "--version",
-        callback=print_version,
+        help="Print the rich-gradient version and exit.",
+        callback=lambda value: _show_version(value),
         is_eager=True,
-        expose_value=False,
-        help="Print version and exit.",
-    ),
-    help_option: Optional[bool] = typer.Option(
-        None,
-        "-h",
-        "--help",
-        callback=_help_callback,
-        is_eager=True,
-        expose_value=False,
-        help="Show this message and exit.",
-    ),
+    )
 ) -> None:
-    """rich-gradient command line interface."""
-    del ctx
-    return
+    """Entry point for Typer application."""
+
+    del version  # ``version`` is handled by the eager callback
+
+
+def _show_version(value: Optional[bool]) -> None:
+    """Display the package version when the --version flag is used."""
+
+    if value:
+        typer.echo(f"rich-gradient {__version__}")
+        raise typer.Exit()
+
+
+def run() -> None:
+    """Execute the Typer application."""
+
+    app()
 
 
 if __name__ == "__main__":
-    app()
+    run()
