@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, List, Optional, Tuple, TypeAlias, Union
+from typing import Any, List, Optional, Tuple, TypeAlias, Union, cast
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -85,6 +85,7 @@ class Gradient(JupyterMixin):
         repeat_scale: float = 2.0,
         highlight_words: Optional[HighlightWordsType] = None,
         highlight_regex: Optional[HighlightRegexType] = None,
+        animated: bool = False,
     ) -> None:
         """
         Initialize a BaseGradient instance.
@@ -113,6 +114,10 @@ class Gradient(JupyterMixin):
         self.rainbow: bool = rainbow
         self.repeat_scale: float = repeat_scale
         self.phase: float = 0.0
+        # Keep a flag if the user requested animated behavior; static
+        # Gradient objects ignore animation but tests may construct with
+        # animated=True, so store the attribute for parity.
+        self.animated: bool = bool(animated)
         self.expand: bool = expand
         self.justify = justify
         self.vertical_justify = vertical_justify
@@ -130,8 +135,11 @@ class Gradient(JupyterMixin):
         # Parse and store color stops
         foreground_colors: List[ColorType] = list(colors or [])
         background_colors: List[ColorType] = list(bg_colors or [])
-        self.colors = foreground_colors
-        self.bg_colors = background_colors
+        self.colors = foreground_colors  # type: ignore[assignment]
+        # Help type-checkers understand the setter accepts ColorType values
+        self.bg_colors = cast(
+            Optional[List[ColorType]], background_colors
+        )  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
         self._highlight_rules: list[_HighlightRule] = []
         if highlight_words:
@@ -178,9 +186,17 @@ class Gradient(JupyterMixin):
 
         # Loop smoothly by appending reversed middle stops
         if len(triplets) > 2:
-            # Append reversed stops excluding final stop so gradient wraps smoothly
-            triplets += list(reversed(triplets[:-1]))
-        self._foreground_colors = triplets
+            # Create an extended list for smooth wrapping; avoid mutating any
+            # external reference by building a new list.
+            extended = triplets + list(reversed(triplets[:-1]))
+            self._foreground_colors = extended
+        else:
+            self._foreground_colors = triplets
+        # Recompute active stops only if background colors have already
+        # been initialized. During __init__ the bg setter runs after this
+        # setter, so avoid accessing unset attributes.
+        if getattr(self, "_background_colors", None) is not None:
+            self._active_stops = self._initialize_color_stops()
 
     @property
     def bg_colors(self) -> List[ColorTriplet]:
@@ -197,6 +213,8 @@ class Gradient(JupyterMixin):
         """
         if not colors:
             self._background_colors = []
+            # Recompute active stops after change
+            self._active_stops = self._initialize_color_stops()
             return
 
         if len(colors) == 1:
@@ -206,6 +224,8 @@ class Gradient(JupyterMixin):
         else:
             triplets = self._to_color_triplets(colors)
             self._background_colors = triplets
+        # Recompute active stops after change
+        self._active_stops = self._initialize_color_stops()
 
     @property
     def justify(self) -> AlignMethod:
@@ -539,7 +559,7 @@ class Gradient(JupyterMixin):
                     "Each highlight word tuple must be (words, style[, case_sensitive])."
                 )
             words = self._normalize_words_spec(entry[0])
-            style: StyleType = entry[1]
+            style = entry[1]
             case_sensitive = bool(entry[2]) if len(entry) == 3 else True
             return words, style, case_sensitive
         raise TypeError(
@@ -624,7 +644,7 @@ class Gradient(JupyterMixin):
                     "Each highlight regex tuple must be (pattern, style[, flags])."
                 )
             pattern = self._normalize_pattern_spec(entry[0])
-            style: StyleType = entry[1]
+            style = entry[1]
             flags = int(entry[2]) if len(entry) == 3 else 0
             return pattern, style, flags
         raise TypeError(
@@ -674,11 +694,7 @@ class Gradient(JupyterMixin):
         return self
 
     def highlight_regex(
-        self,
-        pattern: str | re.Pattern[str],
-        style: StyleType,
-        *,
-        flags: int = 0,
+        self, pattern: str | re.Pattern[str], style: StyleType, flags: int = 0
     ) -> "Gradient":
         """
         Highlight matches of a regex pattern with an additional style after gradients are applied.
@@ -693,7 +709,9 @@ class Gradient(JupyterMixin):
         """
         highlight_style = self._coerce_highlight_style(style)
         compiled = (
-            pattern if isinstance(pattern, re.Pattern) else re.compile(pattern)
+            pattern
+            if isinstance(pattern, re.Pattern)
+            else re.compile(pattern, flags=flags)
         )
         self._highlight_rules.append(
             _HighlightRule(
@@ -742,7 +760,7 @@ class Gradient(JupyterMixin):
                     # (used in title/subtitle patterns) from being styled.
                     try:
                         groups = match.groups()
-                    except Exception:
+                    except (AttributeError, TypeError):
                         groups = ()
                     if groups:
                         for gi in range(
@@ -804,7 +822,8 @@ class Gradient(JupyterMixin):
 
         If only one stop is provided, duplicate it to create a smooth segment pair.
         """
-        source = self.bg_colors if self.bg_colors else self.colors
+        # Prefer foreground color stops; fall back to background stops if set
+        source: List[ColorTriplet] = self.colors if self.colors else self.bg_colors
         if not source:
             return []
         return [source[0], source[0]] if len(source) == 1 else source
@@ -827,7 +846,7 @@ class Gradient(JupyterMixin):
         )
 
     def _interpolated_color(
-        self, frac: float, stops: list, count: Optional[int] = None
+        self, frac: float, stops: list, _count: Optional[int] = None
     ):
         """Return the interpolated color at a fraction (for tests)."""
         return self._interpolate_color(frac, stops)

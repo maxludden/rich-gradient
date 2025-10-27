@@ -302,3 +302,31 @@
 .banner {
     width: 100%;
 }
+
+.copy-link img {
+    cursor: pointer;
+    display: block;
+    max-width: 100%;
+}
+
+.copy-toast {
+    position: fixed;
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%) translateY(-10px);
+    background: #0b1220;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .4);
+    opacity: 0;
+    transition: transform .25s ease, opacity .25s ease;
+    z-index: 9999;
+    font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    pointer-events: none;
+}
+
+.copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}

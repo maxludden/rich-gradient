@@ -1,6 +1,6 @@
 ## AnimatedGradient
 
-::: rich_gradient._animated_gradient.AnimatedGradient
+::: rich_gradient.animated_gradient.AnimatedGradient
     :docstring:
     :members:
     :show-inheritance:

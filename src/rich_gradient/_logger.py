@@ -4,7 +4,7 @@ Provides a Rich-styled, rotating, compressed log file and console output via log
 """
 
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from loguru import logger
 from rich import get_console
@@ -22,7 +22,7 @@ def get_logger(
     log_level: str = "TRACE",
     log_dir: Optional[Path] = None,
     style: str = "blue",
-):
+) -> Any:
     """
     Create and configure a loguru Logger for rich-gradient.
 
@@ -42,7 +42,7 @@ def get_logger(
     log_dir = log_dir or (Path.cwd() / "logs")
     try:
         log_dir.mkdir(exist_ok=True)
-    except Exception as e:
+    except OSError as e:
         console.log(f"Failed to create log directory: {e}", style="bold red")
     trace_log_file = log_dir / "trace.log"
 
@@ -56,14 +56,14 @@ def get_logger(
         compression="zip",
     )
 
-    def rich_console_sink(msg):
+    def rich_console_sink(msg: object) -> None:
         try:
             # If msg is already a string, wrap it in Text for styled console output.
             if isinstance(msg, Text):
                 console.log(msg)
             else:
                 console.log(Text(str(msg), style=Style(color=style, bold=True)))
-        except Exception as e:
+        except (TypeError, ValueError, OSError, UnicodeError, AttributeError) as e:
             console.log(f"Logger console sink error: {e}", style="bold red")
 
     log.add(rich_console_sink)

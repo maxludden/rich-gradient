@@ -2,6 +2,7 @@
 gradients in the terminal using Rich."""
 
 import time
+import warnings
 from threading import Event, RLock, Thread
 from typing import (
     Any,
@@ -10,36 +11,23 @@ from typing import (
     Mapping,
     Optional,
     Sequence,
-    TypeAlias,
-    Union,
     cast,
 )
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
-from rich.color import Color
-from rich.color_triplet import ColorTriplet
-from rich.console import Console, ConsoleRenderable
+from rich.console import Console, ConsoleRenderable, Group, NewLine
 from rich.live import Live
 from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text as RichText
 
-from rich_gradient.gradient import Gradient
-
-# rich-color-ext is installed in package __init__
-
+from rich_gradient.gradient import Gradient, ColorType
 
 __all__ = [
     "AnimatedGradient",
     "ColorType",
 ]
-
-
-GAMMA_CORRECTION = 2.2
-ColorType: TypeAlias = Union[str, Color, ColorTriplet]
-
-# rich_color_ext is installed at package import time
-
 
 class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
@@ -60,7 +48,11 @@ class AnimatedGradient(Gradient):
         vertical_justify (VerticalAlignMethod): Vertical justification. Defaults to "top".
         hues (int): Number of hues when auto-generating colors. Defaults to 5.
         rainbow (bool): Use a rainbow gradient. Defaults to False.
-        speed (int): Animation speed in milliseconds. Defaults to 4.
+        phase_per_second (float | None): Phase advance per second (cycles per second).
+            Defaults to 0.12.
+        speed (int | None): DEPRECATED. Old per-frame ms step. If provided,
+            it will be mapped to an equivalent `phase_per_second` using
+            `phase_per_second = refresh_per_second * (speed/1000.0)`.
         repeat_scale (float): Stretch color stops across a wider span. Defaults to 2.0.
         highlight_words: Optional configurations for word highlighting.
         highlight_regex: Optional configurations for regex highlighting.
@@ -92,13 +84,15 @@ class AnimatedGradient(Gradient):
         vertical_justify: VerticalAlignMethod = "top",
         hues: int = 5,
         rainbow: bool = False,
-        speed: int = 4,
+        phase_per_second: Optional[float] = None,
+        speed: Optional[int] = None,
         repeat_scale: float = 2.0,  # Scale factor to stretch the color stops across a wider span
         highlight_words: Mapping[Any, Any] | Sequence[Any] | None = None,
         highlight_regex: Mapping[Any, Any] | Sequence[Any] | None = None,
     ) -> None:
         assert refresh_per_second > 0, "refresh_per_second must be greater than 0"
         self._lock = RLock()
+
         # Live must exist before we set / forward console
         self.live: Live = Live(
             console=console or get_console(),
@@ -113,14 +107,29 @@ class AnimatedGradient(Gradient):
         self.disable = disable
         self.refresh_per_second = refresh_per_second
         self.expand = expand
-        self._speed = speed / 1000.0
+
+        # Determine phase advance per second. Default mirrors older behavior
+        # where speed=4ms at 30 FPS ≈ 0.12 cycles/second.
+        if phase_per_second is not None:
+            self._phase_per_second = float(phase_per_second)
+        elif speed is not None:
+            # Back-compat with deprecated 'speed' argument.
+            warnings.warn(
+                "AnimatedGradient 'speed' is deprecated; use 'phase_per_second' \
+(cycles per second) instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self._phase_per_second = refresh_per_second * (speed / 1000.0)
+        else:
+            self._phase_per_second = 0.12
 
         # Thread / control flags
         self._running: bool = False
         self._thread: Optional[Thread] = None
         self._stop_event: Event = Event()
 
-        # Initialise BaseGradient (this sets _renderables, colors, etc.)
+        # Initialise Gradient (this sets _renderables, colors, etc.)
         super().__init__(
             renderables=renderables or [],
             colors=colors,
@@ -174,7 +183,10 @@ class AnimatedGradient(Gradient):
         self._running = False
         self._stop_event.set()
         if self._thread is not None:
-            self._thread.join(timeout=1.0)
+            # Give the animation thread a short time to exit cleanly.
+            # Use a slightly larger timeout to reduce risk of background
+            # thread still touching Live while we stop it.
+            self._thread.join(timeout=2.0)
             self._thread = None
         # Ensure Live stops and clears if transient
         self.live.stop()
@@ -216,30 +228,25 @@ class AnimatedGradient(Gradient):
                 pad=self.expand,
             )
 
-    def _gen_quit_panel(self) -> Panel:
-        """Generate a panel with instructions to quit the animation."""
-        return Panel(
-            "[dim]Press [bold]Ctrl+C[/bold] to quit the animation.[/dim]",
-        )
-
-    def _generate_quit_subtitle(self) -> RichText:
-        """Generate a subtitle for the quit panel."""
-        return RichText(
-            "[i]Press[/i] [b u]Ctrl+C[/b u] [i]to stop the animation.[/i]",
-        )
-
     def _animate(self) -> None:
         """Run the animation loop, updating at the requested FPS until stopped."""
         try:
             frame_time = 1.0 / self.refresh_per_second
             while not self._stop_event.is_set():
-                # Advance the gradient phase
-                self._cycle += self._speed
-                self.phase = self._cycle
-                # Push an update to Live
-                self.live.update(self.get_renderable(), refresh=not self.auto_refresh)
-                if not self.auto_refresh:
-                    self.live.refresh()
+                # Advance the gradient phase (guarded by lock to avoid
+                # race conditions with the render path).
+                with self._lock:
+                    self._cycle += self._phase_per_second * frame_time
+                    self.phase = self._cycle
+                    _renderable = self.get_renderable()
+
+                # Push an update to Live. If auto_refresh is True, rely on
+                # Live's own auto refresh; otherwise request an explicit
+                # refresh via update(refresh=True).
+                if self.auto_refresh:
+                    self.live.update(_renderable, refresh=False)
+                else:
+                    self.live.update(_renderable, refresh=True)
                 # Sleep but remain responsive to stop_event
                 self._stop_event.wait(frame_time)
         except KeyboardInterrupt:
@@ -249,21 +256,72 @@ class AnimatedGradient(Gradient):
             self._running = False
 
 
-## Note: The public Gradient factory now lives in `rich_gradient/gradient.py`.
-## Keeping a duplicate here risks confusion, so it has been removed.
+def animated_gradient_example() -> None:
+    """Run an example of AnimatedGradient with multiple rich renderables."""
+    _console = Console(width=64)
 
+    def _generate_table()-> Table:
+        """Generate a sample table to include in the animated gradient."""
+        table = Table(collapse_padding=False, expand=True, width=40)
+        table.add_column("Renderable", justify="right", ratio=4)
+        table.add_column("Works", justify="center", ratio=1)
+
+        renderable_list: List[str] = [
+            "rich.text.Text",
+            "rich.panel.Panel",
+            "rich.console.Group",
+            "rich.rule.Rule",
+            "rich.emoji.Emoji",
+            "rich.markdown.Markdown",
+            "rich.table.Table",
+            "rich.columns.Columns",
+        ]
+        for renderable in renderable_list:
+            table.add_row(renderable, ":heavy_check_mark:")
+        return table
+
+    def _generate_group(table: Table) -> Group:
+        """Generate a group containing a panel and the provided table."""
+        return Group(
+            Panel(
+                Group(
+                    RichText(
+                        "This is an animated gradient that contains: \n\
+panel and table in a group inside a panel!\n\n",
+                        style="bold",
+                        justify="center",
+                    ),
+                    Align(table, align="center"),
+                ),
+                title="Animated Gradient Example",
+                padding=(1, 2),
+            ),
+            NewLine(),
+        )
+
+    _console.line()
+    table = _generate_table()
+    renderable = _generate_group(table)
+
+    # Create the AnimatedGradient
+    animated_gradient = AnimatedGradient(
+        renderable,
+        rainbow=True,
+        highlight_words={
+            "Animated Gradient Example": "bold white",
+            "Renderable": "bold white",
+            "Works": "bold white",
+            ".": "#ccc",
+            "✔": "#0f0",
+        },
+        repeat_scale=4.0,
+        justify="center",
+        console=_console,
+    )
+    _console.line(2)
+
+    # Run the animation
+    animated_gradient.run()
 
 if __name__ == "__main__":
-    _console = get_console()
-
-    animated_gradient = AnimatedGradient(
-        Panel(
-            "This is a panel with a gradient!",
-            title="Animated Gradient Example",
-            padding=(1, 2),
-        ),
-        rainbow=True,
-        highlight_words={"Animated Gradient Example": "bold white"},
-        repeat_scale=4.0,
-    )
-    animated_gradient.run()
+    animated_gradient_example()

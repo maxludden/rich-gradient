@@ -1,80 +1,61 @@
-# ![rich-gradient](img/rich-gradient.svg)
+# rich-gradient
 
-<div class="badges" style="justify-content:full;">
-    <a href="https://github.com/astral-sh/uv"><img class="badge" src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt="uv badge with text endpoint url equals https colon slash slash raw dot githubusercontent dot com slash astral dash sh slash uv slash main slash assets slash badge slash v0 dot json on a white background"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img class="badge" src="https://img.shields.io/badge/Python-3.10 | 3.11 | 3.12 | 3.13-blue?logo=python" alt="Python compatibility badge showing versions 3.10 3.11 3.12 3.13 on a blue background with the Python logo"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img class="badge" src="https://img.shields.io/badge/PyPI-rich_gradient-blue?" alt="PyPI badge displaying rich underscore gradient on a blue background"></a>
-    <a href="https://GitHub.com/maxludden/rich-gradient"><img class="badge" src="https://img.shields.io/badge/Version-0.3.6-bbbbbb" alt="Version badge showing 0.3.6 on a gray background"></a>
-    <a href="https://github.com/Textualize/rich"><img class="badge" src="img/rich-badge.svg" alt="rich"></a></div>
-<div id="spacer"></div>
 
-![gradient example](img/gradient.svg)
 
-This library is a wrapper of the great [rich](https://GitHub.com/textualize/rich) library that extends [rich.text.Text](https://github.com/Textualize/rich/blob/master/rich/text.py) to allow for the easy generation gradient text from either user entered colors or randomly if no colors are entered.
+`rich-gradient` layers smooth foreground and background gradients on top of [Rich](https://github.com/Textualize/rich) renderables. It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and a Typer-powered CLI for trying gradients from the terminal.
 
-Borrowing from [rich-color-ext](https://github.com/maxludden/rich-color-ext) rich_gradient extends the rich standard colors to include:
+## Highlights
 
-- 3 or 6 digit hex code (e.g. <span class="red">`#f00`</span> or <span class="red">`#FF0000`</span>)
-- RGB color codes (e.g. <span class="red">`rgb(255, 0, 0)`</span>)
-- RGB tuples   (e.g. <span class="red">`(255, 0, 0)`</span>)
-- CSS3 Color Names (e.g. <span class="rebeccapurple">`rebeccapurple`</span>)
+- Works anywhere Rich expects a `ConsoleRenderable`, including panels, tables, and live updates.
+- Generates color stops automatically or from CSS color names, hex codes, RGB tuples, or `rich.color.Color` objects.
+- Supports foreground and background gradients, rainbow palettes, and deterministic color spectrums.
+- Ships with ready-to-use renderables (`Gradient`, `Panel`, `Rule`, `Spectrum`) plus animated variants.
+- Includes a CLI for quick experiments and SVG export for documentation or asset generation.
 
 ## Installation
 
-### uv (Recommended)
+`rich-gradient` targets Python 3.10+.
 
 ```bash
+# Recommended: use uv
 uv add rich-gradient
-```
 
-### Pip
-
-```bash
+# Or with pip
 pip install rich-gradient
 ```
 
-## Usage
-
-### Text Example
-
-To print a simple gradient import the `Text` class from in the `rich_gradient` library:
-
-![Hello, World!](img/hello_world.svg)
-
-
-## Gradient
-
-If just text is boring, `rich_gradient.gradient.Gradient` allows you to apply a gradient to any `rich.console.ConsoleRenderable`. Such as a `rich.panel.Panel` or `rich.table.Table`;
+## Quick start
 
 ```python
+from rich.console import Console
+from rich_gradient import Text
 
-table = Table(
-    title="Gradient Table Example",
-    border_style="bold",
-)
-table.add_column(
-    "Renderable",
-    style="bold",
-    vertical="middle",
-    justify="right"
-)
-table.add_column("Works w/Gradient", justify="left", style="bold")
-renderables = [
-    "Text",
-    "Panel",
-    "Syntax",
-    "Table",
-    "Live",
-    "Group",
-    "Markdown"
-]
-for renderable in renderables:
-    table.add_row(
-        renderable,
-        "[b]:heavy_check_mark:[/b]"
+console = Console()
+console.print(
+    Text(
+        "Rich gradients with almost no setup.",
+        colors=["#38bdf8", "#a855f7", "#f97316"],
+        style="bold",
+        justify="center",
     )
-
-console.print(Gradient(table, rainbow=True), justify="center")
+)
 ```
 
-![Gradient Table Example](img/gradient_table_example.svg)
+The example above is bundled in `examples/text_quickstart.py` and renders:
+
+<a href="#" class="copy-install" data-copy="uv add rich-gradient" title="Click to copy: <code>uv add rich-gradient</code>" aria-label="Copy install command">
+    <img src="img/text-quickstart.svg" alt="Text quickstart">
+
+</a>
+
+## Explore the user guide
+
+- [Text](text.md) – gradient-aware drop-in replacement for `rich.text.Text`.
+- [Gradient](gradient.md) – wrap any renderable with foreground/background gradients.
+- [Panel](panel.md) – gradient panels with highlighted titles and subtitles.
+- [Rule](rule.md) – gradient horizontal rules with adjustable thickness.
+- [Spectrum](spectrum.md) – generate and preview deterministic palettes.
+- [CLI](cli.md) – scriptable demos and helpers built with Typer.
+- [Animation](animation.md) – create animated gradients with `Live`.
+
+Prefer API-level details? See the [reference section](animated_gradient_ref.md) generated with `mkdocstrings`.

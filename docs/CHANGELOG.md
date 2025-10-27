@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### v0.3.7 - 2025-10-24 |  <span style="color: rgb(215, 255, 100)">Documentation refresh, reproducible assets & CLI polish</span>
+
+#### Added
+
+- Docs
+    - New user-guide pages for panels, the CLI, and animation (`docs/panel.md`, `docs/cli.md`, `docs/animation.md`) linked from the main navigation.
+    - API reference stubs for `AnimatedPanel` and `Panel` via `mkdocstrings`.
+    - Hero quick-start, palette, background, panel, rule, spectrum, and CLI images generated from checked-in example scripts.
+- Examples
+    - Added reproducible scripts under `examples/` to render all user-guide screenshots, including quick-start `Text`, palette variations, background gradients, gradient/table showcases, panel gallery, rule gallery, spectrum table, CLI help, and updated `hello_world.py`.
+
+#### Changed
+
+- Docs
+    - Rewrote the landing page plus Text, Gradient, Rule, and Spectrum guides for clearer positioning and accurate option coverage.
+    - Updated index code snippets to import `Text` from the package root and refreshed installation guidance.
+    - Refined `docs/animated_gradient_ref.md` to point at the public module path.
+    - Regenerated SVG/GIF assets with consistent naming (e.g., `hello_world.svg`, `text-quickstart.svg`, `gradient-panel.svg`, `cli-help.svg`) and removed legacy images.
+- Library
+    - Exported `Text` from `rich_gradient/__init__.py` so examples, docs, and the CLI can rely on the top-level import.
+- Tooling
+    - Expanded `mkdocs.yml` navigation to surface the new pages and verified the build with `uv run mkdocs build`.
+
+#### Removed
+
+- Docs
+    - Dropped the obsolete `base_gradient_ref.md` page and deprecated image assets that the refreshed guides no longer reference.
+
 ### v0.3.6 - 2025-09-10 |  <span style="color: rgb(215, 255, 100)">Consolidated Gradient, RNG fix, gamma-correct Text, docs/tests</span>
 
 #### Added / Changed

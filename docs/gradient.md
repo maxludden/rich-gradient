@@ -1,51 +1,65 @@
 # Gradient
 
-The `Gradient` class accepts any rich.console.ConsoleRenderable and
-prints it to a rich.console.Console instance in gradient color.
+`rich_gradient.Gradient` wraps any Rich renderable—text, panels, tables, Markdown, even nested layouts—and paints a gradient across the composed output. It works with foreground and background colors, respects alignment, and can highlight words or regex matches along the way.
+
+## Quick example
 
 ```python
-panel = Panel(
-    "If you are looking for a way to display more than \
-a single line of text with a gradient, \
-you can use the `Gradient` class to \
-create a gradient that can be applied to \
-multiple lines of text or any rich renderable object.",
-    title="Gradient Example",
-    title_align="left",
-    padding=(1, 2),
-    border_style="bold",
-    width=60,
+from rich.console import Console
+from rich.markdown import Markdown
+from rich_gradient import Gradient
+
+console = Console()
+markdown = Markdown(
+    """
+## Gradient panels
+
+- Wrap any renderable: tables, markdown, syntax.
+- Highlight sections with `highlight_words` or regex.
+- Combine with Rich's layout primitives.
+""".strip()
 )
-console.print(Gradient(panel, rainbow=True), justify="center")
+console.print(
+    Gradient(
+        markdown,
+        colors=["#38bdf8", "#a855f7", "#f97316"],
+        bg_colors=["#0f172a", "#2c1067"],
+        justify="center",
+    )
+)
 ```
 
-<!--
-If the image is not visible, try using the Markdown image syntax inside the div and add a style attribute for width. Some Markdown renderers (like MkDocs Material) do not support HTML <img> tags or style attributes directly. This approach works in most documentation tools.
--->
-![gradient_example](img/v0.3.4/gradient_example.svg)
+![Gradient panel](img/gradient-panel.svg)
 
-Or if you would like an animated gradient:
+The full example lives in `examples/gradient_showcase.py`.
+
+## Working with different renderables
+
+`Gradient` accepts a single renderable or an iterable. Each renderable is measured and interpolated to share the gradient stops, so you can layer panels, tables, and custom objects together.
 
 ```python
-console = Console(width=64, record=True)
-console.line(2)
-panel = Panel(
-    "This example demonstrates an animated gradient that shifts colors over time. \
-You can use the `Gradient` class to create a gradient that can be applied to any \
-rich renderable object, such as text or panels. The animation is achieved by \
-incrementing the phase of the gradient.",
-    title="Animated Gradient",
-    padding=(1, 2),
-)
-gradient = Gradient(panel, rainbow=True, animated=True)
-live_renderable = gradient
-# Setup Live to refresh at ~30 FPS
-with Live(live_renderable, console=console, refresh_per_second=30):
-    with suppress(KeyboardInterrupt):
-        while True:
-            time.sleep(0.03)
-            # Increment phase to animate gradient shift
-            gradient.phase += 0.2
+from rich.table import Table
+from rich_gradient import Gradient
+
+table = Table(title="Renderables that work with Gradient", show_header=False)
+table.add_column("Renderable", style="bold")
+table.add_column("Supported", justify="center")
+for item in ("Text", "Panel", "Markdown", "Columns", "Layout", "Live updates"):
+    table.add_row(item, "[bold green]✓[/]")
+
+Gradient(table, rainbow=True, repeat_scale=1.8)
 ```
 
-![animated gradient](img/animated_gradient.gif)
+![Gradient table](img/gradient-table.svg)
+
+Key options:
+
+- `colors` / `bg_colors`: list of color stops (same rules as [`Text`](text.md)).
+- `rainbow` and `hues`: auto-generate palettes.
+- `justify` / `vertical_justify`: align the renderable inside the gradient frame.
+- `repeat_scale`: stretch or compress the gradient repeats.
+- `highlight_words` / `highlight_regex`: apply extra styles after the gradient pass.
+
+## Animation
+
+Gradients can be animated by advancing the `.phase` attribute yourself or by using [`AnimatedGradient`](animation.md). Animated variants manage a `rich.live.Live` console and update the gradient smoothly without manual bookkeeping.

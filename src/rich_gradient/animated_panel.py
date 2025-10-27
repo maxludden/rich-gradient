@@ -6,7 +6,7 @@ from re import escape
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
 from rich.align import AlignMethod, VerticalAlignMethod
-from rich.box import Box, ROUNDED
+from rich.box import ROUNDED, Box
 from rich.console import Console, RenderableType
 from rich.panel import Panel as RichPanel
 from rich.style import StyleType
@@ -14,11 +14,7 @@ from rich.text import Text as RichText
 
 from rich_gradient._logger import logger
 from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.gradient import (
-    ColorType,
-    HighlightRegexType,
-    HighlightWordsType,
-)
+from rich_gradient.gradient import ColorType, HighlightRegexType, HighlightWordsType
 from rich_gradient.text import Text, TextType
 
 __all__ = ["AnimatedPanel"]
@@ -58,7 +54,8 @@ class AnimatedPanel(AnimatedGradient):
         redirect_stdout: Redirect stdout into the Live console.
         redirect_stderr: Redirect stderr into the Live console.
         disable: Disable rendering (for testing).
-        speed: Animation speed in milliseconds per tick.
+    phase_per_second: Phase advance per second (cycles per second).
+    speed: Deprecated ms-per-frame step; mapped to phase_per_second.
         repeat_scale: Stretch factor for gradient color stops.
     """
 
@@ -95,7 +92,8 @@ class AnimatedPanel(AnimatedGradient):
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
         disable: bool = False,
-        speed: int = 4,
+        phase_per_second: Optional[float] = None,
+        speed: Optional[int] = None,
         repeat_scale: float = 2.0,
     ) -> None:
         panel = RichPanel(
@@ -134,6 +132,7 @@ class AnimatedPanel(AnimatedGradient):
             vertical_justify=vertical_justify,
             hues=hues,
             rainbow=rainbow,
+            phase_per_second=phase_per_second,
             speed=speed,
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
@@ -168,11 +167,11 @@ class AnimatedPanel(AnimatedGradient):
         if title:
             title_regex = AnimatedPanel._get_title_regex(box)
             logger.debug("AnimatedPanel title regex: %s", title_regex)
-            highlight_list.append((title_regex, title_style or "bold", -1))
+            highlight_list.append((title_regex, title_style or "bold", 0))
         if subtitle:
             subtitle_regex = AnimatedPanel._get_subtitle_regex(box)
             logger.debug("AnimatedPanel subtitle regex: %s", subtitle_regex)
-            highlight_list.append((subtitle_regex, subtitle_style, -1))
+            highlight_list.append((subtitle_regex, subtitle_style, 0))
 
         return highlight_list
 
@@ -203,8 +202,8 @@ if __name__ == "__main__":
         rainbow=True,
         repeat_scale=4.0,
         console=_console,
-        padding=(1,2),
-        justify="center"
+        padding=(1, 2),
+        justify="center",
     )
     try:
         animated_panel.run()

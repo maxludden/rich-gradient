@@ -1,21 +1,26 @@
 # Spectrum
 
-`rich_gradient.spectrum.Spectrum` provides a convenient way to generate and preview a palette of colors used throughout rich-gradient:
+`rich_gradient.spectrum.Spectrum` builds reusable color palettes for the rest of the package. It produces Rich `Color`, `Style`, and `ColorTriplet` objects and renders itself as a handy preview table.
 
-- Generates a list of Rich `Color` objects spanning the spectrum.
-- Supports `hues` count, optional reversal, and a `seed` for deterministic order.
-- Exposes `.colors`, `.triplets`, `.styles`, `.hex`, and `.names`.
-- Renders as a Rich table when printed.
-
-## Usage
+![Spectrum example](img/spectrum.svg)
 
 ```python
 from rich.console import Console
 from rich_gradient.spectrum import Spectrum
 
 console = Console()
-console.print(Spectrum(hues=8, seed=42), justify="center")
+spectrum = Spectrum(hues=8, seed=42)
+console.print(spectrum, justify="center")
+
+# Use the palette elsewhere
+palette = spectrum.triplets  # feed into Text/Gradient colors
+hex_codes = spectrum.hex
 ```
 
-![Spectrum Example](img/v0.3.4/spectrum_example.svg)
+Key options:
 
+- `hues`: number of colors to produce (minimum 2).
+- `invert`: reverse the resulting palette.
+- `seed`: control reproducibility without disturbing the global random state.
+
+Internally `rich-gradient` relies on `Spectrum` whenever it needs to auto-generate color stops (for example, `Text(hues=5)` or `Gradient(rainbow=True)`).

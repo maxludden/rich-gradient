@@ -103,10 +103,66 @@ tr:nth-child(even) {
 }
 
 [data-md-color-scheme="astral-light"] {
-    --md-default-bg-color--dark: var(--black);
+    /* Base colors */
+    --md-default-bg-color: #ffffff;
+    --md-default-bg-color--dark: #f6f7fb;
+    --md-default-fg-color: #2d183b;
+    /* deep purple text */
+    --md-default-fg-color--light: #443057;
+    --md-default-fg-color--lighter: #6a5780;
+
+    /* Brand accents */
     --md-primary-fg-color: var(--galaxy);
-    --md-typeset-a-color: var(--flare);
+    --md-primary-bg-color: #ffffff;
     --md-accent-fg-color: var(--cosmic);
+    --md-typeset-a-color: var(--flare);
+
+    /* Body and code */
+    --md-typeset-color: #2d183b;
+    --md-typeset-mark-color: #fff2a8;
+
+    --md-code-fg-color: #2d183b;
+    --md-code-bg-color: #f6f8fa;
+    /* neutral light code background */
+
+    /* Code highlight tokens (ensure good contrast in light mode) */
+    --md-code-hl-comment-color: #6e7781;
+    --md-code-hl-punctuation-color: #6e7781;
+    --md-code-hl-generic-color: #8e63c7;
+    --md-code-hl-variable-color: #1f2328;
+    --md-code-hl-string-color: #0a7b83;
+    /* teal-ish */
+    --md-code-hl-keyword-color: #7c3aed;
+    /* purple */
+    --md-code-hl-operator-color: #7c3aed;
+    --md-code-hl-number-color: #b45309;
+    /* warm brown */
+    --md-code-hl-special-color: #b45309;
+    --md-code-hl-function-color: #14532d;
+    /* green */
+    --md-code-hl-constant-color: #a21caf;
+    /* magenta */
+    --md-code-hl-name-color: #111827;
+    /* headings/idents */
+
+    /* Tables */
+    --md-typeset-table-color: rgba(0, 0, 0, 0.08);
+    --md-typeset-table-color--light: rgba(0, 0, 0, 0.035);
+}
+
+/* Light-only adjustments for tables and stripes */
+[data-md-color-scheme="astral-light"] table {
+    color: #2d183b;
+}
+
+[data-md-color-scheme="astral-light"] tr:nth-child(even) {
+    background: #f5f2fb;
+    /* very light lilac */
+}
+
+[data-md-color-scheme="astral-light"] table.params td {
+    color: #2d183b;
+    background: #f7f7f9;
 }
 
 [data-md-color-scheme="astral-dark"] {
@@ -222,4 +278,26 @@ tr:nth-child(even) {
     background: #5f00ff;
     padding: 5px;
     border-radius: 5px;
+}
+
+/* Toast for copy-to-clipboard */
+.rg-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--md-code-bg-color, #2e2e2e);
+    color: var(--md-typeset-color, #ffffff);
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    box-shadow: var(--md-shadow-z2, 0 4px 12px rgba(0, 0, 0, .3));
+    opacity: 0;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 9999;
+    font-weight: 600;
+}
+
+.rg-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }

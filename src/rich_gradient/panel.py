@@ -1,22 +1,23 @@
 """Enables rendering of gradients in Rich Panels."""
-from typing import (
-    List,
-    Mapping,
-    Optional,
-    Union,
-)
 
 from re import escape
+from typing import List, Mapping, Optional, Union
+
+from rich.align import AlignMethod, VerticalAlignMethod
+from rich.box import ROUNDED, Box
 from rich.console import Console, RenderableType
 from rich.panel import Panel as RichPanel
-from rich.align import AlignMethod, VerticalAlignMethod
-from rich.box import Box, ROUNDED
 from rich.style import StyleType
 from rich.text import Text as RichText
 
-from rich_gradient.text import Text, TextType
-from rich_gradient.gradient import Gradient, ColorType, HighlightWordsType, HighlightRegexType
 from rich_gradient._logger import logger
+from rich_gradient.gradient import (
+    ColorType,
+    Gradient,
+    HighlightRegexType,
+    HighlightWordsType,
+)
+from rich_gradient.text import Text, TextType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 
@@ -56,10 +57,10 @@ class Panel(Gradient):
         bg_colors: Optional[List[ColorType]] = None,
         rainbow: bool = False,
         hues: int = 5,
-        title: Optional[Text|RichText|TextType] = None,
+        title: Optional[Text | RichText | TextType] = None,
         title_align: AlignMethod = "center",
         title_style: StyleType = "bold",
-        subtitle: Optional[Text|RichText|TextType] = None,
+        subtitle: Optional[Text | RichText | TextType] = None,
         subtitle_align: AlignMethod = "right",
         subtitle_style: StyleType = "",
         border_style: StyleType = "",
@@ -98,18 +99,19 @@ class Panel(Gradient):
             highlight_list = []
         elif isinstance(highlight_regex, Mapping):
             # Convert mapping to a list of (pattern, style, priority) tuples
-            highlight_list = [(pattern, style, 0) for pattern, style in highlight_regex.items()]
+            highlight_list = [
+                (pattern, style, 0) for pattern, style in highlight_regex.items()
+            ]
         else:
             # Assume it's already a sequence of tuples
             highlight_list = list(highlight_regex)
 
         if title:
             title_regex = self._get_title_regex(box)
-            highlight_list.append((title_regex, title_style or "bold", -1))
+            highlight_list.append((title_regex, title_style or "bold", 0))
         if subtitle:
             subtitle_regex = self._get_subtitle_regex(box)
-            highlight_list.append((subtitle_regex, subtitle_style, -1))
-
+            highlight_list.append((subtitle_regex, subtitle_style, 0))
 
         super().__init__(
             panel,
@@ -121,9 +123,8 @@ class Panel(Gradient):
             justify=justify,
             vertical_justify=vertical_justify,
             highlight_words=highlight_words,
-            highlight_regex=highlight_list
+            highlight_regex=highlight_list,
         )
-
 
     @staticmethod
     def _get_title_regex(box: Box) -> str:
@@ -132,7 +133,7 @@ class Panel(Gradient):
         top: str = escape(box.top)
         top_right: str = escape(box.top_right)
         title_regex: str = rf"{top_left}{top}+ (.*?) {top}+{top_right}"
-        logger.debug(f"Generated title regex: {title_regex}")
+        logger.debug("Generated title regex: %s", title_regex)
         return title_regex
 
     @staticmethod
@@ -142,8 +143,9 @@ class Panel(Gradient):
         bottom: str = escape(box.bottom)
         bottom_right: str = escape(box.bottom_right)
         subtitle_regex: str = rf"{bottom_left}{bottom}+ (.*?) {bottom}+{bottom_right}"
-        logger.debug(f"Generated subtitle regex: {{{subtitle_regex}: ")
+        logger.debug("Generated subtitle regex: %s", subtitle_regex)
         return subtitle_regex
+
 
 if __name__ == "__main__":
     console = Console(record=True, width=64)
@@ -162,16 +164,17 @@ The subtitle is simply right-aligned by default :arrow_down:""",
             title="Title",
             subtitle="Subtitle",
             expand=True,
-            padding=(1,2),
+            padding=(1, 2),
             highlight_words={
                 "rich_gradient.panel.Panel": "bold white",
-                "Panel": "bold cyan"
-            }
+                "Panel": "bold cyan",
+            },
         ),
-        justify="center"
+        justify="center",
     )
     console.line()
     console.save_svg(
         "docs/img/panel_example.svg",
         title="rich-gradient",
-        theme=GRADIENT_TERMINAL_THEME)
+        theme=GRADIENT_TERMINAL_THEME,
+    )

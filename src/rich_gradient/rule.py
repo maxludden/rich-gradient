@@ -1,195 +1,218 @@
-from typing import List, Optional, Sequence, Tuple, cast
+"""Gradient-enabled Rule built on Rich's Rule, powered by Gradient."""
+
+from __future__ import annotations
+
+from collections.abc import Sequence
+from typing import Optional
 
 from rich.align import AlignMethod
-from rich.color import Color, ColorParseError
-from rich.color_triplet import ColorTriplet
+from rich.cells import get_character_cell_size
+from rich.color import ColorParseError
 from rich.console import Console, ConsoleOptions, RenderResult
 from rich.rule import Rule as RichRule
-from rich.style import NULL_STYLE, Style, StyleType
+from rich.segment import Segment
+from rich.style import Style, StyleType
 from rich.text import Text as RichText
-from rich.traceback import install as tr_install
+from rich.text import TextType
 
-from rich_gradient.spectrum import Spectrum
-from rich_gradient.text import ColorType, Text
+from rich_gradient.gradient import ColorType, Gradient
+from rich_gradient.text import Text
+from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-console = Console()
-tr_install(console=console, width=64)
-
-
-CHARACTER_MAP = {
-    0: "─",
-    1: "═",
-    2: "━",
-    3: "█",
-}
-up_arrow: Text = Text(" ↑ ", style="bold white")
+# Thickness-to-character mapping
+CHARACTER_MAP = {0: "─", 1: "═", 2: "━", 3: "█"}
 
 
-class Rule(RichRule):
-    """A Rule with a gradient background.
+class Rule(Gradient):
+    """A Rich Rule that supports gradients via the Gradient base class.
 
     Args:
-        title (Optional[str]): The text to display as the title.
-        title_style (StyleType, optional): The style to apply to the title text. Defaults to NULL_STYLE.
-        colors (Sequence[ColorType], optional): A sequence of colors for the gradient. Each color may be a
-            string understood by ``rich.color.Color.parse`` (e.g., "red", "#ff0000"), a ``Color`` instance,
-            or an RGB tuple. Defaults to empty list.
-        thickness (int, optional): Thickness level of the rule (0 to 3). Defaults to 2.
-        style (StyleType, optional): The style of the rule line. Defaults to NULL_STYLE.
-        rainbow (bool, optional): If True, use a rainbow gradient regardless of colors. Defaults to False.
-        hues (int, optional): Number of hues in the gradient if colors are not provided. Defaults to 10.
-        end (str, optional): End character after the rule. Defaults to newline.
-        align (AlignMethod, optional): Alignment of the rule. Defaults to "center".
+        title: Optional title text placed within the rule.
+        title_style: Style applied to the title text after gradients.
+        colors: Foreground gradient color stops.
+        bg_colors: Background gradient color stops.
+        rainbow: If True, generate a rainbow regardless of colors.
+        hues: Number of hues when generating default spectrum.
+        thickness: 0..3 selects line character style.
+        style: Base style for the rule line (merged with gradients).
+        end: Trailing characters after the rule (default newline).
+        align: Alignment for the rule within the available width.
     """
 
     def __init__(
         self,
         title: Optional[str],
-        title_style: StyleType = Style.parse("bold"),
+        title_style: StyleType = "bold",
         colors: Optional[Sequence[ColorType]] = None,
-        thickness: int = 2,
-        style: StyleType = NULL_STYLE,
+        bg_colors: Optional[Sequence[ColorType]] = None,
+        *,
         rainbow: bool = False,
         hues: int = 10,
+        thickness: int = 2,
+        style: StyleType = "",
         end: str = "\n",
         align: AlignMethod = "center",
+        console: Optional[Console] = None,
     ) -> None:
-        # Validate thickness input
-        if thickness < 0 or thickness > 3:
-            raise ValueError(
-                f"Invalid thickness: {thickness}. Thickness must be between 0 and 3."
-            )
-        # Validate type
-        if title is not None and not isinstance(title, str):
-            raise TypeError(f"title must be str, got {type(title).__name__}")
-
-        if not isinstance(title_style, (str, Style)):
-            raise TypeError(
-                f"title_style must be str or Style, got {type(title_style).__name__}"
-            )
-        if not isinstance(style, (str, Style)):
-            raise TypeError(f"style must be str or Style, got {type(style).__name__}")
-        # Determine character based on thickness
+        self.title = title or ""
+        self.title_style = title_style
         self.characters = CHARACTER_MAP.get(thickness, "━")
-        # Parse and store the title style
-        self.title_style = Style.parse(str(title_style))
-        # Initialize the base Rule with provided parameters
-        super().__init__(
-            title=title or "",
+
+        # Build the underlying Rich Rule renderable
+        base_rule = RichRule(
+            title=self.title,
             characters=self.characters,
-            style=Style.parse(str(style)),
+            style=style,
             end=end,
             align=align,
         )
-        # Parse and store the gradient colors
-        self.colors = self._parse_colors(
-            colors if colors is not None else [], rainbow, hues
-        )
+
+        try:
+            if self.title:
+                highlight_words = {self.title: self.title_style}
+            else:
+                highlight_words = None
+
+            super().__init__(
+                base_rule,
+                colors=list(colors) if colors is not None else None,
+                bg_colors=list(bg_colors) if bg_colors is not None else None,
+                console=console,
+                hues=hues,
+                rainbow=rainbow,
+                vertical_justify="middle",
+                highlight_words=highlight_words,
+            )
+        except ColorParseError as err:
+            raise ValueError(f"Invalid color provided: {err}") from err
 
     def __rich_console__(
         self, console: Console, options: ConsoleOptions
     ) -> RenderResult:
-        """Render the gradient rule.
+        """Render the rule using the underlying RichRule at full width and
+        apply gradient coloring using Gradient utilities.
 
-        Args:
-            console (Console): The console to render to.
-            options (ConsoleOptions): The console options.
-
-        Yields:
-            RenderResult: The rendered segments of the gradient rule.
+        This overrides the base Gradient alignment wrapper to ensure the
+        RichRule expands to the console width (so the line isn't collapsed
+        to a single character when aligned/padded externally).
         """
-        # Prepare a base rule with no style to extract segments
-        base_rule = RichRule(
-            title=self.title or "",
-            characters=self.characters,
-            style=NULL_STYLE,
-            end=self.end,
-            align=cast(AlignMethod, self.align),
-        )
-        # Render the base rule to get segments
-        rule_segments = console.render(base_rule, options=options)
-        # Concatenate segment texts to form the full rule text (filter to Segment-like objects)
-        rule_text_parts: List[str] = []
-        for seg in rule_segments:
-            try:
+        # Render underlying content directly (no Align wrapper)
+        content = self.renderables[0] if self.renderables else ""
+        width = options.max_width
+
+        lines = console.render_lines(content, options, pad=True, new_lines=False)
+        for line_index, segments in enumerate(lines):
+            highlight_map = None
+            if self._highlight_rules:
+                line_text = "".join(segment.text for segment in segments)
+                highlight_map = self._build_highlight_map(line_text)
+            column = 0
+            char_index = 0
+            for seg in segments:
                 text = seg.text
-            except Exception:
-                continue
-            rule_text_parts.append(text)
-        rule_text = "".join(rule_text_parts)
+                base_style = seg.style or Style()
+                cluster = ""
+                cluster_width = 0
+                cluster_indices: list[int] = []
+                for character in text:
+                    current_index = char_index
+                    char_index += 1
+                    character_width = get_character_cell_size(character)
+                    if character_width <= 0:
+                        cluster += character
+                        cluster_indices.append(current_index)
+                        continue
+                    if cluster:
+                        style = self._get_style_at_position(
+                            column - cluster_width, cluster_width, width
+                        )
+                        merged_style = self._merge_styles(base_style, style)
+                        merged_style = self._apply_highlight_style(
+                            merged_style, highlight_map, cluster_indices
+                        )
+                        yield Segment(cluster, merged_style)
+                        cluster = ""
+                        cluster_width = 0
+                        cluster_indices = []
+                    cluster = character
+                    cluster_width = character_width
+                    cluster_indices = [current_index]
+                    column += character_width
+                if cluster:
+                    style = self._get_style_at_position(
+                        column - cluster_width, cluster_width, width
+                    )
+                    merged_style = self._merge_styles(base_style, style)
+                    merged_style = self._apply_highlight_style(
+                        merged_style, highlight_map, cluster_indices
+                    )
+                    yield Segment(cluster, merged_style)
+            if line_index < len(lines) - 1:
+                yield Segment.line()
+        # Ensure a trailing newline after the rule so following content appears below
+        yield Segment.line()
 
-        # If no title style, render the gradient text directly
-        if self.title_style == NULL_STYLE:
-            gradient_rule = Text(rule_text, colors=self.colors)
-            yield from console.render(gradient_rule, options)
-            return
-        # Create gradient text for the rule
-        gradient_rule = Text(rule_text, colors=self.colors)
+    @property
+    def title(self) -> Optional[TextType]:
+        """Get the title of the Rule."""
+        return self._title or None
 
-        # Extract the title string for highlighting
-        title = self.title.plain if isinstance(self.title, Text) else str(self.title)
-
-        # Apply the title style highlight after gradient generation
-        if title and self.title_style != NULL_STYLE:
-            gradient_rule.highlight_words([title], style=self.title_style)
-
-        # Yield the styled gradient text
-        yield from console.render(gradient_rule, options)
-
-    def _parse_colors(
-        self,
-        colors: Sequence[ColorType],
-        rainbow: bool,
-        hues: int,
-    ) -> List[str]:
-        """Parse colors for the gradient.
-
-        Args:
-            colors (Sequence[ColorType]): A sequence of colors supplied as strings, ``Color`` objects,
-                ``ColorTriplet`` instances or RGB tuples.
-            rainbow (bool): If True, use a rainbow gradient.
-            hues (int): Number of hues in the gradient.
-
-        Raises:
-            ValueError: If fewer than two colors are provided when colors are specified.
-            ColorParseError: If a provided color value cannot be interpreted.
-
-        Returns:
-            List[str]: A list of hex color strings for the gradient.
-        """
-        if rainbow:
-            return Spectrum(hues).hex
-
-        if colors and len(colors) < 2:
-            raise ValueError(
-                f"At least two colors are required for a gradient. Please provide at least two color values. Received: {colors!r}"
+    @title.setter
+    def title(self, value: Optional[TextType]) -> None:
+        """Set the title of the Rule."""
+        if value is not None and not isinstance(value, (str, RichText, Text)):
+            raise TypeError(
+                f"title must be str, RichText, or Text, got {type(value).__name__}"
             )
+        self._title = value
 
-        if not colors:
-            return Spectrum(hues).hex
+    @property
+    def title_style(self) -> Optional[StyleType]:
+        """Get the title style of the Rule's title."""
+        return self._title_style or None
 
-        _colors: List[str] = []
-        for color in colors:
-            try:
-                if isinstance(color, Color):
-                    _colors.append(color.get_truecolor().hex)
-                elif isinstance(color, ColorTriplet):
-                    _colors.append(color.hex)
-                elif isinstance(color, tuple) and len(color) == 3:
-                    _colors.append(ColorTriplet(*color).hex)
-                else:
-                    _colors.append(Color.parse(color).get_truecolor().hex)
-            except (ColorParseError, TypeError, ValueError) as ce:
+    @title_style.setter
+    def title_style(self, value: Optional[StyleType]) -> None:
+        """Set the title style of the Rule's title."""
+        if value is not None and not isinstance(value, (str, Style)):
+            raise TypeError(
+                f"title_style must be str or Style, got {type(value).__name__}"
+            )
+        self._title_style = Style.parse(str(value)) if value is not None else None
+
+    @property
+    def characters(self) -> str:
+        """Get the character used for the rule line."""
+        return getattr(self, "_rule_char", CHARACTER_MAP[2])
+
+    @characters.setter
+    def characters(self, value: str | int) -> None:
+        """Set the character used for the rule line."""
+        # Allow specifying by thickness int or by the actual character.
+        if isinstance(value, int):
+            if value not in CHARACTER_MAP:
                 raise ValueError(
-                    f"Invalid color: {color}. Please provide a valid color value."
-                ) from ce
-        return _colors
+                    f"thickness must be between 0 and 3 (inclusive), got {value}"
+                )
+            self._rule_char = CHARACTER_MAP[value]
+            return
+        if not isinstance(value, str) or len(value) != 1:
+            raise ValueError("rule_char must be a single character string")
+        allowed = set(CHARACTER_MAP.values())
+        if value not in allowed:
+            raise ValueError(
+                "The rule_char must be one of the following characters: "
+                + ", ".join(CHARACTER_MAP.values())
+            )
+        self._rule_char = value
 
 
-def example():
+def example() -> None:
+    """Demonstrate the gradient Rule functionality."""
     console = Console(width=80, record=True)
+
     comment_style = Style.parse("dim italic")
-    console.line(2)
+    console.line()
     console.print(Rule(title="Centered Rule", rainbow=True, thickness=0))
     console.print(
         Text(
@@ -199,7 +222,7 @@ When no colors are provided, it defaults to a random gradient. ↑",
         ),
         justify="center",
     )
-    console.line(3)
+    console.line()
 
     # left
     console.print(
@@ -213,7 +236,8 @@ When no colors are provided, it defaults to a random gradient. ↑",
     console.print(
         Text.assemble(*[
             Text(
-                "↑ This Rule is left-aligned, with a thickness of 1. When colors are provided, the gradient is generated using the provided colors: ",
+                "↑ This Rule is left-aligned, with a thickness of 1. When colors \
+are provided, the gradient is generated using the provided colors: ",
                 colors=["#F00", "#F90", "#FF0"],
                 style="dim italic",
             ),
@@ -225,23 +249,29 @@ When no colors are provided, it defaults to a random gradient. ↑",
         ]),
         justify="left",
     )
-    console.line(3)
+    console.line()
 
-    COLORS3 = ["deeppink", "purple", "violet", "blue", "dodgerblue"]
+    GRADIENT_COLOR_PALETTE = [  # pylint: disable=C0103
+        "deeppink",
+        "purple",
+        "violet",
+        "blue",
+        "dodgerblue",
+    ]
 
     console.print(
         Rule(
             title="Right-aligned Rule",
             align="right",
             thickness=2,
-            colors=list(COLORS3),
+            colors=list(GRADIENT_COLOR_PALETTE),
         )
     )
     purple_explanation = Text.assemble(*[
         Text(
             "↑  This Rule is right-aligned, with a thickness of 2. When colors are \
 provided, the gradient is generated using the provided colors: ",
-            colors=list(COLORS3),
+            colors=list(GRADIENT_COLOR_PALETTE),
             style="dim italic",
             end=" ",
         ),
@@ -257,7 +287,7 @@ provided, the gradient is generated using the provided colors: ",
     ])
     console.print(purple_explanation, justify="right")
 
-    console.line(3)
+    console.line()
     console.print(
         Rule(
             title="Centered Rule",
@@ -267,9 +297,9 @@ provided, the gradient is generated using the provided colors: ",
         )
     )
 
-    center_desc: Text = Text(
-        "↑ [i]This rule is[/i] [b]centered[/b][i], with a[/i] [b]thickness[/b] [i]of[/i] [b]3.[/b]\n\
-When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ",
+    center_desc = Text(
+        "↑ [i]This rule is[/i] [b]centered[/b][i], with a[/i] [b]thickness[/b] \
+[i]of[/i] [b]3.[/b]\nWhen `rainbow=True`, a full-spectrum Rainbow gradient is generated. ",
         style="dim",
     )
     center_desc.highlight_words(
@@ -278,7 +308,7 @@ When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ",
     center_desc.highlight_words(["=", "`"], style=Style.parse("bold not dim orange"))
     center_desc.highlight_words(["True"], style=Style.parse("bold not dim white"))
     console.print(center_desc, justify="center")
-    console.line(3)
+    console.line()
 
     console.print(
         Rule(
@@ -294,11 +324,15 @@ When `rainbow=True`, a full-spectrum Rainbow gradient is generated. ",
             colors=["#F00", "#F90", "#FF0"],
             style="dim italic",
         ),
-        justify="center",
+        justify="left",
     )
-    console.line(3)
+    console.line()
 
-    console.save_svg("docs/img/rule.svg", title="Rule Example")
+    console.save_svg(
+        "docs/img/rule.svg",
+        title="rich-gradient",
+        theme=GRADIENT_TERMINAL_THEME,
+    )
 
 
 if __name__ == "__main__":
