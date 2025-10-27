@@ -56,7 +56,9 @@ class Rule(Gradient):
     ) -> None:
         self.title = title or ""
         self.title_style = title_style
-        self.characters = CHARACTER_MAP.get(thickness, "━")
+        if thickness not in CHARACTER_MAP:
+            raise ValueError("thickness must be between 0 and 3 (inclusive)")
+        self.characters = thickness
 
         # Build the underlying Rich Rule renderable
         base_rule = RichRule(
