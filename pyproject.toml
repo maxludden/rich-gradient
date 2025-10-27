@@ -41,7 +41,7 @@ packages = ["src/rich_gradient"]
 path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
-rich-gradient = "rich_gradient.cli:app"
+rich-gradient = "rich_gradient.cli:main"
 
 
 [tool.ruff]

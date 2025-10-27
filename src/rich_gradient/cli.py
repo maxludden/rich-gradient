@@ -12,6 +12,7 @@ functions centralise repeated tasks such as parsing colour stops, padding
 strings, and resolving text sources.
 """
 
+# pylint: disable=W0611
 from __future__ import annotations
 
 import sys
