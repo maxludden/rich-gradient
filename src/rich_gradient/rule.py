@@ -20,7 +20,7 @@ from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 # Thickness-to-character mapping
-CHARACTER_MAP = {0: "─", 1: "═", 2: "━", 3: "█"}
+CHARACTER_MAP = {0: "─", 1: "━", 2: "═", 3: "█"}
 
 
 class Rule(Gradient):
@@ -211,14 +211,14 @@ def example() -> None:
     """Demonstrate the gradient Rule functionality."""
     console = Console(width=80, record=True)
 
-    comment_style = Style.parse("dim italic")
+    comment_style = Style.parse("italic")
     console.line()
     console.print(Rule(title="Centered Rule", rainbow=True, thickness=0))
     console.print(
-        Text(
+        RichText(
             "↑ This Rule is centered, with a thickness of 0. \
 When no colors are provided, it defaults to a random gradient. ↑",
-            style="dim italic",
+            style="italic",
         ),
         justify="center",
     )
@@ -234,12 +234,11 @@ When no colors are provided, it defaults to a random gradient. ↑",
         )
     )
     console.print(
-        Text.assemble(*[
-            Text(
+        RichText.assemble(*[
+            RichText(
                 "↑ This Rule is left-aligned, with a thickness of 1. When colors \
 are provided, the gradient is generated using the provided colors: ",
-                colors=["#F00", "#F90", "#FF0"],
-                style="dim italic",
+                style="italic",
             ),
             RichText("#F00", style=Style.parse("bold italic #ff0000"), end=""),
             RichText(", ", style=comment_style, end=""),
@@ -268,11 +267,10 @@ are provided, the gradient is generated using the provided colors: ",
         )
     )
     purple_explanation = Text.assemble(*[
-        Text(
+        RichText(
             "↑  This Rule is right-aligned, with a thickness of 2. When colors are \
 provided, the gradient is generated using the provided colors: ",
-            colors=list(GRADIENT_COLOR_PALETTE),
-            style="dim italic",
+            style="italic",
             end=" ",
         ),
         RichText("deeppink", style=Style.parse("bold italic deeppink"), end=""),
@@ -297,13 +295,13 @@ provided, the gradient is generated using the provided colors: ",
         )
     )
 
-    center_desc = Text(
+    center_desc = RichText.from_markup(
         "↑ [i]This rule is[/i] [b]centered[/b][i], with a[/i] [b]thickness[/b] \
 [i]of[/i] [b]3.[/b]\nWhen `rainbow=True`, a full-spectrum Rainbow gradient is generated. ",
-        style="dim",
+        style="",
     )
     center_desc.highlight_words(
-        ["centered", "thickness", "3", "rainbow"], style=Style.parse("not dim")
+        ["centered", "thickness", "3", "rainbow"], style=Style.parse("")
     )
     center_desc.highlight_words(["=", "`"], style=Style.parse("bold not dim orange"))
     center_desc.highlight_words(["True"], style=Style.parse("bold not dim white"))
@@ -319,10 +317,9 @@ provided, the gradient is generated using the provided colors: ",
         )
     )
     console.print(
-        Text(
+        RichText(
             "↑ This Rule has no title, but still has a gradient rule. ↑",
-            colors=["#F00", "#F90", "#FF0"],
-            style="dim italic",
+            style="italic",
         ),
         justify="left",
     )

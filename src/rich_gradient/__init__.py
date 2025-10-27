@@ -8,6 +8,7 @@ from rich_color_ext import install as rc_install
 from rich_gradient._logger import get_logger
 from rich_gradient.animated_gradient import AnimatedGradient
 from rich_gradient.animated_panel import AnimatedPanel
+from rich_gradient.animated_rule import AnimatedRule
 from rich_gradient.default_styles import DEFAULT_STYLES
 from rich_gradient.gradient import ColorType, Gradient
 from rich_gradient.panel import Panel
@@ -22,6 +23,7 @@ rc_install()
 __all__ = [
     "AnimatedGradient",
     "AnimatedPanel",
+    "AnimatedRule",
     "Console",
     "ColorType",
     "DEFAULT_STYLES",
