@@ -11,6 +11,7 @@ from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.animated_rule import AnimatedRule
 from rich_gradient.default_styles import DEFAULT_STYLES
 from rich_gradient.gradient import ColorType, Gradient
+from rich_gradient.markdown import AnimatedMarkdown, Markdown
 from rich_gradient.panel import Panel
 from rich_gradient.rule import Rule
 from rich_gradient.spectrum import Spectrum
@@ -24,10 +25,12 @@ __all__ = [
     "AnimatedGradient",
     "AnimatedPanel",
     "AnimatedRule",
+    "AnimatedMarkdown",
     "Console",
     "ColorType",
     "DEFAULT_STYLES",
     "Gradient",
+    "Markdown",
     "Text",
     "Panel",
     "Rule",

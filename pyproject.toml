@@ -41,11 +41,24 @@ packages = ["src/rich_gradient"]
 path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
-rich-gradient = "rich_gradient.cli:main"
-
+rich-gradient = "rich_gradient._cli.panel:panel_app"
 
 [tool.ruff]
 ignore = [
     "F401", # Unused imports
     "E741", # Ambiguous variable name
+]
+
+[tool.pylint.MESSAGES_CONTROL]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "too-few-public-methods",
+    "too-many-arguments",
+    "too-many-locals",
+    "too-many-statements",
+    "protected-access",
+    "import-outside-toplevel",
+
 ]

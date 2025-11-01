@@ -118,7 +118,9 @@ class Gradient(JupyterMixin):
         # Gradient objects ignore animation but tests may construct with
         # animated=True, so store the attribute for parity.
         self.animated: bool = bool(animated)
-        self.expand: bool = expand
+        # Backing attribute for expand; use property setter to allow
+        # propagation to wrapped renderables (e.g., Rich Panel instances).
+        self._expand: bool = bool(expand)
         self.justify = justify
         self.vertical_justify = vertical_justify
 
@@ -148,9 +150,51 @@ class Gradient(JupyterMixin):
             self._ingest_init_highlight_regex(highlight_regex)
 
     @property
+    def expand(self) -> bool:
+        """Whether the gradient expands to the available width/height.
+
+        This property is stored on the instance and when updated will attempt
+        to propagate the value to common wrapped renderables (for example,
+        a stored Rich Panel under ``self._panel``).
+        """
+        return bool(getattr(self, "_expand", True))
+
+    @expand.setter
+    def expand(self, value: bool) -> None:
+        self._expand = bool(value)
+        # If we have a tracked underlying Panel-like renderable, try to
+        # propagate the expand flag to it so Rich rendering honors the
+        # intended expansion behavior.
+        # Propagate to any well-known stored renderable attributes.
+        for attr in ("_panel", "_table", "_rule"):
+            obj = getattr(self, attr, None)
+            if obj is not None and hasattr(obj, "expand"):
+                try:
+                    setattr(obj, "expand", self._expand)
+                except (AttributeError, TypeError):
+                    # Don't propagate failures to avoid breaking rendering.
+                    pass
+
+        # Also attempt best-effort propagation to any renderables we've been
+        # given (e.g., Table, Panel objects inside self._renderables).
+        try:
+            for r in getattr(self, "_renderables", []) or []:
+                if hasattr(r, "expand"):
+                    try:
+                        setattr(r, "expand", self._expand)
+                    except (AttributeError, TypeError):
+                        # Ignore failures when an individual renderable disallows setting expand.
+                        pass
+        except (AttributeError, TypeError):
+            # Defensive: if internal structures are not yet set, ignore.
+            pass
+
+
+    @property
     def renderables(self) -> List[ConsoleRenderable]:
         """List of renderable objects to which the gradient is applied."""
         return self._renderables
+
 
     @renderables.setter
     def renderables(self, value: ConsoleRenderable | List[ConsoleRenderable]) -> None:

@@ -112,6 +112,10 @@ class AnimatedPanel(AnimatedGradient):
             safe_box=safe_box,
         )
 
+        # Track underlying panel so expand setter on Gradient can propagate
+        # changes to the Rich Panel instance.
+        self._panel = panel
+
         highlight_list = self._combine_highlight_regex(
             highlight_regex, title, title_style, subtitle, subtitle_style, box
         )

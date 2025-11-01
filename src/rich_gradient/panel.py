@@ -1,7 +1,7 @@
 """Enables rendering of gradients in Rich Panels."""
 
 from re import escape
-from typing import List, Mapping, Optional, Union
+from typing import List, Mapping, Optional, Union, cast
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
@@ -67,7 +67,7 @@ class Panel(Gradient):
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
         box: Box = ROUNDED,
-        padding: Union[int, tuple[int, int], tuple[int, int, int, int]] = (0, 0, 0, 0),
+        padding: Union[int, tuple[int, int], tuple[int, int, int, int]] = (0, 1, 0, 1),
         expand: bool = True,
         style: StyleType = "",
         width: Optional[int] = None,
@@ -77,8 +77,33 @@ class Panel(Gradient):
         highlight_regex: Optional[HighlightRegexType] = None,
     ) -> None:
         """Initialize the Panel with gradient support."""
+
+        # Ensure the inner content supports Rich markup when provided as a string.
+        # - Strings are parsed with Rich markup into RichText
+        # - RichText or our gradient Text pass through unchanged
+        # - RichCast objects (with __rich__) are resolved once
+        def _normalize_renderable(obj: RenderableType) -> RenderableType:
+            # Resolve simple RichCast once (avoid deep recursion)
+            rich_obj = getattr(obj, "__rich__", None)
+            if callable(rich_obj):
+                try:
+                    obj = cast(RenderableType, rich_obj())
+                except (
+                    AttributeError,
+                    TypeError,
+                    ValueError,
+                    RuntimeError,
+                ) as err:  # pragma: no cover - defensive
+                    logger.debug("Error calling __rich__: %s", err)
+            # Parse markup strings into RichText
+            if isinstance(obj, str):
+                return RichText.from_markup(obj)
+            return obj
+
+        normalized_renderable = _normalize_renderable(renderable)
+
         panel = RichPanel(
-            renderable,
+            normalized_renderable,
             title=title,
             title_align=title_align,
             subtitle=subtitle,
@@ -93,8 +118,12 @@ class Panel(Gradient):
             safe_box=safe_box,
         )
 
+        # Track the underlying Rich Panel so expand setter can propagate to it
+        # (Gradient.expand property will attempt to update ``self._panel``).
+        self._panel = panel
+
         # Highlight title and subtitle if they are provided
-        # Normalize highlight_regex into a mutable sequence of tuples (pattern, style, priority)
+        ## Normalize highlight_regex into a mutable sequence of tuples (pattern, style, priority)
         if highlight_regex is None:
             highlight_list = []
         elif isinstance(highlight_regex, Mapping):
@@ -145,6 +174,11 @@ class Panel(Gradient):
         subtitle_regex: str = rf"{bottom_left}{bottom}+ (.*?) {bottom}+{bottom_right}"
         logger.debug("Generated subtitle regex: %s", subtitle_regex)
         return subtitle_regex
+
+    @property
+    def panel(self) -> RichPanel:
+        """Access the underlying Rich Panel renderable."""
+        return self._panel
 
 
 if __name__ == "__main__":

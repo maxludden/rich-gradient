@@ -79,7 +79,7 @@ class AnimatedGradient(Gradient):
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
         disable: bool = False,
-        expand: bool = False,
+        expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
         hues: int = 5,
