@@ -53,9 +53,11 @@ class AnimatedGradient(Gradient):
         speed (int | None): DEPRECATED. Old per-frame ms step. If provided,
             it will be mapped to an equivalent `phase_per_second` using
             `phase_per_second = refresh_per_second * (speed/1000.0)`.
-        repeat_scale (float): Stretch color stops across a wider span. Defaults to 2.0.
+        repeat_scale (float): Stretch color stops across a wider span. Defaults to 4.0.
         highlight_words: Optional configurations for word highlighting.
         highlight_regex: Optional configurations for regex highlighting.
+        animate (bool): Whether to animate. If False, render a static gradient. Defaults to True.
+        duration (float | None): Optional duration for automatic stop when running animations.
 
     Examples:
         >>> ag = AnimatedGradient(renderables=["Hello"], rainbow=True)
@@ -86,9 +88,11 @@ class AnimatedGradient(Gradient):
         rainbow: bool = False,
         phase_per_second: Optional[float] = None,
         speed: Optional[int] = None,
-        repeat_scale: float = 2.0,  # Scale factor to stretch the color stops across a wider span
+        repeat_scale: float = 4.0,  # Scale factor to stretch the color stops across a wider span
         highlight_words: Mapping[Any, Any] | Sequence[Any] | None = None,
         highlight_regex: Mapping[Any, Any] | Sequence[Any] | None = None,
+        animate: bool = True,
+        duration: Optional[float] = 5,
     ) -> None:
         assert refresh_per_second > 0, "refresh_per_second must be greater than 0"
         self._lock = RLock()
@@ -107,6 +111,13 @@ class AnimatedGradient(Gradient):
         self.disable = disable
         self.refresh_per_second = refresh_per_second
         self.expand = expand
+        self.animate = bool(animate)
+        if duration is not None:
+            if duration <= 0:
+                raise ValueError("duration must be greater than 0")
+            self.duration: Optional[float] = float(duration)
+        else:
+            self.duration = None
 
         # Determine phase advance per second. Default mirrors older behavior
         # where speed=4ms at 30 FPS ≈ 0.12 cycles/second.
@@ -128,6 +139,8 @@ class AnimatedGradient(Gradient):
         self._running: bool = False
         self._thread: Optional[Thread] = None
         self._stop_event: Event = Event()
+        self._live_active: bool = False
+        self._deadline: Optional[float] = None
 
         # Initialise Gradient (this sets _renderables, colors, etc.)
         super().__init__(
@@ -143,6 +156,7 @@ class AnimatedGradient(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
+            animated=self.animate,
         )
         self._cycle = 0.0
 
@@ -168,33 +182,56 @@ class AnimatedGradient(Gradient):
     # -----------------
     def start(self) -> None:
         """Start the Live context and the animation loop in a background thread."""
-        if self._running:
+        if self.disable:
+            return
+        if self._running or self._live_active:
+            return
+        if not self.animate:
+            # Static render: render one frame via Live so transient behaviour matches Rich.
+            self._stop_event.clear()
+            self.live.start()
+            self._live_active = True
+            self._deadline = None
+            with self._lock:
+                renderable = self.get_renderable()
+            # Ensure the single frame is drawn immediately.
+            self.live.update(renderable, refresh=True)
             return
         self._running = True
-        self._stop_event.clear()
+        # self._stop_event.clear()
         self.live.start()
+        self._live_active = True
+        if self.duration is not None:
+            self._deadline = time.monotonic() + self.duration
+        else:
+            self._deadline = None
         self._thread = Thread(target=self._animate, daemon=True)
         self._thread.start()
 
     def stop(self) -> None:
         """Signal the animation to stop, wait for the thread, and close Live."""
-        if not self._running:
+        if self.disable:
+            return
+        if not self._live_active and not self._running:
             return
         self._running = False
         self._stop_event.set()
         if self._thread is not None:
-            # Give the animation thread a short time to exit cleanly.
-            # Use a slightly larger timeout to reduce risk of background
-            # thread still touching Live while we stop it.
             self._thread.join(timeout=2.0)
             self._thread = None
-        # Ensure Live stops and clears if transient
-        self.live.stop()
+        if self._live_active:
+            self.live.stop()
+            self._live_active = False
+        self._deadline = None
 
     def run(self) -> None:
         """Blocking helper: start, then wait for Ctrl+C, then stop."""
         try:
             self.start()
+            if self.disable or not self.animate:
+                if self.duration:
+                    time.sleep(self.duration)
+                return
             while self._running:
                 time.sleep(0.1)
         except KeyboardInterrupt:
@@ -235,6 +272,7 @@ class AnimatedGradient(Gradient):
             while not self._stop_event.is_set():
                 # Advance the gradient phase (guarded by lock to avoid
                 # race conditions with the render path).
+                deadline = self._deadline
                 with self._lock:
                     self._cycle += self._phase_per_second * frame_time
                     self.phase = self._cycle
@@ -247,6 +285,9 @@ class AnimatedGradient(Gradient):
                     self.live.update(_renderable, refresh=False)
                 else:
                     self.live.update(_renderable, refresh=True)
+                if deadline is not None and time.monotonic() >= deadline:
+                    self._stop_event.set()
+                    break
                 # Sleep but remain responsive to stop_event
                 self._stop_event.wait(frame_time)
         except KeyboardInterrupt:
@@ -318,7 +359,6 @@ panel and table in a group inside a panel!\n\n",
         justify="center",
         console=_console,
     )
-    _console.line(2)
 
     # Run the animation
     animated_gradient.run()

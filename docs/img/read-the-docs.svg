@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Read the Docs - animated gradient glow badge
+  Created to approximate the 'Cycling gradient glow' CodePen effect.
+  Note: GitHub may sanitize or alter filters/animations when rendering SVGs in README.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="75" viewBox="0 0 340 56" role="img"
+    aria-label="Read the Docs">
+    <defs>
+        <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff4d6d">
+                <animate attributeName="offset" values="0;0.25;0.5;0.75;1;0" dur="6s"
+                    repeatCount="indefinite" />
+            </stop>
+            <stop offset="50%" stop-color="#ffb86b">
+                <animate attributeName="offset" values="0.25;0.5;0.75;1;0;0.25" dur="6s"
+                    repeatCount="indefinite" />
+            </stop>
+            <stop offset="100%" stop-color="#00e6ff">
+                <animate attributeName="offset" values="0.5;0.75;1;0;0.25;0.5" dur="6s"
+                    repeatCount="indefinite" />
+            </stop>
+        </linearGradient>
+
+        <!-- subtle glow filter -->
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.9 0" />
+            <feBlend in="SourceGraphic" in2="b" />
+        </filter>
+        <style>
+            rect{
+            fill: url(#glow);
+            border-radius: 10%;
+            padding: 20%;
+            }
+        </style>
+    </defs>
+
+    <!-- dark rounded background to match CodePen vibe -->
+    <rect x="0" y="0" width="100%" height="100%" rx="8" fill="#000" />
+
+    <!-- glowing gradient text -->
+    <g filter="url(#glow)">
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+            font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            font-weight="800" font-size="40" fill="url(#g)" paint-order="stroke fill">
+            📘 Read the Docs
+        </text>
+    </g>
+
+</svg>

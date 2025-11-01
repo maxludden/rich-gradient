@@ -1,835 +1,643 @@
-"""Typer-based command line interface for ``rich-gradient``.
-
-This CLI mirrors the functionality exposed by the underlying ``rich-gradient``
-renderables (text, panels, rules, and markdown) and provides a high-fidelity
-front end similar to the ``rich`` project's ``rich`` command.  In addition to
-exposing gradient-aware subcommands, the CLI renders contextual help inside
-``rich_gradient.panel.Panel`` instances so that ``--help`` output showcases the
-package's styling capabilities.
-
-Every command honours the palette-handling options common across the project:
-explicit colour stops, rainbow gradients, background colours, hue selection,
-and optional animation with controllable duration.  Input text can be provided
-inline, loaded from files, or streamed from standard input when ``-`` is
-specified as the argument.
-"""
+"""CLI module for rich-gradient."""
 
 from __future__ import annotations
 
-import sys
-import time
-from pathlib import Path
-from typing import Literal, Optional, Sequence
+import io
+from typing import Any, List, Optional, Tuple, cast
 
 import click
-import typer
-from rich.console import Console
-from rich.highlighter import RegexHighlighter
-from rich.panel import Panel as RichPanel
-from rich.table import Table
+from rich.console import Console, JustifyMethod, OverflowMethod
+from rich.style import Style, StyleType
 from rich.text import Text as RichText
-from rich.theme import Theme
-from rich.traceback import install as tr_install
-from rich_color_ext import install as rc_install
-from typer import Argument, Option, Typer
-from typer.core import TyperGroup
+from rich.align import AlignMethod, VerticalAlignMethod
 
-from click.core import ParameterSource
-
-from rich_gradient import __version__
-from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.animated_rule import AnimatedRule
+from rich_gradient.markdown import Markdown, AnimatedMarkdown
 from rich_gradient.panel import Panel
 from rich_gradient.rule import Rule
 from rich_gradient.text import Text
-from rich_gradient.theme import GradientTheme
 
-rc_install()
-tr_install()
-_console = Console(theme=GradientTheme())
+console = Console()
+VERSION = "1.0.0"
 
 
-class _DefaultCommandGroup(TyperGroup):
-    """A Typer/Click group that defaults to a command when none is provided.
-
-    This makes these work equivalently:
-    - rich-gradient "hello"            -> rich-gradient print "hello"
-    - echo "hello" | rich-gradient     -> rich-gradient print (reads stdin)
-    - rich-gradient -R "hello"         -> rich-gradient print -R "hello"
-    """
-
-    # Name of the default command to invoke
-    _default_cmd_name = "print"
-
-    def parse_args(self, ctx: click.Context, args: list[str]) -> None:  # type: ignore[override]
-        # Respect root-level flags and completion env
-        root_flags = {
-            "--help",
-            "-h",
-            "--version",
-            "-V",
-            "--install-completion",
-            "--show-completion",
-            "--help-all",
-        }
-
-        if not args:
-            # No args: default to the print command (stdin supported within command)
-            args.insert(0, self._default_cmd_name)
-        else:
-            first = args[0]
-            # Known subcommand? leave as-is
-            if first not in self.commands:
-                # Root flags/completion? leave as-is for Typer to handle
-                if not (first in root_flags or first.startswith("_TYPER_COMPLETE")):
-                    # Either an option (starts with '-') or free text: route to default
-                    if first.startswith("-") or True:
-                        args.insert(0, self._default_cmd_name)
-
-        super().parse_args(ctx, args)
+def _parse_colors(colors: Optional[str]) -> Optional[List[str]]:
+    """Parse comma-separated color strings into a list of color specifiers."""
+    if colors is None:
+        return None
+    return [c.strip() for c in colors.split(",") if c.strip()]
 
 
-class RichGradientCommand(click.Command):
-    """Override Clicks help with a Rich Gradient version."""
+def _parse_style(style: Optional[str]) -> Style:
+    """Parse a style string into a Rich Style or return null style."""
+    if style is None:
+        return Style.null()
+    return Style.parse(style)
 
-    def format_help(self, ctx, formatter) -> None:
-        class OptionHighlighter(RegexHighlighter):
-            highlights = [
-                r"(?P<switch>\-\w)",
-                r"(?P<option>\-\-[\w\-]+)",
-            ]
 
-        highlighter = OptionHighlighter()
+class GradientHelpCommand(click.Command):
+    """Click Command that displays help via a GradientPanel."""
 
-        console = Console(
-            theme=Theme({
-                "option": "bold #99ff00",
-                "switch": "bold cyan",
-            }),
-            highlighter=highlighter,
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+        sio = io.StringIO()
+        temp_console = Console(file=sio, force_terminal=True, width=formatter.width)
+        temp_console.print(ctx.get_help())
+        captured = sio.getvalue()
+        panel = Panel(
+            RichText.from_markup(captured), title=ctx.command_path, expand=False
         )
-
-        console.print(
-            Text(
-                "[b]rich-gradient CLI[/b] [magenta]v{VERSION}[/] 🤑\n\n\
-[dim]Rich text, formatting, and gradients in the terminal\n",
-            ),
-            justify="center",
-        )
-
-        usage: Text = Text(
-            "Usage: [b]rich-gradient[/b] [b][OPTIONS][/] \
-[b cyan]<PATH,TEXT,URL, or '-'>\n"
-        )
-        usage.highlight_words(["Usage"], "bold yellow")
-        usage.highlight_words(["[", "]", ",", "<", ">"], "bold white")
-        console.print(usage)
-
-        options_table = Table(highlight=True, box=None, show_header=False)
-
-        for param in self.get_params(ctx)[1:]:
-            if len(param.opts) == 2:
-                opt1 = highlighter(param.opts[1])
-                opt2 = highlighter(param.opts[0])
-            else:
-                opt2 = highlighter(param.opts[0])
-                opt1 = Text("")
-
-            if param.metavar:
-                opt2 += Text(f" {param.metavar}", style="bold yellow")
-
-            options = Text(" ".join(reversed(param.opts)))
-            help_record = param.get_help_record(ctx)
-            if help_record is None:
-                _help = RichText("")
-            else:
-                # help_record is a tuple (opts, help_text)
-                _, help_text = help_record
-                _help = RichText.from_markup(help_text, emoji=False)
-
-            if param.metavar:
-                options.append_text(Text(f" {param.metavar}"))
-
-            options_table.add_row(opt1, opt2, highlighter(_help))
-
-        console.print(
-            Panel(
-                options_table, border_style="dim", title="Options", title_align="left"
-            )
-        )
-
-        console.print(
-            Text(
-                "♥ https://maxludden.github.io/rich-gradient/",
-                rainbow=True,
-                style="italic",
-            ),
-            justify="left",
-            style="bold",
-        )
-
-
-app = Typer(
-    name="rich-gradient",
-    short_help="rich-gradient CLI tool",
-    rich_markup_mode="rich",
-    cls=_DefaultCommandGroup,
-    epilog="rich-gradient",
-)
-
-JustifyOption = Literal["left", "center", "right"]
-VerticalJustifyOption = Literal["top", "middle", "bottom"]
-OverflowOption = Literal["crop", "fold", "ellipsis"]
-RuleThickness = Literal[0, 1, 2, 3]
-BoxChoice = Literal["SQUARE", "ROUNDED", "HEAVY", "DOUBLE", "ASCII"]
-
-def _version_callback(value: bool) -> bool:
-    """Display package version when requested."""
-
-    if value:
-        from rich_gradient import __version__  # pylint: disable=import-outside-toplevel
-
-        console.print(Text(__version__))
-        raise typer.Exit()
-    return value
-
-    help_panel_colors: Sequence[str] = HELP_COLORS
-
-    def _render_help_panel(self, ctx: typer.Context, help_text: str) -> str:
-        """Return help text wrapped in a ``GradientPanel``.
-
-        Args:
-            ctx: The Typer context requesting help output.
-            help_text: The standard Click help string.
-        Returns:
-            A string representation of the help content rendered through a
-            gradient panel.
-        """
-
-        width = ctx.terminal_width or 100
-        constrained_width = max(60, min(width, 120))
-        console = Console(
-            record=True,
-            width=constrained_width,
-            color_system="truecolor",
-        )
-        title = ctx.command_path or "rich-gradient"
-        content = RichText(help_text.rstrip("\n"), no_wrap=False, overflow="fold")
-        panel = GradientPanel(
-            content,
-            colors=list(self.help_panel_colors),
-            rainbow=False,
-            hues=max(len(self.help_panel_colors), 2),
-            title=title,
-            title_align="left",
-            title_style="bold",  # Highlight the command path
-            padding=(1, 2),
-            expand=True,
-            justify="left",
-        )
-        panel.console = console
         console.print(panel)
-        return console.export_text(clear=False)
 
 
-class GradientCommand(_GradientHelpMixin, typer.core.TyperCommand):
-    """Command subclass that emits help using gradient panels."""
+class GradientHelpGroup(click.Group):
+    """Click Group that displays help via a rich-gradient Panel."""
 
-    def get_help(self, ctx: typer.Context) -> str:  # type: ignore[override]
-        """Render Click help text within a gradient panel."""
-
-        help_text = super().get_help(ctx)
-        return self._render_help_panel(ctx, help_text)
-
-
-class GradientGroup(_GradientHelpMixin, typer.core.TyperGroup):
-    """Group subclass that emits help using gradient panels."""
-
-    def get_help(self, ctx: typer.Context) -> str:  # type: ignore[override]
-        """Render Click help text within a gradient panel."""
-
-        help_text = super().get_help(ctx)
-        return self._render_help_panel(ctx, help_text)
+    def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
+        sio = io.StringIO()
+        temp_console = Console(file=sio, force_terminal=True, width=formatter.width)
+        temp_console.print(ctx.get_help())
+        captured = sio.getvalue()
+        panel = Panel(
+            RichText.from_markup(captured), title=ctx.command_path, expand=False
+        )
+        console.print(panel)
 
 
-BOX_MAP: dict[BoxChoice, Box] = {
-    "SQUARE": SQUARE,
-    "ROUNDED": ROUNDED,
-    "HEAVY": HEAVY,
-    "DOUBLE": DOUBLE,
-    "ASCII": ASCII,
-}
-
-DEFAULT_SOURCES = {ParameterSource.DEFAULT, ParameterSource.DEFAULT_MAP}
-
-app = typer.Typer(
-    cls=GradientGroup,
-    add_completion=False,
-    no_args_is_help=True,
-    rich_markup_mode="rich",
-    context_settings={"help_option_names": ["-h", "--help"]},
+@click.group(
+    cls=GradientHelpGroup,
+    command_class=GradientHelpCommand,
+    invoke_without_command=True,
+    context_settings=dict(help_option_names=["-h", "--help"]),
+    help="A CLI for rich-gradient: create beautiful gradient-rich output with Rich.",
 )
+@click.version_option(version=VERSION, message="%(prog)s version %(version)s")
+@click.pass_context
+def cli(ctx: click.Context) -> None:
+    """rich-gradient CLI tool. Use subcommands to print gradients, panels, rules, or markdown."""
+    if ctx.invoked_subcommand is None:
+        panel = Panel(RichText.from_markup(ctx.get_help()))
+        console.print(panel)
 
 
-def _version_callback(value: bool) -> None:
-    """Print the installed package version when ``--version`` is supplied."""
-
-    if value:
-        typer.echo(__version__)
-        raise typer.Exit()
-
-
-@app.callback()
-def root_callback(
-    ctx: typer.Context,
-    version: bool = typer.Option(
-        False,
-        "--version",
-        "-V",
-        callback=_version_callback,
-        is_eager=True,
-        help="Show the rich-gradient version and exit.",
-    ),
-) -> None:
-    """Root callback registering shared global options."""
-
-    # ``ctx`` is required so Typer retains the context for subcommands.
-    _ = ctx
-
-
-def _read_text_source(argument: Optional[str]) -> str:
-    """Resolve command input from inline arguments, files, or standard input."""
-
-    if argument is None:
-        if sys.stdin.isatty():
-            raise typer.BadParameter("provide text or pipe content to stdin")
-        data = sys.stdin.read()
-        if not data:
-            raise typer.BadParameter("stdin did not provide any data")
-        return data
-
-    if argument == "-":
-        data = sys.stdin.read()
-        if not data:
-            raise typer.BadParameter("stdin did not provide any data")
-        return data
-
-    if argument.startswith("text="):
-        argument = argument.split("=", 1)[1]
-
-    candidate = Path(argument)
-    if candidate.exists() and candidate.is_file():
-        try:
-            return candidate.read_text(encoding="utf-8")
-        except UnicodeDecodeError as error:  # pragma: no cover - defensive
-            raise typer.BadParameter("file is not valid UTF-8 text") from error
-
-    return argument
-
-def colors_callback(value: Optional[str]) -> Optional[list[str]]:
-    """Callback to parse comma-separated colors into a list.
-    Args:
-        value: The raw CLI input value.
-    Returns:
-        A list of color strings or None.
-    """
-    value = value[0] if isinstance(value, list) else value
-    if not value:
-        return None
-    if "," in value:
-        _colors = value.split(",")
-        return [color.strip() for color in _colors]
-    return [value.strip()]
-
-def _parse_color_stops(spec: Optional[str]) -> Optional[list[str]]:
-    """Split a comma-separated colour specification into individual stops."""
-
-    if spec is None:
-        return None
-    stops = [part.strip() for part in spec.split(",") if part.strip()]
-    if not stops:
-        raise typer.BadParameter("provide at least one colour stop")
-    return stops
-
-def justify_callback(value: str) -> str:
-    """Callback to validate justification option.
-    Args:
-        value: The raw CLI input value.
-    Returns:
-        The validated justification string.
-    """
-    valid_justifications = {"left", "center", "right"}
-    if value not in valid_justifications:
-        raise ValueError(f"Justification must be one of {valid_justifications}")
-    return value
-
-def _parse_padding(value: Optional[str]) -> tuple[int, int, int, int]:
-    """Parse padding strings (``"1"``, ``"2,4"``, ``"1,2,3,4"``) into a 4-tuple."""
-
-def _parse_padding(value: str) -> List[int]:
-    """Parse CLI padding values into a list of integers.
-    Args:
-        value: The raw CLI input value.
-    Returns:
-        A list of four integers representing padding.
-    Raises:
-        ValueError: If the input is invalid.
-    """
-    parts = [element.strip() for element in value.split(",") if element.strip()]
-    try:
-        numbers = [int(part) for part in parts]
-    except ValueError as error:  # pragma: no cover - validated via Typer
-        raise typer.BadParameter("padding must contain integers") from error
-
-    if len(numbers) == 1:
-        top = right = bottom = left = numbers[0]
-    elif len(numbers) == 2:
-        top, right = numbers
-        bottom, left = top, right
-    elif len(numbers) == 4:
-        top, right, bottom, left = numbers
-    else:
-        raise typer.BadParameter("padding requires 1, 2 or 4 integers")
-    return (top, right, bottom, left)
-
-
-@click.command(cls=RichGradientCommand)
-@app.command(name="print", help="Print gradient text to the terminal")
+# ── Print command ───────────────────────────────────────────────────────────
+@cli.command("print", cls=GradientHelpCommand, help="Print text in gradient color.")
+@click.argument("text", nargs=-1, required=True)
+@click.option(
+    "-c",
+    "--colors",
+    metavar="COLORS",
+    type=str,
+    default=None,
+    help="parse a comma separated string of colors (e.g., 'red,#ff9900,yellow').",
+)
+@click.option(
+    "-r",
+    "--rainbow",
+    is_flag=True,
+    default=False,
+    help="print text in rainbow colors (overrides --colors if set).",
+)
+@click.option(
+    "-h",
+    "--hues",
+    metavar="HUES",
+    type=int,
+    default=7,
+    help="The number of hues to use for a random gradient.",
+)
+@click.option(
+    "--style",
+    metavar="STYLE",
+    type=str,
+    default=None,
+    help="The style to apply to the text.",
+)
+@click.option(
+    "-j",
+    "--justify",
+    metavar="JUSTIFY",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="left",
+    help="Justification of the text.",
+)
+@click.option(
+    "--overflow",
+    metavar="OVERFLOW",
+    type=click.Choice(["crop", "fold", "ellipsis"], case_sensitive=False),
+    default="fold",
+    help="How to handle overflow of text.",
+)
+@click.option(
+    "--no-wrap", is_flag=True, default=False, help="Disable wrapping of text."
+)
+@click.option(
+    "--end",
+    metavar="END",
+    type=str,
+    default="\n",
+    help="String appended after the text is printed.",
+)
+@click.option(
+    "--bgcolors",
+    metavar="BGCOLORS",
+    type=str,
+    default=None,
+    help="parse a comma separated string of background colors.",
+)
 def print_command(
-    text: Annotated[
-        Optional[str],
-        Argument(help="The text to display with gradient or '-' for stdin"),
-    ] = None,
-    colors: Annotated[
-        Optional[list[str]],
-        Option(
-            "-c",
-            "--colors",
-            callback=colors_callback,
-            help="Comma-separated list of colors for the gradient \
-(e.g., '#ff0000,#f90,yellow')",
-        ),
-    ] = None,
-    rainbow: Annotated[
-        bool,
-        Option(
-            "-r/-R",
-            "--rainbow/--no-rainbow",
-            help="Use rainbow colors for the gradient",
-        ),
-    ] = False,
-    hues: Annotated[
-        int,
-        Option(
-            "-u",
-            "--hues",
-            help="Number of hues for rainbow gradient",
-        ),
-    ] = 7,
-    justify: Annotated[
-        str,
-        Option(
-            "-j",
-            "--justify",
-            callback=justify_callback,
-            help="Justification of the text",
-        ),
-    ] = "left",
-    animated: Annotated[
-        bool,
-        Option(
-            "-a",
-            "--animated",
-            help="Animate the gradient text.",
-            is_flag=True,
-        ),
-    ] = False,
-    duration: Annotated[
-        float,
-        Option(
-            "-d",
-            "--duration",
-            callback=_validate_duration,
-            help="Length of the animation in seconds (requires --animated).",
-        ),
-    ] = 10.0,
-):
-    """Print gradient text to the terminal."""
-    content = _read_text_source(text)
-    _colors = colors if colors else None
-
-    if animated:
-        try:
-            renderable = RichText.from_markup(content)
-        except Exception as error:
-            raise typer.BadParameter(f"invalid markup: {error}") from error
-
-        animation = AnimatedGradient(
-            renderable,
-            colors=cast(Any, _colors),  # use parsed colors if provided
-            rainbow=rainbow,
-            hues=hues,
-            console=console,
-            justify=cast(Any, justify),
-            expand=True,
-        )
-        _run_animation(animation, duration)
-        return
-
-
-def _run_animation(animation: AnimatedGradient, duration: float) -> None:
-    """Run an animated gradient for the requested duration."""
-
-    if duration <= 0:
-        animation.start()
-        animation.stop()
-        return
-
-    try:
-        with animation:
-            time.sleep(duration)
-    except KeyboardInterrupt:  # pragma: no cover - manual interruption
-        animation.stop()
-
-
-def _handle_color_error(error: ColorParseError | ValueError) -> None:
-    """Convert colour parsing errors into user-facing CLI errors."""
-
-    raise typer.BadParameter(str(error)) from error
-
-@app.command(name="rule", short_help="Display a gradient rule")
-def rule_command(
-    title: Annotated[
-        Optional[str], Option("-t", "--title", help="Optional title for the rule")
-    ] = None,
-    title_style: Annotated[
-        str,
-        Option(
-            "-s",
-            "--title-style",
-            help="Style to apply to the title text",
-        ),
-    ] = "bold",
-    justify: Annotated[
-        str,
-        Option(
-            "-j",
-            "--justify",
-            help="Justification of the title text",
-            callback=justify_callback,
-        ),
-    ] = "center",
-    colors: Annotated[
-        Optional[list[str]],
-        Option(
-            "-c",
-            "--colors",
-            callback=colors_callback,
-            help="Comma-separated list of colors for the gradient \
-(e.g., '#ff0,#00ff00,cyan')",
-        ),
-    ] = None,
-    rainbow: Annotated[
-        bool,
-        Option(
-            "-R/-n",
-            "--rainbow/--no-rainbow",
-            help="Use rainbow colors for the gradient",
-            is_flag=True,
-        ),
-    ] = False,
-    hues: Annotated[
-        int,
-        Option(
-            "-u",
-            "--hues",
-            help="Number of hues for rainbow gradient",
-        ),
-    ] = 7,
-    thickness: Annotated[
-        int,
-        Option(
-            "-T",
-            "--thickness",
-            callback=_validate_thickness,
-            help="Thickness of the rule (0-3)",
-        ),
-    ] = 1,
-    animated: Annotated[
-        bool,
-        Option(
-            "-a",
-            "--animated",
-            help="Animate the gradient rule.",
-            is_flag=True,
-        ),
-    ] = False,
-    duration: Annotated[
-        float,
-        Option(
-            "-d",
-            "--duration",
-            callback=_validate_duration,
-            help="Length of the animation in seconds (requires --animated).",
-        ),
-    ] = 10.0,
-):
-    """Display a gradient rule."""
-    _colors = colors if colors else None
-
-    try:
-        if animate:
-            animation = AnimatedGradient(
-                renderables=base_text,
-                colors=color_stops,
-                bg_colors=bg_color_stops,
-                rainbow=rainbow,
-                hues=hues,
-                console=console,
-                justify=justify,
-                expand=False,
-            )
-            _run_animation(animation, duration)
-        else:
-            gradient_text = GradientText(
-                text_value,
-                colors=color_stops,
-                rainbow=rainbow,
-                hues=hues,
-                style=style or "",
-                justify=justify,
-                overflow=overflow,
-                no_wrap=no_wrap,
-                end=end,
-                bgcolors=bg_color_stops,
-            )
-            console.print(gradient_text)
-    except (ColorParseError, ValueError) as error:
-        _handle_color_error(error)
-
-
-@app.command("panel", cls=GradientCommand)
-def panel_command(
-    ctx: typer.Context,
-    renderable: Optional[str] = typer.Argument(
-        None,
-        help="Panel content, '-' for stdin, or text=...",
-    ),
-    colors: Optional[str] = typer.Option(
-        None,
-        "--colors",
-        "-c",
-        metavar="COLORS",
-        help="Comma-separated list of colours for the gradient.",
-    ),
-    bgcolors: Optional[str] = typer.Option(
-        None,
-        "--bgcolors",
-        metavar="BGCOLORS",
-        help=(
-            "Comma-separated list of background colours for the gradient "
-            "(e.g., 'red,#ff9900,yellow')."
-        ),
-    ),
-    rainbow: bool = typer.Option(
-        False,
-        "--rainbow",
-        "-r",
-        help="Use rainbow colours for the gradient.",
-    ),
-    hues: int = typer.Option(
-        5,
-        "--hues",
-        metavar="HUES",
-        min=2,
-        help="Number of hues for rainbow gradient.",
-    ),
-    title: Optional[str] = typer.Option(
-        None,
-        "--title",
-        "-t",
-        metavar="TITLE",
-        help="Title of the panel.",
-    ),
-    title_style: Optional[str] = typer.Option(
-        None,
-        "--title-style",
-        metavar="TITLE_STYLE",
-        show_default="bold",
-        help="Style applied to the panel title (requires --title).",
-    ),
-    title_align: JustifyOption = typer.Option(
-        "center",
-        "--title-align",
-        metavar="TITLE_ALIGN",
-        case_sensitive=False,
-        help="Alignment of the panel title (requires --title).",
-    ),
-    subtitle: Optional[str] = typer.Option(
-        None,
-        "--subtitle",
-        metavar="SUBTITLE",
-        help="Subtitle of the panel.",
-    ),
-    subtitle_style: Optional[str] = typer.Option(
-        None,
-        "--subtitle-style",
-        metavar="SUBTITLE_STYLE",
-        help="Style applied to the panel subtitle (requires --subtitle).",
-    ),
-    subtitle_align: JustifyOption = typer.Option(
-        "right",
-        "--subtitle-align",
-        metavar="SUBTITLE_ALIGN",
-        case_sensitive=False,
-        help="Alignment of the panel subtitle (requires --subtitle).",
-    ),
-    style: Optional[str] = typer.Option(
-        None,
-        "--style",
-        metavar="STYLE",
-        help="Style applied to the panel content.",
-    ),
-    border_style: Optional[str] = typer.Option(
-        None,
-        "--border-style",
-        metavar="BORDER_STYLE",
-        help="Style applied to the panel border.",
-    ),
-    padding: Optional[str] = typer.Option(
-        None,
-        "--padding",
-        "-p",
-        metavar="PADDING",
-        help="Padding inside the panel (1, 2, or 4 comma-separated integers).",
-    ),
-    vertical_justify: VerticalJustifyOption = typer.Option(
-        "top",
-        "--vertical-justify",
-        "-V",
-        metavar="VERTICAL_JUSTIFY",
-        case_sensitive=False,
-        help="Vertical justification of the panel content.",
-    ),
-    text_justify: JustifyOption = typer.Option(
-        "left",
-        "--text-justify",
-        "-J",
-        metavar="TEXT_JUSTIFY",
-        case_sensitive=False,
-        help="Justification of the text inside the panel.",
-    ),
-    justify: JustifyOption = typer.Option(
-        "left",
-        "--justify",
-        "-j",
-        metavar="JUSTIFY",
-        case_sensitive=False,
-        help="Justification of the panel itself.",
-    ),
-    expand: bool = typer.Option(
-        True,
-        "--expand/--no-expand",
-        "-e/-E",
-        help="Expand the panel to fill the width of the console.",
-    ),
-    width: Optional[int] = typer.Option(
-        None,
-        "--width",
-        metavar="WIDTH",
-        help="Width of the panel (requires --no-expand).",
-    ),
-    height: Optional[int] = typer.Option(
-        None,
-        "--height",
-        metavar="HEIGHT",
-        help="Height of the panel.",
-    ),
-    end: str = typer.Option(
-        "\n",
-        "--end",
-        metavar="END",
-        help="String appended after the panel is printed.",
-    ),
-    box: BoxChoice = typer.Option(
-        "ROUNDED",
-        "--box",
-        metavar="BOX",
-        help="Box style for the panel border.",
-    ),
-    animate: bool = typer.Option(
-        False,
-        "--animate",
-        help="Animate the panel gradient.",
-    ),
-    duration: float = typer.Option(
-        5.0,
-        "--duration",
-        "-d",
-        min=0.0,
-        metavar="DURATION",
-        help="Duration of the panel animation in seconds.",
-    ),
+    text: Tuple[str, ...],
+    colors: Optional[str],
+    rainbow: bool,
+    hues: int,
+    style: Optional[str],
+    justify: str,
+    overflow: str,
+    no_wrap: bool,
+    end: str,
+    bgcolors: Optional[str]
 ) -> None:
-    """Display text inside a gradient panel."""
-
-    console = _create_console()
-    text_value = _read_text_source(renderable)
-    color_stops = _parse_color_stops(colors)
-    bg_color_stops = _parse_color_stops(bgcolors)
-    padding_values = _parse_padding(padding)
-
-    if width is not None and expand:
-        raise typer.BadParameter("--width requires --no-expand")
-
-    title_style_source = ctx.get_parameter_source("title_style")
-    title_align_source = ctx.get_parameter_source("title_align")
-    subtitle_style_source = ctx.get_parameter_source("subtitle_style")
-    subtitle_align_source = ctx.get_parameter_source("subtitle_align")
-
-    if title is None and title_style_source not in DEFAULT_SOURCES and title_style:
-        raise typer.BadParameter("--title-style requires --title to be set")
-    if title is None and title_align_source not in DEFAULT_SOURCES:
-        raise typer.BadParameter("--title-align requires --title to be set")
-    if subtitle is None and subtitle_style_source not in DEFAULT_SOURCES and subtitle_style:
-        raise typer.BadParameter("--subtitle-style requires --subtitle to be set")
-    if subtitle is None and subtitle_align_source not in DEFAULT_SOURCES:
-        raise typer.BadParameter("--subtitle-align requires --subtitle to be set")
-
-    resolved_title_style = title_style or ("bold" if title else "")
-    resolved_subtitle_style = subtitle_style or ""
-
-    content = Align(
-        RichText.from_markup(text_value, style=style or ""),
-        align=text_justify,
+    """Print text in gradient color to the console."""
+    content = " ".join(text)
+    fg_list = _parse_colors(colors)
+    bg_list = _parse_colors(bgcolors)
+    style_obj = _parse_style(style)
+    gradient = Text(
+        content,
+        colors=fg_list,
+        rainbow=rainbow,
+        hues=hues,
+        style=style_obj,
+        justify=cast(JustifyMethod, justify),
+        overflow=cast(OverflowMethod, overflow),
+        end=end,
+        no_wrap=no_wrap,
+        bgcolors=bg_list
     )
+    console.print(gradient)
 
-    try:
-        panel_kwargs = dict(
-            colors=color_stops,
-            bg_colors=bg_color_stops,
+
+# ── Panel command ───────────────────────────────────────────────────────────
+@cli.command(
+    "panel", cls=GradientHelpCommand, help="Display text inside a gradient panel."
+)
+@click.argument("renderable", metavar="RENDERABLE", nargs=1, required=True)
+@click.option(
+    "-c",
+    "--colors",
+    metavar="COLORS",
+    type=str,
+    default=None,
+    help="Comma-separated list of colors for the gradient (e.g., `red,#ff9900,yellow`).",
+)
+@click.option(
+    "--bgcolors",
+    metavar="BGCOLORS",
+    type=str,
+    default=None,
+    help="Comma-separated list of background colors for the gradient (e.g., `red,#ff9900,yellow`).",
+)
+@click.option(
+    "-r",
+    "--rainbow",
+    is_flag=True,
+    default=False,
+    help="Use rainbow colors for the gradient. Overrides -c/--colors if set.",
+)
+@click.option(
+    "--hues",
+    metavar="HUES",
+    type=int,
+    default=5,
+    help="Number of hues for rainbow gradient.",
+)
+@click.option(
+    "-t", "--title", metavar="TITLE", type=str, default=None, help="Title of the panel."
+)
+@click.option(
+    "--title-style",
+    metavar="TITLE_STYLE",
+    type=str,
+    default="bold",
+    help="Style of the panel title text (requires -t/--title).",
+)
+@click.option(
+    "--title-align",
+    metavar="TITLE_ALIGN",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="center",
+    help="Alignment of the panel title (requires -t/--title).",
+)
+@click.option(
+    "--subtitle",
+    metavar="SUBTITLE",
+    type=str,
+    default=None,
+    help="Subtitle of the panel.",
+)
+@click.option(
+    "--subtitle-style",
+    metavar="SUBTITLE_STYLE",
+    type=str,
+    default=None,
+    help="Style of the panel subtitle text (requires --subtitle).",
+)
+@click.option(
+    "--subtitle-align",
+    metavar="SUBTITLE_ALIGN",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="right",
+    help="Alignment of the panel subtitle (requires --subtitle).",
+)
+@click.option(
+    "--style",
+    metavar="STYLE",
+    type=str,
+    default=None,
+    help="The style to apply to the panel.",
+)
+@click.option(
+    "--border-style",
+    metavar="BORDER_STYLE",
+    type=str,
+    default=None,
+    help="The style to apply to the panel border.",
+)
+@click.option(
+    "-p",
+    "--padding",
+    metavar="PADDING",
+    type=str,
+    default="0,1",
+    help="Padding inside the panel (1, 2, or 4 comma-separated integers).",
+)
+@click.option(
+    "-V",
+    "--vertical-justify",
+    metavar="VERTICAL_JUSTIFY",
+    type=click.Choice(["top", "middle", "bottom"], case_sensitive=False),
+    default="top",
+    help="Vertical justification of the panel inner text.",
+)
+@click.option(
+    "-J",
+    "--text-justify",
+    metavar="TEXT_JUSTIFY",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="left",
+    help="Justification of the text inside the panel.",
+)
+@click.option(
+    "-j",
+    "--justify",
+    metavar="JUSTIFY",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="left",
+    help="Justification of the panel itself.",
+)
+@click.option(
+    "-e/--no-expand",
+    "--expand/--no-expand",
+    is_flag=True,
+    default=True,
+    help="Whether to expand the panel to fill the width.",
+)
+@click.option(
+    "--width",
+    metavar="WIDTH",
+    type=int,
+    default=None,
+    help="Width of the panel (requires --no-expand if set).",
+)
+@click.option(
+    "--height",
+    metavar="HEIGHT",
+    type=int,
+    default=None,
+    help="Height of the panel; content determines by default.",
+)
+@click.option(
+    "--end",
+    metavar="END",
+    type=str,
+    default="\n",
+    help="String appended after the panel is printed.",
+)
+@click.option(
+    "--box",
+    metavar="BOX",
+    type=click.Choice(
+        ["SQUARE", "ROUNDED", "HEAVY", "DOUBLE", "ASCII"], case_sensitive=False
+    ),
+    default="ROUNDED",
+    help="Box style for the panel border.",
+)
+@click.option(
+    "--animate", is_flag=True, default=False, help="Animate the panel gradient."
+)
+@click.option(
+    "-d",
+    "--duration",
+    metavar="DURATION",
+    type=float,
+    default=5.0,
+    help="Duration of the panel animation in seconds (only used if --animate).",
+)
+def panel_command(
+    renderable: str,
+    colors: Optional[str],
+    bgcolors: Optional[str],
+    rainbow: bool,
+    hues: int,
+    title: Optional[str],
+    title_style: str,
+    title_align: str,
+    subtitle: Optional[str],
+    subtitle_style: Optional[str],
+    subtitle_align: str,
+    style: Optional[str],
+    border_style: Optional[str],
+    padding: Optional[str],
+    vertical_justify: str,
+    text_justify: str,
+    justify: str,
+    expand: bool,
+    width: Optional[int],
+    height: Optional[int],
+    end: str,
+    box: str,
+    animate: bool,
+    duration: float,
+) -> None:
+    """Display a renderable inside a gradient panel."""
+    fg_list = _parse_colors(colors)
+    bg_list = _parse_colors(bgcolors)
+    style_obj = _parse_style(style)
+    _text_justify = cast(JustifyMethod, text_justify)
+    padding_tuple: Optional[Tuple[int, ...]] = None
+    if padding:
+        padding_tuple = tuple(int(x) for x in padding.split(",") if x.strip())
+
+    from rich import box as rich_box
+
+    box_map: dict[str, Any] = {
+        "SQUARE": rich_box.SQUARE,
+        "ROUNDED": rich_box.ROUNDED,
+        "HEAVY": rich_box.HEAVY,
+        "DOUBLE": rich_box.DOUBLE,
+        "ASCII": rich_box.ASCII,
+    }
+    box_style = box_map.get(box.upper(), rich_box.ROUNDED)
+
+    panel = Panel(
+        renderable,
+        colors=cast(Any, fg_list),
+        rainbow=rainbow,
+        hues=hues,
+        bg_colors=cast(Any, bg_list),
+        title=title,
+        title_style=_parse_style(title_style),
+        title_align=cast(AlignMethod, title_align),
+        subtitle=subtitle,
+        subtitle_style=_parse_style(subtitle_style),
+        subtitle_align=cast(AlignMethod, subtitle_align),
+        style=style_obj,
+        border_style=_parse_style(border_style),
+        padding=cast(Any, padding_tuple),
+        vertical_justify=cast(Any, vertical_justify),
+        justify=cast(AlignMethod, justify),
+        text_justify=cast(AlignMethod, text_justify),
+        expand=expand,
+        width=width,
+        height=height,
+        box=box_style,
+    )
+    console.print(panel, end=end)
+
+
+# ── Rule command ───────────────────────────────────────────────────────────
+@cli.command(
+    "rule", cls=GradientHelpCommand, help="Display a gradient rule in the console."
+)
+@click.option(
+    "-t", "--title", metavar="TITLE", type=str, default=None, help="Title of the rule."
+)
+@click.option(
+    "-s",
+    "--title-style",
+    metavar="TITLE_STYLE",
+    type=str,
+    default=None,
+    help="The style of the rule’s title text.",
+)
+@click.option(
+    "-c",
+    "--colors",
+    metavar="COLORS",
+    type=str,
+    default=None,
+    help="Comma-separated list of colors for the gradient (e.g., `red,#ff9900,yellow`).",
+)
+@click.option(
+    "--bgcolors",
+    metavar="BGCOLORS",
+    type=str,
+    default=None,
+    help="Comma-separated list of background colors for the gradient.",
+)
+@click.option(
+    "-r",
+    "--rainbow",
+    is_flag=True,
+    default=False,
+    help="Use rainbow colors for the gradient (overrides --colors).",
+)
+@click.option(
+    "--hues",
+    metavar="HUES",
+    type=int,
+    default=10,
+    help="Number of hues for rainbow gradient.",
+)
+@click.option(
+    "--end",
+    metavar="END",
+    type=str,
+    default="\n",
+    help="String appended after the rule is printed.",
+)
+@click.option(
+    "-T",
+    "--thickness",
+    metavar="THICKNESS",
+    type=int,
+    default=2,
+    help="Thickness of the rule line (choices 0-3).",
+)
+@click.option(
+    "-a",
+    "--align",
+    metavar="ALIGN",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="center",
+    help="Alignment of the rule in the console.",
+)
+def rule_command(
+    title: Optional[str],
+    title_style: Optional[str],
+    colors: Optional[str],
+    bgcolors: Optional[str],
+    rainbow: bool,
+    hues: int,
+    end: str,
+    thickness: int,
+    style: Optional[str],
+    align: str,
+) -> None:
+    """Display a gradient rule in the console."""
+    _colors = _parse_colors(colors)
+    _bgcolors = _parse_colors(bgcolors)
+    _title_style = _parse_style(title_style)
+    _style = _parse_style(style)
+
+    rule = Rule(
+        title=title or "",
+        title_style=_title_style,
+        colors=_colors,
+        rainbow=rainbow,
+        hues=hues,
+        bg_colors=_bgcolors,
+        thickness=thickness,
+        end=end,
+        style=_style,
+        align=cast(AlignMethod, align)
+    )
+    console.print(rule)
+
+
+# ── Markdown command ─────────────────────────────────────────────────────────
+@cli.command(
+    "markdown",
+    cls=GradientHelpCommand,
+    help="Render markdown text with gradient colors.",
+)
+@click.argument("markdown", nargs=1, type=str, required=True, metavar="MARKDOWN")
+@click.option(
+    "-c",
+    "--colors",
+    metavar="COLORS",
+    type=str,
+    default=None,
+    help="Comma-separated list of colors for the gradient (e.g., `red,#ff9900,yellow`).",
+)
+@click.option(
+    "--bgcolors",
+    metavar="BGCOLORS",
+    type=str,
+    default=None,
+    help="Comma-separated list of background colors for the gradient.",
+)
+@click.option(
+    "-r",
+    "--rainbow",
+    is_flag=True,
+    default=False,
+    help="Use rainbow colors for the gradient (overrides --colors).",
+)
+@click.option(
+    "--hues",
+    metavar="HUES",
+    type=int,
+    default=7,
+    help="Number of hues for rainbow gradient.",
+)
+@click.option(
+    "--style",
+    metavar="STYLE",
+    type=str,
+    default=None,
+    help="The style to apply to the markdown text.",
+)
+@click.option(
+    "-j",
+    "--justify",
+    metavar="JUSTIFY",
+    type=click.Choice(["left", "center", "right"], case_sensitive=False),
+    default="left",
+    help="Justification of the markdown text.",
+)
+@click.option(
+    "--vertical-justify",
+    metavar="VERTICAL_JUSTIFY",
+    type=click.Choice(["top", "middle", "bottom"], case_sensitive=False),
+    default="top",
+    help="Vertical justification of the markdown text.",
+)
+@click.option(
+    "--overflow",
+    metavar="OVERFLOW",
+    type=click.Choice(["crop", "fold", "ellipsis"], case_sensitive=False),
+    default="fold",
+    help="How to handle overflow of markdown text.",
+)
+@click.option(
+    "--no-wrap", is_flag=True, default=False, help="Disable wrapping of markdown text."
+)
+@click.option(
+    "--end",
+    metavar="END",
+    type=str,
+    default="\n",
+    help="String appended after the markdown text is printed.",
+)
+@click.option(
+    "--animate", is_flag=True, default=False, help="Animate the gradient markdown text."
+)
+@click.option(
+    "-d",
+    "--duration",
+    metavar="DURATION",
+    type=float,
+    default=5.0,
+    help="Duration of the animation in seconds (only used if --animate).",
+)
+def markdown_command(
+    markdown: str,
+    colors: Optional[str],
+    bgcolors: Optional[str],
+    rainbow: bool,
+    hues: int,
+    justify: str,
+    vertical_justify: str,
+    end: str,
+    animate: bool,
+    duration: float,
+) -> None:
+    """Render markdown text with gradient colors in a rich console."""
+    _colors = _parse_colors(colors)
+    _bgcolors = _parse_colors(bgcolors)
+
+    if animate and console.is_terminal is True:
+        console.clear()
+        md = AnimatedMarkdown(
+            markdown,
+            colors=_colors,
             rainbow=rainbow,
             hues=hues,
-            title=title,
-            title_style=resolved_title_style,
-            title_align=title_align,
-            subtitle=subtitle,
-            subtitle_style=resolved_subtitle_style,
-            subtitle_align=subtitle_align,
-            border_style=border_style or "",
-            padding=padding_values,
-            expand=expand,
-            justify=justify,
-            vertical_justify=vertical_justify,
-            box=_parse_box_choice(box),
-            style=style or "",
-            width=width,
-            height=height,
+            justify=cast(AlignMethod, justify),
+            vertical_justify=cast(VerticalAlignMethod, vertical_justify),
+            bg_colors=_bgcolors,
         )
-    except ValueError as error:
-        raise typer.BadParameter(str(error)) from error
-    console.print(gradient_rule)
+    md = Markdown(
+        markdown,
+        colors=_colors,
+        rainbow=rainbow,
+        hues=hues,
+        justify=cast(AlignMethod, justify),
+        bg_colors=_bgcolors,
+        animate=animate,
+        duration=duration,
+    )
+    console.print(md, end=end)
 
 
 if __name__ == "__main__":
-    main()
+    cli()

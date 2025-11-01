@@ -645,7 +645,7 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "rich", specifier = ">=14.0.0" },
     { name = "rich-color-ext", specifier = ">=0.1.4" },
-    { name = "typer", specifier = ">=0.19.2,<0.20" },
+    { name = "typer", specifier = ">=0.19.2,<0.21" },
 ]
 
 [package.metadata.requires-dev]

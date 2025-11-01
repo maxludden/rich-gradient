@@ -7,9 +7,11 @@ same Live/animation machinery as ``AnimatedGradient`` and ``AnimatedPanel``.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Optional
+from collections.abc import Iterator, Sequence
+from contextlib import contextmanager
+from threading import Event, Thread
 from time import sleep
+from typing import Optional
 
 from rich.align import AlignMethod
 from rich.cells import get_character_cell_size
@@ -46,7 +48,6 @@ class AnimatedRule(AnimatedGradient):
             style: Base style for the rule line (merged with gradients).
             end: Trailing characters after the rule (default newline).
             align: Alignment for the rule within the available width.
-
             auto_refresh: Whether the Live context refreshes on its own.
             refresh_per_second: Target frames per second.
             console: Console to render to.
@@ -57,6 +58,8 @@ class AnimatedRule(AnimatedGradient):
             phase_per_second: Phase advance per second (cycles per second).
             speed: Deprecated per-frame ms step; mapped to ``phase_per_second``.
             repeat_scale: Stretch factor for gradient color stops.
+            animate: Toggle animation on or off.
+            duration: Optional duration in seconds for automatic stop.
     """
 
     def __init__(
@@ -67,7 +70,7 @@ class AnimatedRule(AnimatedGradient):
         bg_colors: Optional[Sequence[ColorType]] = None,
         *,
         rainbow: bool = False,
-        hues: int = 10,
+        hues: int = 7,
         thickness: int = 2,
         style: StyleType = "",
         end: str = "\n",
@@ -82,7 +85,9 @@ class AnimatedRule(AnimatedGradient):
         disable: bool = False,
         phase_per_second: Optional[float] = None,
         speed: Optional[int] = None,
-        repeat_scale: float = 2.0,
+        repeat_scale: float = 4.0,
+        animate: bool = True,
+        duration: Optional[float] = None,
     ) -> None:
         self.title = title or ""
         self.title_style = title_style
@@ -101,18 +106,14 @@ class AnimatedRule(AnimatedGradient):
 
             # Make animation more visible for rules by default: if caller didn't
             # specify a speed or explicit phase, bump the phase a bit.
-            effective_phase = (
-                phase_per_second
-                if (phase_per_second is not None or speed is not None)
-                else 0.25
-            )
+            effective_phase = phase_per_second
+            if effective_phase is None and speed is None and animate:
+                effective_phase = 0.25
 
             super().__init__(
                 renderables=base_rule,
                 colors=list(colors) if colors is not None else None,  # type: ignore[arg-type]
-                bg_colors=list(
-                    bg_colors
-                ) if bg_colors is not None else None,  # type: ignore[arg-type]
+                bg_colors=list(bg_colors) if bg_colors is not None else None,  # type: ignore[arg-type]
                 auto_refresh=auto_refresh,
                 refresh_per_second=refresh_per_second,
                 console=console,
@@ -129,9 +130,37 @@ class AnimatedRule(AnimatedGradient):
                 speed=speed,
                 repeat_scale=repeat_scale,
                 highlight_words=highlight_words,
+                animate=animate,
+                duration=duration,
             )
         except ColorParseError as err:
             raise ValueError(f"Invalid color provided: {err}") from err
+
+    @contextmanager
+    def for_duration(self, duration: float) -> Iterator["AnimatedRule"]:
+        """Run the rule animation for ``duration`` seconds within a context.
+
+        The animation starts when entering the context and will stop
+        automatically once the requested duration elapses. Leaving the context
+        early stops the animation immediately.
+        """
+        if duration <= 0:
+            raise ValueError("duration must be greater than 0")
+        cancel = Event()
+
+        def _auto_stop() -> None:
+            if not cancel.wait(duration):
+                self.stop()
+
+        timer = Thread(target=_auto_stop, daemon=True)
+        self.start()
+        timer.start()
+        try:
+            yield self
+        finally:
+            cancel.set()
+            self.stop()
+            timer.join(timeout=max(duration, 0.1))
 
     # underlying RichRule expands correctly across the console width,
     # while still applying animated gradient styles per character.
@@ -231,27 +260,37 @@ class AnimatedRule(AnimatedGradient):
         self._title_style = Style.parse(str(value)) if value is not None else None
 
     @property
+    def thickness(self) -> int:
+        """The thickness of the Rule line (0..3)."""
+        for key, char in CHARACTER_MAP.items():
+            if char == self.characters:
+                return key
+        return 1  # Default if character is custom
+
+    @thickness.setter
+    def thickness(self, value: int):
+        """Set the thickness of the Rule line (0..3)."""
+        if value not in CHARACTER_MAP:
+            raise ValueError(f"thickness must be one of {list(CHARACTER_MAP.keys())}")
+        self.characters = CHARACTER_MAP[value]
+
+    @property
     def characters(self) -> str:
         """The character used to draw the Rule line."""
-        return getattr(self, "_rule_char", CHARACTER_MAP[2])
+        if not self._rule_char:
+            if self.thickness:
+                return CHARACTER_MAP.get(self.thickness, "━")
+            return "─"
+        return self._rule_char
 
     @characters.setter
-    def characters(self, value: str | int) -> None:
+    def characters(self, value: str) -> None:
         """Set the character used to draw the Rule line."""
-        if isinstance(value, int):
-            if value not in CHARACTER_MAP:
-                raise ValueError(
-                    f"thickness must be between 0 and 3 (inclusive), got {value}"
-                )
-            self._rule_char = CHARACTER_MAP[value]
-            return
-        if not isinstance(value, str) or len(value) != 1:
-            raise ValueError("rule_char must be a single character string")
-        allowed = set(CHARACTER_MAP.values())
-        if value not in allowed:
+        if not isinstance(value, str) or len(value) == 0:
+            raise ValueError("characters must be a non-empty string")
+        if value not in ["─", "━", "═", "█"]:
             raise ValueError(
-                "The rule_char must be one of the following characters: "
-                + ", ".join(CHARACTER_MAP.values())
+                f"characters must be one of {list(CHARACTER_MAP.values())}"
             )
         self._rule_char = value
 
@@ -263,7 +302,7 @@ if __name__ == "__main__":  # pragma: no cover
         title="Animated Gradient Rule",
         rainbow=True,
         title_style="bold white",
-        refresh_per_second=20
+        refresh_per_second=20,
     )
     animated_rule.start()
     sleep(5)

@@ -47,8 +47,9 @@ class Rule(Gradient):
         bg_colors: Optional[Sequence[ColorType]] = None,
         *,
         rainbow: bool = False,
-        hues: int = 10,
-        thickness: int = 2,
+        hues: int = 17,
+        thickness: int = 1,
+        characters: Optional[str] = None,
         style: StyleType = "",
         end: str = "\n",
         align: AlignMethod = "center",
@@ -56,9 +57,8 @@ class Rule(Gradient):
     ) -> None:
         self.title = title or ""
         self.title_style = title_style
-        if thickness not in CHARACTER_MAP:
-            raise ValueError("thickness must be between 0 and 3 (inclusive)")
-        self.characters = thickness
+        self.thickness = thickness
+        self.characters = characters or CHARACTER_MAP.get(thickness, CHARACTER_MAP[2])
 
         # Build the underlying Rich Rule renderable
         base_rule = RichRule(
@@ -87,6 +87,81 @@ class Rule(Gradient):
             )
         except ColorParseError as err:
             raise ValueError(f"Invalid color provided: {err}") from err
+
+    @property
+    def thickness(self) -> int:
+        """Get the thickness of the Rule."""
+        for thickness, char in CHARACTER_MAP.items():
+            if char == getattr(self, "_rule_char", CHARACTER_MAP[2]):
+                return thickness
+        return 2  # Default
+
+    @thickness.setter
+    def thickness(self, value: int) -> None:
+        """Set the thickness of the Rule.
+        Args:
+            value: Thickness as an integer (0-3) or the corresponding character.
+        Raises:
+            ValueError: If the value is not a valid thickness or character."""
+        if isinstance(value, int) and 0 <= value <= 3:
+            self._thickness = value
+            self._characters = CHARACTER_MAP[value]
+            return
+        raise ValueError(
+            "thickness string must be one of the following characters: "
+            + ", ".join(CHARACTER_MAP.values())
+        )
+
+    @property
+    def characters(self) -> str:
+        """Get the character used for the rule line."""
+        if self._characters:
+            return self._characters
+
+        # Validate thickness
+        if not isinstance(self.thickness, int):
+            raise TypeError(
+                f"thickness must be an integer, recieved {type(self.thickness).__name__}"
+            )
+        if 0 <= self.thickness <= 3:
+            raise ValueError("thickness must be an integer between 0 and 3 (inclusive)")
+
+        return CHARACTER_MAP.get(self.thickness, CHARACTER_MAP[2])
+
+    @characters.setter
+    def characters(self, value: str) -> None:
+        """Set the character used for the rule line."""
+        if not isinstance(value, str) or len(value) != 1:
+            raise ValueError("characters must be a single character string")
+        self._characters = value
+
+    @property
+    def title(self) -> Optional[TextType]:
+        """Get the title of the Rule."""
+        return self._title or None
+
+    @title.setter
+    def title(self, value: Optional[TextType]) -> None:
+        """Set the title of the Rule."""
+        if value is not None and not isinstance(value, (str, RichText, Text)):
+            raise TypeError(
+                f"title must be str, RichText, or Text, got {type(value).__name__}"
+            )
+        self._title = value
+
+    @property
+    def title_style(self) -> Optional[StyleType]:
+        """Get the title style of the Rule's title."""
+        return self._title_style or None
+
+    @title_style.setter
+    def title_style(self, value: Optional[StyleType]) -> None:
+        """Set the title style of the Rule's title."""
+        if value is not None and not isinstance(value, (str, Style)):
+            raise TypeError(
+                f"title_style must be str or Style, got {type(value).__name__}"
+            )
+        self._title_style = Style.parse(str(value)) if value is not None else None
 
     def __rich_console__(
         self, console: Console, options: ConsoleOptions
@@ -154,60 +229,6 @@ class Rule(Gradient):
         # Ensure a trailing newline after the rule so following content appears below
         yield Segment.line()
 
-    @property
-    def title(self) -> Optional[TextType]:
-        """Get the title of the Rule."""
-        return self._title or None
-
-    @title.setter
-    def title(self, value: Optional[TextType]) -> None:
-        """Set the title of the Rule."""
-        if value is not None and not isinstance(value, (str, RichText, Text)):
-            raise TypeError(
-                f"title must be str, RichText, or Text, got {type(value).__name__}"
-            )
-        self._title = value
-
-    @property
-    def title_style(self) -> Optional[StyleType]:
-        """Get the title style of the Rule's title."""
-        return self._title_style or None
-
-    @title_style.setter
-    def title_style(self, value: Optional[StyleType]) -> None:
-        """Set the title style of the Rule's title."""
-        if value is not None and not isinstance(value, (str, Style)):
-            raise TypeError(
-                f"title_style must be str or Style, got {type(value).__name__}"
-            )
-        self._title_style = Style.parse(str(value)) if value is not None else None
-
-    @property
-    def characters(self) -> str:
-        """Get the character used for the rule line."""
-        return getattr(self, "_rule_char", CHARACTER_MAP[2])
-
-    @characters.setter
-    def characters(self, value: str | int) -> None:
-        """Set the character used for the rule line."""
-        # Allow specifying by thickness int or by the actual character.
-        if isinstance(value, int):
-            if value not in CHARACTER_MAP:
-                raise ValueError(
-                    f"thickness must be between 0 and 3 (inclusive), got {value}"
-                )
-            self._rule_char = CHARACTER_MAP[value]
-            return
-        if not isinstance(value, str) or len(value) != 1:
-            raise ValueError("rule_char must be a single character string")
-        allowed = set(CHARACTER_MAP.values())
-        if value not in allowed:
-            raise ValueError(
-                "The rule_char must be one of the following characters: "
-                + ", ".join(CHARACTER_MAP.values())
-            )
-        self._rule_char = value
-
 
 def example() -> None:
     """Demonstrate the gradient Rule functionality."""
@@ -263,6 +284,7 @@ are provided, the gradient is generated using the provided colors: ",
     console.print(
         Rule(
             title="Right-aligned Rule",
+            title_style="bold #9f0",
             align="right",
             thickness=2,
             colors=list(GRADIENT_COLOR_PALETTE),

@@ -5,6 +5,7 @@ from __future__ import annotations
 import sys
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, List, Optional, Sequence, Tuple, cast
 
 import click
@@ -166,8 +167,8 @@ def version_callback(value: bool) -> bool:
 def validate_duration(value: float) -> float:
     """Validate animation duration input."""
 
-    if value <= 0:
-        raise typer.BadParameter("duration must be greater than zero")
+    if value < 0:
+        raise typer.BadParameter("duration must be zero or greater")
     return value
 
 
@@ -176,7 +177,13 @@ def run_animation(animation: AnimatedGradient, duration: float) -> None:
 
     animation.start()
     try:
-        time.sleep(duration)
+        # Allow a brief refresh window even for zero-length animations so the
+        # rendered frame can stabilise before shutdown.
+        sleep_time = max(duration, 0.0)
+        if sleep_time == 0:
+            time.sleep(0.05)
+        else:
+            time.sleep(sleep_time)
     except KeyboardInterrupt:
         # Allow graceful exit with Ctrl+C without stack trace noise.
         pass
@@ -225,7 +232,7 @@ def normalize_arguments(app: Typer, arguments: Sequence[str]) -> List[str]:
 
 
 def read_text_source(source: Optional[str]) -> str:
-    """Resolve CLI text input from an argument or stdin."""
+    """Resolve CLI text input from an argument, file path, or stdin."""
 
     if source is not None and "=" in source:
         key, value = source.split("=", 1)
@@ -245,6 +252,14 @@ def read_text_source(source: Optional[str]) -> str:
         if not data:
             raise typer.BadParameter("stdin did not provide any data")
         return data
+
+    # If the argument points to a readable file, prefer its contents.
+    candidate = Path(source)
+    if candidate.exists() and candidate.is_file():
+        try:
+            return candidate.read_text(encoding="utf-8")
+        except UnicodeDecodeError as error:
+            raise typer.BadParameter("file is not valid UTF-8 text") from error
 
     return source
 

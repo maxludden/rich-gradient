@@ -41,7 +41,8 @@ packages = ["src/rich_gradient"]
 path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
-rich-gradient = "rich_gradient._cli.panel:panel_app"
+rgp = "rich_gradient._cli.panel:panel_app"
+rich-gradient = "rich_gradient.cli:app"
 
 [tool.ruff]
 ignore = [
@@ -61,4 +62,10 @@ disable = [
     "protected-access",
     "import-outside-toplevel",
 
+]
+
+[tool.markdownlint]
+disable = [
+    "MD033", # Inline HTML
+    "MD026", # Trailing punctuation in heading
 ]

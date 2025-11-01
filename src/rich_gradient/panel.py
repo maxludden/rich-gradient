@@ -7,7 +7,7 @@ from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
 from rich.console import Console, RenderableType
 from rich.panel import Panel as RichPanel
-from rich.style import StyleType
+from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
 from rich_gradient._logger import logger
@@ -41,6 +41,8 @@ class Panel(Gradient):
         padding (int | tuple[int, int] | tuple[int, int, int, int]): Padding inside the \
             panel. Defaults to (0, 0, 0, 0).
         expand (bool): Whether to expand the panel to fill available width. Defaults to True.
+        text_justify (AlignMethod): The justification of the panel content text. \
+            Defaults to "left".
         style (Union[str, Color]): The style of the panel content. If a color is provided, \
             it will override the gradient style.
         width (Optional[int]): The width of the panel.
@@ -69,6 +71,7 @@ class Panel(Gradient):
         box: Box = ROUNDED,
         padding: Union[int, tuple[int, int], tuple[int, int, int, int]] = (0, 1, 0, 1),
         expand: bool = True,
+        text_justify: AlignMethod = "left",
         style: StyleType = "",
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -97,10 +100,15 @@ class Panel(Gradient):
                     logger.debug("Error calling __rich__: %s", err)
             # Parse markup strings into RichText
             if isinstance(obj, str):
-                return RichText.from_markup(obj)
+                return RichText.from_markup(
+                    obj,
+                    style=style,
+                    justify=text_justify,
+                )
             return obj
 
         normalized_renderable = _normalize_renderable(renderable)
+        _style = Style.parse(style) if style else Style.null()
 
         panel = RichPanel(
             normalized_renderable,
@@ -112,7 +120,7 @@ class Panel(Gradient):
             box=box,
             padding=padding,
             expand=expand,
-            style=style,
+            style=_style,
             width=width,
             height=height,
             safe_box=safe_box,

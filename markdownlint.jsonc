@@ -55,7 +55,7 @@
     // MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md013.md
     "MD013": {
         // Number of characters
-        "line_length": 80,
+        "line_length": 150,
         // Number of characters for headings
         "heading_line_length": 80,
         // Number of characters for code blocks
@@ -102,7 +102,7 @@
     // MD026/no-trailing-punctuation : Trailing punctuation in heading : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md026.md
     "MD026": {
         // Punctuation characters
-        "punctuation": ".,;:!。，；：！"
+        "punctuation": ".,;:!?。，；：！？\\(\\)\\[\\]"
     },
     // MD027/no-multiple-space-blockquote : Multiple spaces after blockquote symbol : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md027.md
     "MD027": {
@@ -135,10 +135,7 @@
     // MD032/blanks-around-lists : Lists should be surrounded by blank lines : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md032.md
     "MD032": true,
     // MD033/no-inline-html : Inline HTML : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md033.md
-    "MD033": {
-        // Allowed elements
-        "allowed_elements": []
-    },
+    "MD033": false,
     // MD034/no-bare-urls : Bare URL used : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md034.md
     "MD034": true,
     // MD035/hr-style : Horizontal rule style : https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md035.md

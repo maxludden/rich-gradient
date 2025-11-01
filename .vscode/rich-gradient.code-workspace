@@ -123,7 +123,8 @@
             "undoc"
         ],
         "docwriter.style": "Google",
-        "docwriter.progress.trackMethods": true
+        "docwriter.progress.trackMethods": true,
+        "svg.preview.background": "transparent"
     },
     "colorize.colorized_colors": [
         "ARGB",

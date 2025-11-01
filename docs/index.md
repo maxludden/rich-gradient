@@ -1,28 +1,67 @@
-# rich-gradient
+
+<a href="https://maxludden.github.io/rich-gradient/" alt="rich-gradient">
+  <img src="img/rich-gradient.svg" alt="rich-gradient" class="banner"/>
+</a>
 
 
+<p align="center">
+  <a href="https://www.python.org/"><img
+    src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12%2C%203.13-blue" alt="Python versions"></a>
+  <a href="https://pypi.org/project/rich_gradient/"><img
+  src="https://img.shields.io/pypi/v/rich-gradient" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/rich_gradient/"><img
+   src="https://img.shields.io/pypi/dm/rich-gradient" alt="PyPI downloads"></a>
+  <a href="https://github.com/astral-sh/uv"><img
+    src="https://img.shields.io/badge/uv-v0-blue" alt="uv badge"></a> <!-- IGNORE -->
+</p>
 
-`rich-gradient` layers smooth foreground and background gradients on top of [Rich](https://github.com/Textualize/rich) renderables. It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and a Typer-powered CLI for trying gradients from the terminal.
+## Purpose
+
+`rich-gradient` layers smooth foreground and background gradients on top of [Rich](https://github.com/Textualize/rich) renderables.
+It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and
+a Typer-powered CLI for trying gradients from the terminal.
 
 ## Highlights
 
 - Works anywhere Rich expects a `ConsoleRenderable`, including panels, tables, and live updates.
 - Generates color stops automatically or from CSS color names, hex codes, RGB tuples, or `rich.color.Color` objects.
 - Supports foreground and background gradients, rainbow palettes, and deterministic color spectrums.
-- Ships with ready-to-use renderables (`Gradient`, `Panel`, `Rule`, `Spectrum`) plus animated variants.
+- Ships with ready-to-use renderables:
+  - [`Text`](text.md)
+  - [`Gradient`](gradient.md)
+  - [`Panel`](panel.md)
+  - [`Rule`](rule.md)
+  - [`Spectrum`](spectrum.md)
+  - And their animated counterparts.
 - Includes a CLI for quick experiments and SVG export for documentation or asset generation.
 
 ## Installation
 
 `rich-gradient` targets Python 3.10+.
+)
 
-```bash
+<h3><a href="https://github.com/astral-sh/uv">uv</a></h3>
+
+```shell
 # Recommended: use uv
 uv add rich-gradient
 
-# Or with pip
+# or via `uv pip`
+uv pip install rich-gradient
+```
+
+<h3><a href="https://pip.pypa.io/en/stable/">pip</a></h3>
+
+Or with pip:
+
+```shell
+# via pip
 pip install rich-gradient
 ```
+
+<a href="https://github.com/maxludden/rich-gradient" alt="GitHub" class="btn">
+  <span>👨🏻‍💻 GitHub</span>
+</a>
 
 ## Quick start
 
@@ -45,7 +84,6 @@ The example above is bundled in `examples/text_quickstart.py` and renders:
 
 <a href="#" class="copy-install" data-copy="uv add rich-gradient" title="Click to copy: <code>uv add rich-gradient</code>" aria-label="Copy install command">
     <img src="img/text-quickstart.svg" alt="Text quickstart">
-
 </a>
 
 ## Explore the user guide

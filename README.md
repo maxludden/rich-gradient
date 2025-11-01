@@ -1,41 +1,63 @@
-# [![rich-gradient](https://maxludden.github.io/rich-gradient/img/rich-gradient.svg)](https://maxludden.github.io/rich-gradient/)
+<a href="https://maxludden.github.io/rich-gradient/" alt="rich-gradient">
+  <h1>
+    <img src="docs/img/rich-gradient.svg" alt="rich-gradient" class="banner"/>
+  </h1>
+</a>
 
 <p align="center">
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12-blue" alt="Python versions"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12%2C%203.13-blue" alt="Python versions"></a>
   <a href="https://pypi.org/project/rich_gradient/"><img src="https://img.shields.io/pypi/v/rich-gradient" alt="PyPI version"></a>
-  <a href="https://pypi.org/project/rich-gradient/"><img src="https://img.shields.io/pypi/dm/rich-gradient" alt="PyPI downloads"></a>
-  <a href="https://github.com/astral-sh/uv"><img src="https://camo.githubusercontent.com/4ab8b0cb96c66d58f1763826bbaa0002c7e4aea0c91721bdda3395b986fe30f2/68747470733a2f2f696d672e736869656c64732e696f2f656e64706f696e743f75726c3d68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f61737472616c2d73682f75762f6d61696e2f6173736574732f62616467652f76302e6a736f6e" alt="uv badge"></a>
+  <a href="https://github.com/astral-sh/uv"><img src="docs/img/uv-badge.svg" alt="uv badge"></a>
 </p>
 
-![gradient example](https://maxludden.github.io/rich-gradient/img/gradient.svg)
+![gradient example](docs/img/getting_started.svg)
 
-This library is a wrapper of the great [rich](https://GitHub.com/textualize/rich) library that extends [rich.text.Text](https://github.com/Textualize/rich/blob/master/rich/text.py) to allow for the easy generation gradient text from either user entered colors or randomly if no colors are entered.
+## Purpose
 
-<del>Borrowing from [pydantic-extra-types](https://GitHub.com/pydantic/pydantic-extra-types)' [Color](https://github.com/pydantic/pydantic-extra-types/blob/main/pydantic_extra_types/color.py) class</del>
-As of v0.3.0, rich-gradient removed the color logic from rich-gradient and created [rich-color-ext]()
+`rich-gradient` layers smooth foreground and background gradients on top of [Rich](https://github.com/Textualize/rich) renderables.
+It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and
+a Typer-powered CLI for trying gradients from the terminal.
 
-- 3 or 6 digit hex code (e.g. `#f00` or `#ff0000`)
-- RGB color codes (e.g. `rgb(255, 0, 0)`)
-- RGB tuples   (e.g. `(255, 0, 0)`)
-- CSS3 Color Names (e.g. `red`)
+## Highlights
 
----
-
-Read the docs at [rich-gradient.readthedocs.io](https://maxludden.github.io/rich-gradient/)
+- Works anywhere Rich expects a `ConsoleRenderable`, including panels, tables, and live updates.
+- Generates color stops automatically or from CSS color names, hex codes, RGB tuples, or `rich.color.Color` objects.
+- Supports foreground and background gradients, rainbow palettes, and deterministic color spectrums.
+- Ships with ready-to-use renderables:
+  - [`Text`](text.md)
+  - [`Gradient`](gradient.md)
+  - [`Panel`](panel.md)
+  - [`Rule`](rule.md)
+  - [`Spectrum`](spectrum.md)
+  - And their animated counterparts.
+- Includes a CLI for quick experiments and SVG export for documentation or asset generation.
 
 ## Installation
 
-### [uv](https://github.com/astral-sh/uv) (Recommended)
+`rich-gradient` targets Python 3.10+.
 
-```bash
+### [uv](https://github.com/astral-sh/uv
+
+```shell
+# Recommended: use uv
 uv add rich-gradient
+
+# or via `uv pip`
+uv pip install rich-gradient
 ```
 
-### Pip
+### [Pip](https://pip.pypa.io/en/stable/
 
-```bash
+Or with pip:
+
+```shell
+# via pip
 pip install rich-gradient
 ```
+
+<a href="https://maxludden.github.io/rich-gradient/" alt="Read the Docs" class="btn">
+  <span>📘 Read the Docs</span>
+</a>
 
 ## CLI Usage
 

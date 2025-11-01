@@ -57,6 +57,8 @@ class AnimatedPanel(AnimatedGradient):
     phase_per_second: Phase advance per second (cycles per second).
     speed: Deprecated ms-per-frame step; mapped to phase_per_second.
         repeat_scale: Stretch factor for gradient color stops.
+        animate: Toggle animation on or off.
+        duration: Optional duration in seconds for automatic stop.
     """
 
     def __init__(
@@ -95,6 +97,8 @@ class AnimatedPanel(AnimatedGradient):
         phase_per_second: Optional[float] = None,
         speed: Optional[int] = None,
         repeat_scale: float = 2.0,
+        animate: bool = True,
+        duration: Optional[float] = None,
     ) -> None:
         panel = RichPanel(
             renderable,
@@ -141,6 +145,8 @@ class AnimatedPanel(AnimatedGradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_list,
+            animate=animate,
+            duration=duration,
         )
         self._panel = panel
 

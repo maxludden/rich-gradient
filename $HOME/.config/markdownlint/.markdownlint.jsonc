@@ -14,7 +14,7 @@
     "MD041": false, // allow content (front matter, badges) before first heading
     // Line length: increase and ignore code/tables/links
     "MD013": {
-        "line_length": 120,
+        "line_length": 150,
         "code_blocks": false,
         "tables": false,
         "headings": false,
