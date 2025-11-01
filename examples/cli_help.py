@@ -6,7 +6,7 @@ from pathlib import Path
 
 from rich.console import Console
 
-from rich_gradient.cli import _render_main_help
+from rich_gradient._cli.common import render_main_help
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "img" / "cli-help.svg"

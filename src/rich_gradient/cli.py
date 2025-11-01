@@ -1,48 +1,172 @@
 """CLI module for the rich-gradient package."""
 
-# pylint: disable=W0611
 from __future__ import annotations
 
 import sys
 import time
 from typing import Annotated, Any, Iterable, List, Optional, Sequence, cast
 
+import click
 import typer
 from rich.console import Console
+from rich.highlighter import RegexHighlighter
+from rich.panel import Panel as RichPanel
+from rich.table import Table
 from rich.text import Text as RichText
+from rich.theme import Theme
+from rich.traceback import install as tr_install
 from rich_color_ext import install as rc_install
 from typer import Argument, Option, Typer
+from typer.core import TyperGroup
 
 from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.animated_rule import AnimatedRule
 from rich_gradient.panel import Panel
 from rich_gradient.rule import Rule
 from rich_gradient.text import Text
-from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
+from rich_gradient.theme import GradientTheme
 
 rc_install()
+tr_install()
+_console = Console(theme=GradientTheme())
+
+
+class _DefaultCommandGroup(TyperGroup):
+    """A Typer/Click group that defaults to a command when none is provided.
+
+    This makes these work equivalently:
+    - rich-gradient "hello"            -> rich-gradient print "hello"
+    - echo "hello" | rich-gradient     -> rich-gradient print (reads stdin)
+    - rich-gradient -R "hello"         -> rich-gradient print -R "hello"
+    """
+
+    # Name of the default command to invoke
+    _default_cmd_name = "print"
+
+    def parse_args(self, ctx: click.Context, args: list[str]) -> None:  # type: ignore[override]
+        # Respect root-level flags and completion env
+        root_flags = {
+            "--help",
+            "-h",
+            "--version",
+            "-V",
+            "--install-completion",
+            "--show-completion",
+            "--help-all",
+        }
+
+        if not args:
+            # No args: default to the print command (stdin supported within command)
+            args.insert(0, self._default_cmd_name)
+        else:
+            first = args[0]
+            # Known subcommand? leave as-is
+            if first not in self.commands:
+                # Root flags/completion? leave as-is for Typer to handle
+                if not (first in root_flags or first.startswith("_TYPER_COMPLETE")):
+                    # Either an option (starts with '-') or free text: route to default
+                    if first.startswith("-") or True:
+                        args.insert(0, self._default_cmd_name)
+
+        super().parse_args(ctx, args)
+
+
+class RichGradientCommand(click.Command):
+    """Override Clicks help with a Rich Gradient version."""
+
+    def format_help(self, ctx, formatter) -> None:
+        class OptionHighlighter(RegexHighlighter):
+            highlights = [
+                r"(?P<switch>\-\w)",
+                r"(?P<option>\-\-[\w\-]+)",
+            ]
+
+        highlighter = OptionHighlighter()
+
+        console = Console(
+            theme=Theme({
+                "option": "bold #99ff00",
+                "switch": "bold cyan",
+            }),
+            highlighter=highlighter,
+        )
+
+        console.print(
+            Text(
+                "[b]rich-gradient CLI[/b] [magenta]v{VERSION}[/] 🤑\n\n\
+[dim]Rich text, formatting, and gradients in the terminal\n",
+            ),
+            justify="center",
+        )
+
+        usage: Text = Text(
+            "Usage: [b]rich-gradient[/b] [b][OPTIONS][/] \
+[b cyan]<PATH,TEXT,URL, or '-'>\n"
+        )
+        usage.highlight_words(["Usage"], "bold yellow")
+        usage.highlight_words(["[", "]", ",", "<", ">"], "bold white")
+        console.print(usage)
+
+        options_table = Table(highlight=True, box=None, show_header=False)
+
+        for param in self.get_params(ctx)[1:]:
+            if len(param.opts) == 2:
+                opt1 = highlighter(param.opts[1])
+                opt2 = highlighter(param.opts[0])
+            else:
+                opt2 = highlighter(param.opts[0])
+                opt1 = Text("")
+
+            if param.metavar:
+                opt2 += Text(f" {param.metavar}", style="bold yellow")
+
+            options = Text(" ".join(reversed(param.opts)))
+            help_record = param.get_help_record(ctx)
+            if help_record is None:
+                _help = RichText("")
+            else:
+                # help_record is a tuple (opts, help_text)
+                _, help_text = help_record
+                _help = RichText.from_markup(help_text, emoji=False)
+
+            if param.metavar:
+                options.append_text(Text(f" {param.metavar}"))
+
+            options_table.add_row(opt1, opt2, highlighter(_help))
+
+        console.print(
+            Panel(
+                options_table, border_style="dim", title="Options", title_align="left"
+            )
+        )
+
+        console.print(
+            Text(
+                "♥ https://maxludden.github.io/rich-gradient/",
+                rainbow=True,
+                style="italic",
+            ),
+            justify="left",
+            style="bold",
+        )
+
 
 app = Typer(
     name="rich-gradient",
     short_help="rich-gradient CLI tool",
     rich_markup_mode="rich",
+    cls=_DefaultCommandGroup,
+    epilog="rich-gradient",
 )
-
-
-def _make_console() -> Console:
-    """Create a console with the gradient theme applied."""
-
-    return Console(theme=GradientTheme())
 
 
 def _version_callback(value: bool) -> bool:
     """Display package version when requested."""
 
     if value:
-        from rich_gradient import __version__
+        from rich_gradient import __version__  # pylint: disable=import-outside-toplevel
 
-        typer.echo(__version__)
+        console.print(Text(__version__))
         raise typer.Exit()
     return value
 
@@ -151,7 +275,13 @@ def _read_text_source(source: Optional[str]) -> str:
 
 
 def colors_callback(value: Optional[str]) -> Optional[list[str]]:
-    """Callback to parse comma-separated colors into a list."""
+    """Callback to parse comma-separated colors into a list.
+    Args:
+        value: The raw CLI input value.
+    Returns:
+        A list of color strings or None.
+    """
+    value = value[0] if isinstance(value, list) else value
     if not value:
         return None
     if "," in value:
@@ -161,7 +291,12 @@ def colors_callback(value: Optional[str]) -> Optional[list[str]]:
 
 
 def justify_callback(value: str) -> str:
-    """Callback to validate justification option."""
+    """Callback to validate justification option.
+    Args:
+        value: The raw CLI input value.
+    Returns:
+        The validated justification string.
+    """
     valid_justifications = {"left", "center", "right"}
     if value not in valid_justifications:
         raise ValueError(f"Justification must be one of {valid_justifications}")
@@ -169,7 +304,14 @@ def justify_callback(value: str) -> str:
 
 
 def _parse_padding(value: str) -> List[int]:
-    """Parse CLI padding values into a list of integers."""
+    """Parse CLI padding values into a list of integers.
+    Args:
+        value: The raw CLI input value.
+    Returns:
+        A list of four integers representing padding.
+    Raises:
+        ValueError: If the input is invalid.
+    """
     parts = [element.strip() for element in value.split(",") if element.strip()]
     if not parts:
         raise ValueError("Padding must contain at least one integer.")
@@ -188,6 +330,7 @@ def _parse_padding(value: str) -> List[int]:
     raise ValueError("Padding must be 1, 2, or 4 comma-separated integers.")
 
 
+@click.command(cls=RichGradientCommand)
 @app.command(name="print", help="Print gradient text to the terminal")
 def print_command(
     text: Annotated[
@@ -207,7 +350,7 @@ def print_command(
     rainbow: Annotated[
         bool,
         Option(
-            "-R/-n",
+            "-r/-R",
             "--rainbow/--no-rainbow",
             help="Use rainbow colors for the gradient",
         ),
@@ -246,11 +389,10 @@ def print_command(
             callback=_validate_duration,
             help="Length of the animation in seconds (requires --animated).",
         ),
-    ] = 5.0,
+    ] = 10.0,
 ):
     """Print gradient text to the terminal."""
     content = _read_text_source(text)
-    console = _make_console()
     _colors = colors if colors else None
 
     if animated:
@@ -266,7 +408,7 @@ def print_command(
             hues=hues,
             console=console,
             justify=cast(Any, justify),
-            expand=False,
+            expand=True,
         )
         _run_animation(animation, duration)
         return
@@ -312,8 +454,7 @@ def main_callback(
 @app.command(name="rule", short_help="Display a gradient rule")
 def rule_command(
     title: Annotated[
-        Optional[str],
-        Option("-t", "--title", help="Optional title for the rule"),
+        Optional[str], Option("-t", "--title", help="Optional title for the rule")
     ] = None,
     title_style: Annotated[
         str,
@@ -339,7 +480,7 @@ def rule_command(
             "--colors",
             callback=colors_callback,
             help="Comma-separated list of colors for the gradient \
-(e.g., '#ff0000,#00ff00,#0000ff')",
+(e.g., '#ff0,#00ff00,cyan')",
         ),
     ] = None,
     rainbow: Annotated[
@@ -348,6 +489,7 @@ def rule_command(
             "-R/-n",
             "--rainbow/--no-rainbow",
             help="Use rainbow colors for the gradient",
+            is_flag=True,
         ),
     ] = False,
     hues: Annotated[
@@ -384,10 +526,9 @@ def rule_command(
             callback=_validate_duration,
             help="Length of the animation in seconds (requires --animated).",
         ),
-    ] = 5.0,
+    ] = 10.0,
 ):
     """Display a gradient rule."""
-    console = _make_console()
     _colors = colors if colors else None
 
     if animated:
@@ -421,185 +562,6 @@ def rule_command(
     except ValueError as error:
         raise typer.BadParameter(str(error)) from error
     console.print(gradient_rule)
-
-
-@app.command(
-    name="panel",
-    help="Display text inside a gradient panel",
-    short_help="Display a gradient panel",
-)
-def panel_command(
-    text: Annotated[
-        Optional[str],
-        Argument(help="The text to display inside the panel or '-' for stdin"),
-    ] = None,
-    text_option: Annotated[
-        Optional[str],
-        Option(
-            "--text",
-            "-T",
-            help="Alternative way to supply panel text (supports '-' for stdin).",
-        ),
-    ] = None,
-    title: Annotated[
-        Optional[str], Option("-t", "--title", help="Title of the panel")
-    ] = None,
-    title_style: Annotated[
-        str,
-        Option(
-            "-s",
-            "--title-style",
-            help="Style of the panel title text",
-        ),
-    ] = "bold",
-    colors: Annotated[
-        Optional[list[str]],
-        Option(
-            "-c",
-            "--colors",
-            callback=colors_callback,
-            help="Comma-separated list of colors for the gradient \
-(e.g., '#f00,#ff9900,yellow')",
-        ),
-    ] = None,
-    rainbow: Annotated[
-        bool,
-        Option(
-            "-R/-n",
-            "--rainbow/--no-rainbow",
-            help="Use rainbow colors for the gradient",
-        ),
-    ] = False,
-    hues: Annotated[
-        int,
-        Option(
-            "-u",
-            "--hues",
-            help="Number of hues for rainbow gradient",
-        ),
-    ] = 7,
-    padding: Annotated[
-        Optional[str],
-        Option(
-            "-p",
-            "--padding",
-            help="Padding inside the panel (1, 2, or 4 comma-separated integers).",
-        ),
-    ] = None,
-    justify: Annotated[
-        str,
-        Option(
-            "-j",
-            "--justify",
-            callback=justify_callback,
-            help="Justification of the panel title",
-        ),
-    ] = "center",
-    expand: Annotated[
-        bool,
-        Option(
-            "--expand/--no-expand",
-            help="Whether to expand the panel to fill the width of the console",
-            is_flag=True,
-        ),
-    ] = True,
-    animated: Annotated[
-        bool,
-        Option(
-            "-a",
-            "--animated",
-            help="Animate the gradient panel.",
-            is_flag=True,
-        ),
-    ] = False,
-    duration: Annotated[
-        float,
-        Option(
-            "-d",
-            "--duration",
-            callback=_validate_duration,
-            help="Length of the animation in seconds (requires --animated).",
-        ),
-    ] = 5.0,
-):
-    """Display input in a gradient panel.
-
-    Options:
-    - `--title`: Title of the panel.
-    - `--title-style`: Style of the title text.
-    - `--colors`: Comma-separated list of colors for the gradient.
-    - `--rainbow`: Use rainbow colors for the gradient.
-    - `--hues`: Number of hues for rainbow gradient.
-    - `--padding`: Padding inside the panel (1, 2, or 4 comma-separated integers).
-    - `--justify`: Justification of the panel title.
-    - `--expand/--no-expand`: Whether to expand the panel to fill the width of the console.
-    """
-    console = _make_console()
-
-    source_value = text_option if text_option is not None else text
-    if source_value is None:
-        # Provide a friendly default demo when no input is supplied
-        content = "Panels can frame gradient text for call-outs and highlights."
-        if title is None:
-            title = "Gradient Panel"
-    else:
-        content = _read_text_source(source_value)
-
-    _colors = colors if colors else None
-
-    parsed_padding: Optional[List[int]] = None
-    if padding is not None:
-        try:
-            parsed_padding = _parse_padding(padding)
-        except ValueError as error:
-            raise typer.BadParameter(str(error)) from error
-
-    panel_kwargs: dict[str, Any] = {}
-    if parsed_padding is not None:
-        panel_kwargs["padding"] = tuple(parsed_padding)
-
-    try:
-        inner_renderable = RichText.from_markup(content)
-    except Exception as error:
-        raise typer.BadParameter(f"invalid markup: {error}") from error
-
-    panel_align = cast(Any, justify)
-    panel_kwargs["title_align"] = panel_align
-
-    if animated:
-        try:
-            animation = AnimatedPanel(
-                inner_renderable,
-                title=title,
-                title_style=title_style,
-                colors=cast(Any, _colors),
-                rainbow=rainbow,
-                hues=hues,
-                justify=panel_align,
-                expand=expand,
-                console=console,
-                **panel_kwargs,
-            )
-        except ValueError as error:
-            raise typer.BadParameter(str(error)) from error
-        _run_animation(animation, duration)
-        return
-
-    try:
-        gradient_panel = Panel(
-            inner_renderable,
-            title=title,
-            title_style=title_style,
-            colors=cast(Any, _colors),
-            rainbow=rainbow,
-            hues=hues,
-            justify=panel_align,
-            expand=expand,
-            **panel_kwargs,
-        )
-    except ValueError as error:
-        raise typer.BadParameter(str(error)) from error
-    console.print(gradient_panel, justify=panel_align)
 
 
 if __name__ == "__main__":

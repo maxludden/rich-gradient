@@ -1,0 +1,97 @@
+{
+    // Enable all rules by default, then override below
+    "default": true,
+    // Headings
+    "MD001": true, // heading-increment
+    "MD002": true, // first-heading-h1
+    "MD003": {
+        "style": "consistent"
+    }, // heading-style
+    "MD025": true, // single-title
+    "MD026": {
+        "punctuation": ".,;:()"
+    }, // allow ? and ! at end of headings
+    "MD041": false, // allow content (front matter, badges) before first heading
+    // Line length: increase and ignore code/tables/links
+    "MD013": {
+        "line_length": 120,
+        "code_blocks": false,
+        "tables": false,
+        "headings": false,
+        "strict": false
+    },
+    // Whitespace / spacing
+    "MD007": {
+        "indent": 2,
+        "start_indented": false
+    }, // unordered-list-indentation
+    "MD009": {
+        "br_spaces": 2,
+        "strict": false
+    }, // allow 2 spaces for line breaks
+    "MD010": {
+        "code_blocks": false
+    }, // allow tabs in code blocks
+    "MD012": {
+        "maximum": 1
+    }, // no multiple blank lines
+    "MD027": true, // no multiple spaces after blockquote marker
+    "MD028": true, // no blank line inside blockquotes
+    "MD030": {
+        "ul_single": 1,
+        "ol_single": 1,
+        "ul_multi": 1,
+        "ol_multi": 1
+    }, // list-marker-space
+    "MD032": true, // lists surrounded by blank lines
+    // Lists
+    "MD004": {
+        "style": "dash"
+    }, // unordered list marker
+    "MD029": {
+        "style": "one"
+    }, // ordered list marker always "1."
+    // Code blocks
+    "MD040": true, // fenced code blocks should have a language
+    "MD046": {
+        "style": "fenced"
+    }, // prefer fenced code blocks
+    // Links / URLs
+    "MD034": false, // allow bare URLs
+    "MD049": {
+        "style": "consistent"
+    }, // emphasis style
+    "MD050": {
+        "style": "consistent"
+    }, // strong style
+    // Inline HTML (allow a safe subset)
+    "MD033": {
+        "allowed_elements": [
+            "br",
+            "img",
+            "details",
+            "summary",
+            "sub",
+            "sup",
+            "kbd",
+            "a",
+            "span",
+            "code",
+            "pre",
+            "p",
+            "div",
+            "blockquote",
+            "ul",
+            "ol",
+            "li",
+            "strong",
+            "em",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6"
+        ]
+    }
+}

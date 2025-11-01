@@ -13,7 +13,7 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install as tr_install
 
-global DEFAULT_STYLES
+
 DEFAULT_STYLES: dict[str, StyleType] = {
     "none": Style.null(),
     "reset": Style(
@@ -403,11 +403,11 @@ def styles_table() -> Table:
     )
     table.add_column("[bold.cyan]Updated[/]", justify="center", vertical="middle")
 
-    for style_name in DEFAULT_STYLES.keys():
+    for style_name in DEFAULT_STYLES:
         temp_style: Optional[StyleType] = DEFAULT_STYLES.get(style_name)
         assert temp_style is not None, "Style should not be None"
-        style: Style = Style.parse(str(temp_style))
-        style_string = str(style)
+        parsed_style: Style = Style.parse(str(temp_style))
+        style_string = str(parsed_style)
         if "grey" in style_name:
             style_string = f"{style_string} [dim]*Supports alternate spelling[/dim]"
         if "dark_grey" in style_name or "dark_gray" in style_name:
@@ -415,7 +415,7 @@ def styles_table() -> Table:
         if "gray" in style_name:
             continue
         edited = EDITED_STYLES.get(style_name)
-        table.add_row(Text(style_name, style=style), style_string, edited)
+        table.add_row(Text(style_name, style=parsed_style), style_string, edited)
         if style_name in ("none", "reset"):
             table.add_section()
 
