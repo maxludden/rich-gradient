@@ -1,278 +1,216 @@
+"""Integration tests for the ``rich-gradient`` Typer CLI."""
+
+from __future__ import annotations
+
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
-from rich.text import Text as RichText
-from rich.panel import Panel
-from rich.console import ConsoleRenderable
 
-from rich_gradient.cli import app, parse_renderable
-
+from rich_gradient.cli import app
 
 runner = CliRunner()
 
 
-def test_parse_renderable_string():
-    """Test that parse_renderable converts strings to RichText."""
-    result = parse_renderable("Hello World")
-    assert isinstance(result, ConsoleRenderable)
-    assert isinstance(result, RichText)
-    assert result.plain == "Hello World"
+def test_version_option() -> None:
+    """``--version`` should print the installed package version."""
 
-
-def test_parse_renderable_with_markup():
-    """Test that parse_renderable handles Rich markup in strings."""
-    result = parse_renderable("[bold]Hello[/bold]")
-    assert isinstance(result, RichText)
-    assert result.plain == "Hello"
-    # Markup should create spans
-    assert len(result._spans) > 0
-
-
-def test_parse_renderable_console_renderable():
-    """Test that parse_renderable passes through ConsoleRenderable objects."""
-    panel = Panel("Test")
-    result = parse_renderable(panel)
-    assert result is panel  # Should be the same object
-
-
-def test_parse_renderable_rich_cast():
-    """Test that parse_renderable handles RichCast objects."""
-    
-    class MyRichCast:
-        def __rich__(self):
-            return RichText("From RichCast")
-    
-    obj = MyRichCast()
-    result = parse_renderable(obj)
-    assert isinstance(result, ConsoleRenderable)
-    assert isinstance(result, RichText)
-    assert result.plain == "From RichCast"
-
-
-def test_parse_renderable_rich_cast_string():
-    """Test that parse_renderable handles RichCast objects that return strings."""
-    
-    class MyRichCast:
-        def __rich__(self):
-            return "String from RichCast"
-    
-    obj = MyRichCast()
-    result = parse_renderable(obj)
-    assert isinstance(result, RichText)
-    assert result.plain == "String from RichCast"
-
-
-def test_parse_renderable_nested_rich_cast():
-    """Test that parse_renderable handles nested RichCast objects."""
-    
-    class InnerRichCast:
-        def __rich__(self):
-            return RichText("Nested")
-    
-    class OuterRichCast:
-        def __rich__(self):
-            return InnerRichCast()
-    
-    obj = OuterRichCast()
-    result = parse_renderable(obj)
-    assert isinstance(result, ConsoleRenderable)
-    assert isinstance(result, RichText)
-    assert result.plain == "Nested"
-
-
-def test_parse_renderable_invalid_type():
-    """Test that parse_renderable raises TypeError for invalid types."""
-    try:
-        parse_renderable(123)  # type: ignore
-        assert False, "Should have raised TypeError"
-    except TypeError as e:
-        assert "Cannot parse" in str(e)
-
-
-def test_parse_renderable_invalid_rich_cast():
-    """Test that parse_renderable raises TypeError for RichCast returning invalid types."""
-    
-    class BadRichCast:
-        def __rich__(self):
-            return 123  # Invalid return type
-    
-    obj = BadRichCast()
-    try:
-        parse_renderable(obj)
-        assert False, "Should have raised TypeError"
-    except TypeError as e:
-        assert "returned" in str(e)
-
-
-def test_cli_text_basic():
-    result = runner.invoke(app, ["text", "Hello", "-c", "magenta", "-c", "cyan"])
+    result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    # Ensure plain text made it to output
-    assert "Hello" in result.stdout
+    assert result.stdout.strip()
 
 
-def test_cli_save_svg(tmp_path: Path):
-    svg_path = tmp_path / "out.svg"
-    result = runner.invoke(app, [
-        "text",
-        "Hello SVG",
-        "--save-svg",
-        str(svg_path),
-        "--width",
-        "60",
-    ])
+def test_help_renders_gradient_panel() -> None:
+    """Help output should render inside a gradient panel."""
+
+    result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert svg_path.exists()
-    # Quick sanity check that it's an SVG file
-    content = svg_path.read_text(encoding="utf-8", errors="ignore")
-    assert "<svg" in content
+    # Rounded box-drawing characters signal that a panel rendered.
+    assert "╭" in result.stdout
+    assert "rich-gradient" in result.stdout
+    assert "Commands" in result.stdout
 
 
-def test_cli_title_without_panel_warns():
-    # Omit mix_stderr for broader Click/Typer compatibility
-    result = runner.invoke(app, ["text", "Warn", "--title", "T"]) 
+@pytest.mark.parametrize(
+    "args, expected",
+    [
+        (["print", "Hello world"], "Hello world"),
+        (["print", "text=Inline"], "Inline"),
+    ],
+)
+def test_print_command_renders_text(args: list[str], expected: str) -> None:
+    """The ``print`` command should render supplied text immediately."""
+
+    result = runner.invoke(app, args)
     assert result.exit_code == 0
-    warning = "Warning: --title has no effect without --panel"
-    # Accept either stdout or stderr depending on environment
-    assert (warning in result.stdout) or (warning in result.stderr)
+    assert expected in result.stdout
 
 
-def test_cli_invalid_color_exits_with_error():
-    result = runner.invoke(app, ["text", "Bad", "-c", "#GGGGGG"])
+def test_print_command_reads_stdin() -> None:
+    """Passing ``-`` should read text from standard input."""
+
+    result = runner.invoke(app, ["print", "-"], input="Streamed input")
+    assert result.exit_code == 0
+    assert "Streamed input" in result.stdout
+
+
+def test_print_command_handles_colour_options() -> None:
+    """Explicit colour stops and background colours should render without errors."""
+
+    result = runner.invoke(
+        app,
+        [
+            "print",
+            "Colourful",
+            "-c",
+            "#f00,#0f0",
+            "--bgcolors",
+            "#111111,#222222",
+            "--style",
+            "bold",
+        ],
+    )
+    assert result.exit_code == 0
+    assert "Colourful" in result.stdout
+
+
+def test_print_command_rejects_invalid_colour() -> None:
+    """Invalid colour stops should produce an error message."""
+
+    result = runner.invoke(app, ["print", "Bad", "-c", "not-a-colour"])
     assert result.exit_code != 0
-    assert "Error:" in result.stdout or "Error:" in result.stderr
+    stderr = result.stderr or ""
+    assert "Invalid value for" in stderr or "Error" in stderr
 
 
-def test_parse_renderable_with_string():
-    """Test parse_renderable with string input."""
-    result = parse_renderable("Hello, [bold]World[/bold]!")
-    assert isinstance(result, RichText)
-    assert result.plain == "Hello, World!"
+def test_print_command_supports_animation() -> None:
+    """Animations with zero duration should complete immediately."""
 
-
-def test_parse_renderable_with_console_renderable():
-    """Test parse_renderable with ConsoleRenderable (Panel) input."""
-    panel = Panel("Test content", title="Test")
-    result = parse_renderable(panel)
-    assert result is panel  # Should return the same object
-    assert isinstance(result, Panel)
-
-
-def test_parse_renderable_with_richcast():
-    """Test parse_renderable with RichCast (object with __rich__ method)."""
-    class CustomRenderable:
-        def __rich__(self):
-            return RichText("Custom content")
-    
-    custom = CustomRenderable()
-    result = parse_renderable(custom)
-    assert isinstance(result, RichText)
-    assert result.plain == "Custom content"
-
-
-def test_parse_renderable_with_richcast_returning_string():
-    """Test parse_renderable with RichCast that returns a string."""
-    class StringRichCast:
-        def __rich__(self):
-            return "[green]Green text[/green]"
-    
-    string_cast = StringRichCast()
-    result = parse_renderable(string_cast)
-    assert isinstance(result, RichText)
-    assert result.plain == "Green text"
-
-
-def test_parse_renderable_with_richtext():
-    """Test parse_renderable with RichText input."""
-    text = RichText("Direct text", style="bold")
-    result = parse_renderable(text)
-    assert result is text  # Should return the same object
-    assert isinstance(result, RichText)
-
-
-def test_cli_gradient_command():
-    """Gradient command should render gradient showcase text."""
-
-    result = runner.invoke(app, ["gradient"])
+    result = runner.invoke(app, ["print", "Animated", "--animate", "-d", "0"])
     assert result.exit_code == 0
-    assert "Gradient Showcase" in result.stdout
 
 
-def test_cli_rule_command():
-    """Rule command should print explanatory text alongside the gradient rule."""
+def test_rule_command_outputs_title() -> None:
+    """The ``rule`` command should include the provided title."""
 
-    result = runner.invoke(app, ["rule"])
+    result = runner.invoke(
+        app,
+        ["rule", "-t", "Section", "-c", "red,blue", "-T", "2", "--align", "left"],
+    )
     assert result.exit_code == 0
-    assert "Gradient rules are perfect for separating sections." in result.stdout
+    assert "Section" in result.stdout
 
 
-def test_cli_panel_command():
-    """Panel command should wrap gradient text in a panel output."""
+def test_rule_command_invalid_colour() -> None:
+    """Invalid colours should cause the rule command to fail."""
 
-    result = runner.invoke(app, ["panel"])
+    result = runner.invoke(app, ["rule", "-c", "#GGGGGG"])
+    assert result.exit_code != 0
+    stderr = result.stderr or ""
+    assert "Invalid value for" in stderr or "Error" in stderr
+
+
+def test_panel_command_renders_content(tmp_path: Path) -> None:
+    """The ``panel`` command should wrap file content in a gradient panel."""
+
+    file_path = tmp_path / "content.txt"
+    file_path.write_text("Panel body", encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        [
+            "panel",
+            str(file_path),
+            "-t",
+            "Info",
+            "--subtitle",
+            "Details",
+            "--padding",
+            "1,2",
+            "--text-justify",
+            "center",
+            "--no-expand",
+            "--box",
+            "ASCII",
+        ],
+    )
     assert result.exit_code == 0
-    assert "Panels can frame gradient text for call-outs and highlights." in result.stdout
+    assert "Panel body" in result.stdout
+    assert "Info" in result.stdout
+    assert "Details" in result.stdout
 
 
-def test_cli_table_command():
-    """Table command should render gradient table content."""
+def test_panel_command_requires_title_for_style() -> None:
+    """Providing ``--title-style`` without a title should raise an error."""
 
-    result = runner.invoke(app, ["table"])
+    result = runner.invoke(app, ["panel", "content", "--title-style", "italic"])
+    assert result.exit_code != 0
+    assert "requires --title" in (result.stderr or "")
+
+
+def test_panel_command_requires_no_expand_for_width() -> None:
+    """Specifying ``--width`` should demand ``--no-expand``."""
+
+    result = runner.invoke(app, ["panel", "content", "--width", "40"])
+    assert result.exit_code != 0
+    assert "requires --no-expand" in (result.stderr or "")
+
+
+def test_panel_command_rejects_bad_padding() -> None:
+    """Invalid padding strings should surface an error."""
+
+    result = runner.invoke(app, ["panel", "Pad me", "-p", "1,2,3"])
+    assert result.exit_code != 0
+
+
+def test_panel_command_rejects_bad_colour() -> None:
+    """Invalid colours should cause the panel command to fail."""
+
+    result = runner.invoke(app, ["panel", "Oops", "-c", "#XYZ"])
+    assert result.exit_code != 0
+
+
+def test_panel_command_supports_animation() -> None:
+    """Animated panels should honour the duration flag."""
+
+    result = runner.invoke(app, ["panel", "Animated panel", "--animate", "-d", "0"])
     assert result.exit_code == 0
-    assert "Color stops" in result.stdout
 
 
-def test_cli_progress_command():
-    """Progress command should complete successfully with summary text."""
+def test_markdown_command_renders_text(tmp_path: Path) -> None:
+    """Markdown content provided via file should render inside a gradient."""
 
-    result = runner.invoke(app, ["progress"])
+    markdown_file = tmp_path / "doc.md"
+    markdown_file.write_text("# Heading\n\nBody", encoding="utf-8")
+
+    result = runner.invoke(app, ["markdown", str(markdown_file), "--justify", "center"])
     assert result.exit_code == 0
-    assert "Gradient progress complete!" in result.stdout
+    assert "Heading" in result.stdout
+    assert "Body" in result.stdout
 
 
-def test_cli_syntax_command():
-    """Syntax command should include its gradient heading."""
+def test_markdown_command_accepts_inline_text() -> None:
+    """Inline markdown text should render without errors."""
 
-    result = runner.invoke(app, ["syntax"])
+    result = runner.invoke(
+        app,
+        ["markdown", "# Title", "--colors", "magenta,cyan", "--bgcolors", "black"],
+    )
     assert result.exit_code == 0
-    assert "Gradient Syntax" in result.stdout
+    assert "Title" in result.stdout
 
 
-def test_cli_markdown_command():
-    """Markdown command should emit the markdown heading text."""
+def test_markdown_command_invalid_colour() -> None:
+    """Invalid colour specifications should surface an error."""
 
-    result = runner.invoke(app, ["markdown"])
+    result = runner.invoke(app, ["markdown", "# Bad", "--colors", "not-a-colour"])
+    assert result.exit_code != 0
+    stderr = result.stderr or ""
+    assert "Invalid value for" in stderr or "Error" in stderr
+
+
+def test_markdown_command_animation() -> None:
+    """Animated markdown rendering should respect the duration flag."""
+
+    result = runner.invoke(app, ["markdown", "# Animated", "--animate", "-d", "0"])
     assert result.exit_code == 0
-    assert "Gradient Markdown" in result.stdout
-
-
-def test_cli_markup_command():
-    """Markup command should parse markup and print the resulting text."""
-
-    result = runner.invoke(app, ["markup"])
-    assert result.exit_code == 0
-    assert "Rich markup meets gradients!" in result.stdout
-
-
-def test_cli_box_command():
-    """Box command should render descriptive gradient text."""
-
-    result = runner.invoke(app, ["box"])
-    assert result.exit_code == 0
-    assert "borders pair nicely with gradients" in result.stdout
-
-
-def test_cli_prompts_command():
-    """Prompts command should simulate a prompt and echo the response."""
-
-    result = runner.invoke(app, ["prompts"])
-    assert result.exit_code == 0
-    assert "Aurora Borealis" in result.stdout
-
-
-def test_cli_live_command():
-    """Live command should finish and print its closing message."""
-
-    result = runner.invoke(app, ["live"])
-    assert result.exit_code == 0
-    assert "Exited live rendering session." in result.stdout
