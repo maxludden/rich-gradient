@@ -34,6 +34,13 @@ a rich-click (Click) CLI for trying gradients from the terminal.
 - Auto-bootstraps a configuration file (`~/.rich-gradient`) where you can toggle
   animation globally and customise the default spectrum palette.
 
+### What's new in v0.3.9
+
+- CLI docs now reflect the Click + rich-click commands (`print`, `panel`, `rule`, `markdown`) with up-to-date options and examples.
+- Help text across CLI options uses the rich markup styling from `text_command.py` for consistency.
+- Tests run without an editable install because `tests/conftest.py` prepends `src/` to `sys.path`.
+- Docs CSS forces the page background to the theme color to eliminate the black/transparent flash at the top of pages.
+
 ## Installation
 
 `rich-gradient` targets Python 3.10+.

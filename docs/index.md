@@ -96,4 +96,11 @@ The example above is bundled in `examples/text_quickstart.py` and renders:
 - [CLI](cli.md) – scriptable demos and helpers built with Click + rich-click.
 - [Animation](animation.md) – create animated gradients with `Live`.
 
+## Latest (v0.3.9)
+
+- CLI docs and examples reflect the Click + rich-click commands (`print`, `panel`, `rule`, `markdown`) with current options.
+- Help text uses consistent rich markup styling across commands.
+- Tests run without an editable install via the `tests/conftest.py` path shim.
+- Docs background now respects the theme, removing the black/transparent flash on initial paint.
+
 Prefer API-level details? See the [reference section](animated_gradient_ref.md) generated with `mkdocstrings`.

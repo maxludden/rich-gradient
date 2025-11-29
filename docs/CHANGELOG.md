@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### v0.3.9 - 2025-12-15 | <span style="color: rgb(215, 255, 100)">CLI doc refresh, import/test stability, CSS fix</span>
+
+#### Added / Changed
+
+- CLI docs and README now describe the Click + rich-click subcommands (`print`, `panel`, `rule`, `markdown`) with current options and examples; removed stale Typer references.
+- CLI option help text across commands uses the rich markup formatting introduced in `text_command.py` for consistent help output.
+- Contributor note documents that `pytest` runs without an editable install because `tests/conftest.py` adds `src/` to `sys.path`.
+- Documentation CSS now anchors `html, body` to the theme background to avoid a black flash/transparent top before styles load.
+
+#### Fixed
+
+- Test collection no longer fails with `ModuleNotFoundError: rich_gradient` when the package isn't installed editable, thanks to the path shim in `tests/conftest.py`.
+
 ### v0.3.7 - 2025-10-24 |  <span style="color: rgb(215, 255, 100)">Documentation refresh, reproducible assets & CLI polish</span>
 
 #### Added

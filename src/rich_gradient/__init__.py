@@ -57,7 +57,7 @@ __all__ = [
     "Spectrum",
 ]
 
-__version__ = "0.3.8"
+__version__ = "0.3.9"
 
 
 # Set up logging
