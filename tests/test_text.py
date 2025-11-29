@@ -303,6 +303,20 @@ def test_apply_gradient(plain, colors, expected_spans, case_id):
     assert covered == expected, f"{covered=} != {expected=}"
 
 
+def test_single_color_with_default_style_creates_spans():
+    """Single foreground/background color should not attempt to parse a null style."""
+    text = Text("hi", colors=["#f00"], bg_colors=["#000"])
+    assert len(text._spans) == len(text.plain)
+
+
+def test_empty_bg_colors_default_to_transparent_background():
+    """Providing an empty list of background colors should fall back to the default color."""
+    text = Text("hi", colors=["#f00"], bg_colors=[])
+    assert text._interpolate_bg_colors is False
+    assert len(text.bg_colors) == len(text.colors)
+    assert color_eq(text.bg_colors[0], Color.parse("default"))
+
+
 def test_colors_property_and_setter():
     """
     Test colors property and setter for correct assignment and type.

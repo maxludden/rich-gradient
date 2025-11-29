@@ -7,7 +7,8 @@ requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
     "rich>=14.0.0",
-    "rich-color-ext>=0.1.4",
+    "rich-color-ext>=0.1.9",
+    "rich-click>=1.9.4",
     "typer>=0.19.2,<0.21",
 ]
 dynamic = ["version"]
@@ -25,6 +26,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
+config = ["pydantic-settings>=2.11.0"]
 dev = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.7",
@@ -33,6 +35,7 @@ dev = [
     "pytest>=8.3.5",
     "pytest-benchmark>=5.1.0",
 ]
+toml = ["tomlkit>=0.13.3"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rich_gradient"]
@@ -41,7 +44,7 @@ packages = ["src/rich_gradient"]
 path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
-rgp = "rich_gradient._cli.panel:panel_app"
+gradient = "rich_gradient.cli:app"
 rich-gradient = "rich_gradient.cli:app"
 
 [tool.ruff]
@@ -52,16 +55,11 @@ ignore = [
 
 [tool.pylint.MESSAGES_CONTROL]
 disable = [
-    "missing-module-docstring",
-    "missing-class-docstring",
-    "missing-function-docstring",
-    "too-few-public-methods",
-    "too-many-arguments",
-    "too-many-locals",
-    "too-many-statements",
-    "protected-access",
-    "import-outside-toplevel",
-
+    "C0103",                      # Variable name doesn't conform to snake_case
+    "E0611",                      # No name in module
+    "W0611",                      # Unused import
+    "W0603",                      # allow `global` statement
+    "W1401",                      # Anomalous backslash in string
 ]
 
 [tool.markdownlint]

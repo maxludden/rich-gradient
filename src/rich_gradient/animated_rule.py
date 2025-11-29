@@ -54,11 +54,9 @@ class AnimatedRule(AnimatedGradient):
             transient: Keep Live transient (don’t clear on stop).
             redirect_stdout: Redirect stdout to Live.
             redirect_stderr: Redirect stderr to Live.
-            disable: Disable rendering (useful for tests).
-            phase_per_second: Phase advance per second (cycles per second).
-            speed: Deprecated per-frame ms step; mapped to ``phase_per_second``.
             repeat_scale: Stretch factor for gradient color stops.
-            animate: Toggle animation on or off.
+            animate (bool | None): Toggle animation on or off. ``None`` defers to
+                the global configuration.
             duration: Optional duration in seconds for automatic stop.
     """
 
@@ -77,16 +75,13 @@ class AnimatedRule(AnimatedGradient):
         align: AlignMethod = "center",
         # Live / animation parameters (mirroring AnimatedGradient)
         auto_refresh: bool = True,
-        refresh_per_second: float = 30.0,
+        refresh_per_second: float = 20.0,
         console: Optional[Console] = None,
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
-        disable: bool = False,
-        phase_per_second: Optional[float] = None,
-        speed: Optional[int] = None,
         repeat_scale: float = 4.0,
-        animate: bool = True,
+        animate: Optional[bool] = None,
         duration: Optional[float] = None,
     ) -> None:
         self.title = title or ""
@@ -104,35 +99,29 @@ class AnimatedRule(AnimatedGradient):
         try:
             highlight_words = {self.title: self.title_style} if self.title else None
 
-            # Make animation more visible for rules by default: if caller didn't
-            # specify a speed or explicit phase, bump the phase a bit.
-            effective_phase = phase_per_second
-            if effective_phase is None and speed is None and animate:
-                effective_phase = 0.25
-
             super().__init__(
                 renderables=base_rule,
-                colors=list(colors) if colors is not None else None,  # type: ignore[arg-type]
-                bg_colors=list(bg_colors) if bg_colors is not None else None,  # type: ignore[arg-type]
+                colors=list(colors) if colors is not None else None,
+                bg_colors=list(bg_colors) if bg_colors is not None else None,
                 auto_refresh=auto_refresh,
                 refresh_per_second=refresh_per_second,
                 console=console,
                 transient=transient,
                 redirect_stdout=redirect_stdout,
                 redirect_stderr=redirect_stderr,
-                disable=disable,
                 expand=True,
                 justify=align,
                 vertical_justify="middle",
                 hues=hues,
                 rainbow=rainbow,
-                phase_per_second=effective_phase,
-                speed=speed,
                 repeat_scale=repeat_scale,
                 highlight_words=highlight_words,
                 animate=animate,
                 duration=duration,
             )
+            if animate:
+                # Rules look better with a slightly faster cycle than the base default.
+                self._phase_per_second = 0.25
         except ColorParseError as err:
             raise ValueError(f"Invalid color provided: {err}") from err
 
@@ -300,9 +289,7 @@ if __name__ == "__main__":  # pragma: no cover
     _console.line(2)
     animated_rule = AnimatedRule(
         title="Animated Gradient Rule",
-        rainbow=True,
-        title_style="bold white",
-        refresh_per_second=20,
+        rainbow=True
     )
     animated_rule.start()
     sleep(5)

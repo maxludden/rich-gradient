@@ -1,125 +1,54 @@
 # rich-gradient CLI
 
-The `rich-gradient` package ships with a Typer-powered command line interface for
-rendering colourful gradients, animated gradients, and themed Rich components
-directly in your terminal. This document walks through installation, everyday
-usage, and all supported options.
+The `rich-gradient` CLI uses Click + rich-click to mirror the library defaults. Use it to experiment quickly without writing code.
 
 ## Installation
 
 ```bash
-pip install rich-gradient rich-color-ext
+pip install rich-gradient
 ```
 
-When working from a cloned repository you can also run the CLI in editable mode:
+From a clone:
 
 ```bash
 pip install -e .
 python -m rich_gradient.cli --help
 ```
 
-The CLI installs shell completions automatically via Typer:
-
-```bash
-rich-gradient --install-completion  # choose bash, zsh, or fish
-rich-gradient --show-completion zsh # preview the generated script
-```
-
-## Core Commands
-
-Every command accepts text directly as an argument, via `text=...`, or by piping
-data into standard input using `-`. Invalid Rich markup is reported with a
-clear error message.
+## Commands & examples
 
 ### `print`
 
-Render gradient text or an animated gradient in place.
+- `rich-gradient print "Hello [b]world[/b]!" -c magenta,cyan`
+- `rich-gradient print "Rainbow!" --rainbow`
+- `echo "stdin" | rich-gradient print --colors "#f00,#0ff"`
 
-Arguments:
-
-- `text`: Text to render, `-` for stdin, or `text=...`.
-
-Options:
-
-- `-c, --colors COLORS`: Comma-separated colour stops. (e.g. `#f00,#f90,#ff0`).
-- `-R/ -n, --rainbow/--no-rainbow`: Generate a rainbow gradient (default: off).
-- `-h, --hues INTEGER`: Number of hues when auto-generating colours (default: 7).
-- `-j, --justify [left|center|right]`: Align the output (default: left).
-- `-a, --animated`: Run an animated gradient instead of a static render.
-- `-d, --duration FLOAT`: Animation length in seconds (default: 5).
-
-Examples:
-
-```bash
-rich-gradient "Hello, World!" -c "#f00,#ff0,#0f0" -j center
-echo "streamed input" | rich-gradient print -
-rich-gradient print text="Animated from env" -R -a -d 8
-```
+Options: `--colors/-c`, `--bgcolors`, `--rainbow`, `--hues`, `--style`, `--justify`, `--overflow`, `--no-wrap`, `--end`
 
 ### `rule`
 
-Draw a gradient or animated rule line, optionally with a title.
+- `rich-gradient rule --title "Section" -c red,blue`
+- `rich-gradient rule -T 3 --bgcolors "#111,#333"`
 
-Options:
-
-- `-t, --title TEXT`: Optional title shown in the rule.
-- `-s, --title-style TEXT`: Rich style for the title (default: bold).
-- `-j, --justify [left|center|right]`: Alignment for the title (default: center).
-- `-c, --colors TEXT`: Comma-separated colour stops.
-- `-R/ -n, --rainbow/--no-rainbow`: Toggle rainbow gradients.
-- `-h, --hues INTEGER`: Number of hues for generated colour ramps (default: 7).
-- `-T, --thickness INTEGER`: Line thickness between 0 and 3 (default: 1).
-- `-a, --animated`: Animate the rule with Rich Live.
-- `-d, --duration FLOAT`: Animation length in seconds (default: 5).
-
-Examples:
-
-```bash
-rich-gradient rule -t "Section 1" -c green,yellow -T 2
-rich-gradient rule -R -a -d 10
-rich-gradient rule --title "Status" --title-style "bold italic cyan"
-```
+Options: `--title`, `--title-style`, `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--thickness`, `--align`, `--end`
 
 ### `panel`
 
-Produce a gradient panel around text or streamed content. Titles are aligned
-with the `--justify` option and padding is configurable.
+- `rich-gradient panel "Panel content" -c red,blue --title "Gradient Panel"`
+- `rich-gradient panel "Centered" --text-justify center --justify center`
+- `rich-gradient panel "Animate me" --rainbow -a -d 8`
 
-Arguements:
+Options: `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--title`, `--title-style`, `--title-align`, `--subtitle`, `--subtitle-style`, `--subtitle-align`, `--style`, `--border-style`, `--padding`, `--vertical-justify`, `--text-justify`, `--justify`, `--expand/--no-expand`, `--width`, `--height`, `--box`, `--end`, `--animate`, `--duration`
 
-- `text`: panel content, `-` for stdin, or `text=...`.
+### `markdown`
 
-Options:
+- `rich-gradient markdown "# Title" --colors "#ff0,#0ff" --justify center`
+- `rich-gradient markdown "**Bold** body" --rainbow --vertical-justify middle`
+- `rich-gradient markdown "Live!" -a -d 6`
 
-- `-t, --title TEXT`: Optional panel title.
-- `-s, --title-style TEXT`: Rich style for the panel title (default: bold).
-- `-j, --justify [left|center|right]`: Title alignment (default: center).
-- `-a, --align [left|center|right]`: Content alignment (default: left).
-- `-c, --colors TEXT`: Comma-separated color stops.
-- `-R/ -n, --rainbow/--no-rainbow`: Toggle rainbow gradients.
-- `-h, --hues INTEGER`: Number of hues for generated gradients (default: 7).
-- `-p, --padding TEXT`: Set padding as `N`, `V,H`, or `T,R,B,L`.
-- `--expand / --no-expand`: Control width expansion (default: expand).
-- `-a, --animated`: Animate the panel background.
-- `-d, --duration FLOAT`: Animation length in seconds (default: 5).
+Options: `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--style`, `--justify`, `--vertical-justify`, `--overflow`, `--no-wrap`, `--end`, `--animate`, `--duration`
 
-Examples:
+## Notes
 
-```bash
-rich-gradient panel "Quick info" -t "Info" -c blue,cyan
-printf "Markdown? *Yes!*\n" | rich-gradient panel -t "Stream" -R
-rich-gradient panel -a -d 12 text="Animated background" -t "Live"
-```
-
-## Additional Features
-
-- `-V, --version` prints the installed `rich-gradient` version and exits.
-- All commands support `--help` for contextual usage.
-- `--rainbow/--no-rainbow` flags allow quick toggling without clearing other
-  options.
-- When `--animated` is supplied, the CLI uses the appropriate animated class
-  (`AnimatedGradient`, `AnimatedRule`, or `AnimatedPanel`) from the package.
-
-With these commands you can script colourful terminal output, build demos, or
-enhance dashboard tooling using the same gradient utilities available inside
-the library.
+- `rich-gradient --version` prints the version.
+- `--help` on any command shows the rich-click styled usage.

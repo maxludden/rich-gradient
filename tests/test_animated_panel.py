@@ -1,3 +1,11 @@
+import os
+from pathlib import Path
+
+os.environ.setdefault(
+    "RICH_GRADIENT_CONFIG_HOME",
+    str((Path(__file__).parent / ".rg_config_test").resolve()),
+)
+
 from rich.console import Console
 from rich.panel import Panel as RichPanel
 
@@ -18,7 +26,7 @@ def test_animated_panel_wires_highlights() -> None:
         auto_refresh=False,
         refresh_per_second=10.0,
         console=console,
-        disable=True,
+        animate=False,
     )
 
     assert isinstance(animated_panel.panel, RichPanel)
@@ -49,7 +57,7 @@ def test_expand_propagates_to_panel() -> None:
         expand=False,
         auto_refresh=False,
         refresh_per_second=10.0,
-        disable=True,
+        animate=False,
     )
     # initial state is respected on both wrapper and inner Rich Panel
     assert animated_panel.expand is False

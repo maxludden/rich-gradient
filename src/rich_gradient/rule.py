@@ -15,6 +15,7 @@ from rich.style import Style, StyleType
 from rich.text import Text as RichText
 from rich.text import TextType
 
+from rich_gradient.config import config
 from rich_gradient.gradient import ColorType, Gradient
 from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -75,6 +76,24 @@ class Rule(Gradient):
             else:
                 highlight_words = None
 
+            # Validate provided color names against runtime config to ensure
+            # clearly invalid names (e.g., 'bad') are rejected. We accept
+            # hex values and rgb(...) forms, and for plain names consult the
+            # runtime config color keys (case-insensitive) as accepted names.
+            if colors is not None:
+                known_names = {
+                    k.lower() for k in dict(getattr(config, "colors", {}) or {}).keys()
+                }
+                for c in colors:
+                    if isinstance(c, str):
+                        s = c.strip()
+                        if s.startswith("#") or s.lower().startswith(("rgb(", "rgba(")):
+                            # hex or rgb forms are allowed; parsing will validate further
+                            continue
+                        # Plain name: must exist in runtime config (case-insensitive)
+                        if s.lower() not in known_names:
+                            raise ValueError(f"Invalid color name: {s}")
+
             super().__init__(
                 base_rule,
                 colors=list(colors) if colors is not None else None,
@@ -85,7 +104,10 @@ class Rule(Gradient):
                 vertical_justify="middle",
                 highlight_words=highlight_words,
             )
-        except ColorParseError as err:
+        except Exception as err:
+            # Normalize any parsing/validation error into ValueError for the
+            # public Rule API so callers receive a consistent exception type
+            # for invalid color inputs.
             raise ValueError(f"Invalid color provided: {err}") from err
 
     @property

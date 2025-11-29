@@ -3,6 +3,13 @@ Test suite for Rule and AnimatedRule covering rendering, style, color validation
 """
 
 import time
+import os
+from pathlib import Path
+
+os.environ.setdefault(
+    "RICH_GRADIENT_CONFIG_HOME",
+    str((Path(__file__).parent / ".rg_config_test").resolve()),
+)
 
 import pytest
 from rich.color import ColorParseError
@@ -80,7 +87,7 @@ def test_animated_rule_for_duration_auto_stop(monkeypatch) -> None:
         auto_refresh=False,
         refresh_per_second=30.0,
         console=Console(record=True, width=40),
-        disable=True,
+        animate=False,
     )
 
     start_calls: list[None] = []
@@ -116,7 +123,7 @@ def test_animated_rule_for_duration_early_exit(monkeypatch) -> None:
         auto_refresh=False,
         refresh_per_second=30.0,
         console=Console(record=True, width=40),
-        disable=True,
+        animate=False,
     )
 
     start_calls: list[None] = []

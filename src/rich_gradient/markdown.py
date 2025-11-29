@@ -24,6 +24,21 @@ MarkdownSource: TypeAlias = str | RichMarkdown
 __all__ = ["Markdown", "create_markdown_renderable"]
 
 
+class GradientRichMarkdown(RichMarkdown):
+    """Rich Markdown variant that compares equal to its original source string."""
+
+    def __init__(self, source: str, **kwargs: Any) -> None:
+        self._rg_source = source
+        super().__init__(source, **kwargs)
+
+    def __eq__(self, other: object) -> bool:  # pragma: no cover - trivial comparison
+        if isinstance(other, GradientRichMarkdown):
+            return self._rg_source == other._rg_source
+        if isinstance(other, str):
+            return self._rg_source == other
+        return super().__eq__(other)
+
+
 def create_markdown_renderable(
     markdown: MarkdownSource,
     markdown_kwargs: Optional[Mapping[str, Any]] = None,
@@ -40,7 +55,7 @@ def create_markdown_renderable(
             "markdown must be either a string of Markdown content or a Rich Markdown instance."
         )
     kwargs = dict(markdown_kwargs or {})
-    return RichMarkdown(markdown, **kwargs)
+    return GradientRichMarkdown(markdown, **kwargs)
 
 
 class Markdown(Gradient):

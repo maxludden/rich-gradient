@@ -4,21 +4,32 @@ __pycache__/
 build/
 dist/
 site/
-# examples/
 wheels/
 *.egg-info
 get-pip.*
 logs
 
-# venv
+# virtual environments / tooling
 .venv
+.env
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# OS artifacts
 docs/img/.DS_Store
 .DS_Store
-# src/rich_gradient/examples/example_gradient.py
-# src/rich_gradient/examples/example_rule.py
-.mypy_cache/
-out/
-lolcat.py
-cspell.json
+
+# tooling configs that should stay local
 .cspell/
-.cspell.json
+cspell.json
+.vscode/
+.idea/
+
+# project-specific outputs
+out/
+static*/**
+tests/.rg_config_test/

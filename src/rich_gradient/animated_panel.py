@@ -26,38 +26,58 @@ class AnimatedPanel(AnimatedGradient):
     Args:
         renderable: The renderable to display inside the panel.
         colors: Optional foreground color stops for the gradient.
+            [cli option: `-c`, `--colors`]
         bg_colors: Optional background color stops for the gradient.
-        rainbow: If True, ignore ``colors`` and use a rainbow gradient.
+            [cli option: `-C`, `--bg-colors`]
         hues: Number of hues to generate when auto-selecting colors.
-        title: Optional panel title renderable.
+            [cli option: `--hues`]
+        rainbow: If True, ignore `colors` and use a rainbow gradient.
+            [cli option: `-r`, `--rainbow`]
+        repeat_scale: Stretch factor for gradient color stops. Higher values produce
+            a more gradual gradient. [cli option: `--repeat-scale`]
+        title: Optional panel title renderable. [cli option: `-t`, `--title`]
         title_align: Alignment for the title text. Defaults to ``"center"``.
+            [cli option: `--title-align`]
         title_style: Style applied to the highlighted title text.
-        subtitle: Optional panel subtitle renderable.
-        subtitle_align: Alignment for the subtitle text. Defaults to ``"right"``.
+            [cli option: `--title-style`]
+        subtitle: Optional panel subtitle renderable. [cli option: `-s`, `--subtitle`]
+        subtitle_align: Alignment for the subtitle text. Defaults to `"right"`.
+            [cli option: `--subtitle-align`]
         subtitle_style: Style applied to the highlighted subtitle text.
-        border_style: Border style for the Rich panel.
+            [cli option: `--subtitle-style`]
+        border_style: Border style for the Rich panel. [cli option: `--border-style`]
         justify: Horizontal justification applied to the animated gradient.
+            [cli option: `--justify`]
         vertical_justify: Vertical justification applied to the animated gradient.
+            [cli option: `-V`, `--vertical-justify`]
         box: Rich box style for the panel border. Defaults to :data:`ROUNDED`.
-        padding: Panel padding.
-        expand: Whether the panel expands to available width.
-        style: Base style for panel content.
-        width: Optional explicit panel width.
-        height: Optional explicit panel height.
-        safe_box: Use “safe” box characters if True.
+            [cli option: `-b`, `--box`]
+        padding: Panel padding. Can be a single integer or a tuple of up to four integers.
+            [cli option: `-p`,`--padding`]
+        expand: Whether the panel expands to available width. [cli option: `-e`, `--expand`]
+        style: Base style for panel content. [cli option: `--style`]
+        width: Optional explicit panel width. [cli option: `--width`]
+        height: Optional explicit panel height. [cli option: `--height`]
+        safe_box: Use “safe” box characters if True. [cli option: `--safe-box`]
         highlight_words: Word highlight configuration forwarded to the gradient.
+            [cli option: `-w`, `--highlight-words`]
         highlight_regex: Regex highlight configuration forwarded to the gradient.
-        auto_refresh: Whether ``Live`` refreshes automatically.
-        refresh_per_second: Target frames per second.
-        console: Explicit console to render to.
-        transient: Leave the screen clear after stopping if True.
+            [cli option:  `-H`, `--highlight-regex`]
+        auto_refresh: Whether `Live` refreshes automatically.
+            [cli option: `--auto-refresh`]
+        refresh_per_second (optional, float): Target frames per second. Defaults to 20.0
+            [cli option: `--rps`]
+        console (Optional[Console]): Explicit console to render to. Defaults to None.
+            [cli option: `--console`]
+        transient (optional, bool): Leave the screen clear after stopping if True.
+            [cli option: `-T`,`--transient`]
         redirect_stdout: Redirect stdout into the Live console.
+            [cli option: `--redirect-stdout`]
         redirect_stderr: Redirect stderr into the Live console.
-        disable: Disable rendering (for testing).
-    phase_per_second: Phase advance per second (cycles per second).
-    speed: Deprecated ms-per-frame step; mapped to phase_per_second.
-        repeat_scale: Stretch factor for gradient color stops.
-        animate: Toggle animation on or off.
+            [cli option: `--redirect-stderr`]
+
+        animate (bool | None): Toggle animation on or off. ``None`` defers to the
+            global configuration.
         duration: Optional duration in seconds for automatic stop.
     """
 
@@ -66,40 +86,41 @@ class AnimatedPanel(AnimatedGradient):
         renderable: RenderableType,
         colors: Optional[List[ColorType]] = None,
         bg_colors: Optional[List[ColorType]] = None,
-        *,
-        rainbow: bool = False,
         hues: int = 5,
+        rainbow: bool = False,
+        repeat_scale: float = 4.0,
+
+        # layout args
+        expand: bool = True,
+        justify: AlignMethod = "left",
+        vertical_justify: VerticalAlignMethod = "middle",
+        highlight_words: Optional[HighlightWordsType] = None,
+        highlight_regex: Optional[HighlightRegexType] = None,
+        border_style: StyleType = "",
+        box: Box = ROUNDED,
+        padding: Union[int, tuple[int, int], tuple[int, int, int, int]] = (0, 1),
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        style: StyleType = "",
         title: Optional[Text | RichText | TextType] = None,
         title_align: AlignMethod = "center",
         title_style: StyleType = "bold",
         subtitle: Optional[Text | RichText | TextType] = None,
         subtitle_align: AlignMethod = "right",
         subtitle_style: StyleType = "",
-        border_style: StyleType = "",
-        justify: AlignMethod = "left",
-        vertical_justify: VerticalAlignMethod = "middle",
-        box: Box = ROUNDED,
-        padding: Union[int, tuple[int, int], tuple[int, int, int, int]] = (0, 0, 0, 0),
-        expand: bool = True,
-        style: StyleType = "",
-        width: Optional[int] = None,
-        height: Optional[int] = None,
         safe_box: bool = False,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
-        auto_refresh: bool = True,
-        refresh_per_second: float = 30.0,
+
+        # live args
         console: Optional[Console] = None,
-        transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
-        disable: bool = False,
-        phase_per_second: Optional[float] = None,
-        speed: Optional[int] = None,
-        repeat_scale: float = 2.0,
-        animate: bool = True,
+        auto_refresh: bool = True,
+        refresh_per_second: float = 20.0,
+        transient: bool = False,
+        animate: Optional[bool] = None,
         duration: Optional[float] = None,
     ) -> None:
+        """Initialize AnimatedPanel instance. See class docstring for details."""
         panel = RichPanel(
             renderable,
             title=title,
@@ -134,14 +155,11 @@ class AnimatedPanel(AnimatedGradient):
             transient=transient,
             redirect_stdout=redirect_stdout,
             redirect_stderr=redirect_stderr,
-            disable=disable,
             expand=expand,
             justify=justify,
             vertical_justify=vertical_justify,
             hues=hues,
             rainbow=rainbow,
-            phase_per_second=phase_per_second,
-            speed=speed,
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_list,
@@ -210,7 +228,6 @@ if __name__ == "__main__":
         title_style="bold white",
         subtitle="Ctrl+C to stop",
         rainbow=True,
-        repeat_scale=4.0,
         console=_console,
         padding=(1, 2),
         justify="center",

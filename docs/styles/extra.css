@@ -22,8 +22,20 @@
     --lunar: #fbf2fc;
     --asteroid: #e3cee3;
     --crater: #f0dfdf;
+    --md-default-bg-color: var(--lunar);
+    --md-default-fg-color: var(--galaxy);
+    --md-primary-fg-color: var(--aurora);
+    --md-accent-fg-color: var(--radiate);
 
     --md-admonition-icon--note: url('data:image/svg+xml;charset=utf-8,<?xml version="1.0" encoding="UTF-8"?><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><style>.cls-1 {stroke-width: 0px;}</style></defs><path id="gradient_icon" class="cls-1" d="m21.16.94H2.84c-1.05,0-1.9.85-1.9,1.9v18.32c0,1.05.85,1.9,1.9,1.9h18.32c1.05,0,1.9-.85,1.9-1.9V2.84c0-1.05-.85-1.9-1.9-1.9Zm1.4,18.1H1.44v-.19h21.13v.19Zm0-3.09H1.44v-.3h21.13v.3Zm0-3.1H1.44v-.5h21.13v.5Zm0-3H1.44v-.9h21.13v.9Zm0-2.9H1.44v-1.4h21.13v1.4Zm0-2.9H1.44v-1.21c0-.25.06-.48.18-.69h20.76c.12.21.18.44.18.69v1.21Z" /></svg>');
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --md-default-bg-color: var(--galaxy);
+            --md-default-fg-color: var(--white);
+            --md-primary-fg-color: var(--aurora);
+            --md-accent-fg-color: var(--radiate);
+        }
+    }
 }
 
 @font-face {
@@ -39,6 +51,11 @@
 @font-face {
     font-family: "Urbanist-Thin", sans-serif;
     src: url("/Users/maxludden/Library/Fonts/Urbanist-Thin.ttf");
+}
+
+html {
+    color:#ffffff;
+    background-color: var(--md-default-bg-color);
 }
 
 table {
@@ -300,4 +317,12 @@ tr:nth-child(even) {
 .rg-toast.visible {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+}
+
+/* Reset body background/structure so pages respect theme colors (avoid black flash) */
+html,
+body {
+    display: block;
+    min-height: 100%;
+    background: var(--md-default-bg-color);
 }

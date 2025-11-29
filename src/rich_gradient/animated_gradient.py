@@ -1,18 +1,10 @@
-"""A module providing an AnimatedGradient class for creating animated
-gradients in the terminal using Rich."""
+"""Animated gradient support built on top of Rich Live."""
 
+import signal
 import time
-import warnings
+from contextlib import suppress
 from threading import Event, RLock, Thread
-from typing import (
-    Any,
-    Callable,
-    List,
-    Mapping,
-    Optional,
-    Sequence,
-    cast,
-)
+from typing import Any, Callable, List, Mapping, Optional, Sequence, cast
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -22,12 +14,32 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text as RichText
 
-from rich_gradient.gradient import Gradient, ColorType
+# from rich_gradient import config
+from rich_gradient.gradient import ColorType, Gradient
+
+# def _get_config() -> Any:
+#     """
+#     Retrieve the global configuration, re-importing from the package once it is fully initialised.
+#     Falls back to the cached config instance while the package is still loading.
+#     """
+
+#     try:
+#         from rich_gradient import config
+
+#     except ImportError:
+#         return config
+#     else:
+#         _GLOBAL_CONFIG = config
+#         return _GLOBAL_CONFIG
 
 __all__ = [
     "AnimatedGradient",
     "ColorType",
+    "FPS",
 ]
+
+FPS = 0.12
+
 
 class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
@@ -36,28 +48,22 @@ class AnimatedGradient(Gradient):
         renderables (Optional[List[ConsoleRenderable]]): Renderables to apply the gradient to.
         colors (Optional[List[ColorType]]): Foreground color stops for the gradient.
         bg_colors (Optional[List[ColorType]]): Background color stops for the gradient.
-        auto_refresh (bool): Automatically refresh the Live context. Defaults to True.
-        refresh_per_second (float): Refresh rate for the Live context. Defaults to 30.0.
-        console (Optional[Console]): Console to use for rendering. Defaults to the global console.
-        transient (bool): Keep Live transient (don’t clear on stop). Defaults to False.
-        redirect_stdout (bool): Redirect stdout to Live. Defaults to False.
-        redirect_stderr (bool): Redirect stderr to Live. Defaults to False.
-        disable (bool): Disable rendering. Defaults to False.
+        hues (int): Number of hues when auto-generating colors. Defaults to 5.
+        rainbow (bool): Generate a rainbow gradient instead of using ``colors``. Defaults to False.
+        repeat_scale (float): Stretch color stops across a wider span. Defaults to 4.0.
         expand (bool): Expand to fill console width/height. Defaults to False.
         justify (AlignMethod): Horizontal justification. Defaults to "left".
         vertical_justify (VerticalAlignMethod): Vertical justification. Defaults to "top".
-        hues (int): Number of hues when auto-generating colors. Defaults to 5.
-        rainbow (bool): Use a rainbow gradient. Defaults to False.
-        phase_per_second (float | None): Phase advance per second (cycles per second).
-            Defaults to 0.12.
-        speed (int | None): DEPRECATED. Old per-frame ms step. If provided,
-            it will be mapped to an equivalent `phase_per_second` using
-            `phase_per_second = refresh_per_second * (speed/1000.0)`.
-        repeat_scale (float): Stretch color stops across a wider span. Defaults to 4.0.
+        console (Optional[Console]): Console to use for rendering. Defaults to the global console.
         highlight_words: Optional configurations for word highlighting.
         highlight_regex: Optional configurations for regex highlighting.
-        animate (bool): Whether to animate. If False, render a static gradient. Defaults to True.
-        duration (float | None): Optional duration for automatic stop when running animations.
+        redirect_stdout (bool): Redirect stdout to Live. Defaults to False.
+        redirect_stderr (bool): Redirect stderr to Live. Defaults to False.
+        auto_refresh (bool): Automatically refresh the Live context. Defaults to True.
+        refresh_per_second (float): Refresh rate for the Live context. Defaults to 20.0.
+        animate (bool | None): Whether to animate. When ``None`` (default), the global
+            configuration is used. Set to ``False`` to disable live updates explicitly.
+        duration (Optional[float]): Optional duration for automatic stop when running animations.
 
     Examples:
         >>> ag = AnimatedGradient(renderables=["Hello"], rainbow=True)
@@ -71,29 +77,29 @@ class AnimatedGradient(Gradient):
     def __init__(
         self,
         renderables: Optional[List[ConsoleRenderable] | ConsoleRenderable | str] = None,
+        # color args
         colors: Optional[List[ColorType]] = None,
         bg_colors: Optional[List[ColorType]] = None,
-        *,
-        auto_refresh: bool = True,
-        refresh_per_second: float = 30.0,
-        console: Optional[Console] = None,
-        transient: bool = False,
-        redirect_stdout: bool = False,
-        redirect_stderr: bool = False,
-        disable: bool = False,
+        hues: int = 5,
+        rainbow: bool = False,
+        repeat_scale: float = 4.0,
+        # layout args
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
-        hues: int = 5,
-        rainbow: bool = False,
-        phase_per_second: Optional[float] = None,
-        speed: Optional[int] = None,
-        repeat_scale: float = 4.0,  # Scale factor to stretch the color stops across a wider span
         highlight_words: Mapping[Any, Any] | Sequence[Any] | None = None,
         highlight_regex: Mapping[Any, Any] | Sequence[Any] | None = None,
-        animate: bool = True,
-        duration: Optional[float] = 5,
+        # live args
+        console: Optional[Console] = None,
+        redirect_stdout: bool = False,
+        redirect_stderr: bool = False,
+        auto_refresh: bool = True,
+        refresh_per_second: float = 30.0,
+        transient: bool = False,
+        animate: Optional[bool] = None,
+        duration: Optional[float] = None,
     ) -> None:
+        self.animate = self.get_animated(animate)
         assert refresh_per_second > 0, "refresh_per_second must be greater than 0"
         self._lock = RLock()
 
@@ -108,10 +114,8 @@ class AnimatedGradient(Gradient):
         )
         self.auto_refresh = auto_refresh
         self.transient = transient
-        self.disable = disable
         self.refresh_per_second = refresh_per_second
         self.expand = expand
-        self.animate = bool(animate)
         if duration is not None:
             if duration <= 0:
                 raise ValueError("duration must be greater than 0")
@@ -119,21 +123,8 @@ class AnimatedGradient(Gradient):
         else:
             self.duration = None
 
-        # Determine phase advance per second. Default mirrors older behavior
-        # where speed=4ms at 30 FPS ≈ 0.12 cycles/second.
-        if phase_per_second is not None:
-            self._phase_per_second = float(phase_per_second)
-        elif speed is not None:
-            # Back-compat with deprecated 'speed' argument.
-            warnings.warn(
-                "AnimatedGradient 'speed' is deprecated; use 'phase_per_second' \
-(cycles per second) instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            self._phase_per_second = refresh_per_second * (speed / 1000.0)
-        else:
-            self._phase_per_second = 0.12
+        # Fixed phase advance per second mirrors the legacy default of ≈0.12 cycles/sec.
+        self._phase_per_second = FPS
 
         # Thread / control flags
         self._running: bool = False
@@ -182,8 +173,6 @@ class AnimatedGradient(Gradient):
     # -----------------
     def start(self) -> None:
         """Start the Live context and the animation loop in a background thread."""
-        if self.disable:
-            return
         if self._running or self._live_active:
             return
         if not self.animate:
@@ -191,11 +180,11 @@ class AnimatedGradient(Gradient):
             self._stop_event.clear()
             self.live.start()
             self._live_active = True
-            self._deadline = None
             with self._lock:
                 renderable = self.get_renderable()
-            # Ensure the single frame is drawn immediately.
             self.live.update(renderable, refresh=True)
+            self.live.stop()
+            self._live_active = False
             return
         self._running = True
         # self._stop_event.clear()
@@ -210,8 +199,6 @@ class AnimatedGradient(Gradient):
 
     def stop(self) -> None:
         """Signal the animation to stop, wait for the thread, and close Live."""
-        if self.disable:
-            return
         if not self._live_active and not self._running:
             return
         self._running = False
@@ -226,17 +213,37 @@ class AnimatedGradient(Gradient):
 
     def run(self) -> None:
         """Blocking helper: start, then wait for Ctrl+C, then stop."""
+        # Install a temporary SIGINT handler so Ctrl+C will immediately
+        # attempt to stop the animation and close the Live console cleanly.
+        previous_handler = signal.getsignal(signal.SIGINT)
+
+        def _sigint_handler(_signum, _frame):
+            # Stop animation and ensure Live is closed. Keep handler small
+            # and defensive to avoid raising from signal context.
+            try:
+                self.stop()
+            except (RuntimeError, OSError):
+                pass
+
+        signal.signal(signal.SIGINT, _sigint_handler)
+
         try:
             self.start()
-            if self.disable or not self.animate:
+            if not self.animate:
                 if self.duration:
                     time.sleep(self.duration)
                 return
             while self._running:
                 time.sleep(0.1)
         except KeyboardInterrupt:
-            pass
+            # If KeyboardInterrupt is raised, ensure we stop cleanly.
+            self.stop()
         finally:
+            # Restore the previous SIGINT handler and ensure Live is stopped.
+            try:
+                signal.signal(signal.SIGINT, previous_handler)
+            except (ValueError, OSError):
+                pass
             self.stop()
 
     def __enter__(self):
@@ -268,40 +275,47 @@ class AnimatedGradient(Gradient):
     def _animate(self) -> None:
         """Run the animation loop, updating at the requested FPS until stopped."""
         try:
-            frame_time = 1.0 / self.refresh_per_second
-            while not self._stop_event.is_set():
-                # Advance the gradient phase (guarded by lock to avoid
-                # race conditions with the render path).
-                deadline = self._deadline
-                with self._lock:
-                    self._cycle += self._phase_per_second * frame_time
-                    self.phase = self._cycle
-                    _renderable = self.get_renderable()
+            with suppress(KeyboardInterrupt):
+                frame_time = 1.0 / self.refresh_per_second
+                while not self._stop_event.is_set():
+                    # Advance the gradient phase (guarded by lock to avoid
+                    # race conditions with the render path).
+                    deadline = self._deadline
+                    with self._lock:
+                        self._cycle += self._phase_per_second * frame_time
+                        self.phase = self._cycle
+                        _renderable = self.get_renderable()
 
-                # Push an update to Live. If auto_refresh is True, rely on
-                # Live's own auto refresh; otherwise request an explicit
-                # refresh via update(refresh=True).
-                if self.auto_refresh:
-                    self.live.update(_renderable, refresh=False)
-                else:
-                    self.live.update(_renderable, refresh=True)
-                if deadline is not None and time.monotonic() >= deadline:
-                    self._stop_event.set()
-                    break
-                # Sleep but remain responsive to stop_event
-                self._stop_event.wait(frame_time)
+                    # Push an update to Live. If auto_refresh is True, rely on
+                    # Live's own auto refresh; otherwise request an explicit
+                    # refresh via update(refresh=True).
+                    if self.auto_refresh:
+                        self.live.update(_renderable, refresh=False)
+                    else:
+                        self.live.update(_renderable, refresh=True)
+                    if deadline is not None and time.monotonic() >= deadline:
+                        self._stop_event.set()
+                        break
+                    # Sleep but remain responsive to stop_event
+                    self._stop_event.wait(frame_time)
+            self.live.stop()
         except KeyboardInterrupt:
-            # Allow graceful exit on Ctrl+C
-            pass
-        finally:
-            self._running = False
+            self.live.stop()
+
+    def get_animated(self, animate: Optional[bool] = None) -> bool:
+        """Return whether animation is enabled."""
+        from rich_gradient.config import config
+
+        if animate is None:
+            return config.animation_enabled
+        return bool(animate)
 
 
 def animated_gradient_example() -> None:
     """Run an example of AnimatedGradient with multiple rich renderables."""
     _console = Console(width=64)
 
-    def _generate_table()-> Table:
+    def _generate_table() -> Table:
         """Generate a sample table to include in the animated gradient."""
         table = Table(collapse_padding=False, expand=True, width=40)
         table.add_column("Renderable", justify="right", ratio=4)
@@ -355,13 +369,13 @@ panel and table in a group inside a panel!\n\n",
             ".": "#ccc",
             "✔": "#0f0",
         },
-        repeat_scale=4.0,
         justify="center",
         console=_console,
     )
 
     # Run the animation
     animated_gradient.run()
+
 
 if __name__ == "__main__":
     animated_gradient_example()

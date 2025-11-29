@@ -14,6 +14,7 @@ nav:
           - Rule: "rule.md"
           - Spectrum: "spectrum.md"
           - Animation: "animation.md"
+          - Configuration: "configuration.md"
           - CLI: "cli.md"
     - References:
           - Animated Gradient Reference: "animated_gradient_ref.md"

@@ -73,6 +73,8 @@
         "files.associations": {
             "*.yaml": "home-assistant"
         },
+        "workbench.editor.enablePreview": false,
+        "workbench.editor.enablePreviewFromQuickOpen": false,
         "sqltools.connections": [
             {
                 "name": "supergene",

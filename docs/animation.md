@@ -16,14 +16,12 @@ markdown = Markdown(
     "[b]Animated gradients[/b]\n\n"
     "- Run as a context manager\n"
     "- Or control start/stop manually\n"
-    "- Adjust `phase_per_second` for speed"
 )
 
 with AnimatedGradient(
     markdown,
     rainbow=True,
     console=console,
-    phase_per_second=0.2,
 ) as gradient:
     console.input("[dim]Press Enter to stop...[/dim]")
 ```
@@ -31,10 +29,10 @@ with AnimatedGradient(
 Key parameters:
 
 - `refresh_per_second`: desired frame rate for the `Live` render loop.
-- `phase_per_second`: how quickly the gradient cycles through its color stops.
 - `repeat_scale`: stretch the palette across a wider span before repeating.
 - `highlight_words` / `highlight_regex`: identical to the static `Gradient`.
 - `start()`, `stop()`, `run()`: manual control when you want to integrate with custom event loops.
+- Defaults honour the global configuration; see [Configuration](configuration.md) for details.
 
 ## `AnimatedPanel`
 
@@ -56,7 +54,6 @@ animated = AnimatedPanel(
     panel,
     rainbow=True,
     refresh_per_second=40,
-    phase_per_second=0.15,
 )
 try:
     animated.run()

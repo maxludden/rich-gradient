@@ -16,7 +16,7 @@
 
 `rich-gradient` layers smooth foreground and background gradients on top of [Rich](https://github.com/Textualize/rich) renderables.
 It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and
-a Typer-powered CLI for trying gradients from the terminal.
+a rich-click (Click) CLI for trying gradients from the terminal.
 
 ## Highlights
 
@@ -27,16 +27,18 @@ a Typer-powered CLI for trying gradients from the terminal.
   - [`Text`](text.md)
   - [`Gradient`](gradient.md)
   - [`Panel`](panel.md)
-  - [`Rule`](rule.md)
-  - [`Spectrum`](spectrum.md)
-  - And their animated counterparts.
+- [`Rule`](rule.md)
+- [`Spectrum`](spectrum.md)
+- And their animated counterparts.
 - Includes a CLI for quick experiments and SVG export for documentation or asset generation.
+- Auto-bootstraps a configuration file (`~/.rich-gradient`) where you can toggle
+  animation globally and customise the default spectrum palette.
 
 ## Installation
 
 `rich-gradient` targets Python 3.10+.
 
-### [uv](https://github.com/astral-sh/uv
+### [uv](https://github.com/astral-sh/uv)
 
 ```shell
 # Recommended: use uv
@@ -46,7 +48,7 @@ uv add rich-gradient
 uv pip install rich-gradient
 ```
 
-### [Pip](https://pip.pypa.io/en/stable/
+### [Pip](https://pip.pypa.io/en/stable/)
 
 Or with pip:
 
@@ -61,39 +63,24 @@ pip install rich-gradient
 
 ## CLI Usage
 
-The package ships with a Typer-based CLI. The first command is `text`, which prints gradient-styled text. More commands may be added over time.
+The CLI is built with Click + rich-click. Subcommands:
 
-### Quick examples
+- `print`: gradient text. Options: `--colors/-c`, `--bgcolors`, `--rainbow`, `--hues`, `--style`, `--justify`, `--overflow`, `--no-wrap`, `--end`.
+- `rule`: gradient rule. Options: `--title`, `--title-style`, `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--thickness`, `--align`, `--end`.
+- `panel`: gradient panel. Options: `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--title`, `--title-style`, `--title-align`, `--subtitle`, `--subtitle-style`, `--subtitle-align`, `--style`, `--border-style`, `--padding`, `--vertical-justify`, `--text-justify`, `--justify`, `--expand/--no-expand`, `--width`, `--height`, `--box`, `--end`, `--animate`, `--duration`.
+- `markdown`: gradient markdown. Options: `--colors`, `--bgcolors`, `--rainbow`, `--hues`, `--style`, `--justify`, `--vertical-justify`, `--overflow`, `--no-wrap`, `--end`, `--animate`, `--duration`.
 
-- Print gradient text with two color stops:
+Quick examples:
 
-  `rich-gradient text "Hello [b]world[/b]!" -c magenta -c cyan`
+- Gradient text: `rich-gradient print "Hello [b]world[/b]!" -c magenta,cyan`
+- Rainbow text: `rich-gradient print "Rainbow!" --rainbow`
+- Panel with title: `rich-gradient panel "Panel content" -c red,blue --title "Gradient Panel"`
+- Rule with title: `rich-gradient rule --title "Section" -c "#f00,#0ff"`
+- Gradient markdown: `rich-gradient markdown "# Title" --colors "#ff0,#0ff" --justify center`
 
-- Rainbow gradient (auto-generated colors):
+### Contributor notes
 
-  `rich-gradient text "Rainbow!" --rainbow`
-
-- Read from stdin:
-
-  `echo "From stdin" | rich-gradient text`
-
-- Wrap in a panel with a title:
-
-  `rich-gradient text "Panel content" --panel --title "Gradient Panel"`
-
-- Save to SVG (uses the project terminal theme):
-
-  `rich-gradient text "Save me" --save-svg out/example.svg`
-
-### Common options
-
-- `-c/--color`: Repeat to add multiple foreground color stops.
-- `-b/--bgcolor`: Repeat for background color stops.
-- `--rainbow`, `--hues`: Auto-generate a palette if colors aren’t provided.
-- `--style`, `--justify`, `--overflow`, `--no-wrap/--wrap`, `--end`, `--tab-size`, `--markup/--no-markup`.
-- `--panel`, `--title`: Wrap output in a panel with optional title.
-- `--width`: Console width. `--record`: enable recording.
-- `--save-svg PATH`: Save the current render as SVG.
+- Tests: `pytest` works without an editable install because `tests/conftest.py` adds `src/` to `sys.path`. No extra env tweaks needed; just install deps and run `pytest`.
 
 ## Usage
 

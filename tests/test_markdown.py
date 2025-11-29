@@ -3,7 +3,8 @@
 import pytest
 from rich.markdown import Markdown as RichMarkdown
 
-from rich_gradient.markdown import AnimatedMarkdown, Markdown
+from rich_gradient.markdown import Markdown
+from rich_gradient.animated_markdown import AnimatedMarkdown
 
 
 def test_markdown_initializes_with_string_content():
@@ -12,7 +13,7 @@ def test_markdown_initializes_with_string_content():
     markdown = Markdown(content, colors=["#ff0000", "#0000ff"])
     rich_md = markdown.rich_markdown
     assert isinstance(rich_md, RichMarkdown)
-    assert rich_md.markdown == content
+    assert rich_md == content
 
 
 def test_markdown_preserves_kwargs_on_update():
@@ -25,7 +26,7 @@ def test_markdown_preserves_kwargs_on_update():
     assert markdown.rich_markdown.style == "markdown.bold"
     markdown.update_markdown("_italic_")
     assert markdown.rich_markdown.style == "markdown.bold"
-    assert markdown.rich_markdown.markdown == "_italic_"
+    assert markdown.rich_markdown == "_italic_"
 
 
 def test_markdown_rejects_kwargs_with_renderable():
@@ -39,6 +40,6 @@ def test_animated_markdown_allows_updates():
     """AnimatedMarkdown should expose the underlying Rich Markdown and support updates."""
     animated = AnimatedMarkdown("Initial", colors=["#abcdef", "#123456"])
     assert isinstance(animated.rich_markdown, RichMarkdown)
-    assert animated.rich_markdown.markdown == "Initial"
+    assert animated.rich_markdown == "Initial"
     animated.update_markdown("Updated")
-    assert animated.rich_markdown.markdown == "Updated"
+    assert animated.rich_markdown == "Updated"
