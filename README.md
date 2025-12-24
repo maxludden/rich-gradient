@@ -1,7 +1,6 @@
 # [![rich-gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/rich-gradient.svg)](https://maxludden.github.io/rich-gradient/)
 
-<!-- markdownlint-disable MD033 -->
-<!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD033 MD013 -->
 <p align="center">
   <a href="https://www.python.org/"><img
     src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12%2C%203.13-blue" alt="Python versions"></a>
@@ -182,7 +181,7 @@ console.print(
 
 ### Rainbow Gradient Example
 
-If four colors isn't enough, you can use the 'rainbow' parameter to generate
+If four colors aren't enough, you can use the 'rainbow' parameter to generate
  a rainbow gradient that spans the entire spectrum of colors randomly.
 
 ```python
