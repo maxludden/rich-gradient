@@ -6,7 +6,6 @@ from typing import Any, Optional, cast
 
 import rich_click as click
 from rich.align import AlignMethod, VerticalAlignMethod
-from rich.console import OverflowMethod
 
 from rich_gradient.animated_markdown import AnimatedMarkdown
 from rich_gradient.markdown import Markdown
@@ -83,14 +82,6 @@ styles will be applied as the gradient's colors override color styles.[/]",
     show_default=True,
 )
 @click.option(
-    "--overflow",
-    metavar="OVERFLOW",
-    type=click.Choice(["crop", "fold", "ellipsis"], case_sensitive=False),
-    default="fold",
-    help="How to handle overflow of markdown text. [lime](crop, fold, ellipsis)[/]",
-    show_default=True,
-)
-@click.option(
     "--no-wrap",
     is_flag=True,
     default=False,
@@ -104,7 +95,9 @@ styles will be applied as the gradient's colors override color styles.[/]",
     default="\n",
     help="String appended after the text is printed. [dim]\\[default: '\\n'][/dim]",
 )
-@click.option("--animate", is_flag=True, default=False, help="Animate the gradient markdown text.")
+@click.option(
+    "--animate", is_flag=True, default=False, help="Animate the gradient markdown text."
+)
 @click.option(
     "-d",
     "--duration",
