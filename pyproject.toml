@@ -9,7 +9,7 @@ dependencies = [
     "rich>=14.0.0",
     "rich-color-ext>=0.1.9",
     "rich-click>=1.9.4",
-    "typer>=0.19.2,<0.21",
+    "typer>=0.19.2,<0.22",
 ]
 dynamic = ["version"]
 
