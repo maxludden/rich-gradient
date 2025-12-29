@@ -5,6 +5,7 @@ build/
 dist/
 site/
 wheels/
+tmp_dl/
 *.egg-info
 get-pip.*
 logs
