@@ -13,13 +13,16 @@ from .common import console, parse_colors, parse_style
 
 
 @click.command("rule", help="Display a gradient rule in the console.")
-@click.option("-t", "--title", metavar="TITLE", type=str, default=None, help="Title of the rule.")
+@click.option(
+    "-t", "--title", metavar="TITLE", type=str, default=None, help="Title of the rule."
+)
 @click.option(
     "-s",
     "--title-style",
     metavar="TITLE_STYLE",
     type=str,
-    default=None,
+    default="bold",
+    show_default=True,
     help="The style of the rule's title text. [dim italic]*Only non-color \
 styles will be applied as the gradient's colors override color styles.[/]",
 )
@@ -28,16 +31,17 @@ styles will be applied as the gradient's colors override color styles.[/]",
     "--colors",
     metavar="COLORS",
     type=str,
-    default=None,
+    # default="#38bdf8,#a855f7,#f97316",
+    default="",
+    show_default=True,
     help="Comma-separated list of colors for the gradient. [dim](e.g., \
-`[/][red]red[/][dim], [/][#ff9900]#ff9900[/][dim], [/][yellow]yellow[/][dim]`). \
-If no colors are provided, the color stops are automatically generated.",
+`[/][red]red[/][dim], [/][#ff9900]#ff9900[/][dim], [/][yellow]yellow[/][dim]`).",
 )
 @click.option(
     "--bgcolors",
     metavar="BGCOLORS",
     type=str,
-    default=None,
+    default="",
     help="Comma-separated list of background colors for the gradient. [dim](e.g., \
 `[/][red]red[/][dim], [/][#ff9900]#ff9900[/][dim], [/][#ff0]#ff0[/][dim]`). \
 Defaults to [/][bold #fff]transparent[/][dim].[/dim]",

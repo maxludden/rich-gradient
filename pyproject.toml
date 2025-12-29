@@ -2,7 +2,7 @@
 name = "rich-gradient"
 description = "A gradient generator for the Rich library."
 readme = "README.md"
-authors = [{ name = "Max Ludden", email = "dev@maxludden.com" }]
+authors = [{ name = "Max Ludden", email = "maxludden@me.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
@@ -55,11 +55,12 @@ ignore = [
 
 [tool.pylint.MESSAGES_CONTROL]
 disable = [
-    "C0103",                      # Variable name doesn't conform to snake_case
+    "C0103",                      # Variable name does not conform to snake_case
     "E0611",                      # No name in module
     "W0611",                      # Unused import
     "W0603",                      # allow `global` statement
     "W1401",                      # Anomalous backslash in string
+    "R0914",                      # Too many local variables
 ]
 
 [tool.markdownlint]

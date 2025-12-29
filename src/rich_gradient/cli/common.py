@@ -10,7 +10,7 @@ from rich.style import Style
 from rich_click import rich_click as rich_click_config
 
 console = Console()
-VERSION = "1.0.0"
+VERSION = "0.3.9"
 
 # Configure global rich-click styling so every command gets consistent output.
 rich_click_config.USE_RICH_MARKUP = True
