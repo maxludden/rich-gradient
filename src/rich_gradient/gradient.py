@@ -31,7 +31,7 @@ from rich.text import Text as RichText
 
 from rich_gradient.spectrum import Spectrum
 
-# Type alias for accepted color inputs
+
 ColorType: TypeAlias = Union[str, Color, ColorTriplet]
 
 

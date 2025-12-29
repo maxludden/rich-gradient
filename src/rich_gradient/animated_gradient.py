@@ -14,23 +14,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text as RichText
 
-# from rich_gradient import config
 from rich_gradient.gradient import ColorType, Gradient
-
-# def _get_config() -> Any:
-#     """
-#     Retrieve the global configuration, re-importing from the package once it is fully initialised.
-#     Falls back to the cached config instance while the package is still loading.
-#     """
-
-#     try:
-#         from rich_gradient import config
-
-#     except ImportError:
-#         return config
-#     else:
-#         _GLOBAL_CONFIG = config
-#         return _GLOBAL_CONFIG
 
 __all__ = [
     "AnimatedGradient",
@@ -304,7 +288,9 @@ class AnimatedGradient(Gradient):
 
     def get_animated(self, animate: Optional[bool] = None) -> bool:
         """Return whether animation is enabled."""
-        from rich_gradient.config import config
+        from rich_gradient.config import (
+            config,  # pylint: disable=import-outside-toplevel
+        )
 
         if animate is None:
             return config.animation_enabled
