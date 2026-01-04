@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### v0.3.10 - 2026-01-04 | <span style="color: rgb(215, 255, 100)">AnimatedText, CLI defaults, Live persistence</span>
+
+#### Added / Changed
+
+- Added `AnimatedText` for live gradient `rich.text.Text`, plus `update_text` helpers, package export, reference docs, and an example script.
+- AnimatedGradient family (`AnimatedGradient`, `AnimatedPanel`, `AnimatedMarkdown`, `AnimatedRule`) no longer clears the console on stop; unless `transient=True`, the final gradient render persists.
+- CLI defaults to the `print` command when no subcommand is provided and can read input from stdin.
+  - For example:
+
+    <code>echo "Hello, World!" | rich-gradient</code>
+
+   - Docs refreshed to note the behavior.
+- Animation/text guides and the mkdocs navigation now include AnimatedText coverage.
+- Added tests for AnimatedText behavior and CLI default/stdin handling.
+
+#### Fixed
+
+- Silenced `rich-color-ext` `get_css_map` type checker mismatch for older releases.
+
 ### v0.3.9 - 2025-12-15 | <span style="color: rgb(215, 255, 100)">CLI doc refresh, import/test stability, CSS fix</span>
 
 #### Added / Changed

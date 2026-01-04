@@ -65,3 +65,13 @@ rich_text = text.as_rich()
 ```
 
 This is useful when you want to serialize the output or reuse it in renderables that expect a plain `Text`.
+
+## Animated text
+
+For live gradients, use `AnimatedText` which wraps `rich.text.Text` and animates the gradient phase over time.
+
+```python
+from rich_gradient.animated_text import AnimatedText
+
+AnimatedText("Live text", rainbow=True, duration=3).run()
+```

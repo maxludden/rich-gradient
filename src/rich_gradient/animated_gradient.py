@@ -161,7 +161,6 @@ class AnimatedGradient(Gradient):
             return
         if not self.animate:
             # Static render: render one frame via Live so transient behaviour matches Rich.
-            self._stop_event.clear()
             self.live.start()
             self._live_active = True
             with self._lock:
@@ -171,7 +170,6 @@ class AnimatedGradient(Gradient):
             self._live_active = False
             return
         self._running = True
-        # self._stop_event.clear()
         self.live.start()
         self._live_active = True
         if self.duration is not None:
@@ -217,7 +215,7 @@ class AnimatedGradient(Gradient):
                 if self.duration:
                     time.sleep(self.duration)
                 return
-            while self._running:
+            while self._running and not self._stop_event.is_set():
                 time.sleep(0.1)
         except KeyboardInterrupt:
             # If KeyboardInterrupt is raised, ensure we stop cleanly.
@@ -357,6 +355,7 @@ panel and table in a group inside a panel!\n\n",
         },
         justify="center",
         console=_console,
+        duration=3.0,
     )
 
     # Run the animation

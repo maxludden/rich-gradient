@@ -34,6 +34,29 @@ Key parameters:
 - `start()`, `stop()`, `run()`: manual control when you want to integrate with custom event loops.
 - Defaults honour the global configuration; see [Configuration](configuration.md) for details.
 
+## `AnimatedText`
+
+`AnimatedText` gives you the same gradient animation on top of Rich `Text`, with a helper to
+swap content while the animation is running.
+
+```python
+from time import sleep
+from rich_gradient.animated_text import AnimatedText
+
+animated = AnimatedText("Loading...", rainbow=True)
+
+with animated:
+    sleep(1)
+    animated.update_text("Almost there...")
+    sleep(1)
+```
+
+CLI demo:
+
+```bash
+uv run python examples/animated_text_demo.py
+```
+
 ## `AnimatedPanel`
 
 ![Animated panel](img/animated_panel.gif)

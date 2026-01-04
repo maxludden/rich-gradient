@@ -36,7 +36,7 @@ def get_css_map() -> Dict[str, str]:
     """Return the CSS color mapping, falling back gracefully if unavailable."""
     getter = getattr(_rce, "get_css_map", None)
     if callable(getter):
-        return getter()
+        return getter() # type: ignore
     # Older releases lacked get_css_map, so return an empty mapping instead of failing.
     return {}
 
