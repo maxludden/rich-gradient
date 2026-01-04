@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from typing import Optional, Tuple, cast
 
 import rich_click as click
@@ -14,7 +15,7 @@ from .common import console, parse_colors, parse_style
 
 
 @click.command("print", help="Print text in gradient color.")
-@click.argument("text", nargs=-1, required=True)
+@click.argument("text", nargs=-1, required=False)
 @click.option(
     "-c",
     "--colors",
@@ -108,7 +109,14 @@ def print_command(
     bgcolors: Optional[str],
 ) -> None:
     """Print text in gradient color to the console."""
-    content = " ".join(text)
+    if text:
+        content = " ".join(text)
+    else:
+        if sys.stdin.isatty():
+            raise click.UsageError("Missing text argument.")
+        content = click.get_text_stream("stdin").read().rstrip("\n")
+        if not content:
+            raise click.UsageError("Missing text argument.")
     fg_list = parse_colors(colors)
     bg_list = parse_colors(bgcolors)
     style_obj = parse_style(style)

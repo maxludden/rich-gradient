@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 import rich_click as click
 
 from .common import VERSION
@@ -13,7 +15,11 @@ from .text_command import print_command
 
 @click.group(
     invoke_without_command=True,
-    context_settings=dict(help_option_names=["-h", "--help"]),
+    context_settings=dict(
+        help_option_names=["-h", "--help"],
+        allow_extra_args=True,
+        ignore_unknown_options=True,
+    ),
     help="Create gradient-rich text, panels, and markdown.",
 )
 @click.version_option(version=VERSION, message="%(prog)s version %(version)s")
@@ -24,6 +30,13 @@ def cli(ctx: click.Context | None = None) -> None:
         ctx = click.get_current_context()
     assert ctx is not None
     if ctx.invoked_subcommand is None:
+        if ctx.args or not sys.stdin.isatty():
+            print_command.main(
+                args=list(ctx.args),
+                prog_name=ctx.command_path,
+                standalone_mode=False,
+            )
+            return
         click.echo(ctx.get_help())
 
 
