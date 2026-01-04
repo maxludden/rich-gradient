@@ -66,7 +66,7 @@ def quick_start_rainbow_text():
 def quick_start_gradient_panel():
     """rich-gradient panel -t 'Panel Title' "Gradient Panel content..."""
 
-    from rich.panel import Panel
+    from rich_gradient.panel import Panel
 
     console.line()
     console.print(
