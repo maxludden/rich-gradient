@@ -69,6 +69,7 @@ class Gradient(JupyterMixin):
 
     # Gamma correction exponent for linear interpolation
     _GAMMA_CORRECTION: float = 2.2
+    _MAX_PRECOMPUTED_WIDTH: int = 4096
 
     def __init__(
         self,
@@ -143,6 +144,9 @@ class Gradient(JupyterMixin):
             Optional[List[ColorType]], background_colors
         )  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
+        self._linear_foreground: list[tuple[float, float, float]] = []
+        self._linear_background: list[tuple[float, float, float]] = []
+        self._refresh_linear_stops()
         self._highlight_rules: list[_HighlightRule] = []
         if highlight_words:
             self._ingest_init_highlight_words(highlight_words)
@@ -241,6 +245,7 @@ class Gradient(JupyterMixin):
         # setter, so avoid accessing unset attributes.
         if getattr(self, "_background_colors", None) is not None:
             self._active_stops = self._initialize_color_stops()
+        self._refresh_linear_stops()
 
     @property
     def bg_colors(self) -> List[ColorTriplet]:
@@ -259,6 +264,7 @@ class Gradient(JupyterMixin):
             self._background_colors = []
             # Recompute active stops after change
             self._active_stops = self._initialize_color_stops()
+            self._refresh_linear_stops()
             return
 
         if len(colors) == 1:
@@ -270,6 +276,7 @@ class Gradient(JupyterMixin):
             self._background_colors = triplets
         # Recompute active stops after change
         self._active_stops = self._initialize_color_stops()
+        self._refresh_linear_stops()
 
     @property
     def justify(self) -> AlignMethod:
@@ -388,6 +395,7 @@ class Gradient(JupyterMixin):
         )
 
         lines = console.render_lines(content, options, pad=True, new_lines=False)
+        foreground_lut, background_lut = self._build_style_lookup(width)
         for line_index, segments in enumerate(lines):
             highlight_map = None
             if self._highlight_rules:
@@ -410,8 +418,12 @@ class Gradient(JupyterMixin):
                         cluster_indices.append(current_index)
                         continue
                     if cluster:
-                        style = self._get_style_at_position(
-                            column - cluster_width, cluster_width, width
+                        style = self._get_style_from_lookup(
+                            column - cluster_width,
+                            cluster_width,
+                            width,
+                            foreground_lut,
+                            background_lut,
                         )
                         merged_style = self._merge_styles(base_style, style)
                         merged_style = self._apply_highlight_style(
@@ -426,8 +438,12 @@ class Gradient(JupyterMixin):
                     cluster_indices = [current_index]
                     column += character_width
                 if cluster:
-                    style = self._get_style_at_position(
-                        column - cluster_width, cluster_width, width
+                    style = self._get_style_from_lookup(
+                        column - cluster_width,
+                        cluster_width,
+                        width,
+                        foreground_lut,
+                        background_lut,
                     )
                     merged_style = self._merge_styles(base_style, style)
                     merged_style = self._apply_highlight_style(
@@ -462,6 +478,44 @@ class Gradient(JupyterMixin):
             bg_style = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
 
         return Style(color=fg_style or None, bgcolor=bg_style or None)
+
+    def _get_style_from_lookup(
+        self,
+        position: int,
+        width: int,
+        span: int,
+        foreground_lut: list[Style] | None,
+        background_lut: list[Style] | None,
+    ) -> Style:
+        """
+        Fetch a precomputed style for a given cell cluster when possible.
+
+        Args:
+            position: Starting cell index of the cluster.
+            width: Cell width of the cluster.
+            span: Total available width for gradient calculation.
+            foreground_lut: Optional precomputed foreground styles.
+            background_lut: Optional precomputed background styles.
+
+        Returns:
+            Style with appropriate foreground and/or background colors.
+        """
+        if span <= 0 or position < 0:
+            return self._get_style_at_position(position, width, span)
+        if width in {1, 2}:
+            if background_lut is None and foreground_lut is None:
+                return self._get_style_at_position(position, width, span)
+            index = position + (width // 2)
+            if index >= span:
+                return self._get_style_at_position(position, width, span)
+            foreground = (
+                foreground_lut[index] if foreground_lut is not None else Style()
+            )
+            background = (
+                background_lut[index] if background_lut is not None else Style()
+            )
+            return foreground + background
+        return self._get_style_at_position(position, width, span)
 
     def _compute_fraction(self, position: int, width: int, span: float) -> float:
         """
@@ -524,6 +578,114 @@ class Gradient(JupyterMixin):
         lb = lb0 + (lb1 - lb0) * t
 
         return to_srgb(lr), to_srgb(lg), to_srgb(lb)
+
+    def _refresh_linear_stops(self) -> None:
+        """Precompute linear-light stops for faster interpolation."""
+        self._linear_foreground = self._to_linear_stops(self.colors)
+        self._linear_background = self._to_linear_stops(self.bg_colors)
+
+    def _to_linear_stops(
+        self, stops: list[ColorTriplet]
+    ) -> list[tuple[float, float, float]]:
+        """Convert sRGB stops into linear-light tuples."""
+        if not stops:
+            return []
+
+        def to_linear(c: float) -> float:
+            return (c / 255.0) ** self._GAMMA_CORRECTION
+
+        return [
+            (to_linear(r), to_linear(g), to_linear(b)) for r, g, b in stops
+        ]
+
+    def _build_style_lookup(
+        self, span: int
+    ) -> tuple[list[Style] | None, list[Style] | None]:
+        """
+        Build precomputed lookup tables for fast style access.
+
+        Args:
+            span: Total available width for gradient calculation.
+
+        Returns:
+            Tuple of (foreground styles, background styles).
+        """
+        if span <= 0 or span > self._MAX_PRECOMPUTED_WIDTH:
+            return None, None
+        foreground = (
+            self._build_color_lut(span, self.colors, self._linear_foreground)
+            if self.colors
+            else None
+        )
+        background = (
+            self._build_color_lut(span, self.bg_colors, self._linear_background, True)
+            if self.bg_colors
+            else None
+        )
+        return foreground, background
+
+    def _build_color_lut(
+        self,
+        span: int,
+        stops: list[ColorTriplet],
+        linear_stops: list[tuple[float, float, float]],
+        is_background: bool = False,
+    ) -> list[Style]:
+        """
+        Build a lookup table of gradient styles for each column.
+
+        Args:
+            span: Total available width for gradient calculation.
+            stops: sRGB color stop tuples.
+            linear_stops: Linear-light stop tuples.
+            is_background: Whether to populate background styles.
+
+        Returns:
+            List of Style objects for each column.
+        """
+        lut: list[Style] = []
+        for column in range(span):
+            frac = self._compute_fraction(column, 1, span)
+            r, g, b = self._interpolate_linear_color(frac, stops, linear_stops)
+            hex_color = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+            if is_background:
+                lut.append(Style(bgcolor=hex_color))
+            else:
+                lut.append(Style(color=hex_color))
+        return lut
+
+    def _interpolate_linear_color(
+        self,
+        frac: float,
+        stops: list[ColorTriplet],
+        linear_stops: list[tuple[float, float, float]],
+    ) -> tuple[float, float, float]:
+        """
+        Interpolate a color using precomputed linear-light stops.
+
+        Args:
+            frac: Fractional position between 0.0 and 1.0.
+            stops: sRGB color stop tuples.
+            linear_stops: Linear-light stop tuples.
+
+        Returns:
+            Tuple of (r, g, b) in sRGB space.
+        """
+        if frac <= 0:
+            return stops[0]
+        if frac >= 1:
+            return stops[-1]
+        segment_count = len(stops) - 1
+        pos = frac * segment_count
+        idx = int(pos)
+        t = pos - idx
+        lr0, lg0, lb0 = linear_stops[idx]
+        lr1, lg1, lb1 = linear_stops[min(idx + 1, segment_count)]
+        lr = lr0 + (lr1 - lr0) * t
+        lg = lg0 + (lg1 - lg0) * t
+        lb = lb0 + (lb1 - lb0) * t
+        inv_gamma = 1.0 / self._GAMMA_CORRECTION
+        return (lr**inv_gamma) * 255.0, (lg**inv_gamma) * 255.0, (lb**inv_gamma) * 255.0
 
     @staticmethod
     def _merge_styles(original: Style, gradient_style: Style) -> Style:
