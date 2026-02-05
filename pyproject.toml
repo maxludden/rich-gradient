@@ -61,6 +61,7 @@ disable = [
     "W0603",                      # allow `global` statement
     "W1401",                      # Anomalous backslash in string
     "R0914",                      # Too many local variables
+    "W0212",                      # Access to a protected member of a client class
 ]
 
 [tool.markdownlint]

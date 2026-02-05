@@ -14,6 +14,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text as RichText
 
+from rich_gradient.config import config
 from rich_gradient.gradient import ColorType, Gradient
 
 __all__ = [
@@ -286,10 +287,6 @@ class AnimatedGradient(Gradient):
 
     def get_animated(self, animate: Optional[bool] = None) -> bool:
         """Return whether animation is enabled."""
-        from rich_gradient.config import (
-            config,  # pylint: disable=import-outside-toplevel
-        )
-
         if animate is None:
             return config.animation_enabled
         return bool(animate)

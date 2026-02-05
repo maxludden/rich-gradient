@@ -33,9 +33,7 @@ a Click/rich-click CLI for trying gradients from the terminal.
     - [`Spectrum`](spectrum.md)
     - And their animated counterparts.
 
-???+ note CLI
 
-    Includes a CLI `rich-gradient` for quick experiments and SVG export for documentation or asset generation.
 
 ## Installation
 

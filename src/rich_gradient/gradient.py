@@ -12,9 +12,9 @@ correction, and flexible alignment options.
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, List, Optional, Tuple, TypeAlias, Union, cast
+from typing import Any, List, Optional, TypeAlias, Union, cast
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -29,8 +29,13 @@ from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
+from rich_gradient._highlight import (
+    HighlightRegex,
+    HighlightRegexType,
+    HighlightWords,
+    HighlightWordsType,
+)
 from rich_gradient.spectrum import Spectrum
-
 
 ColorType: TypeAlias = Union[str, Color, ColorTriplet]
 
@@ -46,25 +51,46 @@ class _HighlightRule:
     pattern: re.Pattern[str] | None = None
 
 
-HighlightWordsType: TypeAlias = Union[
-    Mapping[str, StyleType],
-    Sequence[Tuple[str | Sequence[str], StyleType, bool]],
-]
-HighlightRegexType: TypeAlias = Union[
-    Mapping[str, StyleType],
-    Sequence[Tuple[str, StyleType, int]],
-]
-
-
 class Gradient(JupyterMixin):
-    """
-    Base class for rendering color gradients in the terminal using Rich.
+    """Initialize a Gradient instance.
 
-    This class applies a smoothly interpolated gradient of foreground and/or
-    background colors across supplied renderable content.
+    Args:
+        renderables (str|ConsoleRenderable|List[ConsoleRenderable]): A single renderable or list \
+            of renderable objects to which the gradient will be applied.
+        colors (List[str|ColorTriplet], Optional): list of colors for the gradient foreground. \
+            If omitted and rainbow is False, a spectrum of `hues` colors is used. Accepts \
+            3-digit hex strings ('#0f0'), 6-digit hex strings ('#00ff00'), and CSS color \
+            names (e.g., 'lime')
+        bg_colors(str|ColorTriplet|List[str|ColorTriplet], Optional): the background color \
+            or list of colors for the gradient background. Accepts the same formats as \
+            `colors`. If omitted, no background is applied.
+        console(rich.console.Console, Optional): A rich Console to render to. Defaults to
+            `rich.get_console()`.
+        hues(int, Optional): the number of hues to generate if no explicit colors are given. \
+            defaults to 5. This parameter is ignored if `colors` is provided.
+        rainbow(bool, Optional): If True, ignore `colors` and use a full spectrum of colors. \
+            defaults to False.
+        expand(bool, Optional): Whether to expand renderables to the full console width. \
+            defaults to True.
+        justify(str|AlignMethod): Horizontal alignment: 'left', 'center', or 'right'. \
+            Defaults to 'left'.
+        vertical_justify(str|VerticalAlignMethod): Vertical alignment: 'top', 'center', or \
+            'bottom'. Defaults to 'middle'.
+        repeat_scale(float, Optional): Scale factor controlling gradient repeat span. \
+            defaults to 2.0.
+        highlight_words(HighlightWordsType|HighlightWords|Sequence[HighlightWords]\
+            , Optional): Optional configurations describing \
+            word highlights to apply. Accepts either a mapping of words to styles, or a \
+            sequence of tuples describing the highlights.
 
-    Attributes:
-        console: Console instance used for rendering.
+            Examples:
+            - {'error': 'bold italic red', 'warning': '#FFFF00', 'lime': '#0f0'}
+            - [('error', 'bold red'), (('warning', 'caution'), 'yellow', False)]
+            - [HighlightWords(words=('error',), style=Style(bold=True, color='red'))]
+        highlight_regex(HighlightRegexType|HighlightRegex|Sequence[HighlightRegex], Optional):
+            Optional configurations describing regex highlights to apply. Accepts either \
+            a mapping of regex patterns to styles, or a sequence of tuples describing \
+            the highlights.
     """
 
     # Gamma correction exponent for linear interpolation
@@ -83,12 +109,16 @@ class Gradient(JupyterMixin):
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
         repeat_scale: float = 2.0,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
+        highlight_words: Optional[
+            HighlightWordsType | HighlightWords | Sequence[HighlightWords]
+        ] = None,
+        highlight_regex: Optional[
+            HighlightRegexType | HighlightRegex | Sequence[HighlightRegex]
+        ] = None,
         animated: bool = False,
     ) -> None:
         """
-        Initialize a BaseGradient instance.
+        Initialize a Gradient instance.
 
         Args:
             renderables: A single renderable or list of renderable objects to
@@ -139,15 +169,33 @@ class Gradient(JupyterMixin):
         background_colors: List[ColorType] = list(bg_colors or [])
         self.colors = foreground_colors  # type: ignore[assignment]
         # Help type-checkers understand the setter accepts ColorType values
-        self.bg_colors = cast(
-            Optional[List[ColorType]], background_colors
-        )  # type: ignore[assignment]
+        self.bg_colors = cast(Optional[List[ColorType]], \
+            background_colors)  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
         self._highlight_rules: list[_HighlightRule] = []
-        if highlight_words:
-            self._ingest_init_highlight_words(highlight_words)
-        if highlight_regex:
-            self._ingest_init_highlight_regex(highlight_regex)
+        self._highlight_map_cache: dict[str, list[Optional[Style]]] = {}
+        if highlight_words is not None:
+            for word_rule in HighlightWords.from_config(highlight_words):
+                self._highlight_rules.append(
+                    _HighlightRule(
+                        kind="words",
+                        words=word_rule.words,
+                        style=word_rule.style,
+                        case_sensitive=word_rule.case_sensitive,
+                    )
+                )
+
+        if highlight_regex is not None:
+            for regex_rule in HighlightRegex.from_config(highlight_regex):
+                self._highlight_rules.append(
+                    _HighlightRule(
+                        kind="regex",
+                        pattern=regex_rule.pattern,
+                        style=regex_rule.style,
+                    )
+                )
+
+        self._invalidate_highlight_cache()
 
     @property
     def expand(self) -> bool:
@@ -189,12 +237,10 @@ class Gradient(JupyterMixin):
             # Defensive: if internal structures are not yet set, ignore.
             pass
 
-
     @property
     def renderables(self) -> List[ConsoleRenderable]:
         """List of renderable objects to which the gradient is applied."""
         return self._renderables
-
 
     @renderables.setter
     def renderables(self, value: ConsoleRenderable | List[ConsoleRenderable]) -> None:
@@ -299,11 +345,10 @@ class Gradient(JupyterMixin):
 
     @vertical_justify.setter
     def vertical_justify(self, method: VerticalAlignMethod) -> None:
-        """
-        Validate and set vertical alignment.
+        """Validate and set vertical alignment.
 
         Args:
-            method: 'top', 'center', or 'bottom'.
+            method(VerticalAlignMethod): 'top', 'center', or 'bottom'.
 
         Raises:
             ValueError: If method is invalid.
@@ -335,7 +380,12 @@ class Gradient(JupyterMixin):
             elif isinstance(c, Color):
                 triplets.append(c.get_truecolor())
             elif isinstance(c, str):
-                triplets.append(Color.parse(c).get_truecolor())
+                color = c.strip()
+                if len(color) == 4 and color.startswith("#"):
+                    h = color[1:]
+                    if all(ch in "0123456789abcdefABCDEF" for ch in h):
+                        color = "#" + "".join(ch * 2 for ch in h)
+                triplets.append(Color.parse(color).get_truecolor())
             else:
                 raise ColorParseError(
                     f"Unsupported color type: {type(c)}\n\tCould not parse color: {c}"
@@ -349,8 +399,8 @@ class Gradient(JupyterMixin):
         Measure the minimum and maximum width for the gradient content.
 
         Args:
-            console: Console for measurement.
-            options: Rendering options.
+            console(rich.console.Console): Console for measurement.
+            options(rich.console.ConsoleOptions): Rendering options.
 
         Returns:
             Measurement: Combined width constraints.
@@ -392,7 +442,14 @@ class Gradient(JupyterMixin):
             highlight_map = None
             if self._highlight_rules:
                 line_text = "".join(segment.text for segment in segments)
-                highlight_map = self._build_highlight_map(line_text)
+                if self.animated:
+                    highlight_map = self._build_highlight_map(line_text)
+                else:
+                    cached = self._highlight_map_cache.get(line_text)
+                    if cached is None:
+                        cached = self._build_highlight_map(line_text)
+                        self._highlight_map_cache[line_text] = cached
+                    highlight_map = cached
             column = 0
             char_index = 0
             for seg in segments:
@@ -438,16 +495,15 @@ class Gradient(JupyterMixin):
                 yield Segment.line()
 
     def _get_style_at_position(self, position: int, width: int, span: int) -> Style:
-        """
-        Compute the Rich Style for a character cluster at a given position.
+        """Compute the Rich Style for a character cluster at a given position.
 
         Args:
-            position: Starting cell index of the cluster.
-            width: Cell width of the cluster.
-            span: Total available width for gradient calculation.
+            position(int): Starting cell index of the cluster.
+            width(int): Cell width of the cluster.
+            span(int): Total available width for gradient calculation.
 
         Returns:
-            Style with appropriate foreground and/or background colors.
+            Style: rich.style.Style with appropriate foreground and/or background colors.
         """
         frac = self._compute_fraction(position, width, span)
 
@@ -464,16 +520,15 @@ class Gradient(JupyterMixin):
         return Style(color=fg_style or None, bgcolor=bg_style or None)
 
     def _compute_fraction(self, position: int, width: int, span: float) -> float:
-        """
-        Compute fractional position for gradient interpolation, including phase.
+        """Compute fractional position for gradient interpolation, including phase.
 
         Args:
-            position: Starting cell index.
-            width: Cell width.
-            span: Total span for gradient.
+            position(int): Starting cell index.
+            width(int): Cell width.
+            span(float): Total span for gradient.
 
         Returns:
-            Fraction between 0.0 and 1.0.
+            float: Fraction between 0.0 and 1.0.
         """
         total_width = (span or 0) * (self.repeat_scale or 1.0)
         if total_width <= 0:
@@ -486,12 +541,11 @@ class Gradient(JupyterMixin):
     def _interpolate_color(
         self, frac: float, color_stops: list[ColorTriplet]
     ) -> tuple[float, float, float]:
-        """
-        Interpolate color in linear light space with gamma correction.
+        """Interpolate color in linear light space with gamma correction.
 
         Args:
-            frac: Fractional position between 0.0 and 1.0.
-            color_stops: List of ColorTriplet stops.
+            frac(float): Fractional position between 0.0 and 1.0.
+            color_stops(List[ColorTriplet]): List of ColorTriplet stops.
 
         Returns:
             Tuple of (r, g, b) in sRGB space.
@@ -539,170 +593,11 @@ class Gradient(JupyterMixin):
         """
         return original + gradient_style if original else gradient_style
 
-    # -----------------
-    # Highlight helpers
-    # -----------------
-    def _ingest_init_highlight_words(
-        self, config: Mapping[Any, Any] | Sequence[Any]
-    ) -> None:
-        """Ingest highlight word configuration supplied to __init__."""
-        for words, style, case_sensitive in self._iter_highlight_word_entries(config):
-            self.highlight_words(words, style, case_sensitive=case_sensitive)
-
-    def _iter_highlight_word_entries(
-        self, config: Mapping[Any, Any] | Sequence[Any]
-    ) -> Sequence[tuple[tuple[str, ...], StyleType, bool]]:
-        """Yield normalized (words, style, case_sensitive) tuples."""
-        entries: list[tuple[tuple[str, ...], StyleType, bool]] = []
-        if isinstance(config, Mapping):
-            for words_spec, payload in config.items():
-                entries.append(self._normalize_word_mapping_entry(words_spec, payload))
-        elif isinstance(config, Sequence) and not isinstance(config, (str, bytes)):
-            for entry in config:
-                entries.append(self._normalize_word_sequence_entry(entry))
-        else:
-            raise TypeError(
-                "highlight_words must be a mapping or sequence of highlight definitions."
-            )
-        return entries
-
-    def _normalize_word_mapping_entry(
-        self, words_spec: Any, payload: Any
-    ) -> tuple[tuple[str, ...], StyleType, bool]:
-        words = self._normalize_words_spec(words_spec)
-        if isinstance(payload, Mapping):
-            if "style" not in payload:
-                raise ValueError("highlight word mapping payload must include 'style'.")
-            style: StyleType = payload["style"]
-            case_sensitive = bool(payload.get("case_sensitive", True))
-        elif isinstance(payload, (list, tuple)):
-            if not payload:
-                raise ValueError("highlight word tuple payload cannot be empty.")
-            style = payload[0]
-            case_sensitive = bool(payload[1]) if len(payload) > 1 else True
-        else:
-            style = payload
-            case_sensitive = True
-        return words, style, case_sensitive
-
-    def _normalize_word_sequence_entry(
-        self, entry: Any
-    ) -> tuple[tuple[str, ...], StyleType, bool]:
-        if isinstance(entry, Mapping):
-            if "words" not in entry or "style" not in entry:
-                raise ValueError(
-                    "Each highlight word dict must include 'words' and 'style' keys."
-                )
-            words = self._normalize_words_spec(entry["words"])
-            style: StyleType = entry["style"]
-            case_sensitive = bool(entry.get("case_sensitive", True))
-            return words, style, case_sensitive
-        if isinstance(entry, (list, tuple)):
-            if len(entry) < 2 or len(entry) > 3:
-                raise ValueError(
-                    "Each highlight word tuple must be (words, style[, case_sensitive])."
-                )
-            words = self._normalize_words_spec(entry[0])
-            style = entry[1]
-            case_sensitive = bool(entry[2]) if len(entry) == 3 else True
-            return words, style, case_sensitive
-        raise TypeError(
-            "highlight_words sequence entries must be dicts or tuples describing the highlight."
-        )
-
     @staticmethod
-    def _normalize_words_spec(words: Any) -> tuple[str, ...]:
-        """Normalize a word or sequence of words to a tuple of strings."""
-        if isinstance(words, str):
-            return (words,)
-        if isinstance(words, Sequence) and not isinstance(words, (str, bytes)):
-            normalized = tuple(str(word) for word in words if str(word))
-            if not normalized:
-                raise ValueError(
-                    "Word sequences must contain at least one non-empty string."
-                )
-            return normalized
-        raise TypeError("Highlight words must be a string or a sequence of strings.")
-
-    def _ingest_init_highlight_regex(
-        self, config: Mapping[Any, Any] | Sequence[Any]
-    ) -> None:
-        """Ingest highlight regex configuration supplied to __init__."""
-        for pattern, style, flags in self._iter_highlight_regex_entries(config):
-            self.highlight_regex(pattern, style, flags=flags)
-
-    def _iter_highlight_regex_entries(
-        self, config: Mapping[Any, Any] | Sequence[Any]
-    ) -> Sequence[tuple[str | re.Pattern[str], StyleType, int]]:
-        entries: list[tuple[str | re.Pattern[str], StyleType, int]] = []
-        if isinstance(config, Mapping):
-            for pattern_spec, payload in config.items():
-                entries.append(
-                    self._normalize_regex_mapping_entry(pattern_spec, payload)
-                )
-        elif isinstance(config, Sequence) and not isinstance(config, (str, bytes)):
-            for entry in config:
-                entries.append(self._normalize_regex_sequence_entry(entry))
-        else:
-            raise TypeError(
-                "highlight_regex must be a mapping or sequence of highlight definitions."
-            )
-        return entries
-
-    def _normalize_regex_mapping_entry(
-        self, pattern_spec: Any, payload: Any
-    ) -> tuple[str | re.Pattern[str], StyleType, int]:
-        pattern = self._normalize_pattern_spec(pattern_spec)
-        if isinstance(payload, Mapping):
-            if "style" not in payload:
-                raise ValueError(
-                    "highlight regex mapping payload must include 'style'."
-                )
-            style: StyleType = payload["style"]
-            flags = int(payload.get("flags", 0))
-        elif isinstance(payload, (list, tuple)):
-            if not payload:
-                raise ValueError("highlight regex tuple payload cannot be empty.")
-            style = payload[0]
-            flags = int(payload[1]) if len(payload) > 1 else 0
-        else:
-            style = payload
-            flags = 0
-        return pattern, style, flags
-
-    def _normalize_regex_sequence_entry(
-        self, entry: Any
-    ) -> tuple[str | re.Pattern[str], StyleType, int]:
-        if isinstance(entry, Mapping):
-            if "pattern" not in entry or "style" not in entry:
-                raise ValueError(
-                    "Each highlight regex dict must include 'pattern' and 'style' keys."
-                )
-            pattern = self._normalize_pattern_spec(entry["pattern"])
-            style: StyleType = entry["style"]
-            flags = int(entry.get("flags", 0))
-            return pattern, style, flags
-        if isinstance(entry, (list, tuple)):
-            if len(entry) < 2 or len(entry) > 3:
-                raise ValueError(
-                    "Each highlight regex tuple must be (pattern, style[, flags])."
-                )
-            pattern = self._normalize_pattern_spec(entry[0])
-            style = entry[1]
-            flags = int(entry[2]) if len(entry) == 3 else 0
-            return pattern, style, flags
-        raise TypeError(
-            "highlight_regex sequence entries must be dicts or tuples describing the highlight."
-        )
-
-    @staticmethod
-    def _normalize_pattern_spec(pattern: Any) -> str | re.Pattern[str]:
-        """Normalize a pattern specification to a raw pattern or compiled regex."""
-        if isinstance(pattern, re.Pattern):
-            return pattern
-        if pattern is None:
-            raise ValueError("Regex pattern cannot be None.")
-        return str(pattern)
+    def _coerce_highlight_style(style: StyleType) -> Style:
+        if isinstance(style, Style):
+            return style
+        return Style.parse(str(style))
 
     def highlight_words(
         self,
@@ -716,13 +611,14 @@ class Gradient(JupyterMixin):
             after gradients are applied.
 
         Args:
-            words: Iterable of words to highlight.
-            style: Style to overlay on matched words.
-            case_sensitive: Whether matching is case-sensitive. Defaults to True.
+            words(Sequence[str]): Iterable of words to highlight.
+            style(StyleType): Style to overlay on matched words.
+            case_sensitive(bool): Whether matching is case-sensitive. Defaults to True.
 
         Returns:
             The gradient instance (for chaining).
         """
+        self._invalidate_highlight_cache()
         filtered = tuple(word for word in words if word)
         if not filtered:
             return self
@@ -744,13 +640,14 @@ class Gradient(JupyterMixin):
         Highlight matches of a regex pattern with an additional style after gradients are applied.
 
         Args:
-            pattern: Regex pattern (string or compiled).
-            style: Style to overlay on matches.
-            flags: Optional regex flags when pattern is a string.
+            pattern(str|re.Pattern[str]): Regex pattern (string or compiled).
+            style(StyleType): Style to overlay on matches.
+            flags(int): Optional regex flags when pattern is a string. Defaults to 0.
 
         Returns:
             The gradient instance (for chaining).
         """
+        self._invalidate_highlight_cache()
         highlight_style = self._coerce_highlight_style(style)
         compiled = (
             pattern
@@ -766,71 +663,75 @@ class Gradient(JupyterMixin):
         )
         return self
 
-    def _coerce_highlight_style(self, style: StyleType) -> Style:
-        """Normalize StyleType inputs to Style for highlight operations."""
-        if isinstance(style, Style):
-            return style
-        if style is None:
-            raise ValueError("Highlight style cannot be None.")
-        return Style.parse(str(style))
+    def _invalidate_highlight_cache(self) -> None:
+        """Clear cached highlight maps when highlight rules change."""
+        if self._highlight_map_cache:
+            self._highlight_map_cache.clear()
 
     def _build_highlight_map(self, text: str) -> list[Optional[Style]]:
         """Compute per-character highlight styles for a line of text."""
         if not text or not self._highlight_rules:
             return []
         highlight_map: list[Optional[Style]] = [None] * len(text)
+        apply_range = self._apply_highlight_range
+
+        def apply_word_rule() -> None:
+            haystack = text if rule.case_sensitive else text.lower()
+            for word in rule.words:
+                target = word if rule.case_sensitive else word.lower()
+                if not target:
+                    continue
+                start = 0
+                while True:
+                    index = haystack.find(target, start)
+                    if index == -1:
+                        break
+                    end = index + len(target)
+                    apply_range(highlight_map, index, end, rule.style)
+                    start = end
+
+        def apply_regex_rule() -> None:
+            pattern = rule.pattern
+            if pattern is None:
+                return
+            for match in pattern.finditer(text):
+                # If the regex contains capture groups, apply highlighting only
+                # to those group spans. Otherwise, fall back to the whole match.
+                try:
+                    groups = match.groups()
+                except (AttributeError, TypeError):
+                    groups = ()
+                if groups:
+                    last_index = match.lastindex or 0
+                    for gi in range(1, last_index + 1):
+                        gstart, gend = match.span(gi)
+                        if gstart == -1 or gstart == gend:
+                            continue
+                        apply_range(highlight_map, gstart, gend, rule.style)
+                    continue
+                start, end = match.span()
+                if start == end:
+                    continue
+                apply_range(highlight_map, start, end, rule.style)
+
         for rule in self._highlight_rules:
             if rule.kind == "words":
-                haystack = text if rule.case_sensitive else text.lower()
-                for word in rule.words:
-                    target = word if rule.case_sensitive else word.lower()
-                    if not target:
-                        continue
-                    start = 0
-                    while True:
-                        index = haystack.find(target, start)
-                        if index == -1:
-                            break
-                        end = index + len(target)
-                        self._apply_highlight_range(
-                            highlight_map, index, end, rule.style
-                        )
-                        start = index + len(target)
-            elif rule.kind == "regex" and rule.pattern is not None:
-                for match in rule.pattern.finditer(text):
-                    # If the regex contains capture groups, apply highlighting only
-                    # to the spans of those groups. Otherwise, fall back to the
-                    # whole match span. This prevents surrounding border characters
-                    # (used in title/subtitle patterns) from being styled.
-                    try:
-                        groups = match.groups()
-                    except (AttributeError, TypeError):
-                        groups = ()
-                    if groups:
-                        for gi in range(
-                            1, match.lastindex + 1 if match.lastindex else 0
-                        ):
-                            gspan = match.span(gi)
-                            gstart, gend = gspan
-                            if gstart == -1 or gstart == gend:
-                                continue
-                            self._apply_highlight_range(
-                                highlight_map, gstart, gend, rule.style
-                            )
-                    else:
-                        start, end = match.span()
-                        if start == end:
-                            continue
-                        self._apply_highlight_range(
-                            highlight_map, start, end, rule.style
-                        )
+                apply_word_rule()
+            elif rule.kind == "regex":
+                apply_regex_rule()
         return highlight_map
 
     @staticmethod
     def _apply_highlight_range(
         highlight_map: list[Optional[Style]], start: int, end: int, style: Style
     ) -> None:
-        """Apply style to a character range in the highlight map."""
+        """Apply style to a character range in the highlight map.
+        Args:
+            highlight_map(List[Optional[Style]]): List of per-character highlight styles.
+            start(int): Starting index (inclusive).
+            end(int): Ending index (exclusive).
+            style(Style): Style to apply.
+        """
         end = min(end, len(highlight_map))
         if start < 0 or start >= end:
             return
@@ -896,27 +797,29 @@ class Gradient(JupyterMixin):
         return self._interpolate_color(frac, stops)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Example BaseGradient Usage
     _console = Console()
     _console.print(
         Gradient(
-            renderables=Panel(
+            Panel(
                 RichText.from_markup(
-                    "[b]BaseGradient[/b] can print any rich.console.ConsoleRenderable \
+                    "[b]Gradient[/b] can print any rich.console.ConsoleRenderable \
 in [i]smooth[/i], [b]gradient[/b] color.\nIf no explicit colors are given, a spectrum of \
-colors is generated based on hue.\n\n[b]BaseGradient[/b] can parse \
-and render gradients from:\n\t- CSS3 named colors,\n\t- 3 and 6 digit hex \
-codes,\n\t- RGB triplets (rich.color.ColorTriplet)",
+colors is generated based on hue.\n\n[b]Gradient[/b] can parse \
+and render gradients from:\n\t- CSS3 named colors ('lime'),\n\t- 3 digit hex colors \
+('#0f0'),\n\t- 6 digit hex colors ('#00ff00'),\n\t- RGB triplets ('rgb(0,255,0)')",
                     justify="left",
                 ),
                 title="Color Parsing",
-                expand=False,
                 title_align="left",
             ),
             highlight_words={
-                # "Color Parsing": "bold white",
-                "hue": "bold white"
+                "'lime'": "bold lime",
+                "'#0f0'": "bold #0f0",
+                "'#00ff00'": "bold #00ff00",
+                "'rgb(0,255,0)'": "bold rgb(0,255,0)",
+                "hue": "bold white",
             },
             highlight_regex={r"\w+\.\w+": "bold white", r"\w+\.\w+\.\w+": "bold white"},
             justify="left",

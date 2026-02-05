@@ -3,6 +3,10 @@ Test suite for Gradient class and color interpolation logic.
 Covers color computation, style merging, rendering, and quit panel logic.
 """
 
+from __future__ import annotations
+
+from typing import Any, Iterable, TypeGuard
+
 import pytest
 from rich.console import Console
 from rich.panel import Panel
@@ -12,17 +16,25 @@ from rich.style import Style
 from rich_gradient.gradient import Gradient
 
 
+def _is_segment(value: object) -> TypeGuard[Segment]:
+    return isinstance(value, Segment)
+
+
+def _segments_only(segments: Iterable[object]) -> list[Segment]:
+    return [seg for seg in segments if _is_segment(seg)]
+
+
 @pytest.mark.parametrize("rainbow", [True, False])
-def test_gradient_color_computation(rainbow):
-    """
-    Test that Gradient._color_at returns a valid hex color string for both rainbow and non-rainbow modes.
+def test_gradient_color_computation(rainbow: bool) -> None:
+    """Test that Gradient._color_at returns a valid hex color string for
+    both rainbow and non-rainbow modes.
     """
     gradient = Gradient("Hello", rainbow=rainbow)
     color = gradient._color_at(5, 1, 10)
     assert color.startswith("#") and len(color) == 7
 
 
-def test_gradient_styled_foreground():
+def test_gradient_styled_foreground() -> None:
     """
     Test that _styled correctly merges foreground color and preserves style attributes.
     """
@@ -35,7 +47,7 @@ def test_gradient_styled_foreground():
     assert styled.color.get_truecolor().hex.lower() == color.lower()
 
 
-def test_gradient_styled_background():
+def test_gradient_styled_background() -> None:
     """
     Test that _styled correctly merges background color and preserves style attributes.
     """
@@ -48,7 +60,7 @@ def test_gradient_styled_background():
     assert styled.bgcolor.get_truecolor().hex.lower() == color.lower()
 
 
-def test_gradient_render_static():
+def test_gradient_render_static() -> None:
     """
     Test that static gradient rendering produces only Segment objects.
     """
@@ -60,7 +72,7 @@ def test_gradient_render_static():
     assert all(isinstance(seg, Segment) for seg in segments)
 
 
-def test_gradient_with_single_color():
+def test_gradient_with_single_color() -> None:
     """
     Test that a single color input produces two identical stops for smooth gradient.
     """
@@ -69,7 +81,7 @@ def test_gradient_with_single_color():
     assert all(isinstance(c, tuple) and len(c) == 3 for c in gradient._active_stops)
 
 
-def test_gradient_color_interpolation_boundaries():
+def test_gradient_color_interpolation_boundaries() -> None:
     """
     Test that color interpolation at boundaries returns correct RGB values.
     """
@@ -90,7 +102,7 @@ def test_gradient_color_interpolation_boundaries():
     )
 
 
-def test_gradient_highlight_words_applies_style():
+def test_gradient_highlight_words_applies_style() -> None:
     """
     Test that highlight_words overlays styles after gradient rendering.
     """
@@ -98,8 +110,9 @@ def test_gradient_highlight_words_applies_style():
     gradient = Gradient("Hello World", colors=["#f00", "#0f0"])
     gradient.highlight_words(["World"], style="bold")
     segments = list(gradient.__rich_console__(console, console.options))
+    segment_list = _segments_only(segments)
     characters: list[tuple[str, Style | None]] = []
-    for seg in segments:
+    for seg in segment_list:
         for ch in seg.text:
             if ch == "\n":
                 continue
@@ -111,7 +124,7 @@ def test_gradient_highlight_words_applies_style():
     assert all(style is not None and style.bold for _, style in world_chars)
 
 
-def test_gradient_highlight_words_case_insensitive_override():
+def test_gradient_highlight_words_case_insensitive_override() -> None:
     """
     Test that case-insensitive matching remains available when requested.
     """
@@ -119,8 +132,9 @@ def test_gradient_highlight_words_case_insensitive_override():
     gradient = Gradient("Hello World", colors=["#f00", "#0f0"])
     gradient.highlight_words(["world"], style="bold", case_sensitive=False)
     segments = list(gradient.__rich_console__(console, console.options))
+    segment_list = _segments_only(segments)
     characters: list[tuple[str, Style | None]] = []
-    for seg in segments:
+    for seg in segment_list:
         for ch in seg.text:
             if ch == "\n":
                 continue
@@ -132,7 +146,7 @@ def test_gradient_highlight_words_case_insensitive_override():
     assert all(style is not None and style.bold for _, style in world_chars)
 
 
-def test_gradient_highlight_regex_applies_style():
+def test_gradient_highlight_regex_applies_style() -> None:
     """
     Test that highlight_regex overlays styles using compiled regex patterns.
     """
@@ -140,24 +154,27 @@ def test_gradient_highlight_regex_applies_style():
     gradient = Gradient("Numbers: 12345", colors=["#f00", "#0f0"])
     gradient.highlight_regex(r"\d+", Style(underline=True))
     segments = list(gradient.__rich_console__(console, console.options))
-    digit_segments = [seg for seg in segments if seg.text and seg.text.isdigit()]
+    segment_list = _segments_only(segments)
+    digit_segments = [seg for seg in segment_list if seg.text and seg.text.isdigit()]
     assert digit_segments, "Expected to find digit segments for regex highlight."
     assert all(seg.style is not None and seg.style.underline for seg in digit_segments)
 
 
-def test_gradient_init_highlight_words_mapping():
+def test_gradient_init_highlight_words_mapping() -> None:
     """
     Test that highlight words supplied via __init__ mapping are applied.
     """
     console = Console()
+    highlight_words: Any = {"Beta": {"style": "bold", "case_sensitive": True}}
     gradient = Gradient(
         "Alpha Beta",
         colors=["#f00", "#0f0"],
-        highlight_words={"Beta": {"style": "bold", "case_sensitive": True}},
+        highlight_words=highlight_words,
     )
     segments = list(gradient.__rich_console__(console, console.options))
+    segment_list = _segments_only(segments)
     characters: list[tuple[str, Style | None]] = []
-    for seg in segments:
+    for seg in segment_list:
         for ch in seg.text:
             if ch == "\n":
                 continue
@@ -169,23 +186,25 @@ def test_gradient_init_highlight_words_mapping():
     assert all(style is not None and style.bold for _, style in beta_chars)
 
 
-def test_gradient_init_highlight_regex_sequence():
+def test_gradient_init_highlight_regex_sequence() -> None:
     """
     Test that highlight regex supplied via __init__ sequence is applied.
     """
     console = Console()
+    highlight_regex: Any = [(r"\d+", Style(italic=True))]
     gradient = Gradient(
         "Value: 123",
         colors=["#f00", "#0f0"],
-        highlight_regex=[(r"\d+", Style(italic=True))],
+        highlight_regex=highlight_regex,
     )
     segments = list(gradient.__rich_console__(console, console.options))
-    digit_segments = [seg for seg in segments if seg.text and seg.text.isdigit()]
+    segment_list = _segments_only(segments)
+    digit_segments = [seg for seg in segment_list if seg.text and seg.text.isdigit()]
     assert digit_segments
     assert all(seg.style is not None and seg.style.italic for seg in digit_segments)
 
 
-def _first_line_from_segments(segments):
+def _first_line_from_segments(segments: Iterable[Segment]) -> str:
     """Helper to extract the first rendered line of text from segments."""
     line_parts: list[str] = []
     for segment in segments:
@@ -195,24 +214,26 @@ def _first_line_from_segments(segments):
     return "".join(line_parts)
 
 
-def test_gradient_justify_left_no_leading_padding():
+def test_gradient_justify_left_no_leading_padding() -> None:
     """
     Test that left justification does not insert leading spaces.
     """
     console = Console(width=10)
     gradient = Gradient("Hi", colors=["#f00", "#0f0"], justify="left")
     segments = list(gradient.__rich_console__(console, console.options))
-    first_line = _first_line_from_segments(segments)
+    segment_list = _segments_only(segments)
+    first_line = _first_line_from_segments(segment_list)
     assert first_line.startswith("Hi")
 
 
-def test_gradient_justify_center_centers_text():
+def test_gradient_justify_center_centers_text() -> None:
     """
     Test that center justification inserts symmetric padding.
     """
     console = Console(width=10)
     gradient = Gradient("Hi", colors=["#f00", "#0f0"], justify="center")
     segments = list(gradient.__rich_console__(console, console.options))
-    first_line = _first_line_from_segments(segments)
+    segment_list: list[Segment] = [seg for seg in segments if isinstance(seg, Segment)]
+    first_line = _first_line_from_segments(segment_list)
     assert first_line.startswith(" " * 4)
     assert first_line.strip() == "Hi"

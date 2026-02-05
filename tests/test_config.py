@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 from pathlib import Path
@@ -18,6 +19,8 @@ def _reload_with_home(temp_home: Path) -> None:
     os.environ["RICH_GRADIENT_HOME_DIR"] = str(temp_home)
     # Use the package helper to refresh cached configuration objects.
     rg_pkg.reload_config()
+    # Refresh animated_gradient module so its config reference updates.
+    importlib.reload(ag_module)
 
 
 def test_config_json_override_and_integration() -> None:
