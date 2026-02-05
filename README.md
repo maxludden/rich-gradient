@@ -37,21 +37,27 @@ a rich-click (Click) CLI for trying gradients from the terminal.
 - [`Rule`](rule.md)
 - [`Spectrum`](spectrum.md)
 - And their animated counterparts.
+- AnimatedText for live gradient text updates.
 - Includes a CLI for quick experiments
   and SVG export for documentation or asset generation.
 - Auto-bootstraps a configuration file (`~/.rich-gradient`) where you can toggle
   animation globally and customise the default spectrum palette.
 
-### What's new in v0.3.9
+### What's new in v0.3.10
 
-- CLI docs now reflect the Click + rich-click commands
-  (`print`, `panel`, `rule`, `markdown`) with up-to-date options and examples.
-- Help text across CLI options uses the rich markup styling
-  from `text_command.py` for consistency.
-- Tests run without an editable install because `tests/conftest.py`
-  prepends `src/` to `sys.path`.
-- Docs CSS forces the page background to the theme color
-  to eliminate the black/transparent flash at the top of pages.
+- **Added** support for reading input from stdin when no subcommand is provided.
+  - For example:
+    - `rich-gradient 'Who likes gradients?`
+    - `echo "Hello, World!" | rich-gradient`
+  - Docs refreshed to note the behavior.
+  - Added tests for the new behavior.
+
+- **Bugfix**:
+  - AnimatedGradient family (`AnimatedGradient`, `AnimatedPanel`,
+  `AnimatedMarkdown`, and  `AnimatedRule`) no longer clears the console on `start()`;
+  - Unless `transient=True`, the final gradient render persists.
+
+- See the [CHANGELOG](docs/CHANGELOG.md) for more details.
 
 ## Installation
 
@@ -82,25 +88,86 @@ pip install rich-gradient
 
 The CLI is built with Click + rich-click. Subcommands:
 
-- `print`: gradient text. Options: `--colors/-c`, `--bgcolors`, `--rainbow`,
-  `--hues`, `--style`, `--justify`, `--overflow`, `--no-wrap`, `--end`.
-- `rule`: gradient rule. Options: `--title`, `--title-style`, `--colors`,
-  `--bgcolors`, `--rainbow`, `--hues`, `--thickness`, `--align`, `--end`.
-- `panel`: gradient panel. Options: `--colors`, `--bgcolors`, `--rainbow`,
-  `--hues`, `--title`, `--title-style`, `--title-align`, `--subtitle`,
-  `--subtitle-style`, `--subtitle-align`, `--style`, `--border-style`,
-  `--padding`, `--vertical-justify`, `--text-justify`, `--justify`,
-  `--expand/--no-expand`, `--width`, `--height`, `--box`,
-  `--end`, `--animate`, `--duration`.
-- `markdown`: gradient markdown. Options: `--colors`, `--bgcolors`,
-  `--rainbow`, `--hues`, `--style`, `--justify`, `--vertical-justify`,
-  `--overflow`, `--no-wrap`, `--end`, `--animate`, `--duration`.
+- `print`: gradient text. Options:
+  - `--colors/-c`
+  - `--bgcolors`
+  - `--rainbow`
+  - `--hues`
+  - `--style`
+  - `--justify`
+  - `--overflow`
+  - `--no-wrap`
+  - `--end`
+  - `--animate`
+  - `--duration`
+- gradient: generate gradient renderables. Options:
+  - `--colors/-c`
+  - `--bgcolors`
+  - `--rainbow`
+  - `--hues`
+  - `--style`
+  - `--justify`
+  - `--vertical-justify`
+  - `--overflow`
+  - `--no-wrap`
+  - `--end`
+  - `--animate`
+  - `--duration`
+- `rule`: gradient rule. Options:
+  - `--title`
+  - `--title-style`
+  - `--colors`
+  - `--bgcolors`
+  - `--rainbow`
+  - `--hues`
+  - `--thickness`
+  - `--align`
+  - `--end`
+  - `--animate`
+  - `--duration`
+- `panel`: gradient panel. Options:
+  - `--colors`
+  - `--bgcolors`
+  - `--rainbow`
+  - `--hues`
+  - `--title`
+  - `--title-style`
+  - `--title-align`
+  - `--subtitle`
+  - `--subtitle-style`
+  - `--subtitle-align`
+  - `--style`
+  - `--border-style`
+  - `--padding`
+  - `--vertical-justify`
+  - `--text-justify`
+  - `--justify`
+  - `--expand/--no-expand`
+  - `--width`
+  - `--height`
+  - `--box`
+  - `--end`
+  - `--animate`
+  - `--duration`
+- `markdown`: gradient markdown. Options:
+  - `--colors`
+  - `--bgcolors`
+  - `--rainbow`
+  - `--hues`
+  - `--style`
+  - `--justify`
+  - `--vertical-justify`
+  - `--overflow`
+  - `--no-wrap`
+  - `--end`
+  - `--animate`
+  - `--duration`
 
 Quick examples:
 
-- Gradient text: `rich-gradient print "Hello [b]world[/b]!" -c magenta,cyan`
-- Rainbow text: `rich-gradient print "Rainbow!" --rainbow`
-- Panel with title: `rich-gradient panel "Panel content"
+- Gradient text: `rich-gradient "Hello [b]world[/b]! " -c '#f00,#f90,#ff0'`
+- Rainbow text: `rich-gradient "All the colors of the rainbow! " --rainbow`
+- Panel with title: `rich-gradient panel -t 'Panel Title' "Gradient Panel content..."`
 -c red,blue --title "Gradient Panel"`
 - Rule with title: `rich-gradient rule --title "Section" -c "#f00,#0ff"`
 - Gradient markdown: `rich-gradient markdown

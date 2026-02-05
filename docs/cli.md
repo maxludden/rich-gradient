@@ -15,17 +15,25 @@ pip install -e .
 python -m rich_gradient.cli --help
 ```
 
+## Quick usage
+
+The CLI assumes `print` when no subcommand is provided, and it can read from stdin.
+
+- `rich-gradient "Hello [b]world[/b]!" -c magenta,cyan`
+- `echo "$SHELL" | rich-gradient`
+
 ## Commands
 
 ### `print`
 
 Render gradient text.
 
-- Argument: `text...` (required, accepts multiple words)
+- Argument: `text...` (required unless stdin is provided, accepts multiple words)
 - Options: `-c/--colors`, `--bgcolors`, `-r/--rainbow`, `--hues`, `--style`, `-j/--justify`, `--overflow`, `--no-wrap`, `--end`
 
 Examples:
 
+- `rich-gradient "Hello [b]world[/b]!" -c magenta,cyan`
 - `rich-gradient print "Hello [b]world[/b]!" -c magenta,cyan`
 - `rich-gradient print "Rainbow!" --rainbow`
 - `echo "stdin" | rich-gradient print --colors "#f00,#0ff"`

@@ -17,6 +17,7 @@ from .animated_gradient import AnimatedGradient
 from .animated_markdown import AnimatedMarkdown
 from .animated_panel import AnimatedPanel
 from .animated_rule import AnimatedRule
+from .animated_text import AnimatedText
 from .config import RichGradientConfig
 from .config import config as _config
 from .config import reload_config as _reload_config
@@ -39,6 +40,7 @@ __all__ = [
     "AnimatedPanel",
     "AnimatedRule",
     "AnimatedMarkdown",
+    "AnimatedText",
     "CONFIG",
     "config",
     "reload_config",
@@ -57,7 +59,7 @@ __all__ = [
     "Spectrum",
 ]
 
-__version__ = "0.3.9"
+__version__ = "0.3.10"
 
 
 # Set up logging

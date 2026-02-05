@@ -17,6 +17,7 @@ nav:
           - Configuration: "configuration.md"
           - CLI: "cli.md"
     - References:
+          - Animated Text Reference: "animated_text_ref.md"
           - Animated Gradient Reference: "animated_gradient_ref.md"
           - Animated Panel Reference: "animated_panel_ref.md"
           - Gradient Reference: "gradient_ref.md"
