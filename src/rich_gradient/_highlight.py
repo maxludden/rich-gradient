@@ -1,3 +1,10 @@
+"""Normalize highlight configuration into validated, typed rule objects.
+
+Provides dataclasses and helpers that accept legacy highlight configuration
+shapes and convert them into explicit, parsed forms for word and regex
+highlighting.
+"""
+
 from __future__ import annotations
 
 import re

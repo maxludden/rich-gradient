@@ -8,8 +8,6 @@ dependencies = [
     "loguru>=0.7.3",
     "rich>=14.0.0",
     "rich-color-ext>=0.1.9",
-    "rich-click>=1.9.4",
-    "typer>=0.19.2,<0.22",
 ]
 dynamic = ["version"]
 
@@ -44,7 +42,6 @@ packages = ["src/rich_gradient"]
 path = "src/rich_gradient/__init__.py"
 
 [project.scripts]
-gradient = "rich_gradient.cli:app"
 rich-gradient = "rich_gradient.cli:app"
 
 [tool.ruff]

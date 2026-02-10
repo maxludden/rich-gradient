@@ -113,8 +113,10 @@ class Rule(Gradient):
     @property
     def thickness(self) -> int:
         """Get the thickness of the Rule."""
+        if hasattr(self, "_thickness"):
+            return self._thickness
         for thickness, char in CHARACTER_MAP.items():
-            if char == getattr(self, "_rule_char", CHARACTER_MAP[2]):
+            if char == getattr(self, "_characters", CHARACTER_MAP[2]):
                 return thickness
         return 2  # Default
 
@@ -145,7 +147,7 @@ class Rule(Gradient):
             raise TypeError(
                 f"thickness must be an integer, recieved {type(self.thickness).__name__}"
             )
-        if 0 <= self.thickness <= 3:
+        if not 0 <= self.thickness <= 3:
             raise ValueError("thickness must be an integer between 0 and 3 (inclusive)")
 
         return CHARACTER_MAP.get(self.thickness, CHARACTER_MAP[2])

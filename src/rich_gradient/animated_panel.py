@@ -227,9 +227,9 @@ if __name__ == "__main__":
         title="Animated Panel",
         title_style="bold white",
         subtitle="Ctrl+C to stop",
-        rainbow=True,
+        # rainbow=True,
         console=_console,
-        padding=(1, 2),
+        padding=(1, 4),
         justify="center",
     )
     try:

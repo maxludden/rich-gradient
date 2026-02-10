@@ -87,10 +87,18 @@ class Gradient(JupyterMixin):
             - {'error': 'bold italic red', 'warning': '#FFFF00', 'lime': '#0f0'}
             - [('error', 'bold red'), (('warning', 'caution'), 'yellow', False)]
             - [HighlightWords(words=('error',), style=Style(bold=True, color='red'))]
+
         highlight_regex(HighlightRegexType|HighlightRegex|Sequence[HighlightRegex], Optional):
             Optional configurations describing regex highlights to apply. Accepts either \
             a mapping of regex patterns to styles, or a sequence of tuples describing \
             the highlights.
+
+            Examples:
+            - {r'\berror\b': 'bold italic red', r'warning|caution': '#FFFF00'}
+            - [(r'\berror\b', 'bold red'), (r'warning|caution', 'yellow')]
+            - [HighlightRegex(pattern=r'\berror\b', style=Style(bold=True, color='red'))]
+
+        animated(bool, Optional): Whether the gradient is animated. Defaults to False.
     """
 
     # Gamma correction exponent for linear interpolation
@@ -169,8 +177,8 @@ class Gradient(JupyterMixin):
         background_colors: List[ColorType] = list(bg_colors or [])
         self.colors = foreground_colors  # type: ignore[assignment]
         # Help type-checkers understand the setter accepts ColorType values
-        self.bg_colors = cast(Optional[List[ColorType]], \
-            background_colors)  # type: ignore[assignment]
+        self.bg_colors = cast(
+            Optional[List[ColorType]], background_colors)  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
         self._highlight_rules: list[_HighlightRule] = []
         self._highlight_map_cache: dict[str, list[Optional[Style]]] = {}
@@ -308,7 +316,7 @@ class Gradient(JupyterMixin):
             return
 
         if len(colors) == 1:
-            triplet = Color.parse(colors[0]).get_truecolor()
+            triplet = self._to_color_triplets([colors[0]])[0]
             # repeat single color across hues
             self._background_colors = [triplet] * self.hues
         else:
@@ -798,7 +806,7 @@ class Gradient(JupyterMixin):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    # Example BaseGradient Usage
+    # Example Gradient Usage
     _console = Console()
     _console.print(
         Gradient(
@@ -826,4 +834,3 @@ and render gradients from:\n\t- CSS3 named colors ('lime'),\n\t- 3 digit hex col
         ),
         justify="center",
     )
-# rich_gradient/gradient.py

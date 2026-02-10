@@ -33,7 +33,7 @@ class GradientTheme(Theme):
         if styles is None:
             styles = dict(DEFAULT_STYLES)
         super().__init__(styles=styles, inherit=True)
-        self._theme: Theme = Theme(DEFAULT_STYLES)
+        self._theme: Theme = Theme(styles, inherit=True)
         self._styles: Dict[str, StyleType] = styles
 
     @property

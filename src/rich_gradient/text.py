@@ -98,7 +98,7 @@ instances. Defaults to None.
         self._interpolate_bg_colors = False  # Ensure flag is always initialized
         # Normalize color inputs into rich.color.Color instances
         self.colors = self.parse_colors(colors, hues, rainbow)
-        self.bg_colors = self.parse_bg_colors(bg_colors, hues)
+        self.bg_colors = self.parse_bg_colors(bg_colors)
 
         # Handle the single-color and single-background case: apply style directly and return early
         if len(self.colors) == 1 and len(self.bg_colors) == 1:
@@ -219,7 +219,7 @@ at least 2. Invalid hues value: {hues}"
         return parsed
 
     def parse_bg_colors(
-        self, bg_colors: Optional[Sequence[ColorType]] = None, hues: int = 5
+        self, bg_colors: Optional[Sequence[ColorType]] = None
     ) -> List[Color]:
         """Parse and return a list of background colors for the gradient.
         Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, \

@@ -9,6 +9,8 @@ from typing import Any, Iterable, TypeGuard
 
 import pytest
 from rich.console import Console
+from rich.color import Color
+from rich.color_triplet import ColorTriplet
 from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style
@@ -58,6 +60,19 @@ def test_gradient_styled_background() -> None:
     assert styled.dim
     assert styled.bgcolor is not None
     assert styled.bgcolor.get_truecolor().hex.lower() == color.lower()
+
+
+def test_gradient_single_bg_color_accepts_color_types() -> None:
+    """Single bg color should accept Color and ColorTriplet inputs."""
+    color = Color.parse("#0000ff")
+    gradient_color = Gradient("Test", colors=["#f00", "#0f0"], bg_colors=[color])
+    assert len(gradient_color.bg_colors) == gradient_color.hues
+    assert all(bg == color.get_truecolor() for bg in gradient_color.bg_colors)
+
+    triplet = ColorTriplet(0, 255, 255)
+    gradient_triplet = Gradient("Test", colors=["#f00", "#0f0"], bg_colors=[triplet])
+    assert len(gradient_triplet.bg_colors) == gradient_triplet.hues
+    assert all(bg == triplet for bg in gradient_triplet.bg_colors)
 
 
 def test_gradient_render_static() -> None:

@@ -18,7 +18,7 @@ from rich.style import Style
 from rich.text import Text as RichText
 
 from rich_gradient.animated_rule import AnimatedRule
-from rich_gradient.rule import Rule
+from rich_gradient.rule import Rule, CHARACTER_MAP
 
 
 @pytest.mark.parametrize("thickness", [0, 1, 2, 3])
@@ -77,6 +77,17 @@ def test_gradient_rule_render_output() -> None:
     segments = list(rule.__rich_console__(console, console.options))
     assert segments
     assert all(hasattr(seg, "text") for seg in segments)
+
+
+def test_gradient_rule_thickness_roundtrip() -> None:
+    """Rule thickness should roundtrip and reflect the correct character."""
+    rule = Rule(title="Test", colors=["#f00", "#0f0"], thickness=3)
+    assert rule.thickness == 3
+    assert rule.characters == CHARACTER_MAP[3]
+
+    rule.thickness = 1
+    assert rule.thickness == 1
+    assert rule.characters == CHARACTER_MAP[1]
 
 
 def test_animated_rule_for_duration_auto_stop(monkeypatch) -> None:

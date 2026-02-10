@@ -121,6 +121,7 @@ This is an example of **Markdown** content rendered with `rich-gradient`.
 ```python
 from rich_gradient.markdown import Markdown
 md = Markdown("# Hello, World!", colors=["red", "blue"])
+```
 """
 
 
