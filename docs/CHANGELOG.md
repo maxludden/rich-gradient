@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+
+### v0.3.11 - 2026-02-10 | <span style="color: rgb(215, 255, 100)">Highlight configs, CLI refactor, Gradient/Rule fixes</span>
+
+#### Added / Changed
+
+- Added explicit highlight configuration helpers (`HighlightWords`, `HighlightRegex`) and updated `Gradient` to accept the new highlight inputs.
+- Refactored CLI command structure and removed deprecated CLI command modules/files.
+- Improved documentation and examples to cover the new highlighting workflow.
+- Added `GradientTheme` tests and tightened gradient test coverage (including single background color handling).
+- See [rich-gradient-cli](https://github.com/maxludden/rich-gradient-cli) for the new CLI implementation.
+
+#### Fixed
+
+- Improved Gradient color parsing and handling of highlight inputs.
+- Corrected Rule thickness/character mapping behavior.
+- Streamlined Text background color parsing and ensured theme initialization is consistent.
+
 ### v0.3.10 - 2026-01-04 | <span style="color: rgb(215, 255, 100)">AnimatedText, CLI defaults, Live persistence</span>
 
 #### Added / Changed
