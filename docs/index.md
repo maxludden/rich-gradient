@@ -103,7 +103,7 @@ Prefer API-level details? See the [reference section](animated_gradient_ref.md) 
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="https://github.com/maxludden/maxludden/blob/f3913ecf11f90c97435e2b55d2e43dadd51c1fe4/Images/MaxLogo-animated.svg"
+      src="img/MaxLogo-animated.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />

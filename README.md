@@ -216,7 +216,7 @@ It supports the same options as the API, and can be used for quick experiments o
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="https://github.com/maxludden/maxludden/blob/f3913ecf11f90c97435e2b55d2e43dadd51c1fe4/Images/MaxLogo-animated.svg"
+      src="docs/img/MaxLogo-animated.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />
