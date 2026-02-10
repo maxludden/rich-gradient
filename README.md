@@ -19,8 +19,7 @@
 `rich-gradient` layers smooth foreground and background gradients on top of
 [Rich](https://github.com/Textualize/rich) renderables.
 It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`,
-utilities for building palettes, and
-a rich-click (Click) CLI for trying gradients from the terminal.
+utilities for building palettes.
 
 ## Highlights
 
@@ -38,8 +37,6 @@ a rich-click (Click) CLI for trying gradients from the terminal.
 - [`Spectrum`](spectrum.md)
 - And their animated counterparts.
 - AnimatedText for live gradient text updates.
-- Includes a CLI for quick experiments
-  and SVG export for documentation or asset generation.
 - Auto-bootstraps a configuration file (`~/.rich-gradient`) where you can toggle
   animation globally and customise the default spectrum palette.
 
@@ -84,94 +81,7 @@ pip install rich-gradient
 
 [📘 Read the Docs](https://maxludden.github.io/rich-gradient/)
 
-## CLI Usage
 
-The CLI is built with Click + rich-click. Subcommands:
-
-- `print`: gradient text. Options:
-  - `--colors/-c`
-  - `--bgcolors`
-  - `--rainbow`
-  - `--hues`
-  - `--style`
-  - `--justify`
-  - `--overflow`
-  - `--no-wrap`
-  - `--end`
-  - `--animate`
-  - `--duration`
-- gradient: generate gradient renderables. Options:
-  - `--colors/-c`
-  - `--bgcolors`
-  - `--rainbow`
-  - `--hues`
-  - `--style`
-  - `--justify`
-  - `--vertical-justify`
-  - `--overflow`
-  - `--no-wrap`
-  - `--end`
-  - `--animate`
-  - `--duration`
-- `rule`: gradient rule. Options:
-  - `--title`
-  - `--title-style`
-  - `--colors`
-  - `--bgcolors`
-  - `--rainbow`
-  - `--hues`
-  - `--thickness`
-  - `--align`
-  - `--end`
-  - `--animate`
-  - `--duration`
-- `panel`: gradient panel. Options:
-  - `--colors`
-  - `--bgcolors`
-  - `--rainbow`
-  - `--hues`
-  - `--title`
-  - `--title-style`
-  - `--title-align`
-  - `--subtitle`
-  - `--subtitle-style`
-  - `--subtitle-align`
-  - `--style`
-  - `--border-style`
-  - `--padding`
-  - `--vertical-justify`
-  - `--text-justify`
-  - `--justify`
-  - `--expand/--no-expand`
-  - `--width`
-  - `--height`
-  - `--box`
-  - `--end`
-  - `--animate`
-  - `--duration`
-- `markdown`: gradient markdown. Options:
-  - `--colors`
-  - `--bgcolors`
-  - `--rainbow`
-  - `--hues`
-  - `--style`
-  - `--justify`
-  - `--vertical-justify`
-  - `--overflow`
-  - `--no-wrap`
-  - `--end`
-  - `--animate`
-  - `--duration`
-
-Quick examples:
-
-- Gradient text: `rich-gradient "Hello [b]world[/b]! " -c '#f00,#f90,#ff0'`
-- Rainbow text: `rich-gradient "All the colors of the rainbow! " --rainbow`
-- Panel with title: `rich-gradient panel -t 'Panel Title' "Gradient Panel content..."`
--c red,blue --title "Gradient Panel"`
-- Rule with title: `rich-gradient rule --title "Section" -c "#f00,#0ff"`
-- Gradient markdown: `rich-gradient markdown
-"# Title" --colors "#ff0,#0ff" --justify center`
 
 ### Contributor notes
 
@@ -293,3 +203,22 @@ console.line()
 ```
 
 ![Still Text](https://github.com/maxludden/rich-gradient/raw/refs/heads/main/docs/img/v0.3.4/built_on_rich_text.svg)
+
+## CLI
+
+[`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli) is a command-line interface for generating gradients from the terminal.
+It supports the same options as the API, and can be used for quick experiments or generating gradients for documentation or assets.
+
+<div align="center">
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+      <p>Designed by Max Ludden</p>
+  </a>
+  <br />
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+    <img
+      src="https://github.com/maxludden/maxludden/blob/f3913ecf11f90c97435e2b55d2e43dadd51c1fe4/Images/MaxLogo-animated.svg"
+      alt="Max Ludden's Logo"
+      width="20%"
+    />
+  </a>
+</div>

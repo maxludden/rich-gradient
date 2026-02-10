@@ -91,14 +91,21 @@ The example above is bundled in `examples/text_quickstart.py` and renders:
 - [Panel](panel.md) – gradient panels with highlighted titles and subtitles.
 - [Rule](rule.md) – gradient horizontal rules with adjustable thickness.
 - [Spectrum](spectrum.md) – generate and preview deterministic palettes.
-- [CLI](cli.md) – scriptable demos and helpers built with Click + rich-click.
 - [Animation](animation.md) – create animated gradients with `Live`.
 
-## Latest (v0.3.9)
-
-- CLI docs and examples reflect the Click + rich-click commands (`print`, `panel`, `rule`, `markdown`) with current options.
-- Help text uses consistent rich markup styling across commands.
-- Tests run without an editable install via the `tests/conftest.py` path shim.
-- Docs background now respects the theme, removing the black/transparent flash on initial paint.
 
 Prefer API-level details? See the [reference section](animated_gradient_ref.md) generated with `mkdocstrings`.
+
+<div align="center">
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+      <p>Designed by Max Ludden</p>
+  </a>
+  <br />
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+    <img
+      src="https://github.com/maxludden/maxludden/blob/f3913ecf11f90c97435e2b55d2e43dadd51c1fe4/Images/MaxLogo-animated.svg"
+      alt="Max Ludden's Logo"
+      width="20%"
+    />
+  </a>
+</div>
