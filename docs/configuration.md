@@ -1,68 +1,50 @@
 ## Configuration
 
-rich-gradient automatically discovers a small configuration file that lives
-alongside your shell environment. The loader recognises JSON, TOML, and YAML
-documents, and searches the following paths in order:
+rich-gradient loads a small optional JSON configuration file. By default it
+looks for:
 
-1. `$HOME/.config/.rich-gradient`
-2. `$HOME/local/bin/.rich-gradient`
-3. `$HOME/.rich-gradient`
+```text
+$HOME/.rich-gradient/config.json
+```
 
-> **Note**  
-> The first path that exists wins. A personalised file in
-> `$HOME/.config/.rich-gradient.{json,toml,yaml}` overrides the default that is
-> bootstrapped in `$HOME/.rich-gradient`.
+Set `RICH_GRADIENT_HOME_DIR` to point at a different directory before import.
+Tests and temporary environments can also call `rich_gradient.reload_config()`
+with an explicit config path.
 
 ### Default bootstrap
 
-On first import, rich-gradient writes a default JSON document to
-`$HOME/.rich-gradient` (or to the directory pointed at by
-`RICH_GRADIENT_CONFIG_HOME` if the environment variable is set – handy for
-tests and ephemeral environments). The file looks like this:
+If no file exists, rich-gradient uses its built-in defaults. A config file may
+override those defaults with this shape:
 
 ```json
 {
-  "executable_path": "/path/to/rich-gradient",
-  "animation_enabled": true,
-  "spectrum_colors": [
-    "#FF0000",
-    "#FF5500",
-    "#FF9900",
-    "... trimmed for brevity ..."
-  ]
+  "animate": true,
+  "colors": {
+    "red": "#FF0000",
+    "tomato": "#FF5500",
+    "orange": "#FF9900"
+  }
 }
 ```
 
-- `executable_path` records the CLI that should be invoked for helper tooling.
-- `animation_enabled` acts as the global kill-switch for animation. Setting the
+- `animate` acts as the global kill-switch for animation. Setting the
   flag to `false` forces every animated helper (`AnimatedGradient`, `AnimatedPanel`,
   etc.) to start in static mode unless you explicitly pass `animate=True`.
-- `spectrum_colors` seeds the default colour palette and mirrors the manual
-  values hard-coded inside `Spectrum`.
+- `colors` customises the named spectrum palette. Missing default colours are
+  merged back in, so you can override only the entries you care about.
 
-### Environment export
+### Environment overrides
 
-After the configuration is loaded, the following environment variables are
-exported so that sub-processes and CLI wrappers can reuse the settings:
+The loader also accepts environment overrides:
 
-| Variable                          | Meaning                                         |
-| -------------------------------- | ----------------------------------------------- |
-| `RICH_GRADIENT_CONFIG_PATH`      | Absolute path to the file that was loaded.      |
-| `RICH_GRADIENT_EXECUTABLE_PATH`  | Path stored in `executable_path`.               |
-| `RICH_GRADIENT_ANIMATION_ENABLED`| `"1"` when animation is enabled, else `"0"`.    |
-| `RICH_GRADIENT_SPECTRUM_COLORS`  | Comma separated list of configured colours.     |
+| Variable | Meaning |
+| --- | --- |
+| `RICH_GRADIENT_HOME_DIR` | Directory containing `config.json`. |
+| `RICH_GRADIENT_ANIMATE` | `1`, `true`, `yes`, or `on` enables animation; any other value disables it. |
+| `RICH_GRADIENT_COLORS` | JSON object merged into the named color palette. |
+| `RICH_GRADIENT_EXE` | Preserved for compatibility with external wrappers; unused by the core library. |
 
 ### Format support
 
-rich-gradient determines which parser to use from the file suffix:
-
-| Suffix        | Parser                                        |
-| ------------- | --------------------------------------------- |
-| none / `.json`| Python `json` module                          |
-| `.toml`       | `tomllib` (or `tomli` when installed)         |
-| `.yaml`/`.yml`| PyYAML (install `pyyaml` to enable this)      |
-
-If you prefer YAML or TOML, create one of the supported files in
-`$HOME/.config/` or `$HOME/local/bin/` and rich-gradient will pick it up on the
-next import. The bootstrapped JSON in `$HOME/.rich-gradient` acts as a safe
-fallback and is never overwritten once created.
+The current loader reads JSON only. TOML and YAML are not parsed by the core
+library.

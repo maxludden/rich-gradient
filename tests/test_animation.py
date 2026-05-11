@@ -3,7 +3,10 @@
 # pylint: disable=protected-access
 import math
 import os
+import time
 from pathlib import Path
+
+import pytest
 
 # Direct configuration writes into a test-local directory to avoid touching the user home.
 os.environ.setdefault(
@@ -56,6 +59,46 @@ def test_default_phase_rate_matches_expected_value():
         rel_tol=1e-9,
         abs_tol=1e-9,
     )
+
+
+def test_refresh_per_second_must_be_positive() -> None:
+    """Refresh rate validation should not depend on Python assert statements."""
+    with pytest.raises(ValueError, match="refresh_per_second"):
+        AnimatedGradient(
+            renderables="X",
+            refresh_per_second=0,
+            auto_refresh=False,
+            animate=True,
+        )
+
+
+def test_animated_gradient_can_restart_after_stop() -> None:
+    """Stopping an animation should not leave the stop event latched forever."""
+    console = Console(record=True, width=40)
+    gradient = AnimatedGradient(
+        renderables="Restartable",
+        colors=["#ff0000", "#00ff00"],
+        refresh_per_second=30.0,
+        auto_refresh=False,
+        console=console,
+        animate=True,
+    )
+
+    try:
+        gradient.start()
+        time.sleep(0.03)
+        gradient.stop()
+
+        assert gradient._stop_event.is_set()
+
+        gradient.start()
+        time.sleep(0.03)
+
+        assert not gradient._stop_event.is_set()
+        assert gradient._thread is not None
+        assert gradient._thread.is_alive()
+    finally:
+        gradient.stop()
 
 
 def test_highlight_with_emoji_does_not_crash():

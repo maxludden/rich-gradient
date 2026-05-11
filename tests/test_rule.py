@@ -49,7 +49,13 @@ def test_gradient_rule_rainbow_colors() -> None:
     assert len(rule.colors) > 1
 
 
-@pytest.mark.parametrize("bad", [["not-a-color"], ["#f00", "bad"]])
+def test_gradient_rule_accepts_rich_color_names() -> None:
+    """Rule should accept valid Rich color names outside the configured palette."""
+    rule = Rule(title="RichColors", colors=["white", "black"])
+    assert len(rule.colors) == 2
+
+
+@pytest.mark.parametrize("bad", [["not-a-color"], ["#f00", "not-a-real-color"]])
 def test_gradient_rule_color_validation(bad) -> None:
     """Invalid colour inputs should raise ValueError."""
     with pytest.raises(ValueError):
@@ -61,6 +67,13 @@ def test_gradient_rule_invalid_thickness(thickness) -> None:
     """Out-of-range thickness values should be rejected."""
     with pytest.raises(ValueError):
         Rule(title="Fail", colors=["#f00", "#0f0"], thickness=thickness)
+
+
+@pytest.mark.parametrize("thickness", [-1, 5])
+def test_animated_rule_invalid_thickness(thickness) -> None:
+    """AnimatedRule should reject invalid thickness values like Rule."""
+    with pytest.raises(ValueError):
+        AnimatedRule(title="Fail", colors=["#f00", "#0f0"], thickness=thickness)
 
 
 @pytest.mark.parametrize("title", [None, ""]) 

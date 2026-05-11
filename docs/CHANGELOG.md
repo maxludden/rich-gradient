@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## v0.3.12 - 2026-05-10 | <span style="color: rgb(215, 255, 100)">Corrected empty-renderable fallbacks in `Rule` and `AnimatedRule`</span>
 
-
+- Documentation now describes `rich-gradient` as the core renderable library
+  and points command-line users to `rich-gradient-cli`.
+- Consolidated gradient segment rendering for `Gradient`, `Rule`, and
+  `AnimatedRule` so highlighting, wide glyphs, combining characters, foreground
+  gradients, and background gradients use the same rendering path.
+- Fixed defensive empty-renderable fallbacks in `Rule` and `AnimatedRule` so
+  the internal renderer always receives a Rich renderable.
 
 ### v0.3.11 - 2026-02-10 | <span style="color: rgb(215, 255, 100)">Highlight configs, CLI refactor, Gradient/Rule fixes</span>
 

@@ -20,10 +20,13 @@ console.print(Rule("Thick block rule", thickness=3, colors=["#ef4444", "#facc15"
 ## Thickness and alignment
 
 - `align`: `"left"`, `"center"` (default), or `"right"`.
-- `thickness`: integer 0–3 controlling the glyph (`─`, `═`, `━`, `█` respectively).
+- `thickness`: integer 0-3 controlling the glyph (`─`, `━`, `═`, `█` respectively).
 - `characters`: provide your own glyph when you need full control.
 
 The gradient is distributed across the rendered width after padding and indentation are applied.
+`Rule` uses the same cell-aware rendering path as `Gradient`, so highlighted titles,
+wide glyphs, combining characters, foreground gradients, and background gradients are
+handled consistently.
 
 ## Titles and colors
 

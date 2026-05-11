@@ -51,7 +51,7 @@ with animated:
     sleep(1)
 ```
 
-CLI demo:
+Runnable example:
 
 ```bash
 uv run python examples/animated_text_demo.py
@@ -84,4 +84,30 @@ finally:
     animated.stop()
 ```
 
-Both animated classes forward `console`, `expand`, `justify`, and color configuration to their static counterparts, making it easy to switch between live demos and static output.
+Animated renderables forward `console`, `expand`, `justify`, and color configuration
+to their static counterparts, making it easy to switch between live demos and static
+output.
+
+## `AnimatedRule`
+
+`AnimatedRule` animates the same full-width rule rendering as [`Rule`](rule.md), while
+using `AnimatedGradient` for live updates.
+
+```python
+from time import sleep
+from rich_gradient.animated_rule import AnimatedRule
+
+rule = AnimatedRule(
+    title="Deploying",
+    colors=["#38bdf8", "#a855f7", "#f97316"],
+    thickness=2,
+    refresh_per_second=30,
+)
+
+with rule.for_duration(2):
+    sleep(2)
+```
+
+Titles are highlighted after the gradient is applied, and the animated rule uses the
+same cell-aware renderer as the static `Rule` for wide glyphs, combining characters,
+foreground gradients, and background gradients.

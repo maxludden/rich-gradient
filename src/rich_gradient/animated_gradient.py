@@ -85,7 +85,8 @@ class AnimatedGradient(Gradient):
         duration: Optional[float] = None,
     ) -> None:
         self.animate = self.get_animated(animate)
-        assert refresh_per_second > 0, "refresh_per_second must be greater than 0"
+        if refresh_per_second <= 0:
+            raise ValueError("refresh_per_second must be greater than 0")
         self._lock = RLock()
 
         # Live must exist before we set / forward console
@@ -160,6 +161,7 @@ class AnimatedGradient(Gradient):
         """Start the Live context and the animation loop in a background thread."""
         if self._running or self._live_active:
             return
+        self._stop_event.clear()
         if not self.animate:
             # Static render: render one frame via Live so transient behaviour matches Rich.
             self.live.start()

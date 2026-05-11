@@ -33,26 +33,23 @@ utilities for building palettes.
   - [`Text`](text.md)
   - [`Gradient`](gradient.md)
   - [`Panel`](panel.md)
-- [`Rule`](rule.md)
-- [`Spectrum`](spectrum.md)
-- And their animated counterparts.
+  - [`Rule`](rule.md)
+  - [`Spectrum`](spectrum.md)
+  - And their animated counterparts.
 - AnimatedText for live gradient text updates.
-- Auto-bootstraps a configuration file (`~/.rich-gradient`) where you can toggle
-  animation globally and customise the default spectrum palette.
+- Loads optional JSON configuration from `~/.rich-gradient/config.json`, where
+  you can toggle animation globally and customise the default spectrum palette.
 
-### What's new in v0.3.10
+### What's new in v0.3.11
 
-- **Added** support for reading input from stdin when no subcommand is provided.
-  - For example:
-    - `rich-gradient 'Who likes gradients?`
-    - `echo "Hello, World!" | rich-gradient`
-  - Docs refreshed to note the behavior.
-  - Added tests for the new behavior.
+- **Added** explicit highlight configuration helpers for words and regexes.
+- **Changed** CLI functionality moved to
+  [`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli); this
+  package is the core renderable library.
 
 - **Bugfix**:
-  - AnimatedGradient family (`AnimatedGradient`, `AnimatedPanel`,
-  `AnimatedMarkdown`, and  `AnimatedRule`) no longer clears the console on `start()`;
-  - Unless `transient=True`, the final gradient render persists.
+  - Improved gradient color parsing and single background color handling.
+  - Corrected Rule thickness and character mapping behavior.
 
 - See the [CHANGELOG](docs/CHANGELOG.md) for more details.
 
@@ -206,8 +203,9 @@ console.line()
 
 ## CLI
 
-[`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli) is a command-line interface for generating gradients from the terminal.
-It supports the same options as the API, and can be used for quick experiments or generating gradients for documentation or assets.
+This package no longer ships a command-line interface. Install
+[`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli) for
+terminal commands that build on the renderables provided here.
 
 <div align="center">
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">

@@ -98,7 +98,7 @@ class AnimatedText(AnimatedGradient):
     def rich_text(self) -> RichText:
         """Return the underlying Rich Text renderable."""
         if not self.renderables:
-            raise RuntimeError("Text renderables have not been initialised.")
+            raise RuntimeError("Text renderables have not been initialized.")
         renderable = self.renderables[0]
         if not isinstance(renderable, RichText):
             raise TypeError("Stored renderable is not a Rich Text instance.")
@@ -114,10 +114,10 @@ class AnimatedText(AnimatedGradient):
         """Replace the Text content safely during animation."""
         with self._lock:
             if isinstance(text, GradientText):
-                self.renderables = [text.as_rich()]
+                self.renderables = text.as_rich()
                 return
             if isinstance(text, RichText):
-                self.renderables = [text]
+                self.renderables = text
                 return
 
             effective_markup = self._markup if markup is None else bool(markup)
@@ -129,7 +129,7 @@ class AnimatedText(AnimatedGradient):
                 markup=effective_markup,
                 text_kwargs=effective_kwargs,
             )
-            self.renderables = [renderable]
+            self.renderables = renderable
 
             if text_kwargs is not None:
                 self._text_kwargs = dict(text_kwargs)
@@ -163,4 +163,3 @@ if __name__ == "__main__":
         finally:
             animated_text.stop()
     _console.line()
-

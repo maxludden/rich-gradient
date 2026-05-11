@@ -18,7 +18,7 @@
 
 `rich-gradient` layers smooth foreground and background gradients on top of [rich](https://github.com/Textualize/rich) renderables.
 It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and
-a Click/rich-click CLI for trying gradients from the terminal.
+animated variants for live terminal output.
 
 ## Highlights
 
@@ -92,6 +92,13 @@ The example above is bundled in `examples/text_quickstart.py` and renders:
 - [Rule](rule.md) – gradient horizontal rules with adjustable thickness.
 - [Spectrum](spectrum.md) – generate and preview deterministic palettes.
 - [Animation](animation.md) – create animated gradients with `Live`.
+
+## Command line usage
+
+This package is the renderable library. The command-line interface now lives in
+[`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli), which
+depends on this package and exposes terminal commands for quick experiments and
+asset generation.
 
 
 Prefer API-level details? See the [reference section](animated_gradient_ref.md) generated with `mkdocstrings`.

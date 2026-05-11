@@ -9,7 +9,7 @@ from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
 from rich.console import Console, RenderableType
 from rich.panel import Panel as RichPanel
-from rich.style import StyleType
+from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
 from rich_gradient._logger import logger
@@ -19,6 +19,8 @@ from rich_gradient.text import Text, TextType
 
 __all__ = ["AnimatedPanel"]
 
+_RegexHighlight = tuple[Any, str | Style, int]
+
 
 class AnimatedPanel(AnimatedGradient):
     """Animated variant of :class:`rich_gradient.panel.Panel`.
@@ -26,56 +28,35 @@ class AnimatedPanel(AnimatedGradient):
     Args:
         renderable: The renderable to display inside the panel.
         colors: Optional foreground color stops for the gradient.
-            [cli option: `-c`, `--colors`]
         bg_colors: Optional background color stops for the gradient.
-            [cli option: `-C`, `--bg-colors`]
         hues: Number of hues to generate when auto-selecting colors.
-            [cli option: `--hues`]
         rainbow: If True, ignore `colors` and use a rainbow gradient.
-            [cli option: `-r`, `--rainbow`]
         repeat_scale: Stretch factor for gradient color stops. Higher values produce
-            a more gradual gradient. [cli option: `--repeat-scale`]
-        title: Optional panel title renderable. [cli option: `-t`, `--title`]
+            a more gradual gradient.
+        title: Optional panel title renderable.
         title_align: Alignment for the title text. Defaults to ``"center"``.
-            [cli option: `--title-align`]
         title_style: Style applied to the highlighted title text.
-            [cli option: `--title-style`]
-        subtitle: Optional panel subtitle renderable. [cli option: `-s`, `--subtitle`]
+        subtitle: Optional panel subtitle renderable.
         subtitle_align: Alignment for the subtitle text. Defaults to `"right"`.
-            [cli option: `--subtitle-align`]
         subtitle_style: Style applied to the highlighted subtitle text.
-            [cli option: `--subtitle-style`]
-        border_style: Border style for the Rich panel. [cli option: `--border-style`]
+        border_style: Border style for the Rich panel.
         justify: Horizontal justification applied to the animated gradient.
-            [cli option: `--justify`]
         vertical_justify: Vertical justification applied to the animated gradient.
-            [cli option: `-V`, `--vertical-justify`]
         box: Rich box style for the panel border. Defaults to :data:`ROUNDED`.
-            [cli option: `-b`, `--box`]
         padding: Panel padding. Can be a single integer or a tuple of up to four integers.
-            [cli option: `-p`,`--padding`]
-        expand: Whether the panel expands to available width. [cli option: `-e`, `--expand`]
-        style: Base style for panel content. [cli option: `--style`]
-        width: Optional explicit panel width. [cli option: `--width`]
-        height: Optional explicit panel height. [cli option: `--height`]
-        safe_box: Use “safe” box characters if True. [cli option: `--safe-box`]
+        expand: Whether the panel expands to available width.
+        style: Base style for panel content.
+        width: Optional explicit panel width.
+        height: Optional explicit panel height.
+        safe_box: Use "safe" box characters if True.
         highlight_words: Word highlight configuration forwarded to the gradient.
-            [cli option: `-w`, `--highlight-words`]
         highlight_regex: Regex highlight configuration forwarded to the gradient.
-            [cli option:  `-H`, `--highlight-regex`]
         auto_refresh: Whether `Live` refreshes automatically.
-            [cli option: `--auto-refresh`]
         refresh_per_second (optional, float): Target frames per second. Defaults to 20.0
-            [cli option: `--rps`]
         console (Optional[Console]): Explicit console to render to. Defaults to None.
-            [cli option: `--console`]
         transient (optional, bool): Leave the screen clear after stopping if True.
-            [cli option: `-T`,`--transient`]
         redirect_stdout: Redirect stdout into the Live console.
-            [cli option: `--redirect-stdout`]
         redirect_stderr: Redirect stderr into the Live console.
-            [cli option: `--redirect-stderr`]
-
         animate (bool | None): Toggle animation on or off. ``None`` defers to the
             global configuration.
         duration: Optional duration in seconds for automatic stop.
@@ -181,26 +162,32 @@ class AnimatedPanel(AnimatedGradient):
         subtitle: Optional[RenderableType],
         subtitle_style: StyleType,
         box: Box,
-    ) -> Sequence[tuple[Any, StyleType, int]]:
+    ) -> Sequence[_RegexHighlight]:
         """Merge user-provided regex highlights with title/subtitle highlights."""
+        def normalize_style(value: object) -> str | Style:
+            return value if isinstance(value, Style) else str(value)
+
         if highlight_regex is None:
-            highlight_list: list[tuple[Any, StyleType, int]] = []
+            highlight_list: list[_RegexHighlight] = []
         elif isinstance(highlight_regex, Mapping):
             highlight_list = [
-                (pattern, style, 0) for pattern, style in highlight_regex.items()
+                (pattern, normalize_style(style), 0)
+                for pattern, style in highlight_regex.items()
             ]
         else:
-            highlight_list = list(highlight_regex)
+            highlight_list = [
+                (pattern, normalize_style(style), int(flags))
+                for pattern, style, flags in highlight_regex
+            ]
 
         if title:
             title_regex = AnimatedPanel._get_title_regex(box)
             logger.debug("AnimatedPanel title regex: %s", title_regex)
-            highlight_list.append((title_regex, title_style or "bold", 0))
+            highlight_list.append((title_regex, normalize_style(title_style or "bold"), 0))
         if subtitle:
             subtitle_regex = AnimatedPanel._get_subtitle_regex(box)
             logger.debug("AnimatedPanel subtitle regex: %s", subtitle_regex)
-            highlight_list.append((subtitle_regex, subtitle_style, 0))
-
+            highlight_list.append((subtitle_regex, normalize_style(subtitle_style), 0))
         return highlight_list
 
     @staticmethod

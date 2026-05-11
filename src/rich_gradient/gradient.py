@@ -37,7 +37,7 @@ from rich_gradient._highlight import (
 )
 from rich_gradient.spectrum import Spectrum
 
-ColorType: TypeAlias = Union[str, Color, ColorTriplet]
+ColorType: TypeAlias = Union[str, Color, ColorTriplet, tuple[int, int, int]]
 
 
 @dataclass(frozen=True)
@@ -165,12 +165,7 @@ class Gradient(JupyterMixin):
         # Validate and normalize renderables
         if renderables is None:
             raise ValueError("`renderables` cannot be None...")
-        if isinstance(renderables, str):
-            self.renderables = [RichText.from_markup(renderables)]
-        elif isinstance(renderables, ConsoleRenderable):
-            self.renderables = [renderables]
-        else:
-            self.renderables = renderables
+        self._set_renderables(renderables)
 
         # Parse and store color stops
         foreground_colors: List[ColorType] = list(colors or [])
@@ -251,13 +246,26 @@ class Gradient(JupyterMixin):
         return self._renderables
 
     @renderables.setter
-    def renderables(self, value: ConsoleRenderable | List[ConsoleRenderable]) -> None:
+    def renderables(
+        self, value: str | ConsoleRenderable | List[ConsoleRenderable]
+    ) -> None:
         """Set and normalize the list of renderables."""
-        render_list = value if isinstance(value, list) else [value]
+        self._set_renderables(value)
+
+    def _set_renderables(
+        self, value: str | ConsoleRenderable | List[ConsoleRenderable]
+    ) -> None:
+        """Normalize and store renderables without going through the descriptor."""
+        if isinstance(value, list):
+            render_list: list[str | ConsoleRenderable] = cast(
+                list[str | ConsoleRenderable], value
+            )
+        else:
+            render_list = [value]
         normalized: List[ConsoleRenderable] = []
         for item in render_list:
             if isinstance(item, str):
-                normalized.append(RichText.from_markup(item))
+                normalized.append(cast(ConsoleRenderable, RichText.from_markup(item)))
             else:
                 normalized.append(item)
         self._renderables = normalized
@@ -342,7 +350,7 @@ class Gradient(JupyterMixin):
             ValueError: If method is invalid.
         """
         if isinstance(method, str) and method.lower() in {"left", "center", "right"}:
-            self._justify = method.lower()  # type: ignore
+            self._justify = method.lower()
         else:
             raise ValueError(f"Invalid justify method: {method}")
 
@@ -362,7 +370,7 @@ class Gradient(JupyterMixin):
             ValueError: If method is invalid.
         """
         if isinstance(method, str) and method.lower() in {"top", "middle", "bottom"}:
-            self._vertical_justify = method.lower()  # type: ignore
+            self._vertical_justify = method.lower()
         else:
             raise ValueError(f"Invalid vertical justify method: {method}")
 
@@ -387,6 +395,13 @@ class Gradient(JupyterMixin):
                 triplets.append(c)
             elif isinstance(c, Color):
                 triplets.append(c.get_truecolor())
+            elif isinstance(c, tuple) and len(c) == 3:
+                red, green, blue = (int(channel) for channel in c)
+                if not all(0 <= channel <= 255 for channel in (red, green, blue)):
+                    raise ColorParseError(
+                        f"RGB tuple values must be between 0 and 255: {c}"
+                    )
+                triplets.append(ColorTriplet(red, green, blue))
             elif isinstance(c, str):
                 color = c.strip()
                 if len(color) == 4 and color.startswith("#"):
@@ -445,62 +460,111 @@ class Gradient(JupyterMixin):
             pad=self.expand,
         )
 
+        yield from self._render_styled_lines(console, options, content)
+
+    def _render_styled_lines(
+        self,
+        console: Console,
+        options: ConsoleOptions,
+        content: ConsoleRenderable,
+        *,
+        trailing_newline: bool = False,
+    ) -> RenderResult:
+        """Render content line-by-line and apply gradient styles to cell clusters."""
         lines = console.render_lines(content, options, pad=True, new_lines=False)
+        width = options.max_width
         for line_index, segments in enumerate(lines):
-            highlight_map = None
-            if self._highlight_rules:
-                line_text = "".join(segment.text for segment in segments)
-                if self.animated:
-                    highlight_map = self._build_highlight_map(line_text)
-                else:
-                    cached = self._highlight_map_cache.get(line_text)
-                    if cached is None:
-                        cached = self._build_highlight_map(line_text)
-                        self._highlight_map_cache[line_text] = cached
-                    highlight_map = cached
-            column = 0
-            char_index = 0
-            for seg in segments:
-                text = seg.text
-                base_style = seg.style or Style()
-                cluster = ""
-                cluster_width = 0
-                cluster_indices: list[int] = []
-                for character in text:
-                    current_index = char_index
-                    char_index += 1
-                    character_width = get_character_cell_size(character)
-                    if character_width <= 0:
-                        cluster += character
-                        cluster_indices.append(current_index)
-                        continue
-                    if cluster:
-                        style = self._get_style_at_position(
-                            column - cluster_width, cluster_width, width
-                        )
-                        merged_style = self._merge_styles(base_style, style)
-                        merged_style = self._apply_highlight_style(
-                            merged_style, highlight_map, cluster_indices
-                        )
-                        yield Segment(cluster, merged_style)
-                        cluster = ""
-                        cluster_width = 0
-                        cluster_indices = []
-                    cluster = character
-                    cluster_width = character_width
-                    cluster_indices = [current_index]
-                    column += character_width
-                if cluster:
-                    style = self._get_style_at_position(
-                        column - cluster_width, cluster_width, width
-                    )
-                    merged_style = self._merge_styles(base_style, style)
-                    merged_style = self._apply_highlight_style(
-                        merged_style, highlight_map, cluster_indices
-                    )
-                    yield Segment(cluster, merged_style)
+            highlight_map = self._get_highlight_map_for_segments(segments)
+            yield from self._render_styled_segments(segments, width, highlight_map)
             if line_index < len(lines) - 1:
                 yield Segment.line()
+        if trailing_newline:
+            yield Segment.line()
+
+    def _get_highlight_map_for_segments(
+        self, segments: Sequence[Segment]
+    ) -> Optional[list[Optional[Style]]]:
+        """Return a cached highlight map for a rendered line when possible."""
+        if not self._highlight_rules:
+            return None
+        line_text = "".join(segment.text for segment in segments)
+        if self.animated:
+            return self._build_highlight_map(line_text)
+
+        cached = self._highlight_map_cache.get(line_text)
+        if cached is None:
+            cached = self._build_highlight_map(line_text)
+            self._highlight_map_cache[line_text] = cached
+        return cached
+
+    def _render_styled_segments(
+        self,
+        segments: Sequence[Segment],
+        span: int,
+        highlight_map: Optional[list[Optional[Style]]],
+    ) -> RenderResult:
+        """Apply gradient and highlight styles to rendered Rich segments."""
+        column = 0
+        char_index = 0
+        for seg in segments:
+            text = seg.text
+            base_style = seg.style or Style()
+            cluster = ""
+            cluster_width = 0
+            cluster_indices: list[int] = []
+            for character in text:
+                current_index = char_index
+                char_index += 1
+                character_width = get_character_cell_size(character)
+                if character_width <= 0:
+                    cluster += character
+                    cluster_indices.append(current_index)
+                    continue
+                if cluster:
+                    yield self._styled_cluster(
+                        cluster,
+                        column - cluster_width,
+                        cluster_width,
+                        span,
+                        base_style,
+                        highlight_map,
+                        cluster_indices,
+                    )
+                    cluster = ""
+                    cluster_width = 0
+                    cluster_indices = []
+                cluster = character
+                cluster_width = character_width
+                cluster_indices = [current_index]
+                column += character_width
+            if cluster:
+                yield self._styled_cluster(
+                    cluster,
+                    column - cluster_width,
+                    cluster_width,
+                    span,
+                    base_style,
+                    highlight_map,
+                    cluster_indices,
+                )
+
+    def _styled_cluster(
+        self,
+        text: str,
+        position: int,
+        width: int,
+        span: int,
+        base_style: Style,
+        highlight_map: Optional[list[Optional[Style]]],
+        indices: Sequence[int],
+    ) -> Segment:
+        """Build a styled segment for one display-cell cluster."""
+        gradient_style = self._get_style_at_position(position, width, span)
+        merged_style = self._merge_styles(base_style, gradient_style)
+        merged_style = self._apply_highlight_style(
+            merged_style, highlight_map, indices
+        )
+        return Segment(text, merged_style)
 
     def _get_style_at_position(self, position: int, width: int, span: int) -> Style:
         """Compute the Rich Style for a character cluster at a given position.

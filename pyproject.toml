@@ -42,9 +42,6 @@ packages = ["src/rich_gradient"]
 [tool.hatch.version]
 path = "src/rich_gradient/__init__.py"
 
-[project.scripts]
-rich-gradient = "rich_gradient.cli:app"
-
 [tool.ruff]
 ignore = [
     "F401", # Unused imports

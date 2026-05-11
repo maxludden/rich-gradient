@@ -9,7 +9,7 @@ from typing import Any, Iterable, TypeGuard
 
 import pytest
 from rich.console import Console
-from rich.color import Color
+from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
 from rich.panel import Panel
 from rich.segment import Segment
@@ -73,6 +73,19 @@ def test_gradient_single_bg_color_accepts_color_types() -> None:
     gradient_triplet = Gradient("Test", colors=["#f00", "#0f0"], bg_colors=[triplet])
     assert len(gradient_triplet.bg_colors) == gradient_triplet.hues
     assert all(bg == triplet for bg in gradient_triplet.bg_colors)
+
+
+def test_gradient_accepts_rgb_tuple_colors() -> None:
+    """Gradient should accept RGB tuples like Text does."""
+    gradient = Gradient("Tuple", colors=[(255, 0, 0), (0, 255, 0)])
+    assert gradient.colors[:2] == [ColorTriplet(255, 0, 0), ColorTriplet(0, 255, 0)]
+
+
+@pytest.mark.parametrize("color", [(256, 0, 0), (-1, 0, 0)])
+def test_gradient_rejects_out_of_range_rgb_tuple(color: tuple[int, int, int]) -> None:
+    """RGB tuple channels must stay inside truecolor bounds."""
+    with pytest.raises(ColorParseError):
+        Gradient("Tuple", colors=[color, (0, 0, 0)])
 
 
 def test_gradient_render_static() -> None:

@@ -6,16 +6,12 @@ from collections.abc import Sequence
 from typing import Optional
 
 from rich.align import AlignMethod
-from rich.cells import get_character_cell_size
-from rich.color import ColorParseError
 from rich.console import Console, ConsoleOptions, RenderResult
 from rich.rule import Rule as RichRule
-from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Text as RichText
 from rich.text import TextType
 
-from rich_gradient.config import config
 from rich_gradient.gradient import ColorType, Gradient
 from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -75,24 +71,6 @@ class Rule(Gradient):
                 highlight_words = {self.title: self.title_style}
             else:
                 highlight_words = None
-
-            # Validate provided color names against runtime config to ensure
-            # clearly invalid names (e.g., 'bad') are rejected. We accept
-            # hex values and rgb(...) forms, and for plain names consult the
-            # runtime config color keys (case-insensitive) as accepted names.
-            if colors is not None:
-                known_names = {
-                    k.lower() for k in dict(getattr(config, "colors", {}) or {}).keys()
-                }
-                for c in colors:
-                    if isinstance(c, str):
-                        s = c.strip()
-                        if s.startswith("#") or s.lower().startswith(("rgb(", "rgba(")):
-                            # hex or rgb forms are allowed; parsing will validate further
-                            continue
-                        # Plain name: must exist in runtime config (case-insensitive)
-                        if s.lower() not in known_names:
-                            raise ValueError(f"Invalid color name: {s}")
 
             super().__init__(
                 base_rule,
@@ -198,60 +176,11 @@ class Rule(Gradient):
         to a single character when aligned/padded externally).
         """
         # Render underlying content directly (no Align wrapper)
-        content = self.renderables[0] if self.renderables else ""
-        width = options.max_width
+        content = self.renderables[0] if self.renderables else RichText("")
 
-        lines = console.render_lines(content, options, pad=True, new_lines=False)
-        for line_index, segments in enumerate(lines):
-            highlight_map = None
-            if self._highlight_rules:
-                line_text = "".join(segment.text for segment in segments)
-                highlight_map = self._build_highlight_map(line_text)
-            column = 0
-            char_index = 0
-            for seg in segments:
-                text = seg.text
-                base_style = seg.style or Style()
-                cluster = ""
-                cluster_width = 0
-                cluster_indices: list[int] = []
-                for character in text:
-                    current_index = char_index
-                    char_index += 1
-                    character_width = get_character_cell_size(character)
-                    if character_width <= 0:
-                        cluster += character
-                        cluster_indices.append(current_index)
-                        continue
-                    if cluster:
-                        style = self._get_style_at_position(
-                            column - cluster_width, cluster_width, width
-                        )
-                        merged_style = self._merge_styles(base_style, style)
-                        merged_style = self._apply_highlight_style(
-                            merged_style, highlight_map, cluster_indices
-                        )
-                        yield Segment(cluster, merged_style)
-                        cluster = ""
-                        cluster_width = 0
-                        cluster_indices = []
-                    cluster = character
-                    cluster_width = character_width
-                    cluster_indices = [current_index]
-                    column += character_width
-                if cluster:
-                    style = self._get_style_at_position(
-                        column - cluster_width, cluster_width, width
-                    )
-                    merged_style = self._merge_styles(base_style, style)
-                    merged_style = self._apply_highlight_style(
-                        merged_style, highlight_map, cluster_indices
-                    )
-                    yield Segment(cluster, merged_style)
-            if line_index < len(lines) - 1:
-                yield Segment.line()
-        # Ensure a trailing newline after the rule so following content appears below
-        yield Segment.line()
+        yield from self._render_styled_lines(
+            console, options, content, trailing_newline=True
+        )
 
 
 def example() -> None:
