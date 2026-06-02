@@ -31,6 +31,7 @@ dev = [
     "mkdocs-material>=9.6.7",
     "mkdocstrings>=0.29.0",
     "mkdocstrings-python>=1.16.5",
+    "mypy>=2.1.0",
     "pytest>=8.3.5",
     "pytest-benchmark>=5.1.0",
 ]

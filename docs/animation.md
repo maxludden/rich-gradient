@@ -31,8 +31,13 @@ Key parameters:
 - `refresh_per_second`: desired frame rate for the `Live` render loop.
 - `repeat_scale`: stretch the palette across a wider span before repeating.
 - `highlight_words` / `highlight_regex`: identical to the static `Gradient`.
+- `duration`: optional automatic stop time, in seconds.
 - `start()`, `stop()`, `run()`: manual control when you want to integrate with custom event loops.
 - Defaults honour the global configuration; see [Configuration](configuration.md) for details.
+
+When `duration` is set, `AnimatedGradient` stops itself once the deadline is
+reached and clears its internal running state. You can call `start()` again on
+the same instance after a duration-limited run finishes.
 
 ## `AnimatedText`
 
@@ -87,6 +92,10 @@ finally:
 Animated renderables forward `console`, `expand`, `justify`, and color configuration
 to their static counterparts, making it easy to switch between live demos and static
 output.
+
+`AnimatedPanel` accepts the same regex highlight shapes as `Gradient`, including
+two-item tuples like `("AnimatedPanel", "bold cyan")`. Flags are optional and
+default to `0`.
 
 ## `AnimatedRule`
 

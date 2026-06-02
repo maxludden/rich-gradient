@@ -41,7 +41,7 @@ from rich.color import Color
 from rich.color_triplet import ColorTriplet
 from rich.console import Console
 from rich.style import Style, StyleType
-from rich.table import Table
+from rich.table import Table as RichTable
 from rich.text import Text
 from rich_gradient._color_ext import get_css_map, install, is_installed
 
@@ -229,7 +229,7 @@ deterministic color order.
         """Return an iterator over the colors in the Spectrum."""
         return iter(self.colors)
 
-    def __rich__(self) -> Table:
+    def __rich__(self) -> RichTable:
         """Return a rich Table representation of the Spectrum."""
 
         def rainbow_title(text: str) -> Text:
@@ -241,7 +241,7 @@ deterministic color order.
                 pieces.append(Text(chunk, style=f"b u {hex_code}"))
             return Text.assemble(*pieces)
 
-        table = Table(title=rainbow_title("Spectrum Colors"))
+        table = RichTable(title=rainbow_title("Spectrum Colors"))
         table.add_column(
             rainbow_title("Sample"), justify="center")
         table.add_column(rainbow_title("Color"), style="bold")
@@ -281,7 +281,7 @@ deterministic color order.
         return table
 
     @property
-    def rich(self) -> Table:
+    def rich(self) -> RichTable:
         """Return the rich Table representation of the Spectrum."""
         return self.__rich__()
 

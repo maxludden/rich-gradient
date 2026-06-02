@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Add an internal typed `GradientRamp` helper that precomputes foreground and
+  background `Style` objects for each render span.
+- Add benchmark coverage for static gradient rendering, animated frame
+  rendering, long text rendering, and gradient panel rendering.
+- Add convenience wrappers for Rich `Table`, `Tree`, `Columns`, `Pretty`, and
+  `Syntax`, including package exports, reference docs, tests, and direct module
+  demos.
+
+### Changed
+
+- Route `Gradient._get_style_at_position()` through the cached ramp so repeated
+  cell lookups reuse precomputed styles instead of rebuilding styles per
+  character cluster.
+- Alias direct Rich table imports as `RichTable` internally and in examples so
+  `rich_gradient.Table` can be the package-level table wrapper.
+
+### Fixed
+
+- Clean up `AnimatedGradient` running state when a duration-limited animation
+  expires, allowing the same instance to restart.
+- Allow `AnimatedPanel` regex highlights to use two-item tuples
+  `(pattern, style)` with default flags, matching `Gradient` highlight parsing.
+
 ## v0.3.12 - 2026-05-10 | <span style="color: rgb(215, 255, 100)">Refactor rule gradient rendering and remove bundled CLI</span>
 
 - Share the cell-aware styled segment renderer across Gradient, Rule, and AnimatedRule

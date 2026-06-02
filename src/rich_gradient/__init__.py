@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from rich.console import Console
 from rich.traceback import install as tr_install
@@ -20,14 +20,19 @@ from rich_gradient.animated_text import AnimatedText
 from rich_gradient.config import RichGradientConfig
 from rich_gradient.config import config as _config
 from rich_gradient.config import reload_config as _reload_config
+from rich_gradient.columns import Columns
 from rich_gradient.default_styles import DEFAULT_STYLES
 from rich_gradient.gradient import ColorType, Gradient
 from rich_gradient.markdown import Markdown
 from rich_gradient.panel import Panel
+from rich_gradient.pretty import Pretty
 from rich_gradient.rule import Rule
 from rich_gradient.spectrum import Spectrum
+from rich_gradient.syntax import Syntax
+from rich_gradient.table import Table
 from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
+from rich_gradient.tree import Tree
 
 if not is_installed():
     rc_install()
@@ -45,24 +50,29 @@ __all__ = [
     "reload_config",
     "Console",
     "ColorType",
+    "Columns",
     "DEFAULT_STYLES",
     "get_css_map",
     "Gradient",
     "RichGradientConfig",
     "Markdown",
+    "Pretty",
+    "Syntax",
+    "Table",
     "Text",
     "Panel",
     "Rule",
     "GRADIENT_TERMINAL_THEME",
     "GradientTheme",
     "Spectrum",
+    "Tree",
 ]
 
 __version__ = "0.3.12"
 
 
 # Set up logging
-logger = get_logger(False)
+logger: Any = get_logger(enabled=False)
 logger.disable("rich_gradient")
 
 
@@ -74,7 +84,7 @@ CONFIG = config
 def reload_config(config_path: Optional[Path] = None) -> RichGradientConfig:
     """Reload runtime configuration and update package-level aliases."""
 
-    updated = _reload_config(config_path)
+    updated: RichGradientConfig = _reload_config(config_path)
     globals()["config"] = updated
     globals()["CONFIG"] = updated
     return updated

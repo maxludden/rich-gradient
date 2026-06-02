@@ -130,6 +130,34 @@ def test_gradient_color_interpolation_boundaries() -> None:
     )
 
 
+def test_gradient_style_position_reuses_cached_ramp() -> None:
+    """Repeated style lookups for the same span should reuse one gradient ramp."""
+    gradient = Gradient("Interp", colors=["#000000", "#ffffff"])
+
+    first_style = gradient._get_style_at_position(0, 1, 10)
+    first_ramp = gradient._gradient_ramp
+    second_style = gradient._get_style_at_position(1, 1, 10)
+
+    assert first_ramp is not None
+    assert gradient._gradient_ramp is first_ramp
+    assert first_style.color is not None
+    assert second_style.color is not None
+
+
+def test_gradient_ramp_invalidates_when_color_stops_change() -> None:
+    """Updating color stops should force a new gradient ramp to be built."""
+    gradient = Gradient("Interp", colors=["#000000", "#ffffff"])
+
+    gradient._get_style_at_position(0, 1, 10)
+    first_ramp = gradient._gradient_ramp
+
+    gradient.colors = ["#ff0000", "#00ff00"]
+    gradient._get_style_at_position(0, 1, 10)
+
+    assert first_ramp is not None
+    assert gradient._gradient_ramp is not first_ramp
+
+
 def test_gradient_highlight_words_applies_style() -> None:
     """
     Test that highlight_words overlays styles after gradient rendering.

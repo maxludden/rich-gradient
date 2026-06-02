@@ -8,7 +8,7 @@ from typing import Dict, Optional
 from rich.console import Console
 from rich.default_styles import DEFAULT_STYLES as RICH_DEFAULT_STYLES
 from rich.style import Style, StyleType
-from rich.table import Table
+from rich.table import Table as RichTable
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install as tr_install
@@ -382,10 +382,10 @@ def formatted_title() -> Text:
     return Text.assemble(*letters)
 
 
-def styles_table() -> Table:
+def styles_table() -> RichTable:
     """Generate a table to display all styles, examples of how to call each,
     and if each style is new, or updated from rich, or unchanged."""
-    table = Table(
+    table = RichTable(
         title=formatted_title(),
         border_style="bold #888888",
         caption="These styles are used when instantiating rich.console.Console",

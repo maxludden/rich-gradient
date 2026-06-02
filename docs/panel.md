@@ -34,6 +34,23 @@ console.print(
 
 When a title or subtitle is provided, the panel generates regex patterns that match the corresponding row in the rendered border and applies the supplied styles (`title_style` / `subtitle_style`). You can still pass your own `highlight_regex` or `highlight_words`; they’ll be merged with the title highlights.
 
+Regex highlights support the same configuration shapes as [`Gradient`](gradient.md):
+
+```python
+import re
+
+Panel(
+    "Panel body",
+    title="Status",
+    highlight_regex=[
+        (r"\bOK\b", "bold green"),
+        (r"\berror\b", "bold red", re.IGNORECASE),
+    ],
+)
+```
+
+The third tuple item is optional. When omitted, regex flags default to `0`.
+
 ## Other options
 
 - `padding`, `box`, `safe_box`, `width`, `height`: forwarded to the underlying Rich panel.

@@ -17,8 +17,8 @@
 ## Purpose
 
 `rich-gradient` layers smooth foreground and background gradients on top of [rich](https://github.com/Textualize/rich) renderables.
-It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`, utilities for building palettes, and
-animated variants for live terminal output.
+It includes a drop-in `Text` subclass, wrappers for common Rich renderables,
+utilities for building palettes, and animated variants for live terminal output.
 
 ## Highlights
 
@@ -31,6 +31,7 @@ animated variants for live terminal output.
     - [`Panel`](panel.md)
     - [`Rule`](rule.md)
     - [`Spectrum`](spectrum.md)
+    - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](renderables.md)
     - And their animated counterparts.
 
 
@@ -90,6 +91,7 @@ The example above is bundled in `examples/text_quickstart.py` and renders:
 - [Gradient](gradient.md) – wrap any renderable with foreground/background gradients.
 - [Panel](panel.md) – gradient panels with highlighted titles and subtitles.
 - [Rule](rule.md) – gradient horizontal rules with adjustable thickness.
+- [Convenience Renderables](renderables.md) – gradient `Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`.
 - [Spectrum](spectrum.md) – generate and preview deterministic palettes.
 - [Animation](animation.md) – create animated gradients with `Live`.
 

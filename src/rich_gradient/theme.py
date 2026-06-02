@@ -4,7 +4,7 @@ from typing import Dict, Optional, Tuple
 
 from rich.console import Console
 from rich.style import Style, StyleType
-from rich.table import Table
+from rich.table import Table as RichTable
 from rich.terminal_theme import TerminalTheme
 from rich.theme import Theme
 
@@ -51,14 +51,14 @@ class GradientTheme(Theme):
     def __repr__(self) -> str:
         return f"GradientTheme({self._styles!r})"
 
-    def __rich__(self) -> Table:
+    def __rich__(self) -> RichTable:
         return styles_table()
 
     def __getitem__(self, name: str) -> Style:
         return Style.parse(str(self._styles[name]))
 
     @classmethod
-    def get_theme_table(cls) -> Table:
+    def get_theme_table(cls) -> RichTable:
         """Get a table of all styles in the theme."""
         return styles_table()
 

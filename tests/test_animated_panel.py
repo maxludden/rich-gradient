@@ -49,6 +49,25 @@ def test_animated_panel_wires_highlights() -> None:
     assert any("Gradient" in rule.words for rule in word_rules)
 
 
+def test_animated_panel_accepts_two_item_regex_highlight_tuples() -> None:
+    """AnimatedPanel should accept regex tuples without explicit flags."""
+    animated_panel = AnimatedPanel(
+        "Gradient Body",
+        colors=["#ff0000", "#0000ff"],
+        highlight_regex=[("Gradient", "bold")],
+        auto_refresh=False,
+        animate=False,
+    )
+
+    regex_rules = [
+        rule for rule in animated_panel._highlight_rules if rule.kind == "regex"
+    ]
+    assert any(
+        rule.pattern is not None and rule.pattern.pattern == "Gradient"
+        for rule in regex_rules
+    )
+
+
 def test_expand_propagates_to_panel() -> None:
     console = Console(record=True, width=60)
     animated_panel = AnimatedPanel(

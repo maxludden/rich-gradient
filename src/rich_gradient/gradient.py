@@ -35,9 +35,17 @@ from rich_gradient._highlight import (
     HighlightWords,
     HighlightWordsType,
 )
+from rich_gradient._gradient_ramp import GradientRamp
 from rich_gradient.spectrum import Spectrum
 
 ColorType: TypeAlias = Union[str, Color, ColorTriplet, tuple[int, int, int]]
+_GradientRampKey: TypeAlias = tuple[
+    tuple[ColorTriplet, ...],
+    tuple[ColorTriplet, ...],
+    int,
+    float,
+    float,
+]
 
 
 @dataclass(frozen=True)
@@ -152,6 +160,8 @@ class Gradient(JupyterMixin):
         self.rainbow: bool = rainbow
         self.repeat_scale: float = repeat_scale
         self.phase: float = 0.0
+        self._gradient_ramp: GradientRamp | None = None
+        self._gradient_ramp_key: _GradientRampKey | None = None
         # Keep a flag if the user requested animated behavior; static
         # Gradient objects ignore animation but tests may construct with
         # animated=True, so store the attribute for parity.
@@ -303,6 +313,7 @@ class Gradient(JupyterMixin):
         # setter, so avoid accessing unset attributes.
         if getattr(self, "_background_colors", None) is not None:
             self._active_stops = self._initialize_color_stops()
+        self._invalidate_gradient_ramp()
 
     @property
     def bg_colors(self) -> List[ColorTriplet]:
@@ -321,6 +332,7 @@ class Gradient(JupyterMixin):
             self._background_colors = []
             # Recompute active stops after change
             self._active_stops = self._initialize_color_stops()
+            self._invalidate_gradient_ramp()
             return
 
         if len(colors) == 1:
@@ -332,6 +344,7 @@ class Gradient(JupyterMixin):
             self._background_colors = triplets
         # Recompute active stops after change
         self._active_stops = self._initialize_color_stops()
+        self._invalidate_gradient_ramp()
 
     @property
     def justify(self) -> AlignMethod:
@@ -577,19 +590,45 @@ class Gradient(JupyterMixin):
         Returns:
             Style: rich.style.Style with appropriate foreground and/or background colors.
         """
-        frac = self._compute_fraction(position, width, span)
+        return self._get_gradient_ramp(span).style_at(position, width, self.phase)
 
-        # Default: apply gradient to foreground; background uses bg_colors if provided.
-        fg_style = ""
-        bg_style = ""
-        if self.colors:
-            r, g, b = self._interpolate_color(frac, self.colors)
-            fg_style = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
-        if self.bg_colors:
-            r, g, b = self._interpolate_color(frac, self.bg_colors)
-            bg_style = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+    def _get_gradient_ramp(self, span: int) -> GradientRamp:
+        """Return a cached gradient ramp for the current color configuration.
 
-        return Style(color=fg_style or None, bgcolor=bg_style or None)
+        Args:
+            span: Render span in terminal cells.
+
+        Returns:
+            A precomputed gradient ramp for style lookups.
+        """
+        key = self._build_gradient_ramp_key(span)
+        if self._gradient_ramp is None or self._gradient_ramp_key != key:
+            foreground_stops, background_stops, ramp_span, repeat_scale, gamma = key
+            self._gradient_ramp = GradientRamp(
+                foreground_stops=foreground_stops,
+                background_stops=background_stops,
+                span=ramp_span,
+                repeat_scale=repeat_scale,
+                gamma=gamma,
+            )
+            self._gradient_ramp_key = key
+        return self._gradient_ramp
+
+    def _build_gradient_ramp_key(self, span: int) -> _GradientRampKey:
+        """Build a hashable cache key for the active gradient ramp."""
+        return (
+            tuple(self.colors),
+            tuple(self.bg_colors),
+            int(span or 0),
+            float(self.repeat_scale or 1.0),
+            float(self._GAMMA_CORRECTION),
+        )
+
+    def _invalidate_gradient_ramp(self) -> None:
+        """Clear cached gradient ramp state after color changes."""
+        if hasattr(self, "_gradient_ramp"):
+            self._gradient_ramp = None
+            self._gradient_ramp_key = None
 
     def _compute_fraction(self, position: int, width: int, span: float) -> float:
         """Compute fractional position for gradient interpolation, including phase.

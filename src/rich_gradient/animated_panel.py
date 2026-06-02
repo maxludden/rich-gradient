@@ -175,10 +175,16 @@ class AnimatedPanel(AnimatedGradient):
                 for pattern, style in highlight_regex.items()
             ]
         else:
-            highlight_list = [
-                (pattern, normalize_style(style), int(flags))
-                for pattern, style, flags in highlight_regex
-            ]
+            highlight_list = []
+            for entry in highlight_regex:
+                if len(entry) < 2:
+                    raise ValueError(
+                        "Highlight regex tuples must be (pattern, style[, flags])."
+                    )
+                pattern = entry[0]
+                style = entry[1]
+                flags = entry[2] if len(entry) > 2 else 0
+                highlight_list.append((pattern, normalize_style(style), int(flags)))
 
         if title:
             title_regex = AnimatedPanel._get_title_regex(box)

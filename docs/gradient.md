@@ -1,6 +1,10 @@
 # Gradient
 
-`rich_gradient.Gradient` wraps any Rich renderable—text, panels, tables, Markdown, even nested layouts—and paints a gradient across the composed output. It works with foreground and background colors, respects alignment, and can highlight words or regex matches along the way.
+`rich_gradient.Gradient` wraps any Rich renderable—text, panels, tables,
+Markdown, even nested layouts—and paints a gradient across the composed output.
+It works with foreground and background colors, respects alignment, and can
+highlight words or regex matches along the way. For Rich renderables you create
+often, see the convenience wrappers in [Convenience Renderables](renderables.md).
 
 ## Quick example
 
@@ -38,10 +42,10 @@ The full example lives in `examples/gradient_showcase.py`.
 `Gradient` accepts a single renderable or an iterable. Each renderable is measured and interpolated to share the gradient stops, so you can layer panels, tables, and custom objects together.
 
 ```python
-from rich.table import Table
+from rich.table import Table as RichTable
 from rich_gradient import Gradient
 
-table = Table(title="Renderables that work with Gradient", show_header=False)
+table = RichTable(title="Renderables that work with Gradient", show_header=False)
 table.add_column("Renderable", style="bold")
 table.add_column("Supported", justify="center")
 for item in ("Text", "Panel", "Markdown", "Columns", "Layout", "Live updates"):
@@ -59,6 +63,23 @@ Key options:
 - `justify` / `vertical_justify`: align the renderable inside the gradient frame.
 - `repeat_scale`: stretch or compress the gradient repeats.
 - `highlight_words` / `highlight_regex`: apply extra styles after the gradient pass.
+
+## Rendering performance
+
+`Gradient` renders by converting Rich output into terminal-cell clusters and then
+applying foreground and background styles to each cluster. To avoid rebuilding
+the same interpolated `Style` objects for every character, the renderer keeps an
+internal cached ramp for the active color stops, render span, repeat scale, and
+gamma setting.
+
+That cache is rebuilt automatically when foreground or background color stops
+change, or when Rich renders at a different span. The public API does not expose
+the ramp directly; use `colors`, `bg_colors`, `repeat_scale`, and `phase` as
+normal. The optimization is most useful for long renderables and animated frames
+where many clusters reuse the same terminal-cell positions.
+
+Benchmark coverage lives in `tests/benchmark_perf.py` and includes static
+gradient rendering, animated frame rendering, long text, and panel rendering.
 
 ## Highlight configuration classes
 

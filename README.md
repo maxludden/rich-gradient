@@ -6,8 +6,8 @@
     src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12%2C%203.13-blue" alt="Python versions"></a>
   <a href="https://pypi.org/project/rich_gradient/"><img
   src="https://img.shields.io/pypi/v/rich-gradient" alt="PyPI version"></a>
-  <a href="https://pypi.org/project/rich_gradient/"><img
-   src="https://img.shields.io/pypi/dm/rich-gradient" alt="PyPI downloads"></a>
+  <a href="https://pepy.tech/project/rich-gradient"><img
+   src="https://img.shields.io/pepy/dt/rich-gradient" alt="PyPI downloads"></a>
   <a href="https://github.com/astral-sh/uv"><img
     src="https://raw.githubusercontent.com/maxludden/rich-gradient/refs/heads/main/docs/img/uv-badge.svg" alt="uv badge"></a>
 </p>
@@ -19,8 +19,8 @@
 `rich-gradient` layers smooth foreground and background gradients on top of
 [Rich](https://github.com/Textualize/rich) renderables.
 It includes a drop-in `Text` subclass, wrappers for `Panel` and `Rule`,
-gradient-aware Markdown, animated variants, and utilities for building
-palettes.
+gradient-aware Markdown, convenience wrappers for common Rich renderables,
+animated variants, and utilities for building palettes.
 
 ## Highlights
 
@@ -37,6 +37,7 @@ palettes.
   - [`Rule`](docs/rule.md)
   - [`Spectrum`](docs/spectrum.md)
   - [`Markdown`](docs/gradient.md)
+  - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](docs/renderables.md)
   - And their animated counterparts.
 - `AnimatedText`, `AnimatedGradient`, `AnimatedPanel`, `AnimatedRule`, and
   `AnimatedMarkdown` for live gradient updates.
@@ -45,12 +46,23 @@ palettes.
 
 ### What's new in v0.3.12
 
+- **Added** an internal cached gradient ramp for `Gradient` rendering. Foreground
+  and background styles are precomputed per render span and reused across
+  segment lookups.
+- **Added** benchmark coverage for static gradients, animated frame rendering,
+  long text, and gradient panels.
+- **Added** gradient convenience constructors for Rich `Table`, `Tree`,
+  `Columns`, `Pretty`, and `Syntax`, each with a runnable module demo.
 - **Changed** gradient segment rendering is shared across `Gradient`, `Rule`,
   and `AnimatedRule` for more consistent cell-aware output.
 - **Changed** CLI functionality moved to
   [`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli); this
   package is the core renderable library.
 - **Added** RGB tuple color stops and stricter tuple channel validation.
+- **Fixed** duration-limited `AnimatedGradient` instances now clean up their
+  running state so they can be restarted.
+- **Fixed** `AnimatedPanel` now accepts two-item regex highlight tuples like
+  `("pattern", "style")`, matching the base highlight parser.
 - **Fixed** `Rule` and `AnimatedRule` empty-renderable fallbacks and thickness
   handling.
 - **Fixed** `AnimatedGradient` refresh-rate validation and restart-after-stop

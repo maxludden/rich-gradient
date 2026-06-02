@@ -11,7 +11,7 @@ from rich.align import Align, AlignMethod, VerticalAlignMethod
 from rich.console import Console, ConsoleRenderable, Group, NewLine
 from rich.live import Live
 from rich.panel import Panel
-from rich.table import Table
+from rich.table import Table as RichTable
 from rich.text import Text as RichText
 
 from rich_gradient.config import config
@@ -25,7 +25,7 @@ __all__ = [
 
 FPS = 0.12
 
-
+# MARK: AnimatedGradient
 class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
 
@@ -142,7 +142,7 @@ class AnimatedGradient(Gradient):
         self.log: Callable[..., None] = self.console.log
 
     # -----------------
-    # Console forwarding
+    # MARK: Console Forwarding
     # -----------------
     @property
     def live_console(self) -> Console:
@@ -155,7 +155,7 @@ class AnimatedGradient(Gradient):
         self.live.console = value
 
     # -----------------
-    # Animation control
+    # MARK: Animation Control
     # -----------------
     def start(self) -> None:
         """Start the Live context and the animation loop in a background thread."""
@@ -194,6 +194,12 @@ class AnimatedGradient(Gradient):
         if self._live_active:
             self.live.stop()
             self._live_active = False
+        self._deadline = None
+
+    def _mark_stopped(self) -> None:
+        """Record that the animation loop has stopped."""
+        self._running = False
+        self._live_active = False
         self._deadline = None
 
     def run(self) -> None:
@@ -240,7 +246,7 @@ class AnimatedGradient(Gradient):
         return False
 
     # -----------------
-    # Live renderable
+    # MARK: Live Renderable
     # -----------------
     def get_renderable(self) -> ConsoleRenderable:
         """Return the renderable the Live instance should display each frame."""
@@ -249,9 +255,9 @@ class AnimatedGradient(Gradient):
                 raise AssertionError("No renderables set for the gradient")
 
             return Align(
-                self,
+                renderable=self,
                 align=self.justify,
-                vertical=cast(VerticalAlignMethod, self.vertical_justify),
+                vertical=self.vertical_justify,
                 width=self.console.width if self.expand else None,
                 height=self.console.height if self.expand else None,
                 pad=self.expand,
@@ -261,14 +267,14 @@ class AnimatedGradient(Gradient):
         """Run the animation loop, updating at the requested FPS until stopped."""
         try:
             with suppress(KeyboardInterrupt):
-                frame_time = 1.0 / self.refresh_per_second
+                frame_time: int | float = 1.0 / self.refresh_per_second
                 while not self._stop_event.is_set():
                     # Advance the gradient phase (guarded by lock to avoid
                     # race conditions with the render path).
-                    deadline = self._deadline
+                    deadline: int | float | None = self._deadline
                     with self._lock:
                         self._cycle += self._phase_per_second * frame_time
-                        self.phase = self._cycle
+                        self.phase: int | float = self._cycle
                         _renderable = self.get_renderable()
 
                     # Push an update to Live. If auto_refresh is True, rely on
@@ -286,6 +292,8 @@ class AnimatedGradient(Gradient):
             self.live.stop()
         except KeyboardInterrupt:
             self.live.stop()
+        finally:
+            self._mark_stopped()
 
     def get_animated(self, animate: Optional[bool] = None) -> bool:
         """Return whether animation is enabled."""
@@ -293,14 +301,14 @@ class AnimatedGradient(Gradient):
             return config.animation_enabled
         return bool(animate)
 
-
+# MARK: Example
 def animated_gradient_example() -> None:
     """Run an example of AnimatedGradient with multiple rich renderables."""
     _console = Console(width=64)
 
-    def _generate_table() -> Table:
+    def _generate_table() -> RichTable:
         """Generate a sample table to include in the animated gradient."""
-        table = Table(collapse_padding=False, expand=True, width=40)
+        table = RichTable(collapse_padding=False, expand=True, width=40)
         table.add_column("Renderable", justify="right", ratio=4)
         table.add_column("Works", justify="center", ratio=1)
 
@@ -318,7 +326,7 @@ def animated_gradient_example() -> None:
             table.add_row(renderable, ":heavy_check_mark:")
         return table
 
-    def _generate_group(table: Table) -> Group:
+    def _generate_group(table: RichTable) -> Group:
         """Generate a group containing a panel and the provided table."""
         return Group(
             Panel(
@@ -354,7 +362,7 @@ panel and table in a group inside a panel!\n\n",
         },
         justify="center",
         console=_console,
-        duration=3.0,
+        duration=5.0,
     )
 
     # Run the animation

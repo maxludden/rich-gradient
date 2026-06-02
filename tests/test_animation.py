@@ -101,6 +101,37 @@ def test_animated_gradient_can_restart_after_stop() -> None:
         gradient.stop()
 
 
+def test_animated_gradient_can_restart_after_duration_expires() -> None:
+    """A duration-limited animation should clean up enough to restart."""
+    console = Console(record=True, width=40)
+    gradient = AnimatedGradient(
+        renderables="Timed",
+        colors=["#ff0000", "#00ff00"],
+        refresh_per_second=30.0,
+        auto_refresh=False,
+        console=console,
+        animate=True,
+        duration=0.03,
+    )
+
+    try:
+        gradient.start()
+        time.sleep(0.12)
+
+        assert gradient._stop_event.is_set()
+        assert gradient._running is False
+        assert gradient._live_active is False
+
+        gradient.start()
+        time.sleep(0.01)
+
+        assert not gradient._stop_event.is_set()
+        assert gradient._thread is not None
+        assert gradient._thread.is_alive()
+    finally:
+        gradient.stop()
+
+
 def test_highlight_with_emoji_does_not_crash():
     """Ensure highlight pipeline handles multi-codepoint glyphs without error."""
     text = "Hello 🌟 World"

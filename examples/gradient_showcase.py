@@ -6,7 +6,7 @@ from pathlib import Path
 
 from rich.console import Console
 from rich.markdown import Markdown
-from rich.table import Table
+from rich.table import Table as RichTable
 
 from rich_gradient import Gradient
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -42,7 +42,7 @@ def render_panel_example() -> None:
 
 def render_table_example() -> None:
     console = Console(record=True, width=88)
-    table = Table(title="Renderables that work with Gradient", box=None, show_header=False)
+    table = RichTable(title="Renderables that work with Gradient", box=None, show_header=False)
     table.add_column("Renderable", style="bold")
     table.add_column("Supported", justify="center")
     for renderable in ("Text", "Panel", "Markdown", "Columns", "Layout", "Live updates"):
