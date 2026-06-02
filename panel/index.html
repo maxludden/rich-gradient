@@ -533,6 +533,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../renderables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convenience Renderables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../spectrum/" class="md-nav__link">
         
   
@@ -755,6 +783,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../columns_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Columns Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../gradient_ref/" class="md-nav__link">
         
   
@@ -791,6 +847,34 @@
     
   
     Panel Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pretty_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretty Reference
   
 
     
@@ -867,6 +951,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../syntax_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../table_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../text_ref/" class="md-nav__link">
         
   
@@ -903,6 +1043,34 @@
     
   
     Theme Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tree_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tree Reference
   
 
     
@@ -1047,6 +1215,19 @@
 </span></code></pre></div>
 <h2 id="title-and-subtitle-highlighting">Title and subtitle highlighting<a class="headerlink" href="#title-and-subtitle-highlighting" title="Permanent link">&para;</a></h2>
 <p>When a title or subtitle is provided, the panel generates regex patterns that match the corresponding row in the rendered border and applies the supplied styles (<code>title_style</code> / <code>subtitle_style</code>). You can still pass your own <code>highlight_regex</code> or <code>highlight_words</code>; they’ll be merged with the title highlights.</p>
+<p>Regex highlights support the same configuration shapes as <a href="../gradient/"><code>Gradient</code></a>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">Panel</span><span class="p">(</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;Panel body&quot;</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Status&quot;</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">highlight_regex</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bOK\b&quot;</span><span class="p">,</span> <span class="s2">&quot;bold green&quot;</span><span class="p">),</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\berror\b&quot;</span><span class="p">,</span> <span class="s2">&quot;bold red&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">],</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>The third tuple item is optional. When omitted, regex flags default to <code>0</code>.</p>
 <h2 id="other-options">Other options<a class="headerlink" href="#other-options" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>padding</code>, <code>box</code>, <code>safe_box</code>, <code>width</code>, <code>height</code>: forwarded to the underlying Rich panel.</li>

@@ -384,6 +384,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#command-line-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line usage
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -538,6 +549,34 @@
     
   
     Rule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="renderables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convenience Renderables
   
 
     
@@ -780,6 +819,34 @@
   
   
     <li class="md-nav__item">
+      <a href="columns_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Columns Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="gradient_ref/" class="md-nav__link">
         
   
@@ -816,6 +883,34 @@
     
   
     Panel Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pretty_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretty Reference
   
 
     
@@ -892,6 +987,62 @@
   
   
     <li class="md-nav__item">
+      <a href="syntax_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="table_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="text_ref/" class="md-nav__link">
         
   
@@ -928,6 +1079,34 @@
     
   
     Theme Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tree_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tree Reference
   
 
     
@@ -1021,8 +1200,8 @@
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
 <p><code>rich-gradient</code> layers smooth foreground and background gradients on top of <a href="https://github.com/Textualize/rich">rich</a> renderables.
-It includes a drop-in <code>Text</code> subclass, wrappers for <code>Panel</code> and <code>Rule</code>, utilities for building palettes, and
-a Click/rich-click CLI for trying gradients from the terminal.</p>
+It includes a drop-in <code>Text</code> subclass, wrappers for common Rich renderables,
+utilities for building palettes, and animated variants for live terminal output.</p>
 <h2 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Works anywhere Rich expects a <code>ConsoleRenderable</code>, including panels, tables, and live updates.</li>
@@ -1034,6 +1213,7 @@ a Click/rich-click CLI for trying gradients from the terminal.</p>
 <li><a href="panel/"><code>Panel</code></a></li>
 <li><a href="rule/"><code>Rule</code></a></li>
 <li><a href="spectrum/"><code>Spectrum</code></a></li>
+<li><a href="renderables/"><code>Table</code>, <code>Tree</code>, <code>Columns</code>, <code>Pretty</code>, and <code>Syntax</code></a></li>
 <li>And their animated counterparts.</li>
 </ul>
 </li>
@@ -1077,10 +1257,29 @@ a Click/rich-click CLI for trying gradients from the terminal.</p>
 <li><a href="gradient/">Gradient</a> – wrap any renderable with foreground/background gradients.</li>
 <li><a href="panel/">Panel</a> – gradient panels with highlighted titles and subtitles.</li>
 <li><a href="rule/">Rule</a> – gradient horizontal rules with adjustable thickness.</li>
+<li><a href="renderables/">Convenience Renderables</a> – gradient <code>Table</code>, <code>Tree</code>, <code>Columns</code>, <code>Pretty</code>, and <code>Syntax</code>.</li>
 <li><a href="spectrum/">Spectrum</a> – generate and preview deterministic palettes.</li>
 <li><a href="animation/">Animation</a> – create animated gradients with <code>Live</code>.</li>
 </ul>
+<h2 id="command-line-usage">Command line usage<a class="headerlink" href="#command-line-usage" title="Permanent link">&para;</a></h2>
+<p>This package is the renderable library. The command-line interface now lives in
+<a href="https://github.com/maxludden/rich-gradient-cli"><code>rich-gradient-cli</code></a>, which
+depends on this package and exposes terminal commands for quick experiments and
+asset generation.</p>
 <p>Prefer API-level details? See the <a href="animated_gradient_ref/">reference section</a> generated with <code>mkdocstrings</code>.</p>
+<div align="center">
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+      <p>Designed by Max Ludden</p>
+  </a>
+  <br />
+  <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
+    <img
+      src="img/MaxLogo-animated.svg"
+      alt="Max Ludden's Logo"
+      width="20%"
+    />
+  </a>
+</div>
 
 
 

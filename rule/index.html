@@ -16,7 +16,7 @@
         <link rel="prev" href="../panel/">
       
       
-        <link rel="next" href="../spectrum/">
+        <link rel="next" href="../renderables/">
       
       
         
@@ -533,6 +533,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../renderables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convenience Renderables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../spectrum/" class="md-nav__link">
         
   
@@ -755,6 +783,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../columns_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Columns Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../gradient_ref/" class="md-nav__link">
         
   
@@ -791,6 +847,34 @@
     
   
     Panel Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pretty_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretty Reference
   
 
     
@@ -867,6 +951,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../syntax_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../table_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../text_ref/" class="md-nav__link">
         
   
@@ -903,6 +1043,34 @@
     
   
     Theme Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tree_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tree Reference
   
 
     
@@ -1035,10 +1203,13 @@
 <h2 id="thickness-and-alignment">Thickness and alignment<a class="headerlink" href="#thickness-and-alignment" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>align</code>: <code>"left"</code>, <code>"center"</code> (default), or <code>"right"</code>.</li>
-<li><code>thickness</code>: integer 0–3 controlling the glyph (<code>─</code>, <code>═</code>, <code>━</code>, <code>█</code> respectively).</li>
+<li><code>thickness</code>: integer 0-3 controlling the glyph (<code>─</code>, <code>━</code>, <code>═</code>, <code>█</code> respectively).</li>
 <li><code>characters</code>: provide your own glyph when you need full control.</li>
 </ul>
-<p>The gradient is distributed across the rendered width after padding and indentation are applied.</p>
+<p>The gradient is distributed across the rendered width after padding and indentation are applied.
+<code>Rule</code> uses the same cell-aware rendering path as <code>Gradient</code>, so highlighted titles,
+wide glyphs, combining characters, foreground gradients, and background gradients are
+handled consistently.</p>
 <h2 id="titles-and-colors">Titles and colors<a class="headerlink" href="#titles-and-colors" title="Permanent link">&para;</a></h2>
 <p>Rules support <code>title</code>, <code>title_align</code>, and <code>title_style</code> exactly like Rich. Styles can reference any color supported by <code>rich.color.Color</code>, including CSS names and hex codes provided by <code>rich-color-ext</code>. Pass <code>bg_colors</code> to paint the rule background.</p>
 <p>The example script that generates the gallery is saved as <code>examples/rule_gallery.py</code>.</p>

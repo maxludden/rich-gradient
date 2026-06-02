@@ -464,6 +464,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../renderables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Convenience Renderables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../spectrum/" class="md-nav__link">
         
   
@@ -578,6 +606,17 @@
     <span class="md-ellipsis">
       
         AnimatedPanel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animatedrule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AnimatedRule
       
     </span>
   </a>
@@ -766,6 +805,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../columns_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Columns Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../gradient_ref/" class="md-nav__link">
         
   
@@ -802,6 +869,34 @@
     
   
     Panel Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pretty_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pretty Reference
   
 
     
@@ -878,6 +973,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../syntax_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../table_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../text_ref/" class="md-nav__link">
         
   
@@ -914,6 +1065,34 @@
     
   
     Theme Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tree_ref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tree Reference
   
 
     
@@ -1056,9 +1235,13 @@
 <li><code>refresh_per_second</code>: desired frame rate for the <code>Live</code> render loop.</li>
 <li><code>repeat_scale</code>: stretch the palette across a wider span before repeating.</li>
 <li><code>highlight_words</code> / <code>highlight_regex</code>: identical to the static <code>Gradient</code>.</li>
+<li><code>duration</code>: optional automatic stop time, in seconds.</li>
 <li><code>start()</code>, <code>stop()</code>, <code>run()</code>: manual control when you want to integrate with custom event loops.</li>
 <li>Defaults honour the global configuration; see <a href="../configuration/">Configuration</a> for details.</li>
 </ul>
+<p>When <code>duration</code> is set, <code>AnimatedGradient</code> stops itself once the deadline is
+reached and clears its internal running state. You can call <code>start()</code> again on
+the same instance after a duration-limited run finishes.</p>
 <h2 id="animatedtext"><code>AnimatedText</code><a class="headerlink" href="#animatedtext" title="Permanent link">&para;</a></h2>
 <p><code>AnimatedText</code> gives you the same gradient animation on top of Rich <code>Text</code>, with a helper to
 swap content while the animation is running.</p>
@@ -1072,7 +1255,7 @@ swap content while the animation is running.</p>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">animated</span><span class="o">.</span><span class="n">update_text</span><span class="p">(</span><span class="s2">&quot;Almost there...&quot;</span><span class="p">)</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </span></code></pre></div>
-<p>CLI demo:</p>
+<p>Runnable example:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>examples/animated_text_demo.py
 </span></code></pre></div>
 <h2 id="animatedpanel"><code>AnimatedPanel</code><a class="headerlink" href="#animatedpanel" title="Permanent link">&para;</a></h2>
@@ -1097,7 +1280,31 @@ swap content while the animation is running.</p>
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="k">finally</span><span class="p">:</span>
 </span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">animated</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 </span></code></pre></div>
-<p>Both animated classes forward <code>console</code>, <code>expand</code>, <code>justify</code>, and color configuration to their static counterparts, making it easy to switch between live demos and static output.</p>
+<p>Animated renderables forward <code>console</code>, <code>expand</code>, <code>justify</code>, and color configuration
+to their static counterparts, making it easy to switch between live demos and static
+output.</p>
+<p><code>AnimatedPanel</code> accepts the same regex highlight shapes as <code>Gradient</code>, including
+two-item tuples like <code>("AnimatedPanel", "bold cyan")</code>. Flags are optional and
+default to <code>0</code>.</p>
+<h2 id="animatedrule"><code>AnimatedRule</code><a class="headerlink" href="#animatedrule" title="Permanent link">&para;</a></h2>
+<p><code>AnimatedRule</code> animates the same full-width rule rendering as <a href="../rule/"><code>Rule</code></a>, while
+using <code>AnimatedGradient</code> for live updates.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rich_gradient.animated_rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnimatedRule</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">rule</span> <span class="o">=</span> <span class="n">AnimatedRule</span><span class="p">(</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Deploying&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#38bdf8&quot;</span><span class="p">,</span> <span class="s2">&quot;#a855f7&quot;</span><span class="p">,</span> <span class="s2">&quot;#f97316&quot;</span><span class="p">],</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">thickness</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">refresh_per_second</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">with</span> <span class="n">rule</span><span class="o">.</span><span class="n">for_duration</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Titles are highlighted after the gradient is applied, and the animated rule uses the
+same cell-aware renderer as the static <code>Rule</code> for wide glyphs, combining characters,
+foreground gradients, and background gradients.</p>
 
 
 
