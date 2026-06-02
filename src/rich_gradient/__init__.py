@@ -1,4 +1,4 @@
-"""rich_gradient"""
+"""Public package interface for rich-gradient."""
 
 from __future__ import annotations
 
@@ -68,7 +68,7 @@ __all__ = [
     "Tree",
 ]
 
-__version__ = "0.3.12"
+__version__ = "0.3.13"
 
 
 # Set up logging
@@ -82,7 +82,14 @@ CONFIG = config
 
 
 def reload_config(config_path: Optional[Path] = None) -> RichGradientConfig:
-    """Reload runtime configuration and update package-level aliases."""
+    """Reload runtime configuration and update package-level aliases.
+
+    Args:
+        config_path: Optional path to a configuration file.
+
+    Returns:
+        The reloaded runtime configuration.
+    """
 
     updated: RichGradientConfig = _reload_config(config_path)
     globals()["config"] = updated

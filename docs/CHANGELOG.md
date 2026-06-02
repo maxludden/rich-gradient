@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v0.3.13 - 2026-06-02 | <span style="color: rgb(215, 255, 100)">Renderables, ramp caching, and animation fixes</span>
+
 ### Added
 
 - Add an internal typed `GradientRamp` helper that precomputes foreground and
