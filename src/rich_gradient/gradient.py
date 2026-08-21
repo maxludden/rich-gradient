@@ -178,7 +178,7 @@ class Gradient(JupyterMixin):
         background_colors: list[ColorType] = list(bg_colors or [])
         self.colors = foreground_colors  # type: ignore[assignment]
         # Help type-checkers understand the setter accepts ColorType values
-        self.bg_colors = cast(Optional[List[ColorType]], background_colors)  # type: ignore[assignment]
+        self.bg_colors = cast(list[ColorType] | None, background_colors)  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
         self._highlight_rules: list[_HighlightRule] = []
         self._highlight_map_cache: dict[str, list[Style | None]] = {}

@@ -146,7 +146,7 @@ deterministic color order.
             for color in self.colors
         ]
 
-        self.styles = [
+        self._styles = [
             Style(color=color, bold=False, italic=False, underline=False)
             for color in self.colors
         ]

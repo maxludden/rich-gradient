@@ -106,12 +106,12 @@ def test_animated_gradient_can_restart_after_duration_expires() -> None:
         auto_refresh=False,
         console=console,
         animate=True,
-        duration=0.03,
+        duration=0.1,
     )
 
     try:
         gradient.start()
-        time.sleep(0.12)
+        time.sleep(0.2)
 
         assert gradient._stop_event.is_set()
         assert gradient._running is False

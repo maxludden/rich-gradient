@@ -144,8 +144,6 @@ class AnimatedText(AnimatedGradient):
 if __name__ == "__main__":
     from time import sleep
 
-    from rich.live import Live
-
     animated_text = AnimatedText(
         "Hello, World! This is animated gradient text with Rich!",
         rainbow=True,

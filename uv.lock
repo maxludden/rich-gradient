@@ -1125,6 +1125,7 @@ name = "rich-gradient"
 source = { editable = "." }
 dependencies = [
     { name = "loguru" },
+    { name = "requests" },
     { name = "rich" },
     { name = "rich-color-ext" },
 ]
@@ -1144,7 +1145,6 @@ dev = [
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-benchmark" },
-    { name = "types-pygments" },
 ]
 toml = [
     { name = "tomlkit" },
@@ -1171,7 +1171,6 @@ dev = [
     { name = "pre-commit", specifier = ">=3.4.0" },
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-benchmark", specifier = ">=5.1.0" },
-    { name = "types-pygments" },
 ]
 toml = [{ name = "tomlkit", specifier = ">=0.13.3" }]
 
@@ -1191,27 +1190,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/cc/18/0bbf3884e9eaa38819ebe46a7bd25dcd56b67434402b66a58c4b8e552575/tomlkit-0.13.3.tar.gz", hash = "sha256:430cf247ee57df2b94ee3fbe588e71d362a941ebb545dec29b53961d61add2a1", size = 185207, upload-time = "2025-06-05T07:13:44.947Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bd/75/8539d011f6be8e29f339c42e633aae3cb73bffa95dd0f9adec09b9c58e85/tomlkit-0.13.3-py3-none-any.whl", hash = "sha256:c89c649d79ee40629a9fda55f8ace8c6a1b42deb912b2a8fd8d942ddadb606b0", size = 38901, upload-time = "2025-06-05T07:13:43.546Z" },
-]
-
-[[package]]
-name = "types-docutils"
-version = "0.22.3.20260712"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/9e/24/f50d49be6d5ebbae29ff83418b6788fc9897fdfb54d56555c9ae4b15fb53/types_docutils-0.22.3.20260712.tar.gz", hash = "sha256:bed54a50136c8e7613c03ee1c51eb958b42754915df83535de356b974ca05877", size = 57848, upload-time = "2026-07-12T05:13:36.059Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/af/50/2b408d249cc7260b2296af68c395d90267c23288d1eb96765637eb6c1490/types_docutils-0.22.3.20260712-py3-none-any.whl", hash = "sha256:4bbc5cf949f8b1b1c7e1befa5a4d1c3bcad9f22f823538eea26ba7ff694fa38e", size = 91970, upload-time = "2026-07-12T05:13:35.141Z" },
-]
-
-[[package]]
-name = "types-pygments"
-version = "2.20.0.20260518"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "types-docutils" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/db/66/3e27e8dbe72947d51355d1fcba222a55bf5f0770ee660e9cc9df0d1ce5d7/types_pygments-2.20.0.20260518.tar.gz", hash = "sha256:bcab233d0389cb0a91146eb860e7bdcbceaa0f30bee73cefc7b367129cc4a330", size = 21152, upload-time = "2026-05-18T06:07:26.927Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/d6/5f19f5b633af6a7666c6096fdd06b70f0d4a8f585af5e18a3ef58ad47ec1/types_pygments-2.20.0.20260518-py3-none-any.whl", hash = "sha256:e40728efd00c9da5936366648d5b3c55e72ed52bdd80495a96577b4d717c4fcb", size = 29002, upload-time = "2026-05-18T06:07:26.054Z" },
 ]
 
 [[package]]
