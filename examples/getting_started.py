@@ -2,6 +2,7 @@
 from rich.console import Console
 
 from rich_gradient.gradient import Gradient
+from rich_gradient.panel import Panel
 from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 
