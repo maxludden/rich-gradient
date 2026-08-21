@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+
+## v0.3.14 - 2026-08-21 | <span style="color: rgb(215, 255, 100)">Packaging, CI, typing, and tooling</span>
+
+### Short release notes
+
+A small maintenance release that modernizes the project toolchain and CI:
+
+- Bumped minimum Python to >=3.11 and prepared package for a patch release (0.3.14).
+- Added CI workflow, development tooling (mypy, pre-commit, ruff, black, isort), and a `.pre-commit-config.yaml` for consistent checks.
+- Bumped `rich` to >=15.0.0 and refreshed the lockfile to match the updated toolchain.
+- Enforced formatting and type checks in CI and fixed style/import issues across examples, source, and tests.
+
 ### Added
 
 - CI: GitHub Actions workflow to run pre-commit, mypy, and tests on supported Python versions (3.11, 3.12).
