@@ -42,7 +42,7 @@ def test_config_json_override_and_integration() -> None:
         _reload_with_home(tmp_path)
 
         # The package exposes a top-level `config` instance with the runtime values
-        pkg_config = getattr(rg_pkg, "config")
+        pkg_config = rg_pkg.config
         assert pkg_config.animation_enabled is False
         assert isinstance(pkg_config.spectrum_colors, list)
         assert pkg_config.home_dir == tmp_path

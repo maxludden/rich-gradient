@@ -6,7 +6,6 @@ authors = [{ name = "Max Ludden", email = "maxludden@me.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "loguru>=0.7.3",
-    "requests>=2.32.5",
     "rich>=14.0.0",
     "rich-color-ext>=0.1.9",
 ]
@@ -34,6 +33,7 @@ dev = [
     "mypy>=2.1.0",
     "pytest>=8.3.5",
     "pytest-benchmark>=5.1.0",
+    "types-Pygments",
 ]
 toml = ["tomlkit>=0.13.3"]
 
@@ -43,8 +43,11 @@ packages = ["src/rich_gradient"]
 [tool.hatch.version]
 path = "src/rich_gradient/__init__.py"
 
+[tool.mypy]
+files = ["src"]
+
 [tool.ruff]
-ignore = [
+lint.ignore = [
     "F401", # Unused imports
     "E741", # Ambiguous variable name
 ]

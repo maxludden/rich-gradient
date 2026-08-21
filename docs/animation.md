@@ -13,7 +13,7 @@ from rich_gradient.animated_gradient import AnimatedGradient
 
 console = Console()
 markdown = Markdown(
-    "[b]Animated gradients[/b]\n\n"
+    "**Animated gradients**\n\n"
     "- Run as a context manager\n"
     "- Or control start/stop manually\n"
 )

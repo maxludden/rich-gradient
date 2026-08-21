@@ -7,13 +7,6 @@ import time
 from pathlib import Path
 
 import pytest
-
-# Direct configuration writes into a test-local directory to avoid touching the user home.
-os.environ.setdefault(
-    "RICH_GRADIENT_CONFIG_HOME",
-    str((Path(__file__).parent / ".rg_config_test").resolve()),
-)
-
 from rich.console import Console
 
 from rich_gradient import (
@@ -23,6 +16,11 @@ from rich_gradient import (
 )
 from rich_gradient.animated_gradient import FPS
 
+# Direct configuration writes into a test-local directory to avoid touching the user home.
+os.environ.setdefault(
+    "RICH_GRADIENT_CONFIG_HOME",
+    str((Path(__file__).parent / ".rg_config_test").resolve()),
+)
 
 def test_phase_progression_changes_color():
     """Test that advancing the phase changes the sampled color at a position."""

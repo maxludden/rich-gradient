@@ -4,6 +4,7 @@ from rich.console import Console
 from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
+
 def gen_text_rainbow(save: bool=True) -> None:
     """Generate rainbow gradient text examples."""
     console = Console(record=save)

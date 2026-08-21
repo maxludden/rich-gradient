@@ -38,19 +38,19 @@ class Rule(Gradient):
 
     def __init__(
         self,
-        title: Optional[str],
+        title: str | None = None,
         title_style: StyleType = "bold",
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         *,
         rainbow: bool = False,
         hues: int = 17,
         thickness: int = 1,
-        characters: Optional[str] = None,
+        characters: str | None = None,
         style: StyleType = "",
         end: str = "\n",
         align: AlignMethod = "center",
-        console: Optional[Console] = None,
+        console: Console | None = None,
     ) -> None:
         self.title = title or ""
         self.title_style = title_style
@@ -59,7 +59,7 @@ class Rule(Gradient):
 
         # Build the underlying Rich Rule renderable
         base_rule = RichRule(
-            title=self.title,
+            title=title or "",
             characters=self.characters,
             style=style,
             end=end,
@@ -68,7 +68,7 @@ class Rule(Gradient):
 
         try:
             if self.title:
-                highlight_words = {self.title: self.title_style}
+                highlight_words = {title or "": title_style or "bold"}
             else:
                 highlight_words = None
 
@@ -102,16 +102,15 @@ class Rule(Gradient):
     def thickness(self, value: int) -> None:
         """Set the thickness of the Rule.
         Args:
-            value: Thickness as an integer (0-3) or the corresponding character.
+            value: Thickness as an integer between 0 and 3 (inclusive).
         Raises:
-            ValueError: If the value is not a valid thickness or character."""
+            ValueError: If the value is not an integer between 0 and 3."""
         if isinstance(value, int) and 0 <= value <= 3:
             self._thickness = value
             self._characters = CHARACTER_MAP[value]
             return
         raise ValueError(
-            "thickness string must be one of the following characters: "
-            + ", ".join(CHARACTER_MAP.values())
+            f"thickness must be an integer between 0 and 3 (inclusive), got {value!r}"
         )
 
     @property
@@ -138,12 +137,12 @@ class Rule(Gradient):
         self._characters = value
 
     @property
-    def title(self) -> Optional[TextType]:
+    def title(self) -> TextType | None:
         """Get the title of the Rule."""
         return self._title or None
 
     @title.setter
-    def title(self, value: Optional[TextType]) -> None:
+    def title(self, value: TextType | None) -> None:
         """Set the title of the Rule."""
         if value is not None and not isinstance(value, (str, RichText, Text)):
             raise TypeError(
@@ -152,12 +151,12 @@ class Rule(Gradient):
         self._title = value
 
     @property
-    def title_style(self) -> Optional[StyleType]:
+    def title_style(self) -> StyleType | None:
         """Get the title style of the Rule's title."""
         return self._title_style or None
 
     @title_style.setter
-    def title_style(self, value: Optional[StyleType]) -> None:
+    def title_style(self, value: StyleType | None) -> None:
         """Set the title style of the Rule's title."""
         if value is not None and not isinstance(value, (str, Style)):
             raise TypeError(

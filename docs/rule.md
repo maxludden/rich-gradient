@@ -1,6 +1,6 @@
 # Rule
 
-`rich_gradient.Rule` subclasses `rich.rule.Rule` and applies gradient color stops (foreground and optional background) across the rule glyphs. All alignment, justify, and text options from the Rich base class are preserved.
+`rich_gradient.Rule` wraps a `rich.rule.Rule` (via the `Gradient` base class) and applies gradient color stops (foreground and optional background) across the rule glyphs. Alignment and title options mirror the Rich rule.
 
 ![Rule gallery](img/rule-gallery.svg)
 
@@ -13,8 +13,8 @@ console.print(Rule("Default gradient rule", colors=["#38bdf8", "#a855f7", "#f973
 console.print(Rule("Left aligned", align="left", colors=["#14b8a6", "#6366f1"]))
 console.print(Rule("Right aligned", align="right", colors=["#f97316", "#facc15"]))
 console.print(Rule("Thin border", thickness=0, colors=["#22d3ee", "#6366f1"]))
-console.print(Rule("Double border", thickness=1, colors=["#f472b6", "#facc15"]))
-console.print(Rule("Thick block rule", thickness=3, colors=["#ef4444", "#facc15"]))
+console.print(Rule("Double border", thickness=2, colors=["#f472b6", "#facc15"]))
+console.print(Rule("Thick block rule", thickness=3, colors=["#ef4444", "#f97316", "#facc15"]))
 ```
 
 ## Thickness and alignment
@@ -30,6 +30,6 @@ handled consistently.
 
 ## Titles and colors
 
-Rules support `title`, `title_align`, and `title_style` exactly like Rich. Styles can reference any color supported by `rich.color.Color`, including CSS names and hex codes provided by `rich-color-ext`. Pass `bg_colors` to paint the rule background.
+Rules support `title` and `title_style`, and the rule's placement is controlled by `align`. Styles can reference any color supported by `rich.color.Color`, including CSS names and hex codes provided by `rich-color-ext`. Pass `bg_colors` to paint the rule background.
 
 The example script that generates the gallery is saved as `examples/rule_gallery.py`.

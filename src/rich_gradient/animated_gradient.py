@@ -2,9 +2,10 @@
 
 import signal
 import time
+from collections.abc import Callable, Mapping, Sequence
 from contextlib import suppress
 from threading import Event, RLock, Thread
-from typing import Any, Callable, List, Mapping, Optional, Sequence, cast
+from typing import Any
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -18,9 +19,9 @@ from rich_gradient.config import config
 from rich_gradient.gradient import ColorType, Gradient
 
 __all__ = [
+    "FPS",
     "AnimatedGradient",
     "ColorType",
-    "FPS",
 ]
 
 FPS = 0.12
@@ -30,13 +31,13 @@ class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
 
     Args:
-        renderables (Optional[List[ConsoleRenderable]]): Renderables to apply the gradient to.
-        colors (Optional[List[ColorType]]): Foreground color stops for the gradient.
-        bg_colors (Optional[List[ColorType]]): Background color stops for the gradient.
+        renderables (Optional[list[ConsoleRenderable]]): Renderables to apply the gradient to.
+        colors (Optional[list[ColorType]]): Foreground color stops for the gradient.
+        bg_colors (Optional[list[ColorType]]): Background color stops for the gradient.
         hues (int): Number of hues when auto-generating colors. Defaults to 5.
         rainbow (bool): Generate a rainbow gradient instead of using ``colors``. Defaults to False.
         repeat_scale (float): Stretch color stops across a wider span. Defaults to 4.0.
-        expand (bool): Expand to fill console width/height. Defaults to False.
+        expand (bool): Expand to fill console width/height. Defaults to True.
         justify (AlignMethod): Horizontal justification. Defaults to "left".
         vertical_justify (VerticalAlignMethod): Vertical justification. Defaults to "top".
         console (Optional[Console]): Console to use for rendering. Defaults to the global console.
@@ -45,7 +46,7 @@ class AnimatedGradient(Gradient):
         redirect_stdout (bool): Redirect stdout to Live. Defaults to False.
         redirect_stderr (bool): Redirect stderr to Live. Defaults to False.
         auto_refresh (bool): Automatically refresh the Live context. Defaults to True.
-        refresh_per_second (float): Refresh rate for the Live context. Defaults to 20.0.
+        refresh_per_second (float): Refresh rate for the Live context. Defaults to 30.0.
         animate (bool | None): Whether to animate. When ``None`` (default), the global
             configuration is used. Set to ``False`` to disable live updates explicitly.
         duration (Optional[float]): Optional duration for automatic stop when running animations.
@@ -61,10 +62,10 @@ class AnimatedGradient(Gradient):
 
     def __init__(
         self,
-        renderables: Optional[List[ConsoleRenderable] | ConsoleRenderable | str] = None,
+        renderables: list[ConsoleRenderable] | ConsoleRenderable | str | None = None,
         # color args
-        colors: Optional[List[ColorType]] = None,
-        bg_colors: Optional[List[ColorType]] = None,
+        colors: list[ColorType] | None = None,
+        bg_colors: list[ColorType] | None = None,
         hues: int = 5,
         rainbow: bool = False,
         repeat_scale: float = 4.0,
@@ -75,14 +76,14 @@ class AnimatedGradient(Gradient):
         highlight_words: Mapping[Any, Any] | Sequence[Any] | None = None,
         highlight_regex: Mapping[Any, Any] | Sequence[Any] | None = None,
         # live args
-        console: Optional[Console] = None,
+        console: Console | None = None,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
         auto_refresh: bool = True,
         refresh_per_second: float = 30.0,
         transient: bool = False,
-        animate: Optional[bool] = None,
-        duration: Optional[float] = None,
+        animate: bool | None = None,
+        duration: float | None = None,
     ) -> None:
         self.animate = self.get_animated(animate)
         if refresh_per_second <= 0:
@@ -105,7 +106,7 @@ class AnimatedGradient(Gradient):
         if duration is not None:
             if duration <= 0:
                 raise ValueError("duration must be greater than 0")
-            self.duration: Optional[float] = float(duration)
+            self.duration: float | None = float(duration)
         else:
             self.duration = None
 
@@ -114,10 +115,10 @@ class AnimatedGradient(Gradient):
 
         # Thread / control flags
         self._running: bool = False
-        self._thread: Optional[Thread] = None
+        self._thread: Thread | None = None
         self._stop_event: Event = Event()
         self._live_active: bool = False
-        self._deadline: Optional[float] = None
+        self._deadline: float | None = None
 
         # Initialise Gradient (this sets _renderables, colors, etc.)
         super().__init__(
@@ -295,7 +296,7 @@ class AnimatedGradient(Gradient):
         finally:
             self._mark_stopped()
 
-    def get_animated(self, animate: Optional[bool] = None) -> bool:
+    def get_animated(self, animate: bool | None = None) -> bool:
         """Return whether animation is enabled."""
         if animate is None:
             return config.animation_enabled
@@ -312,7 +313,7 @@ def animated_gradient_example() -> None:
         table.add_column("Renderable", justify="right", ratio=4)
         table.add_column("Works", justify="center", ratio=1)
 
-        renderable_list: List[str] = [
+        renderable_list: list[str] = [
             "rich.text.Text",
             "rich.panel.Panel",
             "rich.console.Group",

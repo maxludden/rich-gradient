@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Optional
 
 from rich.console import Console
 from rich.default_styles import DEFAULT_STYLES as RICH_DEFAULT_STYLES
@@ -12,7 +12,6 @@ from rich.table import Table as RichTable
 from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install as tr_install
-
 
 DEFAULT_STYLES: dict[str, StyleType] = {
     "none": Style.null(),
@@ -348,7 +347,7 @@ DEFAULT_STYLES: dict[str, StyleType] = {
 
 
 # Automatically generate EDITED_STYLES by comparing to rich's default styles
-EDITED_STYLES: Dict[str, str] = {}
+EDITED_STYLES: dict[str, str] = {}
 for key, style in DEFAULT_STYLES.items():
     if key not in RICH_DEFAULT_STYLES:
         EDITED_STYLES[key] = ":star: [bold #e1b400]New[/] :star:"
@@ -358,7 +357,7 @@ for key, style in DEFAULT_STYLES.items():
         EDITED_STYLES[key] = "[dim]Unchanged[/dim]"
 
 
-def get_default_styles() -> Dict[str, StyleType]:
+def get_default_styles() -> dict[str, StyleType]:
     """Retrieve the defaults styles from GRADIENT_STYLES."""
     return DEFAULT_STYLES
 
@@ -404,7 +403,7 @@ def styles_table() -> RichTable:
     table.add_column("[bold.cyan]Updated[/]", justify="center", vertical="middle")
 
     for style_name in DEFAULT_STYLES:
-        temp_style: Optional[StyleType] = DEFAULT_STYLES.get(style_name)
+        temp_style: StyleType | None = DEFAULT_STYLES.get(style_name)
         assert temp_style is not None, "Style should not be None"
         parsed_style: Style = Style.parse(str(temp_style))
         style_string = str(parsed_style)

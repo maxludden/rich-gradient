@@ -60,7 +60,7 @@ def test_text_empty_string():
     """
     Test that Text with empty string input produces no output but does not error.
     """
-    from re import match, compile, MULTILINE
+    from re import MULTILINE, compile, match
     txt = Text("")
     out = render_to_text(txt)
     

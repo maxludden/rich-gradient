@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
-from typing import Optional
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.columns import Columns as RichColumns
@@ -11,7 +10,12 @@ from rich.console import Console, RenderableType
 from rich.padding import PaddingDimensions
 from rich.text import TextType
 
-from rich_gradient.gradient import ColorType, Gradient, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (
+    ColorType,
+    Gradient,
+    HighlightRegexType,
+    HighlightWordsType,
+)
 
 
 class Columns(Gradient):
@@ -52,17 +56,17 @@ class Columns(Gradient):
         right_to_left: bool = False,
         align: AlignMethod | None = None,
         title: TextType | None = None,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         repeat_scale: float = 2.0,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
-        console: Optional[Console] = None,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
+        console: Console | None = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
     ) -> None:
         """Initialize gradient-enabled Rich columns."""
         columns = RichColumns(

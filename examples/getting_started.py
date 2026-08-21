@@ -1,6 +1,9 @@
+"""A demo of the AnimatedText class from rich-gradient."""
 from rich.console import Console
-from rich_gradient.text import Text
+
 from rich_gradient.gradient import Gradient
+from rich_gradient.panel import Panel
+from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 
 console = Console(record=True, width=64, theme=GradientTheme())
@@ -65,8 +68,6 @@ def quick_start_rainbow_text():
 
 def quick_start_gradient_panel():
     """rich-gradient panel -t 'Panel Title' "Gradient Panel content..."""
-
-    from rich_gradient.panel import Panel
 
     console.line()
     console.print(

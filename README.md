@@ -38,35 +38,28 @@ animated variants, and utilities for building palettes.
   - [`Spectrum`](docs/spectrum.md)
   - [`Markdown`](docs/gradient.md)
   - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](docs/renderables.md)
-  - And their animated counterparts.
+  - Animated variants for `Gradient`, `Markdown`, `Panel`, `Rule`, and `Text`.
 - `AnimatedText`, `AnimatedGradient`, `AnimatedPanel`, `AnimatedRule`, and
   `AnimatedMarkdown` for live gradient updates.
 - Loads optional JSON configuration from `~/.rich-gradient/config.json`, where
   you can toggle animation globally and customize the default spectrum palette.
+- Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
 
-### What's new in v0.3.12
+### What's new in the next release
 
-- **Added** an internal cached gradient ramp for `Gradient` rendering. Foreground
-  and background styles are precomputed per render span and reused across
-  segment lookups.
-- **Added** benchmark coverage for static gradients, animated frame rendering,
-  long text, and gradient panels.
-- **Added** gradient convenience constructors for Rich `Table`, `Tree`,
-  `Columns`, `Pretty`, and `Syntax`, each with a runnable module demo.
-- **Changed** gradient segment rendering is shared across `Gradient`, `Rule`,
-  and `AnimatedRule` for more consistent cell-aware output.
-- **Changed** CLI functionality moved to
-  [`rich-gradient-cli`](https://github.com/maxludden/rich-gradient-cli); this
-  package is the core renderable library.
-- **Added** RGB tuple color stops and stricter tuple channel validation.
-- **Fixed** duration-limited `AnimatedGradient` instances now clean up their
-  running state so they can be restarted.
-- **Fixed** `AnimatedPanel` now accepts two-item regex highlight tuples like
-  `("pattern", "style")`, matching the base highlight parser.
-- **Fixed** `Rule` and `AnimatedRule` empty-renderable fallbacks and thickness
-  handling.
-- **Fixed** `AnimatedGradient` refresh-rate validation and restart-after-stop
-  behavior.
+- **Breaking** — importing `rich_gradient` no longer installs Rich's pretty
+  traceback handler (it previously replaced `sys.excepthook` as an import side
+  effect). Programs run identically; only uncaught-exception formatting is
+  affected. To keep Rich tracebacks, call `rich_gradient.install_tracebacks()`
+  once at startup, or set `RICH_GRADIENT_TRACEBACKS=1` for the old automatic
+  behavior with no code changes.
+- **Fixed** `Panel` crashing when `style` was passed as a `rich.style.Style`
+  instance instead of a string.
+- **Fixed** `Rule()` can now be constructed without a title, matching
+  `AnimatedRule` and Rich's own `Rule`.
+- **Fixed** `AnimatedRule` now uses its faster phase speed when animation is
+  enabled via the global config, not only when `animate=True` is passed.
+- **Removed** the unused `requests` runtime dependency for lighter installs.
 
 - See the [CHANGELOG](docs/CHANGELOG.md) for more details.
 

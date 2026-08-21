@@ -20,7 +20,7 @@ def main() -> None:
         Rule("Left aligned", align="left", colors=["#14b8a6", "#6366f1"]),
         Rule("Right aligned", align="right", colors=["#f97316", "#facc15"]),
         Rule("Thin border", thickness=0, colors=["#22d3ee", "#6366f1"]),
-        Rule("Double border", thickness=1, colors=["#f472b6", "#facc15"]),
+        Rule("Double border", thickness=2, colors=["#f472b6", "#facc15"]),
         Rule("Thick block rule", thickness=3, colors=["#ef4444", "#f97316", "#facc15"]),
     )
     console.print(rules)

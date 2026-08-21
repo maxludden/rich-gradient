@@ -1,8 +1,10 @@
 """Example usage of rich-gradient to print "Hello World!" with a gradient."""
+
 from rich.console import Console, Group
 from rich.syntax import Syntax
+
 from rich_gradient import Text
-from rich_gradient.theme import GradientTheme, GRADIENT_TERMINAL_THEME
+from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 
 console = Console(record=True, width=64, theme=GradientTheme())
 console.line()

@@ -39,7 +39,7 @@ Behind the scenes `rich-gradient` relies on [rich-color-ext](https://github.com/
 
 ## Background gradients
 
-Use `bgcolors` to gradient-fill the background independently. Single background colors are treated as a solid fill, while multiple stops interpolate smoothly.
+Use `bg_colors` to gradient-fill the background independently. Single background colors are treated as a solid fill, while multiple stops interpolate smoothly.
 
 ![Background gradients](img/text-backgrounds.svg)
 
@@ -47,10 +47,10 @@ Use `bgcolors` to gradient-fill the background independently. Single background 
 Text(
     "Foreground & background gradient",
     colors=["#2563eb", "#ec4899"],
-    bgcolors=["#0f172a", "#1f2937"],
+    bg_colors=["#0f172a", "#1f2937"],
 )
-Text("Rainbow with solid background", rainbow=True, bgcolors=["#111827"])
-Text("Background-only gradient", colors=["#f1f5f9"], bgcolors=["#22d3ee", "#f97316"])
+Text("Rainbow with solid background", rainbow=True, bg_colors=["#111827"])
+Text("Background-only gradient", colors=["#f1f5f9"], bg_colors=["#22d3ee", "#f97316"])
 ```
 
 Set `Text(..., markup=False)` when you want to treat the input literally rather than parsing Rich markup. You can still call `.stylize()` or provide `spans` explicitly if you need fine-grained styling.

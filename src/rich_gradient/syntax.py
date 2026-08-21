@@ -11,7 +11,12 @@ from rich.console import Console
 from rich.padding import PaddingDimensions
 from rich.syntax import Syntax as RichSyntax
 
-from rich_gradient.gradient import ColorType, Gradient, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (
+    ColorType,
+    Gradient,
+    HighlightRegexType,
+    HighlightWordsType,
+)
 
 
 class Syntax(Gradient):
@@ -62,17 +67,17 @@ class Syntax(Gradient):
         background_color: str | None = None,
         indent_guides: bool = False,
         padding: PaddingDimensions = 0,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         repeat_scale: float = 2.0,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
-        console: Optional[Console] = None,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
+        console: Console | None = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
     ) -> None:
         """Initialize gradient-enabled Rich syntax highlighting."""
         syntax = RichSyntax(

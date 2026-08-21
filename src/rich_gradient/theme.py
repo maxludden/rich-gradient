@@ -1,7 +1,5 @@
 """A container for style information, used by `gradient.Gradient'."""
 
-from typing import Dict, Optional, Tuple
-
 from rich.console import Console
 from rich.style import Style, StyleType
 from rich.table import Table as RichTable
@@ -10,7 +8,7 @@ from rich.theme import Theme
 
 from rich_gradient.default_styles import DEFAULT_STYLES, styles_table
 
-_ColorTuple = Tuple[int, int, int]
+_ColorTuple = tuple[int, int, int]
 
 __all__ = ["GRADIENT_TERMINAL_THEME", "GradientTheme"]
 
@@ -28,13 +26,13 @@ class GradientTheme(Theme):
 
     # styles: Dict[str, Style] = {}
 
-    def __init__(self, styles: Optional[Dict[str, StyleType]] = None) -> None:
+    def __init__(self, styles: dict[str, StyleType] | None = None) -> None:
         """Initialize the theme with the given styles."""
         if styles is None:
             styles = dict(DEFAULT_STYLES)
         super().__init__(styles=styles, inherit=True)
         self._theme: Theme = Theme(styles, inherit=True)
-        self._styles: Dict[str, StyleType] = styles
+        self._styles: dict[str, StyleType] = styles
 
     @property
     def theme(self) -> Theme:
@@ -42,8 +40,8 @@ class GradientTheme(Theme):
         return self._theme
 
     @theme.setter
-    def theme(self, theme: Theme = Theme(DEFAULT_STYLES)) -> None:
-        self._theme = theme
+    def theme(self, theme: Theme | None = None) -> None:
+        self._theme = theme if theme is not None else Theme(DEFAULT_STYLES)
 
     def __call__(self) -> Theme:
         return self.theme

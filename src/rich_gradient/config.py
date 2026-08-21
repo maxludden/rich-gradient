@@ -1,12 +1,13 @@
-"""Pure Python configuration backend used when pydantic-settings is unavailable."""
+"""Pure-Python runtime configuration for rich-gradient (JSON file + env overrides)."""
 
 from __future__ import annotations
 
+import builtins
 import json
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar
 
 from loguru import logger
 
@@ -16,7 +17,7 @@ if not is_installed():
     install()
 
 
-def _deep_update(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+def _deep_update(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
     """Recursively update base dict with override and return base (mutates base)."""
     for k, v in override.items():
         if isinstance(v, dict) and isinstance(base.get(k), dict):
@@ -38,7 +39,7 @@ class Color:
 class Colors:
     """Represents a collection of colors."""
 
-    __root__: List[Color] = field(
+    __root__: list[Color] = field(
         default_factory=lambda: [
             Color("red", "#FF0000"),
             Color("tomato", "#FF5500"),
@@ -61,28 +62,28 @@ class Colors:
     )
 
     @property
-    def names(self) -> List[str]:
+    def names(self) -> list[str]:
         """Return a list of color names."""
         return [color.name for color in self.__root__]
 
     @property
-    def hex(self) -> List[str]:
+    def hex(self) -> list[str]:
         """Return a list of color hex values."""
         return [color.hex for color in self.__root__]
 
-    def as_dict(self) -> Dict[str, str]:
+    def as_dict(self) -> builtins.dict[str, str]:
         """Return a dictionary mapping color names to hex values."""
         return {color.name: color.hex for color in self.__root__}
 
     @property
-    def dict(self) -> Dict[str, str]:
+    def dict(self) -> builtins.dict[str, str]:
         """Return a dictionary mapping color names to hex values."""
         return self.as_dict()
 
 
 @dataclass(frozen=True)
 class RichGradientConfig:
-    """Pure-Python fallback configuration for rich-gradient.
+    """Runtime configuration for rich-gradient.
 
     Use RichGradientConfig.load(...) to create an instance. The loader will:
     - start from DEFAULT_CONFIG
@@ -90,11 +91,9 @@ class RichGradientConfig:
     - apply environment variable overrides
 
     Attributes (public API):
-        exe: Path to the rich-gradient executable.
+        home_dir: Directory rich-gradient reads its config file from.
         animate: whether animations are enabled.
         colors: mapping of color-name -> hex value.
-        path: Path to the config file that was loaded (or None).
-        raw: merged raw configuration dict used to build this instance.
     """
 
     DEFAULT_CONFIG: ClassVar[dict] = {
@@ -105,10 +104,10 @@ class RichGradientConfig:
 
     home_dir: Path
     animate: bool
-    colors: Dict
+    colors: dict
 
     @property
-    def spectrum_colors(self) -> List[str]:
+    def spectrum_colors(self) -> list[str]:
         """Return the spectrum colors as an ordered list of hex strings.
 
         Order follows the keys in the merged colors mapping. This is typically
@@ -126,12 +125,12 @@ class RichGradientConfig:
         return bool(self.animate)
 
     @classmethod
-    def load(cls, config_path: Optional[Path] = None) -> "RichGradientConfig":
+    def load(cls, config_path: Path | None = None) -> RichGradientConfig:
         """Load configuration.
 
         Args:
             config_path: optional explicit Path to a JSON config file. If None,
-                         the loader will look for $HOME/.rich-gradient/config.json.
+                the loader will look for $HOME/.rich-gradient/config.json.
 
         Environment variable overrides supported:
             RICH_GRADIENT_EXE -> string path to exe
@@ -140,7 +139,7 @@ class RichGradientConfig:
             RICH_GRADIENT_HOME_DIR -> overrides rich-gradient-home-dir value
         """
 
-        merged: Dict[str, Any] = json.loads(json.dumps(cls.DEFAULT_CONFIG))
+        merged: dict[str, Any] = json.loads(json.dumps(cls.DEFAULT_CONFIG))
 
         # step 1: read file if present
         # Allow environment to override home dir before attempting to read a
@@ -232,9 +231,9 @@ class RichGradientConfig:
 config = RichGradientConfig.load()
 
 
-def reload_config(config_path: Optional[Path] = None) -> RichGradientConfig:
+def reload_config(config_path: Path | None = None) -> RichGradientConfig:
     """Reload the runtime configuration and return the new instance."""
 
-    global config  # noqa: PLW0603 - explicit module-level cache refresh
+    global config
     config = RichGradientConfig.load(config_path)
     return config

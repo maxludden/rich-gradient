@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Optional, Sequence, TypeAlias
+from collections.abc import Mapping, Sequence
+from typing import Any, TypeAlias
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.console import Console
+from rich.live import Live
 from rich.text import Text as RichText
 from rich.text import TextType
 
@@ -23,7 +25,7 @@ def create_text_renderable(
     text: TextSource,
     *,
     markup: bool = True,
-    text_kwargs: Optional[Mapping[str, Any]] = None,
+    text_kwargs: Mapping[str, Any] | None = None,
 ) -> RichText:
     """Create a Rich Text renderable from a string or Text instance."""
     if isinstance(text, GradientText):
@@ -44,17 +46,17 @@ class AnimatedText(AnimatedGradient):
         self,
         text: TextSource,
         *,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
         repeat_scale: float = 4.0,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
-        text_kwargs: Optional[Mapping[str, Any]] = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
+        text_kwargs: Mapping[str, Any] | None = None,
         markup: bool = True,
         auto_refresh: bool = True,
         refresh_per_second: float = 30.0,
@@ -62,8 +64,8 @@ class AnimatedText(AnimatedGradient):
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
-        animate: Optional[bool] = None,
-        duration: Optional[float] = None,
+        animate: bool | None = None,
+        duration: float | None = None,
     ) -> None:
         renderable = create_text_renderable(
             text,
@@ -108,16 +110,16 @@ class AnimatedText(AnimatedGradient):
         self,
         text: TextSource,
         *,
-        text_kwargs: Optional[Mapping[str, Any]] = None,
-        markup: Optional[bool] = None,
+        text_kwargs: Mapping[str, Any] | None = None,
+        markup: bool | None = None,
     ) -> None:
         """Replace the Text content safely during animation."""
         with self._lock:
             if isinstance(text, GradientText):
-                self.renderables = text.as_rich()
+                self._set_renderables([text.as_rich()])
                 return
             if isinstance(text, RichText):
-                self.renderables = text
+                self._set_renderables([text])
                 return
 
             effective_markup = self._markup if markup is None else bool(markup)
@@ -129,7 +131,7 @@ class AnimatedText(AnimatedGradient):
                 markup=effective_markup,
                 text_kwargs=effective_kwargs,
             )
-            self.renderables = renderable
+            self._set_renderables([renderable])
 
             if text_kwargs is not None:
                 self._text_kwargs = dict(text_kwargs)
@@ -139,9 +141,6 @@ class AnimatedText(AnimatedGradient):
 
 if __name__ == "__main__":
     from time import sleep
-
-    from rich.live import Live
-
 
     animated_text = AnimatedText(
         "Hello, World! This is animated gradient text with Rich!",

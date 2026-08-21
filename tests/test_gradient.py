@@ -5,12 +5,13 @@ Covers color computation, style merging, rendering, and quit panel logic.
 
 from __future__ import annotations
 
-from typing import Any, Iterable, TypeGuard
+from collections.abc import Iterable
+from typing import Any, TypeGuard
 
 import pytest
-from rich.console import Console
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
+from rich.console import Console
 from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style
@@ -151,7 +152,8 @@ def test_gradient_ramp_invalidates_when_color_stops_change() -> None:
     gradient._get_style_at_position(0, 1, 10)
     first_ramp = gradient._gradient_ramp
 
-    gradient.colors = ["#ff0000", "#00ff00"]
+    gradient_any: Any = gradient
+    gradient_any.colors = ["#ff0000", "#00ff00"]
     gradient._get_style_at_position(0, 1, 10)
 
     assert first_ramp is not None

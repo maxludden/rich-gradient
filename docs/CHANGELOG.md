@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Breaking
+
+- Importing `rich_gradient` no longer installs Rich's pretty traceback handler
+  (it previously replaced `sys.excepthook` process-wide as an import side
+  effect). Programs run identically; only uncaught-exception formatting
+  reverts to Python's default unless you opt in.
+
+  Migration — either call the new helper once at startup:
+
+  ```python
+  import rich_gradient
+
+  rich_gradient.install_tracebacks()  # accepts rich.traceback.install kwargs
+  ```
+
+  or set `RICH_GRADIENT_TRACEBACKS=1` in the environment to restore the old
+  automatic behavior with no code changes.
+
+### Fixed
+
+- `get_logger(enabled=True)` no longer calls `loguru.logger.remove()`, which
+  destroyed every handler the host application had configured. It now tracks
+  and removes only its own sinks, filters them to `rich_gradient` records so
+  application logs cannot leak in, and defaults its log directory to
+  `~/.rich-gradient/logs` instead of creating `./logs` in the current working
+  directory.
+- `Panel` no longer crashes when `style` is passed as a `rich.style.Style`
+  instance instead of a string.
+- `Rule` accepts being constructed with no title (`Rule()`), matching
+  `AnimatedRule` and Rich's own `Rule`.
+- `AnimatedRule` now uses its faster phase speed when animation is enabled via
+  the global config, not only when `animate=True` is passed explicitly.
+- `Rule` reports an accurate error message for out-of-range `thickness` values.
+- Removed the unused `requests` runtime dependency.
+
+### Changed
+
+- Corrected stale docstrings and documentation: `vertical_justify` accepts
+  `"middle"` (not `"center"`), `Text` background colors use `bg_colors` (docs
+  previously said `bgcolors`), and default values in `Panel` /
+  `AnimatedGradient` docstrings now match their signatures.
+
 ## v0.3.13 - 2026-06-02 | <span style="color: rgb(215, 255, 100)">Renderables, ramp caching, and animation fixes</span>
 
 ### Added
