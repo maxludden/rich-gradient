@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "loguru>=0.7.3",
     "requests>=2.32.5",
-    "rich>=14.0.0",
+    "rich>=15.0.0",
     "rich-color-ext>=2.0.0",
 ]
 dynamic = ["version"]
