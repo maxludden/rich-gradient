@@ -70,9 +70,11 @@ class GradientRamp:
         total_width: float = self._total_width
         ramp_size: int = max(1, ceil(total_width))
         return tuple(
-            self._style_for_fraction(((index + 0.5) / total_width) % 1.0)
-            if total_width > 0
-            else self._style_for_fraction(0.0)
+            (
+                self._style_for_fraction(((index + 0.5) / total_width) % 1.0)
+                if total_width > 0
+                else self._style_for_fraction(0.0)
+            )
             for index in range(ramp_size)
         )
 
@@ -122,10 +124,14 @@ class GradientRamp:
         def to_srgb(channel: float) -> float:
             return (channel ** (1.0 / self.gamma)) * 255.0
 
-        linear_red: float = to_linear(red0) + (to_linear(red1) - to_linear(red0)) * ratio
+        linear_red: float = (
+            to_linear(red0) + (to_linear(red1) - to_linear(red0)) * ratio
+        )
         linear_green: float = (
             to_linear(green0) + (to_linear(green1) - to_linear(green0)) * ratio
         )
-        linear_blue: float = to_linear(blue0) + (to_linear(blue1) - to_linear(blue0)) * ratio
+        linear_blue: float = (
+            to_linear(blue0) + (to_linear(blue1) - to_linear(blue0)) * ratio
+        )
 
         return to_srgb(linear_red), to_srgb(linear_green), to_srgb(linear_blue)

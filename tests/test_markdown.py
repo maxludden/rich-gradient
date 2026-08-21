@@ -3,8 +3,8 @@
 import pytest
 from rich.markdown import Markdown as RichMarkdown
 
-from rich_gradient.markdown import Markdown
 from rich_gradient.animated_markdown import AnimatedMarkdown
+from rich_gradient.markdown import Markdown
 
 
 def test_markdown_initializes_with_string_content():

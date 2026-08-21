@@ -14,7 +14,8 @@ from rich.text import Text as RichText
 
 from rich_gradient._logger import logger
 from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.gradient import ColorType, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (ColorType, HighlightRegexType,
+                                    HighlightWordsType)
 from rich_gradient.text import Text, TextType
 
 __all__ = ["AnimatedPanel"]
@@ -70,7 +71,6 @@ class AnimatedPanel(AnimatedGradient):
         hues: int = 5,
         rainbow: bool = False,
         repeat_scale: float = 4.0,
-
         # layout args
         expand: bool = True,
         justify: AlignMethod = "left",
@@ -90,7 +90,6 @@ class AnimatedPanel(AnimatedGradient):
         subtitle_align: AlignMethod = "right",
         subtitle_style: StyleType = "",
         safe_box: bool = False,
-
         # live args
         console: Optional[Console] = None,
         redirect_stdout: bool = False,
@@ -164,6 +163,7 @@ class AnimatedPanel(AnimatedGradient):
         box: Box,
     ) -> Sequence[_RegexHighlight]:
         """Merge user-provided regex highlights with title/subtitle highlights."""
+
         def normalize_style(value: object) -> str | Style:
             return value if isinstance(value, Style) else str(value)
 
@@ -189,7 +189,9 @@ class AnimatedPanel(AnimatedGradient):
         if title:
             title_regex = AnimatedPanel._get_title_regex(box)
             logger.debug("AnimatedPanel title regex: %s", title_regex)
-            highlight_list.append((title_regex, normalize_style(title_style or "bold"), 0))
+            highlight_list.append(
+                (title_regex, normalize_style(title_style or "bold"), 0)
+            )
         if subtitle:
             subtitle_regex = AnimatedPanel._get_subtitle_regex(box)
             logger.debug("AnimatedPanel subtitle regex: %s", subtitle_regex)

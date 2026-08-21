@@ -11,12 +11,8 @@ from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
 from rich_gradient._logger import logger
-from rich_gradient.gradient import (
-    ColorType,
-    Gradient,
-    HighlightRegexType,
-    HighlightWordsType,
-)
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 from rich_gradient.text import Text, TextType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 

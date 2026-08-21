@@ -11,12 +11,8 @@ from rich.live import Live
 from rich.markdown import Markdown as RichMarkdown
 
 from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.gradient import (
-    ColorType,
-    Gradient,
-    HighlightRegexType,
-    HighlightWordsType,
-)
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 MarkdownSource: TypeAlias = str | RichMarkdown

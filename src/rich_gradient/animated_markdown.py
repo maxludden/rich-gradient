@@ -10,7 +10,8 @@ from rich.console import Console
 from rich.markdown import Markdown as RichMarkdown
 
 from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.gradient import ColorType, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (ColorType, HighlightRegexType,
+                                    HighlightWordsType)
 from rich_gradient.markdown import Markdown, create_markdown_renderable
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 

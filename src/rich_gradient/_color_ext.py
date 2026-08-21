@@ -14,6 +14,7 @@ except ImportError as exc:  # pragma: no cover - dependency missing
 
 __all__ = ["install", "is_installed", "get_css_map"]
 
+
 def _fetch_callable(name: str, default: Callable[[], object]) -> Callable[[], object]:
     """Return a callable attribute from ``rich_color_ext`` or a default fallback."""
     # Lookup is dynamic because older versions may lack these helpers.
@@ -34,7 +35,9 @@ def _default_is_installed() -> bool:
 
 
 install: Callable[[], object] = _fetch_callable("install", _noop_install)
-is_installed: Callable[[], object] = _fetch_callable("is_installed", _default_is_installed)
+is_installed: Callable[[], object] = _fetch_callable(
+    "is_installed", _default_is_installed
+)
 
 
 @lru_cache(maxsize=1)
