@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- CI: GitHub Actions workflow to run pre-commit, mypy, and tests on supported Python versions (3.11, 3.12).
+- Tooling: development toolchain and configuration added (mypy, pre-commit, ruff, black, isort) and a top-level `.pre-commit-config.yaml` so contributors can run the same hooks locally.
+
+### Changed
+
+- Packaging: bumped minimum Python requirement to >=3.11 and prepared the project for a patch release (bumped package version to 0.3.14 in this branch).
+- Dependencies: bumped `rich` to >=15.0.0 and updated `rich-color-ext` to a compatible release; regenerated the project lockfile to reflect these changes.
+- Linting: aligned Ruff configuration to a focused baseline (syntax, error, and warning checks) so automated formatting and checks are consistent across CI and local pre-commit runs.
+- CI behavior: pre-commit and mypy now fail the workflow when issues are detected (no masking with `|| true`) so formatting, linting, and typing regressions are enforced.
+
+### Fixed
+
+- Repo hygiene: applied automatic formatting and import sorting fixes (isort/black/ruff) across examples, source, and tests to produce a consistent code style and to satisfy the new pre-commit hooks.
+- Tests: fixed minor whitespace issues flagged by linters so the test suite is green under the stricter checks.
+
 ## v0.3.13 - 2026-06-02 | <span style="color: rgb(215, 255, 100)">Renderables, ramp caching, and animation fixes</span>
 
 ### Added
