@@ -10,7 +10,7 @@ from rich_gradient.default_styles import DEFAULT_STYLES, styles_table
 
 _ColorTuple = tuple[int, int, int]
 
-__all__ = ["GRADIENT_TERMINAL_THEME", "GradientTheme"]
+__all__: list[str] = ["GRADIENT_TERMINAL_THEME", "GradientTheme"]
 
 
 class GradientTheme(Theme):
@@ -40,8 +40,8 @@ class GradientTheme(Theme):
         return self._theme
 
     @theme.setter
-    def theme(self, theme: Theme | None = None) -> None:
-        self._theme = theme if theme is not None else Theme(DEFAULT_STYLES)
+    def theme(self, theme: Theme = Theme(DEFAULT_STYLES)) -> None:
+        self._theme= theme
 
     def __call__(self) -> Theme:
         return self.theme

@@ -21,7 +21,8 @@ from rich.align import Align, AlignMethod, VerticalAlignMethod
 from rich.cells import get_character_cell_size
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
-from rich.console import Console, ConsoleOptions, ConsoleRenderable, Group, RenderResult
+from rich.console import (Console, ConsoleOptions, ConsoleRenderable, Group,
+                          RenderResult)
 from rich.jupyter import JupyterMixin
 from rich.measure import Measurement
 from rich.panel import Panel
@@ -30,12 +31,8 @@ from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
 from rich_gradient._gradient_ramp import GradientRamp
-from rich_gradient._highlight import (
-    HighlightRegex,
-    HighlightRegexType,
-    HighlightWords,
-    HighlightWordsType,
-)
+from rich_gradient._highlight import (HighlightRegex, HighlightRegexType,
+                                      HighlightWords, HighlightWordsType)
 from rich_gradient.spectrum import Spectrum
 
 ColorType: TypeAlias = str | Color | ColorTriplet | tuple[int, int, int]
@@ -181,8 +178,7 @@ class Gradient(JupyterMixin):
         background_colors: list[ColorType] = list(bg_colors or [])
         self.colors = foreground_colors  # type: ignore[assignment]
         # Help type-checkers understand the setter accepts ColorType values
-        self.bg_colors = cast(
-            list[ColorType] | None, background_colors)  # type: ignore[assignment]
+        self.bg_colors = cast(Optional[List[ColorType]], background_colors)  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
         self._highlight_rules: list[_HighlightRule] = []
         self._highlight_map_cache: dict[str, list[Style | None]] = {}
@@ -573,9 +569,7 @@ class Gradient(JupyterMixin):
         """Build a styled segment for one display-cell cluster."""
         gradient_style = self._get_style_at_position(position, width, span)
         merged_style = self._merge_styles(base_style, gradient_style)
-        merged_style = self._apply_highlight_style(
-            merged_style, highlight_map, indices
-        )
+        merged_style = self._apply_highlight_style(merged_style, highlight_map, indices)
         return Segment(text, merged_style)
 
     def _get_style_at_position(self, position: int, width: int, span: int) -> Style:

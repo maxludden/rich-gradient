@@ -12,7 +12,8 @@ from rich.text import Text as RichText
 from rich.text import TextType
 
 from rich_gradient.animated_gradient import AnimatedGradient
-from rich_gradient.gradient import ColorType, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (ColorType, HighlightRegexType,
+                                    HighlightWordsType)
 from rich_gradient.text import Text as GradientText
 
 TextSource: TypeAlias = TextType
@@ -20,6 +21,7 @@ TextSource: TypeAlias = TextType
 __all__ = ["AnimatedText"]
 
 _console = Console()
+
 
 def create_text_renderable(
     text: TextSource,
@@ -142,19 +144,17 @@ class AnimatedText(AnimatedGradient):
 if __name__ == "__main__":
     from time import sleep
 
+    from rich.live import Live
+
     animated_text = AnimatedText(
         "Hello, World! This is animated gradient text with Rich!",
         rainbow=True,
         justify="center",
         expand=True,
         animate=True,
-        duration=4.0
+        duration=4.0,
     )
-    with Live(
-        animated_text,
-        console=_console,
-        refresh_per_second=30.0
-    ) as live:
+    with Live(animated_text, console=_console, refresh_per_second=30.0) as live:
         animated_text.start()
         try:
             dur = animated_text.duration or 4.0

@@ -19,8 +19,9 @@ from rich.control import strip_control_codes
 from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style, StyleType
-from rich.text import Span, TextType
+from rich.text import Span
 from rich.text import Text as RichText
+from rich.text import TextType
 
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -562,8 +563,7 @@ is superfluous!\n\nThis gradient uses:
     def long_text_example() -> None:
         """Example 5: Long text with a smooth gradient."""
         long_text_colors = ["magenta", "cyan"]
-        long_text_str = (
-            "If you are picky about your colors, but prefer simpler gradients, Text will smoothly \
+        long_text_str = "If you are picky about your colors, but prefer simpler gradients, Text will smoothly \
 interpolate between two or more colors. This means you can specify a list of colors, or even just \
 two colors and Text will generate a smooth gradient between them.\n\nCillum proident deserunt \
 est exercitation laborum eu incididunt ex est in aute enim tempor magna. Do nisi sint anim. \
@@ -572,7 +572,6 @@ Consectetur adipisicing aute laborum cillum amet voluptate consectetur aliqua mo
 nostrud ut. Elit ex cupidatat ex aliquip id magna incididunt dolor veniam. Ex Lorem duis ut \
 ullamco laborum fugiat consequat do amet ullamco. Occaecat ut aliqua irure excepteur minim \
 excepteur voluptate duis exercitation occaecat."
-        )
 
         long_text = Text(
             long_text_str, colors=long_text_colors, style="bold", justify="center"

@@ -31,6 +31,7 @@ __all__ = ["COLOR_STOPS", "GradientTheme", "Spectrum"]
 
 from itertools import cycle
 from random import Random
+from typing import Dict, List, Optional
 
 from rich.color import Color
 from rich.color_triplet import ColorTriplet
@@ -68,7 +69,7 @@ except (AttributeError, TypeError, ValueError):
         "violet": "#B033FF",
         "magenta": "#FF00FF",
         "pink": "#FF00AA",
-        "rose": "#FF0055"
+        "rose": "#FF0055",
     }
 
 
@@ -139,12 +140,13 @@ deterministic color order.
             for name, value in COLOR_STOPS.items()
         }
         self.names = [
-            hex_to_name.get(color.get_truecolor().hex.upper(), color.get_truecolor().hex.upper())
+            hex_to_name.get(
+                color.get_truecolor().hex.upper(), color.get_truecolor().hex.upper()
+            )
             for color in self.colors
         ]
 
-
-        self._styles = [
+        self.styles = [
             Style(color=color, bold=False, italic=False, underline=False)
             for color in self.colors
         ]
@@ -240,8 +242,7 @@ deterministic color order.
             return Text.assemble(*pieces)
 
         table = RichTable(title=rainbow_title("Spectrum Colors"))
-        table.add_column(
-            rainbow_title("Sample"), justify="center")
+        table.add_column(rainbow_title("Sample"), justify="center")
         table.add_column(rainbow_title("Color"), style="bold")
         table.add_column(rainbow_title("Hex"), style="bold")
         table.add_column(rainbow_title("Name"), style="bold")
@@ -264,16 +265,18 @@ deterministic color order.
                 no_wrap=True,
                 justify="center",
             )
-            rgb_text = Text.assemble(*[
-                Text("rgb", style=f"bold {hex_code}"),
-                Text("(", style="i white"),
-                Text(f"{red:>3}", style="#FF0000"),
-                Text(",", style="i #555"),
-                Text(f"{green:>3}", style="#00FF00"),
-                Text(",", style="i #555"),
-                Text(f"{blue:>3}", style="#00AAFF"),
-                Text(")", style="i white"),
-            ])
+            rgb_text = Text.assemble(
+                *[
+                    Text("rgb", style=f"bold {hex_code}"),
+                    Text("(", style="i white"),
+                    Text(f"{red:>3}", style="#FF0000"),
+                    Text(",", style="i #555"),
+                    Text(f"{green:>3}", style="#00FF00"),
+                    Text(",", style="i #555"),
+                    Text(f"{blue:>3}", style="#00AAFF"),
+                    Text(")", style="i white"),
+                ]
+            )
             sample = Text("█" * 10, style=Style(color=hex_code, bold=True))
             table.add_row(sample, name_text, hex_text, rgb_text)
         return table

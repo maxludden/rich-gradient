@@ -14,12 +14,8 @@ from rich.table import Column
 from rich.table import Table as RichTable
 from rich.text import TextType
 
-from rich_gradient.gradient import (
-    ColorType,
-    Gradient,
-    HighlightRegexType,
-    HighlightWordsType,
-)
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 
 
 class Table(Gradient):
