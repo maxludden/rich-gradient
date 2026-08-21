@@ -277,7 +277,7 @@ terminal commands that build on the renderables provided here.
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="docs/img/MaxLogo-animated.svg"
+      src="docs/img/maxlogo.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />

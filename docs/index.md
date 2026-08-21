@@ -26,15 +26,13 @@ utilities for building palettes, and animated variants for live terminal output.
 - Generates color stops automatically or from CSS color names, hex codes, RGB tuples, or `rich.color.Color` objects.
 - Supports foreground and background gradients, rainbow palettes, and deterministic color spectrums.
 - Ships with ready-to-use renderables:
-    - [`Text`](text.md)
-    - [`Gradient`](gradient.md)
-    - [`Panel`](panel.md)
-    - [`Rule`](rule.md)
-    - [`Spectrum`](spectrum.md)
-    - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](renderables.md)
-    - And their animated counterparts.
-
-
+  - [`Text`](text.md)
+  - [`Gradient`](gradient.md)
+  - [`Panel`](panel.md)
+  - [`Rule`](rule.md)
+  - [`Spectrum`](spectrum.md)
+  - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](renderables.md)
+  - And their animated counterparts.
 
 ## Installation
 
@@ -60,7 +58,6 @@ uv pip install rich-gradient
 # via pip
 pip install rich-gradient
 ```
-
 
 ## Quick start
 
@@ -102,7 +99,6 @@ This package is the renderable library. The command-line interface now lives in
 depends on this package and exposes terminal commands for quick experiments and
 asset generation.
 
-
 Prefer API-level details? See the [reference section](animated_gradient_ref.md) generated with `mkdocstrings`.
 
 <div align="center">
@@ -112,7 +108,7 @@ Prefer API-level details? See the [reference section](animated_gradient_ref.md) 
   <br />
   <a href="https://github.com/maxludden/maxludden" style="text-decoration:none; color:inherit;">
     <img
-      src="img/MaxLogo-animated.svg"
+      src="img/maxlogo.svg"
       alt="Max Ludden's Logo"
       width="20%"
     />

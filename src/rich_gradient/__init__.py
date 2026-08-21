@@ -91,7 +91,7 @@ __all__ = [
     "reload_config",
 ]
 
-__version__ = "0.3.14"
+__version__ = "0.3.15"
 
 
 # Set up logging
