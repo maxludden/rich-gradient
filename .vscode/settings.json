@@ -117,5 +117,8 @@
     ],
     "wolf.disableHotModeWarning": true,
     "chatgpt.openOnStartup": true,
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
+    "chat.tools.terminal.autoApprove": {
+        "uvx": true
+    }
 }

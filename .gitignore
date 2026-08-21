@@ -34,3 +34,9 @@ cspell.json
 out/
 static*/**
 tests/.rg_config_test/
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
+.env.vault

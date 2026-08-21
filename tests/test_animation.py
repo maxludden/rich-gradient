@@ -7,19 +7,17 @@ import time
 from pathlib import Path
 
 import pytest
-
-# Direct configuration writes into a test-local directory to avoid touching the user home.
-os.environ.setdefault(
-    "RICH_GRADIENT_CONFIG_HOME",
-    str((Path(__file__).parent / ".rg_config_test").resolve()),
-)
-
 from rich.console import Console
 
 from rich_gradient import CONFIG  # type: ignore[reportMissingTypeStubs]
 from rich_gradient import AnimatedGradient, Gradient
 from rich_gradient.animated_gradient import FPS
 
+# Direct configuration writes into a test-local directory to avoid touching the user home.
+os.environ.setdefault(
+    "RICH_GRADIENT_CONFIG_HOME",
+    str((Path(__file__).parent / ".rg_config_test").resolve()),
+)
 
 def test_phase_progression_changes_color():
     """Test that advancing the phase changes the sampled color at a position."""
@@ -108,12 +106,12 @@ def test_animated_gradient_can_restart_after_duration_expires() -> None:
         auto_refresh=False,
         console=console,
         animate=True,
-        duration=0.03,
+        duration=0.1,
     )
 
     try:
         gradient.start()
-        time.sleep(0.12)
+        time.sleep(0.2)
 
         assert gradient._stop_event.is_set()
         assert gradient._running is False

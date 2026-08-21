@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, List, Optional, TypeAlias, Union, cast
+from typing import TypeAlias, cast
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -35,7 +35,7 @@ from rich_gradient._highlight import (HighlightRegex, HighlightRegexType,
                                       HighlightWords, HighlightWordsType)
 from rich_gradient.spectrum import Spectrum
 
-ColorType: TypeAlias = Union[str, Color, ColorTriplet, tuple[int, int, int]]
+ColorType: TypeAlias = str | Color | ColorTriplet | tuple[int, int, int]
 _GradientRampKey: TypeAlias = tuple[
     tuple[ColorTriplet, ...],
     tuple[ColorTriplet, ...],
@@ -72,14 +72,15 @@ class Gradient(JupyterMixin):
         console(rich.console.Console, Optional): A rich Console to render to. Defaults to
             `rich.get_console()`.
         hues(int, Optional): the number of hues to generate if no explicit colors are given. \
-            defaults to 5. This parameter is ignored if `colors` is provided.
+            defaults to 5. Must be between 2 and the size of the spectrum palette \
+            (17 by default). This parameter is ignored if `colors` is provided.
         rainbow(bool, Optional): If True, ignore `colors` and use a full spectrum of colors. \
             defaults to False.
         expand(bool, Optional): Whether to expand renderables to the full console width. \
             defaults to True.
         justify(str|AlignMethod): Horizontal alignment: 'left', 'center', or 'right'. \
             Defaults to 'left'.
-        vertical_justify(str|VerticalAlignMethod): Vertical alignment: 'top', 'center', or \
+        vertical_justify(str|VerticalAlignMethod): Vertical alignment: 'top', 'middle', or \
             'bottom'. Defaults to 'middle'.
         repeat_scale(float, Optional): Scale factor controlling gradient repeat span. \
             defaults to 2.0.
@@ -111,23 +112,21 @@ class Gradient(JupyterMixin):
 
     def __init__(
         self,
-        renderables: str | ConsoleRenderable | List[ConsoleRenderable],
-        colors: Optional[List[ColorType]] = None,
-        bg_colors: Optional[List[ColorType]] = None,
+        renderables: str | ConsoleRenderable | list[ConsoleRenderable],
+        colors: list[ColorType] | None = None,
+        bg_colors: list[ColorType] | None = None,
         *,
-        console: Optional[Console] = None,
+        console: Console | None = None,
         hues: int = 5,
         rainbow: bool = False,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
         repeat_scale: float = 2.0,
-        highlight_words: Optional[
-            HighlightWordsType | HighlightWords | Sequence[HighlightWords]
-        ] = None,
-        highlight_regex: Optional[
-            HighlightRegexType | HighlightRegex | Sequence[HighlightRegex]
-        ] = None,
+        highlight_words: HighlightWordsType | HighlightWords | \
+            Sequence[HighlightWords] | None = None,
+        highlight_regex: HighlightRegexType | HighlightRegex | \
+            Sequence[HighlightRegex] | None = None,
         animated: bool = False,
     ) -> None:
         """
@@ -147,7 +146,7 @@ class Gradient(JupyterMixin):
             rainbow: If True, ignore `colors` and use a full rainbow.
             expand: Whether to expand renderables to the full console width.
             justify: Horizontal alignment: 'left', 'center', or 'right'.
-            vertical_justify: Vertical alignment: 'top', 'center', or 'bottom'.
+            vertical_justify: Vertical alignment: 'top', 'middle', or 'bottom'.
             repeat_scale: Scale factor controlling gradient repeat span.
             highlight_words: Optional configurations describing word highlights to apply.
             highlight_regex: Optional configurations describing regex highlights to apply.
@@ -175,14 +174,14 @@ class Gradient(JupyterMixin):
         self._set_renderables(renderables)
 
         # Parse and store color stops
-        foreground_colors: List[ColorType] = list(colors or [])
-        background_colors: List[ColorType] = list(bg_colors or [])
+        foreground_colors: list[ColorType] = list(colors or [])
+        background_colors: list[ColorType] = list(bg_colors or [])
         self.colors = foreground_colors  # type: ignore[assignment]
         # Help type-checkers understand the setter accepts ColorType values
-        self.bg_colors = cast(Optional[List[ColorType]], background_colors)  # type: ignore[assignment]
+        self.bg_colors = cast(list[ColorType] | None, background_colors)  # type: ignore[assignment]
         self._active_stops = self._initialize_color_stops()
         self._highlight_rules: list[_HighlightRule] = []
-        self._highlight_map_cache: dict[str, list[Optional[Style]]] = {}
+        self._highlight_map_cache: dict[str, list[Style | None]] = {}
         if highlight_words is not None:
             for word_rule in HighlightWords.from_config(highlight_words):
                 self._highlight_rules.append(
@@ -227,7 +226,7 @@ class Gradient(JupyterMixin):
             obj = getattr(self, attr, None)
             if obj is not None and hasattr(obj, "expand"):
                 try:
-                    setattr(obj, "expand", self._expand)
+                    obj.expand = self._expand
                 except (AttributeError, TypeError):
                     # Don't propagate failures to avoid breaking rendering.
                     pass
@@ -238,7 +237,7 @@ class Gradient(JupyterMixin):
             for r in getattr(self, "_renderables", []) or []:
                 if hasattr(r, "expand"):
                     try:
-                        setattr(r, "expand", self._expand)
+                        r.expand = self._expand
                     except (AttributeError, TypeError):
                         # Ignore failures when an individual renderable disallows setting expand.
                         pass
@@ -247,19 +246,19 @@ class Gradient(JupyterMixin):
             pass
 
     @property
-    def renderables(self) -> List[ConsoleRenderable]:
+    def renderables(self) -> list[ConsoleRenderable]:
         """List of renderable objects to which the gradient is applied."""
         return self._renderables
 
     @renderables.setter
     def renderables(
-        self, value: str | ConsoleRenderable | List[ConsoleRenderable]
+        self, value: str | ConsoleRenderable | list[ConsoleRenderable]
     ) -> None:
         """Set and normalize the list of renderables."""
         self._set_renderables(value)
 
     def _set_renderables(
-        self, value: str | ConsoleRenderable | List[ConsoleRenderable]
+        self, value: str | ConsoleRenderable | list[ConsoleRenderable]
     ) -> None:
         """Normalize and store renderables without going through the descriptor."""
         if isinstance(value, list):
@@ -268,7 +267,7 @@ class Gradient(JupyterMixin):
             )
         else:
             render_list = [value]
-        normalized: List[ConsoleRenderable] = []
+        normalized: list[ConsoleRenderable] = []
         for item in render_list:
             if isinstance(item, str):
                 normalized.append(cast(ConsoleRenderable, RichText.from_markup(item)))
@@ -277,12 +276,12 @@ class Gradient(JupyterMixin):
         self._renderables = normalized
 
     @property
-    def colors(self) -> List[ColorTriplet]:
+    def colors(self) -> list[ColorTriplet]:
         """List of parsed ColorTriplet objects for gradient foreground."""
         return self._foreground_colors
 
     @colors.setter
-    def colors(self, colors: List[ColorType]) -> None:
+    def colors(self, colors: list[ColorType]) -> None:
         """
         Parse and set the foreground color stops.
 
@@ -312,12 +311,12 @@ class Gradient(JupyterMixin):
         self._invalidate_gradient_ramp()
 
     @property
-    def bg_colors(self) -> List[ColorTriplet]:
+    def bg_colors(self) -> list[ColorTriplet]:
         """List of parsed ColorTriplet objects for gradient background."""
         return self._background_colors
 
     @bg_colors.setter
-    def bg_colors(self, colors: Optional[List[ColorType]]) -> None:
+    def bg_colors(self, colors: list[ColorType] | None) -> None:
         """
         Parse and set the background color stops.
 
@@ -373,7 +372,7 @@ class Gradient(JupyterMixin):
         """Validate and set vertical alignment.
 
         Args:
-            method(VerticalAlignMethod): 'top', 'center', or 'bottom'.
+            method(VerticalAlignMethod): 'top', 'middle', or 'bottom'.
 
         Raises:
             ValueError: If method is invalid.
@@ -384,7 +383,7 @@ class Gradient(JupyterMixin):
             raise ValueError(f"Invalid vertical justify method: {method}")
 
     @staticmethod
-    def _to_color_triplets(colors: List[ColorType]) -> List[ColorTriplet]:
+    def _to_color_triplets(colors: list[ColorType]) -> list[ColorTriplet]:
         """
         Convert a list of color specifications to ColorTriplet instances.
 
@@ -398,7 +397,7 @@ class Gradient(JupyterMixin):
             TypeError: If unsupported color type encountered.
             ColorParseError: If a color string fails to parse.
         """
-        triplets: List[ColorTriplet] = []
+        triplets: list[ColorTriplet] = []
         for c in colors:
             if isinstance(c, ColorTriplet):
                 triplets.append(c)
@@ -492,7 +491,7 @@ class Gradient(JupyterMixin):
 
     def _get_highlight_map_for_segments(
         self, segments: Sequence[Segment]
-    ) -> Optional[list[Optional[Style]]]:
+    ) -> list[Style | None] | None:
         """Return a cached highlight map for a rendered line when possible."""
         if not self._highlight_rules:
             return None
@@ -510,7 +509,7 @@ class Gradient(JupyterMixin):
         self,
         segments: Sequence[Segment],
         span: int,
-        highlight_map: Optional[list[Optional[Style]]],
+        highlight_map: list[Style | None] | None,
     ) -> RenderResult:
         """Apply gradient and highlight styles to rendered Rich segments."""
         column = 0
@@ -564,7 +563,7 @@ class Gradient(JupyterMixin):
         width: int,
         span: int,
         base_style: Style,
-        highlight_map: Optional[list[Optional[Style]]],
+        highlight_map: list[Style | None] | None,
         indices: Sequence[int],
     ) -> Segment:
         """Build a styled segment for one display-cell cluster."""
@@ -710,7 +709,7 @@ class Gradient(JupyterMixin):
         style: StyleType,
         *,
         case_sensitive: bool = True,
-    ) -> "Gradient":
+    ) -> Gradient:
         """
         Highlight occurrences of the provided words with an additional style \
             after gradients are applied.
@@ -740,7 +739,7 @@ class Gradient(JupyterMixin):
 
     def highlight_regex(
         self, pattern: str | re.Pattern[str], style: StyleType, flags: int = 0
-    ) -> "Gradient":
+    ) -> Gradient:
         """
         Highlight matches of a regex pattern with an additional style after gradients are applied.
 
@@ -773,11 +772,11 @@ class Gradient(JupyterMixin):
         if self._highlight_map_cache:
             self._highlight_map_cache.clear()
 
-    def _build_highlight_map(self, text: str) -> list[Optional[Style]]:
+    def _build_highlight_map(self, text: str) -> list[Style | None]:
         """Compute per-character highlight styles for a line of text."""
         if not text or not self._highlight_rules:
             return []
-        highlight_map: list[Optional[Style]] = [None] * len(text)
+        highlight_map: list[Style | None] = [None] * len(text)
         apply_range = self._apply_highlight_range
 
         def apply_word_rule() -> None:
@@ -828,7 +827,7 @@ class Gradient(JupyterMixin):
 
     @staticmethod
     def _apply_highlight_range(
-        highlight_map: list[Optional[Style]], start: int, end: int, style: Style
+        highlight_map: list[Style | None], start: int, end: int, style: Style
     ) -> None:
         """Apply style to a character range in the highlight map.
         Args:
@@ -847,13 +846,13 @@ class Gradient(JupyterMixin):
     @staticmethod
     def _apply_highlight_style(
         base_style: Style,
-        highlight_map: Optional[list[Optional[Style]]],
+        highlight_map: list[Style | None] | None,
         indices: Sequence[int],
     ) -> Style:
         """Merge highlight styles for character indices into the base style."""
         if not highlight_map or not indices:
             return base_style
-        highlight_style: Optional[Style] = None
+        highlight_style: Style | None = None
         for index in indices:
             if 0 <= index < len(highlight_map):
                 style = highlight_map[index]
@@ -867,13 +866,13 @@ class Gradient(JupyterMixin):
     # -----------------
     # Test helper parity
     # -----------------
-    def _initialize_color_stops(self) -> List[ColorTriplet]:
+    def _initialize_color_stops(self) -> list[ColorTriplet]:
         """Initialize the active color stops based on mode and provided stops.
 
         If only one stop is provided, duplicate it to create a smooth segment pair.
         """
         # Prefer foreground color stops; fall back to background stops if set
-        source: List[ColorTriplet] = self.colors if self.colors else self.bg_colors
+        source: list[ColorTriplet] = self.colors if self.colors else self.bg_colors
         if not source:
             return []
         return [source[0], source[0]] if len(source) == 1 else source
@@ -896,7 +895,7 @@ class Gradient(JupyterMixin):
         )
 
     def _interpolated_color(
-        self, frac: float, stops: list, _count: Optional[int] = None
+        self, frac: float, stops: list, _count: int | None = None
     ):
         """Return the interpolated color at a fraction (for tests)."""
         return self._interpolate_color(frac, stops)

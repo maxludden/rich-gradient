@@ -20,6 +20,7 @@ TABLE_OUTPUT = (
 
 
 def render_panel_example() -> None:
+    """Render a panel example with gradient text and background."""
     console = Console(record=True, width=80)
     markdown = Markdown(
         """
@@ -45,6 +46,7 @@ def render_panel_example() -> None:
 
 
 def render_table_example() -> None:
+    """Render a table example with gradient text and background."""
     console = Console(record=True, width=88)
     table = RichTable(
         title="Renderables that work with Gradient", box=None, show_header=False
@@ -70,6 +72,7 @@ def render_table_example() -> None:
 
 
 def main() -> None:
+    """Render gradient examples for the documentation."""
     render_panel_example()
     render_table_example()
 

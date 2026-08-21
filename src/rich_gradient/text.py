@@ -9,7 +9,8 @@ while enabling smooth multi-stop gradients, rainbow generation, and single-color
 optimizations.
 """
 
-from typing import Iterable, List, Optional, Sequence, Tuple, TypeAlias, Union
+from collections.abc import Iterable, Sequence
+from typing import TypeAlias
 
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
@@ -25,7 +26,7 @@ from rich.text import TextType
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-ColorType: TypeAlias = Union[str, Color, ColorTriplet, Tuple[int, int, int]]
+ColorType: TypeAlias = str | Color | ColorTriplet | tuple[int, int, int]
 
 
 class Text(RichText):
@@ -34,7 +35,7 @@ class Text(RichText):
     def __init__(
         self,
         text: TextType = "",
-        colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
         hues: int = 5,
         rainbow: bool = False,
         style: StyleType = "",
@@ -43,9 +44,9 @@ class Text(RichText):
         no_wrap: bool = False,
         end: str = "\n",
         tab_size: int = 4,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        bg_colors: Sequence[ColorType] | None = None,
         markup: bool = True,
-        spans: Optional[Sequence[Span]] = None,
+        spans: Sequence[Span] | None = None,
     ):
         """Initialize the Text with gradient colors and styles.
         Args:
@@ -125,7 +126,7 @@ instances. Defaults to None.
         return list(self._colors) if self._colors else []
 
     @colors.setter
-    def colors(self, value: Optional[Sequence[Color]]) -> None:
+    def colors(self, value: Sequence[Color] | None) -> None:
         """Set the list of colors in the gradient."""
         self._colors = list(value) if value else []
 
@@ -135,7 +136,7 @@ instances. Defaults to None.
         return list(self._bg_colors) if self._bg_colors else []
 
     @bg_colors.setter
-    def bg_colors(self, value: Optional[Sequence[Color]]) -> None:
+    def bg_colors(self, value: Sequence[Color] | None) -> None:
         """Set the list of background colors in the gradient."""
         self._bg_colors = list(value) if value else []
 
@@ -173,10 +174,10 @@ instances. Defaults to None.
 
     @staticmethod
     def parse_colors(
-        colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
         hues: int = 5,
         rainbow: bool = False,
-    ) -> List[Color]:
+    ) -> list[Color]:
         """Parse and return a list of colors for the gradient.
         Supports:
         - rgb colors (e.g. `'rgb(255, 0, 0)'`)
@@ -211,7 +212,7 @@ at least 2. Invalid hues value: {hues}"
             return Spectrum(hues).colors
 
         # If we have colors, parse and normalize them
-        parsed: List[Color] = []
+        parsed: list[Color] = []
         for c in colors:
             try:
                 parsed.append(Text._normalize_color(c))
@@ -220,15 +221,16 @@ at least 2. Invalid hues value: {hues}"
         return parsed
 
     def parse_bg_colors(
-        self, bg_colors: Optional[Sequence[ColorType]] = None
-    ) -> List[Color]:
+        self, bg_colors: Sequence[ColorType] | None = None
+    ) -> list[Color]:
         """Parse and return a list of background colors for the gradient.
         Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, \
         and Color objects.
         Args:
             bg_colors (Optional[Sequence[ColorType | Color]]): A list of background colors as \
-            Color instances or strings.
-            hues (int): The number of hues to generate if bgcolors are not provided.
+            Color instances or strings. If omitted, the default (transparent) background \
+            is used; a single color is applied as a solid fill; multiple colors are \
+            interpolated across the text.
         Returns:
             List[Color]: A list of Color objects for background colors.
         """
@@ -251,7 +253,7 @@ at least 2. Invalid hues value: {hues}"
 
         # Multiple bg_colors: interpolate across provided stops
         self._interpolate_bg_colors = True
-        parsed_bg: List[Color] = []
+        parsed_bg: list[Color] = []
         for c in bg_colors:
             try:
                 parsed_bg.append(Text._normalize_color(c))
@@ -260,7 +262,7 @@ at least 2. Invalid hues value: {hues}"
         return parsed_bg
 
     def interpolate_colors(
-        self, colors: Optional[Sequence[Color]] = None
+        self, colors: Sequence[Color] | None = None
     ) -> list[Color]:
         """Interpolate colors across the text using gamma-correct blending."""
         colors = list(colors) if colors is not None else self.colors
@@ -276,7 +278,7 @@ at least 2. Invalid hues value: {hues}"
             return [colors[0]] * length
 
         segments = num_colors - 1
-        result: List[Color] = []
+        result: list[Color] = []
 
         GAMMA = 2.2
 
@@ -284,7 +286,7 @@ at least 2. Invalid hues value: {hues}"
             return (v / 255.0) ** GAMMA
 
         def to_srgb(x: float) -> int:
-            return int(((x ** (1.0 / GAMMA)) * 255.0))
+            return int((x ** (1.0 / GAMMA)) * 255.0)
 
         for i in range(length):
             pos = i / (length - 1) if length > 1 else 0.0
@@ -388,7 +390,7 @@ if __name__ == "__main__":
         """Print the first example with a gradient."""
         default_colors = ["#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
 
-        def example1_text(colors: Optional[Sequence[str]] = None) -> RichText:
+        def example1_text(colors: Sequence[str] | None = None) -> RichText:
             """Generate example text with a simple two-color gradient."""
             text_colors = colors if colors is not None else default_colors
             example1_text = Text(
@@ -406,7 +408,7 @@ Overflow handling\n\t- Custom styles and spans',
             example1_text.highlight_regex(r"rich-gradient|\brich", "bold white")
             return example1_text
 
-        def example1_title(colors: Optional[Sequence[str]] = None) -> RichText:
+        def example1_title(colors: Sequence[str] | None = None) -> RichText:
             """Generate example title text with a gradient."""
             title_colors = colors if colors is not None else default_colors
             example1_title = Text(

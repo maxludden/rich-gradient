@@ -10,18 +10,18 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, TypeAlias, Union
+from typing import Any, TypeAlias
 
 from rich.style import Style, StyleType
 
-HighlightWordsType: TypeAlias = Union[
-    Mapping[str, StyleType],
-    Sequence[tuple[str | Sequence[str], StyleType, bool]],
-]
-HighlightRegexType: TypeAlias = Union[
-    Mapping[str, StyleType],
-    Sequence[tuple[str, StyleType, int]],
-]
+HighlightWordsType: TypeAlias = (
+    Mapping[str, StyleType]
+    | Sequence[tuple[str | Sequence[str], StyleType, bool]]
+)
+HighlightRegexType: TypeAlias = (
+    Mapping[str, StyleType]
+    | Sequence[tuple[str, StyleType, int]]
+)
 
 
 @dataclass(frozen=True)
@@ -94,7 +94,7 @@ class HighlightWords:
         return words, parse_style(str(style)), case_sensitive
 
     @classmethod
-    def _from_mapping(cls, config: Mapping[Any, Any]) -> list["HighlightWords"]:
+    def _from_mapping(cls, config: Mapping[Any, Any]) -> list[HighlightWords]:
         normalize = cls._normalize_words
         parse_payload = cls._parse_payload
         rules: list[HighlightWords] = []
@@ -105,7 +105,7 @@ class HighlightWords:
         return rules
 
     @classmethod
-    def _from_sequence(cls, config: Sequence[Any]) -> list["HighlightWords"]:
+    def _from_sequence(cls, config: Sequence[Any]) -> list[HighlightWords]:
         parse_entry = cls._parse_entry
         rules: list[HighlightWords] = []
         for entry in config:
@@ -114,7 +114,7 @@ class HighlightWords:
         return rules
 
     @classmethod
-    def from_config(cls, config: Any) -> list["HighlightWords"]:
+    def from_config(cls, config: Any) -> list[HighlightWords]:
         """
         Normalize legacy highlight_words configuration into HighlightWords instances.
 
@@ -124,15 +124,21 @@ class HighlightWords:
         """
         if isinstance(config, HighlightWords):
             return [config]
-        if isinstance(config, Sequence) and not isinstance(config, (str, bytes)):
-            if all(isinstance(item, HighlightWords) for item in config):
-                return list(config)
-        if isinstance(config, Sequence) and not isinstance(config, (str, bytes)):
-            if any(isinstance(item, HighlightWords) for item in config):
-                if not all(isinstance(item, HighlightWords) for item in config):
-                    raise TypeError(
-                        "Cannot mix HighlightWords instances with legacy highlight configurations."
-                    )
+        if (
+            isinstance(config, Sequence)
+            and not isinstance(config, (str, bytes))
+            and all(isinstance(item, HighlightWords) for item in config)
+        ):
+            return [item for item in config if isinstance(item, HighlightWords)]
+        if (
+            isinstance(config, Sequence)
+            and not isinstance(config, (str, bytes))
+            and any(isinstance(item, HighlightWords) for item in config)
+            and not all(isinstance(item, HighlightWords) for item in config)
+        ):
+            raise TypeError(
+                "Cannot mix HighlightWords instances with legacy highlight configurations."
+            )
 
         if isinstance(config, Mapping):
             return cls._from_mapping(config)
@@ -205,7 +211,7 @@ class HighlightRegex:
         return pattern, parse_style(str(style))
 
     @classmethod
-    def _from_mapping(cls, config: Mapping[Any, Any]) -> list["HighlightRegex"]:
+    def _from_mapping(cls, config: Mapping[Any, Any]) -> list[HighlightRegex]:
         parse_payload = cls._parse_payload
         normalize = cls._normalize_pattern
         rules: list[HighlightRegex] = []
@@ -220,7 +226,7 @@ class HighlightRegex:
         return rules
 
     @classmethod
-    def _from_sequence(cls, config: Sequence[Any]) -> list["HighlightRegex"]:
+    def _from_sequence(cls, config: Sequence[Any]) -> list[HighlightRegex]:
         parse_entry = cls._parse_entry
         rules: list[HighlightRegex] = []
         for entry in config:
@@ -234,7 +240,7 @@ class HighlightRegex:
         return rules
 
     @classmethod
-    def from_config(cls, config: Any) -> list["HighlightRegex"]:
+    def from_config(cls, config: Any) -> list[HighlightRegex]:
         """
         Normalize legacy highlight_regex configuration into HighlightRegex instances.
         """
@@ -243,13 +249,15 @@ class HighlightRegex:
         if cls._is_sequence(config) and all(
             isinstance(item, HighlightRegex) for item in config
         ):
-            return list(config)
-        if cls._is_sequence(config):
-            if any(isinstance(item, HighlightRegex) for item in config):
-                if not all(isinstance(item, HighlightRegex) for item in config):
-                    raise TypeError(
-                        "Cannot mix HighlightRegex instances with legacy highlight configurations."
-                    )
+            return [item for item in config if isinstance(item, HighlightRegex)]
+        if (
+            cls._is_sequence(config)
+            and any(isinstance(item, HighlightRegex) for item in config)
+            and not all(isinstance(item, HighlightRegex) for item in config)
+        ):
+            raise TypeError(
+                "Cannot mix HighlightRegex instances with legacy highlight configurations."
+            )
 
         if isinstance(config, Mapping):
             return cls._from_mapping(config)

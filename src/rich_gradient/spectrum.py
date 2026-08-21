@@ -12,12 +12,9 @@ This module exposes:
 
 Notes on determinism and `seed`:
 - The `Spectrum` constructor accepts an optional `seed` argument. When
-    provided it calls the global `random.seed(seed)` to make the initial
-    random offset deterministic. That means the same `seed` + same
-    parameters will yield the same palette order, but it also affects the
-    global random state.
-- If you need determinism without altering global random state, use a
-    dedicated `random.Random` instance and adapt the implementation.
+    provided, a dedicated `random.Random(seed)` instance is used to pick the
+    initial palette offset, so the same `seed` + same parameters yield the
+    same palette order without touching global random state.
 
 Usage example:
 
@@ -30,7 +27,7 @@ Usage example:
 
 """
 
-__all__ = ["COLOR_STOPS", "Spectrum", "GradientTheme"]
+__all__ = ["COLOR_STOPS", "GradientTheme", "Spectrum"]
 
 from itertools import cycle
 from random import Random
@@ -94,7 +91,7 @@ seed for deterministic color order.
     """
 
     def __init__(
-        self, hues: int = 17, invert: bool = False, seed: Optional[int] = None
+        self, hues: int = 17, invert: bool = False, seed: int | None = None
     ) -> None:
         """Initialize the Spectrum with a specified number of hues and optional \
 inversion and seed.
@@ -111,7 +108,10 @@ deterministic color order.
         if hues < 2:
             raise ValueError("hues must be at least 2")
         if hues > len(COLOR_STOPS):
-            raise ValueError(f"hues must be at most {len(COLOR_STOPS)}")
+            raise ValueError(
+                f"hues must be at most {len(COLOR_STOPS)} (the size of the "
+                f"spectrum palette); got {hues}"
+            )
         if seed is not None and not isinstance(seed, int):
             raise ValueError("seed must be an integer or None")
 
@@ -119,7 +119,7 @@ deterministic color order.
         rng = Random(seed)
 
         # Generate a random cycle of colors from the spectrum
-        colors: List[Color] = [Color.parse(color) for color in COLOR_STOPS.values()]
+        colors: list[Color] = [Color.parse(color) for color in COLOR_STOPS.values()]
         color_cycle = cycle(colors)
 
         # Skip a pseudo-random number of colors to add variability, deterministically per seed
@@ -146,19 +146,19 @@ deterministic color order.
             for color in self.colors
         ]
 
-        self.styles = [
+        self._styles = [
             Style(color=color, bold=False, italic=False, underline=False)
             for color in self.colors
         ]
         self.hex = [color.get_truecolor().hex.upper() for color in self.colors]
 
     @property
-    def colors(self) -> List[Color]:
+    def colors(self) -> list[Color]:
         """Return the list of Color instances."""
         return self._colors
 
     @colors.setter
-    def colors(self, value: List[Color]) -> None:
+    def colors(self, value: list[Color]) -> None:
         """Set the list of Color instances."""
         if not isinstance(value, list) or not all(isinstance(c, Color) for c in value):
             raise ValueError("colors must be a list of Color instances")
@@ -167,39 +167,39 @@ deterministic color order.
         self._colors = value
 
     @property
-    def triplets(self) -> List[ColorTriplet]:
+    def triplets(self) -> list[ColorTriplet]:
         """Return the list of ColorTriplet instances."""
         return [color.get_truecolor() for color in self._colors]
 
     @property
-    def styles(self) -> List[Style]:
+    def styles(self) -> list[Style]:
         """Return the list of Style instances."""
         return self._styles
 
     @styles.setter
-    def styles(self, styles: List[StyleType]) -> None:
-        """Set the list of Style instances."""
-        if not isinstance(styles, list) or not all(
-            isinstance(s, Style) for s in styles
-        ):
-            raise ValueError("styles must be a list of Style instances")
+    def styles(self, styles: list[StyleType]) -> None:
+        """Set styles from strings or Style instances."""
+        if not isinstance(styles, list):
+            raise TypeError("styles must be a list")
         if len(styles) != len(self.colors):
             raise ValueError("styles length must match colors length")
-        parsed_styles: List[Style] = []
+        parsed_styles: list[Style] = []
         for style in styles:
-            if isinstance(style, (str)):
+            if isinstance(style, str):
                 parsed_styles.append(Style.parse(style))
-            if isinstance(style, Style):
+            elif isinstance(style, Style):
                 parsed_styles.append(style)
+            else:
+                raise TypeError("styles must contain strings or Style instances")
         self._styles = parsed_styles
 
     @property
-    def names(self) -> List[str]:
+    def names(self) -> list[str]:
         """Return the list of color names."""
         return self._names
 
     @names.setter
-    def names(self, value: List[str]) -> None:
+    def names(self, value: list[str]) -> None:
         """Set the list of color names."""
         if not isinstance(value, list) or not all(isinstance(n, str) for n in value):
             raise ValueError("names must be a list of strings")
@@ -234,7 +234,7 @@ deterministic color order.
 
         def rainbow_title(text: str) -> Text:
             chunks = [text[i : i + 2] for i in range(0, len(text), 2)]
-            pieces: List[Text] = []
+            pieces: list[Text] = []
             for idx, chunk in enumerate(chunks):
                 color = self.colors[idx % len(self.colors)]
                 hex_code = color.get_truecolor().hex

@@ -46,6 +46,10 @@ packages = ["src/rich_gradient"]
 [tool.hatch.version]
 path = "src/rich_gradient/__init__.py"
 
+[tool.mypy]
+files = ["src"]
+ignore_missing_imports = true
+
 [tool.ruff]
 target-version = "py311"
 
@@ -71,11 +75,6 @@ disable = [
     "R0914",                      # Too many local variables
     "W0212",                      # Access to a protected member of a client class
 ]
-
-[tool.mypy]
-# Project-level mypy configuration for incremental static typing checks
-files = ["src"]
-ignore_missing_imports = true
 
 [tool.markdownlint]
 disable = [

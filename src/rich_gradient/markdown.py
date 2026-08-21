@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import time
-from typing import Any, Mapping, Optional, Sequence, TypeAlias, cast
+from collections.abc import Mapping, Sequence
+from typing import Any, TypeAlias
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.console import Console
-from rich.live import Live
 from rich.markdown import Markdown as RichMarkdown
 
 from rich_gradient.animated_gradient import AnimatedGradient
@@ -37,7 +36,7 @@ class GradientRichMarkdown(RichMarkdown):
 
 def create_markdown_renderable(
     markdown: MarkdownSource,
-    markdown_kwargs: Optional[Mapping[str, Any]] = None,
+    markdown_kwargs: Mapping[str, Any] | None = None,
 ) -> RichMarkdown:
     """Normalize Markdown input into a Rich Markdown renderable."""
     if isinstance(markdown, RichMarkdown):
@@ -61,18 +60,18 @@ class Markdown(Gradient):
         self,
         markdown: MarkdownSource,
         *,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
         repeat_scale: float = 4.0,
-        console: Optional[Console] = None,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
-        markdown_kwargs: Optional[Mapping[str, Any]] = None,
+        console: Console | None = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
+        markdown_kwargs: Mapping[str, Any] | None = None,
     ) -> None:
         renderable = create_markdown_renderable(markdown, markdown_kwargs)
         super().__init__(
@@ -101,13 +100,13 @@ class Markdown(Gradient):
         renderable = self.renderables[0]
         if not isinstance(renderable, RichMarkdown):
             raise TypeError("Stored renderable is not a Rich Markdown instance.")
-        return cast(RichMarkdown, renderable)
+        return renderable
 
     def update_markdown(
         self,
         markdown: MarkdownSource,
         *,
-        markdown_kwargs: Optional[Mapping[str, Any]] = None,
+        markdown_kwargs: Mapping[str, Any] | None = None,
     ) -> None:
         """Replace the Markdown content while reusing gradient configuration."""
         if isinstance(markdown, str):
@@ -117,14 +116,14 @@ class Markdown(Gradient):
                 else self._markdown_kwargs
             )
             renderable = create_markdown_renderable(markdown, effective_kwargs)
-            self.renderables = [renderable]
+            self._set_renderables([renderable])
             if markdown_kwargs is not None:
                 self._markdown_kwargs = dict(markdown_kwargs)
             else:
                 self._markdown_kwargs = dict(effective_kwargs or {})
         else:
             renderable = create_markdown_renderable(markdown, markdown_kwargs)
-            self.renderables = [renderable]
+            self._set_renderables([renderable])
             self._markdown_kwargs = {}
 
 
@@ -141,10 +140,12 @@ This is an example of **Markdown** content rendered with `rich-gradient`.
 ```python
 from rich_gradient.markdown import Markdown
 md = Markdown("# Hello, World!", colors=["red", "blue"])
+```
 """
 
 
 def markdown_example(markdown: str = MD_TEXT) -> None:
+    """Render a Markdown example with rich-gradient coloring."""
     _console = Console(record=True, width=64)
     _console.line(2)
     _console.print(Markdown(markdown))

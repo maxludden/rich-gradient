@@ -60,10 +60,10 @@ class AnimatedRule(AnimatedGradient):
 
     def __init__(
         self,
-        title: Optional[str] = None,
+        title: str | None = None,
         title_style: StyleType = "bold",
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         *,
         rainbow: bool = False,
         hues: int = 7,
@@ -74,13 +74,13 @@ class AnimatedRule(AnimatedGradient):
         # Live / animation parameters (mirroring AnimatedGradient)
         auto_refresh: bool = True,
         refresh_per_second: float = 20.0,
-        console: Optional[Console] = None,
+        console: Console | None = None,
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
         repeat_scale: float = 4.0,
-        animate: Optional[bool] = None,
-        duration: Optional[float] = None,
+        animate: bool | None = None,
+        duration: float | None = None,
     ) -> None:
         rule_title = title or ""
         self.title = rule_title
@@ -118,14 +118,14 @@ class AnimatedRule(AnimatedGradient):
                 animate=animate,
                 duration=duration,
             )
-            if animate:
+            if self.animate:
                 # Rules look better with a slightly faster cycle than the base default.
                 self._phase_per_second = 0.25
         except ColorParseError as err:
             raise ValueError(f"Invalid color provided: {err}") from err
 
     @contextmanager
-    def for_duration(self, duration: float) -> Iterator["AnimatedRule"]:
+    def for_duration(self, duration: float) -> Iterator[AnimatedRule]:
         """Run the rule animation for ``duration`` seconds within a context.
 
         The animation starts when entering the context and will stop
@@ -170,12 +170,12 @@ class AnimatedRule(AnimatedGradient):
     # Properties (parity with Rule)
     # -----------------
     @property
-    def title(self) -> Optional[TextType]:
+    def title(self) -> TextType | None:
         """The title text of the Rule."""
         return self._title or None
 
     @title.setter
-    def title(self, value: Optional[TextType]) -> None:
+    def title(self, value: TextType | None) -> None:
         """Set the title text of the Rule."""
         if value is not None and not isinstance(value, (str, RichText, Text)):
             raise TypeError(
@@ -184,12 +184,12 @@ class AnimatedRule(AnimatedGradient):
         self._title = value
 
     @property
-    def title_style(self) -> Optional[StyleType]:
+    def title_style(self) -> StyleType | None:
         """The style applied to the title text of the Rule."""
         return self._title_style or None
 
     @title_style.setter
-    def title_style(self, value: Optional[StyleType]) -> None:
+    def title_style(self, value: StyleType | None) -> None:
         """Set the style applied to the title text of the Rule."""
         if value is not None and not isinstance(value, (str, Style)):
             raise TypeError(

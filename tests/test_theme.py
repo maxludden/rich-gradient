@@ -7,7 +7,7 @@ from rich_gradient.theme import GradientTheme
 
 def test_gradient_theme_uses_custom_styles() -> None:
     """GradientTheme should expose a Theme that includes provided styles."""
-    styles = {"custom.style": "bold red"}
+    styles: dict[str, str | Style] = {"custom.style": "bold red"}
     theme = GradientTheme(styles=styles)
     resolved = theme.theme.styles.get("custom.style")
     assert isinstance(resolved, Style)

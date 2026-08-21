@@ -2,6 +2,8 @@
 Test suite for Spectrum class covering color generation, inversion, style matching, and hex code consistency.
 """
 
+from typing import Any
+
 import pytest
 from rich.color import Color
 from rich.style import Style
@@ -44,6 +46,19 @@ def test_spectrum_styles_match_colors():
     ]
     color_hexes = [c.get_truecolor().hex.lower() for c in spectrum.colors]
     assert style_hexes == color_hexes
+
+
+def test_spectrum_accepts_string_styles() -> None:
+    """Spectrum should parse string styles assigned after construction."""
+    spectrum = Spectrum(hues=2)
+    spectrum_any: Any = spectrum
+    spectrum_any.styles = ["bold red", Style(color="blue")]
+    styles = [style for style in spectrum.styles if isinstance(style, Style)]
+
+    assert len(styles) == 2
+    assert styles[0].bold
+    assert styles[0].color is not None
+    assert styles[1].color is not None
 
 
 def test_spectrum_hex_matches_color():

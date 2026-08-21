@@ -46,17 +46,17 @@ class Tree(Gradient):
         expanded: bool = True,
         highlight: bool = False,
         hide_root: bool = False,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         repeat_scale: float = 2.0,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
-        console: Optional[Console] = None,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
+        console: Console | None = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
     ) -> None:
         """Initialize a gradient-enabled Rich tree."""
         tree = RichTree(
@@ -95,7 +95,7 @@ class Tree(Gradient):
         style: StyleType | None = None,
         guide_style: StyleType | None = None,
         expanded: bool = True,
-        highlight: Optional[bool] = False,
+        highlight: bool | None = False,
     ) -> RichTree:
         """Forward `add` to the underlying Rich tree.
 

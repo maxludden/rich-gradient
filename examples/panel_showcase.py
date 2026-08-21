@@ -14,6 +14,7 @@ OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "img" / "panel-overview.
 
 
 def main() -> None:
+    """Demonstrate the features of `rich_gradient.Panel` with a gradient-styled panel."""
     console = Console(record=True, width=88)
     inner = RichPanel.fit(
         Text(

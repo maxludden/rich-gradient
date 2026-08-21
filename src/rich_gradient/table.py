@@ -88,16 +88,16 @@ class Table(Gradient):
         title_justify: AlignMethod = "center",
         caption_justify: AlignMethod = "center",
         highlight: bool = False,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         repeat_scale: float = 2.0,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
-        console: Optional[Console] = None,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
+        console: Console | None = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
     ) -> None:
         """Initialize a gradient-enabled Rich table."""
         table = RichTable(

@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from re import escape
-from typing import Any, List, Mapping, Optional, Sequence, Union
+from typing import Any
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
@@ -66,8 +67,8 @@ class AnimatedPanel(AnimatedGradient):
     def __init__(
         self,
         renderable: RenderableType,
-        colors: Optional[List[ColorType]] = None,
-        bg_colors: Optional[List[ColorType]] = None,
+        colors: list[ColorType] | None = None,
+        bg_colors: list[ColorType] | None = None,
         hues: int = 5,
         rainbow: bool = False,
         repeat_scale: float = 4.0,
@@ -75,30 +76,30 @@ class AnimatedPanel(AnimatedGradient):
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
         border_style: StyleType = "",
         box: Box = ROUNDED,
-        padding: Union[int, tuple[int, int], tuple[int, int, int, int]] = (0, 1),
-        width: Optional[int] = None,
-        height: Optional[int] = None,
+        padding: int | tuple[int, int] | tuple[int, int, int, int] = (0, 1),
+        width: int | None = None,
+        height: int | None = None,
         style: StyleType = "",
-        title: Optional[Text | RichText | TextType] = None,
+        title: Text | RichText | TextType | None = None,
         title_align: AlignMethod = "center",
         title_style: StyleType = "bold",
-        subtitle: Optional[Text | RichText | TextType] = None,
+        subtitle: Text | RichText | TextType | None = None,
         subtitle_align: AlignMethod = "right",
         subtitle_style: StyleType = "",
         safe_box: bool = False,
         # live args
-        console: Optional[Console] = None,
+        console: Console | None = None,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
         auto_refresh: bool = True,
         refresh_per_second: float = 20.0,
         transient: bool = False,
-        animate: Optional[bool] = None,
-        duration: Optional[float] = None,
+        animate: bool | None = None,
+        duration: float | None = None,
     ) -> None:
         """Initialize AnimatedPanel instance. See class docstring for details."""
         panel = RichPanel(
@@ -146,7 +147,6 @@ class AnimatedPanel(AnimatedGradient):
             animate=animate,
             duration=duration,
         )
-        self._panel = panel
 
     @property
     def panel(self) -> RichPanel:
@@ -155,10 +155,10 @@ class AnimatedPanel(AnimatedGradient):
 
     @staticmethod
     def _combine_highlight_regex(
-        highlight_regex: Optional[HighlightRegexType],
-        title: Optional[RenderableType],
+        highlight_regex: HighlightRegexType | None,
+        title: RenderableType | None,
         title_style: StyleType,
-        subtitle: Optional[RenderableType],
+        subtitle: RenderableType | None,
         subtitle_style: StyleType,
         box: Box,
     ) -> Sequence[_RegexHighlight]:

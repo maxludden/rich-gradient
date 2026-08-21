@@ -1,10 +1,7 @@
+"""Tests for the animated panel component."""
+
 import os
 from pathlib import Path
-
-os.environ.setdefault(
-    "RICH_GRADIENT_CONFIG_HOME",
-    str((Path(__file__).parent / ".rg_config_test").resolve()),
-)
 
 from rich.console import Console
 from rich.panel import Panel as RichPanel
@@ -12,8 +9,14 @@ from rich.panel import Panel as RichPanel
 from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.panel import Panel
 
+os.environ.setdefault(
+    "RICH_GRADIENT_CONFIG_HOME",
+    str((Path(__file__).parent / ".rg_config_test").resolve()),
+)
+
 
 def test_animated_panel_wires_highlights() -> None:
+    """Test that the AnimatedPanel correctly wires up title/subtitle regex highlights."""
     console = Console(record=True, width=60)
     animated_panel = AnimatedPanel(
         "Gradient Body",
@@ -54,7 +57,7 @@ def test_animated_panel_accepts_two_item_regex_highlight_tuples() -> None:
     animated_panel = AnimatedPanel(
         "Gradient Body",
         colors=["#ff0000", "#0000ff"],
-        highlight_regex=[("Gradient", "bold")],
+        highlight_regex=[("Gradient", "bold")],  # type: ignore
         auto_refresh=False,
         animate=False,
     )
@@ -69,6 +72,7 @@ def test_animated_panel_accepts_two_item_regex_highlight_tuples() -> None:
 
 
 def test_expand_propagates_to_panel() -> None:
+    """Test that the expand property on AnimatedPanel propagates to the underlying RichPanel."""
     console = Console(record=True, width=60)
     animated_panel = AnimatedPanel(
         "Body",
@@ -88,6 +92,8 @@ def test_expand_propagates_to_panel() -> None:
 
 
 def test_panel_expand_propagates() -> None:
+    """Test that the Panel wrapper correctly propagates the expand
+    property to the underlying RichPanel."""
     panel = Panel("Body", expand=False)
     assert panel.expand is False
     # Panel should track its underlying RichPanel and reflect the expand flag

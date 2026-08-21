@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from rich.columns import Columns as RichColumns
-from rich.console import Console
+from rich.console import Console, RenderableType
 from rich.pretty import Pretty as RichPretty
 from rich.segment import Segment
 from rich.syntax import Syntax as RichSyntax
@@ -15,14 +15,14 @@ from rich.tree import Tree as RichTree
 from rich_gradient import Columns, Pretty, Syntax, Table, Tree
 
 
-def _segments(renderable: object) -> list[Segment]:
+def _segments(renderable: RenderableType) -> list[Segment]:
     """Render a rich object and return only output segments."""
     console = Console(width=80)
     rendered = console.render(renderable, console.options)
     return [segment for segment in rendered if isinstance(segment, Segment)]
 
 
-def _has_gradient_style(renderable: object) -> bool:
+def _has_gradient_style(renderable: RenderableType) -> bool:
     """Return whether rendered output contains a gradient-applied style."""
     return any(
         segment.text.strip()

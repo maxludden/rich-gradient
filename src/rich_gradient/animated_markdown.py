@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Mapping, Optional, Sequence, TypeAlias, cast
+from collections.abc import Mapping, Sequence
+from typing import Any, TypeAlias
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.console import Console
@@ -17,7 +18,7 @@ from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 MarkdownSource: TypeAlias = str | RichMarkdown
 
-__all__ = ["Markdown", "AnimatedMarkdown"]
+__all__ = ["AnimatedMarkdown", "Markdown"]
 
 
 class AnimatedMarkdown(AnimatedGradient):
@@ -27,25 +28,25 @@ class AnimatedMarkdown(AnimatedGradient):
         self,
         markdown: MarkdownSource,
         *,
-        colors: Optional[Sequence[ColorType]] = None,
-        bg_colors: Optional[Sequence[ColorType]] = None,
+        colors: Sequence[ColorType] | None = None,
+        bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
         repeat_scale: float = 4.0,
-        highlight_words: Optional[HighlightWordsType] = None,
-        highlight_regex: Optional[HighlightRegexType] = None,
-        markdown_kwargs: Optional[Mapping[str, Any]] = None,
+        highlight_words: HighlightWordsType | None = None,
+        highlight_regex: HighlightRegexType | None = None,
+        markdown_kwargs: Mapping[str, Any] | None = None,
         auto_refresh: bool = True,
         refresh_per_second: float = 30.0,
-        console: Optional[Console] = None,
+        console: Console | None = None,
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
-        animate: Optional[bool] = None,
-        duration: Optional[float] = None,
+        animate: bool | None = None,
+        duration: float | None = None,
     ) -> None:
         renderable = create_markdown_renderable(markdown, markdown_kwargs)
         super().__init__(
@@ -81,13 +82,13 @@ class AnimatedMarkdown(AnimatedGradient):
         renderable = self.renderables[0]
         if not isinstance(renderable, RichMarkdown):
             raise TypeError("Stored renderable is not a Rich Markdown instance.")
-        return cast(RichMarkdown, renderable)
+        return renderable
 
     def update_markdown(
         self,
         markdown: MarkdownSource,
         *,
-        markdown_kwargs: Optional[Mapping[str, Any]] = None,
+        markdown_kwargs: Mapping[str, Any] | None = None,
     ) -> None:
         """Replace the Markdown content safely during animation."""
         with self._lock:
@@ -98,14 +99,14 @@ class AnimatedMarkdown(AnimatedGradient):
                     else self._markdown_kwargs
                 )
                 renderable = create_markdown_renderable(markdown, effective_kwargs)
-                self.renderables = [renderable]
+                self._set_renderables([renderable])
                 if markdown_kwargs is not None:
                     self._markdown_kwargs = dict(markdown_kwargs)
                 else:
                     self._markdown_kwargs = dict(effective_kwargs or {})
             else:
                 renderable = create_markdown_renderable(markdown, markdown_kwargs)
-                self.renderables = [renderable]
+                self._set_renderables([renderable])
                 self._markdown_kwargs = {}
 
 

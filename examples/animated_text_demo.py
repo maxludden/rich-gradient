@@ -8,6 +8,9 @@ from rich_gradient.animated_text import AnimatedText
 
 
 def main() -> None:
+    """
+    Main function to demonstrate AnimatedText.
+    """
     animated = AnimatedText(
         "Loading...",
         rainbow=True,

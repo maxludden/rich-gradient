@@ -13,6 +13,7 @@ OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "img" / "spectrum.svg"
 
 
 def main() -> None:
+    """Render the Spectrum table and save it as an SVG."""
     console = Console(record=True, width=88)
     console.print(Spectrum(hues=8, seed=42), justify="center")
     console.save_svg(str(OUTPUT), title="rich-gradient", theme=GRADIENT_TERMINAL_THEME)
