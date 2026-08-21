@@ -176,19 +176,19 @@ deterministic color order.
 
     @styles.setter
     def styles(self, styles: list[StyleType]) -> None:
-        """Set the list of Style instances."""
-        if not isinstance(styles, list) or not all(
-            isinstance(s, Style) for s in styles
-        ):
-            raise ValueError("styles must be a list of Style instances")
+        """Set styles from strings or Style instances."""
+        if not isinstance(styles, list):
+            raise TypeError("styles must be a list")
         if len(styles) != len(self.colors):
             raise ValueError("styles length must match colors length")
         parsed_styles: list[Style] = []
         for style in styles:
-            if isinstance(style, (str)):
+            if isinstance(style, str):
                 parsed_styles.append(Style.parse(style))
-            if isinstance(style, Style):
+            elif isinstance(style, Style):
                 parsed_styles.append(style)
+            else:
+                raise TypeError("styles must contain strings or Style instances")
         self._styles = parsed_styles
 
     @property

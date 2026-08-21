@@ -9,7 +9,6 @@ to ``rich_gradient`` records only, and only those sinks are ever removed again.
 """
 
 from pathlib import Path
-from threading import Lock
 from typing import Any
 
 from loguru import logger
@@ -26,21 +25,28 @@ console: Console = get_console()
 
 # Handler ids for sinks this module has added, so repeated calls (or a later
 # disable) remove only rich-gradient's own sinks — never the application's.
-_handler_ids: list[int] = []
-# Serializes the remove-then-add sequence so concurrent get_logger calls
-# cannot interleave and leak duplicate sinks.
-_handler_lock = Lock()
+_file_handler_id: int | None = None
+_console_handler_id: int | None = None
+
+
+def _is_rich_gradient_record(record: Any) -> bool:
+    """Return whether a Loguru record originated in this package."""
+    return str(record.get("name", "")).startswith("rich_gradient")
 
 
 def _remove_own_handlers() -> None:
     """Remove only the sinks previously added by this module."""
-    while _handler_ids:
-        handler_id = _handler_ids.pop()
+    for attribute in ("_file_handler_id", "_console_handler_id"):
+        handler_id = globals()[attribute]
+        if handler_id is None:
+            continue
         try:
             logger.remove(handler_id)
         except ValueError:
             # Already removed (e.g., the application reset loguru itself).
             pass
+        finally:
+            globals()[attribute] = None
 
 
 def get_logger(
@@ -72,10 +78,15 @@ def get_logger(
 
     Returns:
         Logger: The loguru logger.
+
+    Note:
+        Configure logging during single-threaded startup. Repeated concurrent
+        calls are not supported.
     """
+    global _file_handler_id, _console_handler_id
+
     if not enabled:
-        with _handler_lock:
-            _remove_own_handlers()
+        _remove_own_handlers()
         logger.disable("rich_gradient")
         return logger
 
@@ -97,17 +108,18 @@ def get_logger(
         except (TypeError, ValueError, OSError, UnicodeError, AttributeError) as e:
             console.log(f"Logger console sink error: {e}", style="bold red")
 
-    with _handler_lock:
-        _remove_own_handlers()
-        _handler_ids.append(
-            logger.add(
-                trace_log_file,
-                format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}",
-                level=log_level,
-                rotation="10 MB",
-                compression="zip",
-                filter="rich_gradient",
-            )
-        )
-        _handler_ids.append(logger.add(rich_console_sink, filter="rich_gradient"))
+    _remove_own_handlers()
+    global _file_handler_id, _console_handler_id
+    _file_handler_id = logger.add(
+        trace_log_file,
+        format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}",
+        level=log_level,
+        rotation="10 MB",
+        compression="zip",
+        filter=_is_rich_gradient_record,
+    )
+    _console_handler_id = logger.add(
+        rich_console_sink,
+        filter=_is_rich_gradient_record,
+    )
     return logger

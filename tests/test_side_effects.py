@@ -76,7 +76,9 @@ class TestGetLoggerHandlerSafety:
     """get_logger must never disturb application loguru handlers."""
 
     def test_app_handler_survives_and_sinks_do_not_stack(self) -> None:
-        from rich_gradient._logger import _handler_ids, get_logger
+        import rich_gradient._logger as logger_module
+
+        get_logger = logger_module.get_logger
 
         records: list[str] = []
         app_id = logger.add(lambda m: records.append(str(m)), level="DEBUG")
@@ -84,7 +86,8 @@ class TestGetLoggerHandlerSafety:
         try:
             get_logger(enabled=True, log_dir=tmp)
             get_logger(enabled=True, log_dir=tmp)
-            assert len(_handler_ids) == 2  # replaced, not stacked
+            assert logger_module._file_handler_id is not None
+            assert logger_module._console_handler_id is not None
 
             logger.info("app message")
             assert any("app message" in r for r in records)
@@ -101,16 +104,20 @@ class TestGetLoggerHandlerSafety:
         finally:
             get_logger(enabled=False)
             logger.remove(app_id)  # must not raise: our disable left it alone
-        assert not _handler_ids
+        assert logger_module._file_handler_id is None
+        assert logger_module._console_handler_id is None
 
     def test_disable_removes_only_own_sinks(self) -> None:
-        from rich_gradient._logger import _handler_ids, get_logger
+        import rich_gradient._logger as logger_module
+
+        get_logger = logger_module.get_logger
 
         app_id = logger.add(lambda m: None, level="INFO")
         tmp = Path(tempfile.mkdtemp())
         get_logger(enabled=True, log_dir=tmp)
         get_logger(enabled=False)
-        assert not _handler_ids
+        assert logger_module._file_handler_id is None
+        assert logger_module._console_handler_id is None
         logger.remove(app_id)  # would raise ValueError if we had removed it
 
 

@@ -8,29 +8,29 @@ site_author: Max Ludden
 nav:
     - Getting Started: "index.md"
     - User Guide:
-          - Text: "text.md"
-          - Gradient: "gradient.md"
-          - Panel: "panel.md"
-          - Rule: "rule.md"
-          - Convenience Renderables: "renderables.md"
-          - Spectrum: "spectrum.md"
-          - Animation: "animation.md"
-          - Configuration: "configuration.md"
+        - Text: "text.md"
+        - Gradient: "gradient.md"
+        - Panel: "panel.md"
+        - Rule: "rule.md"
+        - Convenience Renderables: "renderables.md"
+        - Spectrum: "spectrum.md"
+        - Animation: "animation.md"
+        - Configuration: "configuration.md"
     - References:
-          - Animated Text Reference: "animated_text_ref.md"
-          - Animated Gradient Reference: "animated_gradient_ref.md"
-          - Animated Panel Reference: "animated_panel_ref.md"
-          - Columns Reference: "columns_ref.md"
-          - Gradient Reference: "gradient_ref.md"
-          - Panel Reference: "panel_ref.md"
-          - Pretty Reference: "pretty_ref.md"
-          - Rule Reference: "rule_ref.md"
-          - Spectrum Reference: "spectrum_ref.md"
-          - Syntax Reference: "syntax_ref.md"
-          - Table Reference: "table_ref.md"
-          - Text Reference: "text_ref.md"
-          - Theme Reference: "theme_ref.md"
-          - Tree Reference: "tree_ref.md"
+        - Animated Text Reference: "animated_text_ref.md"
+        - Animated Gradient Reference: "animated_gradient_ref.md"
+        - Animated Panel Reference: "animated_panel_ref.md"
+        - Columns Reference: "columns_ref.md"
+        - Gradient Reference: "gradient_ref.md"
+        - Panel Reference: "panel_ref.md"
+        - Pretty Reference: "pretty_ref.md"
+        - Rule Reference: "rule_ref.md"
+        - Spectrum Reference: "spectrum_ref.md"
+        - Syntax Reference: "syntax_ref.md"
+        - Table Reference: "table_ref.md"
+        - Text Reference: "text_ref.md"
+        - Theme Reference: "theme_ref.md"
+        - Tree Reference: "tree_ref.md"
     - Changelog: "CHANGELOG.md"
 
 theme:
@@ -54,18 +54,18 @@ theme:
         - media: "(prefers-color-scheme)"
           scheme: astral-dark
           toggle:
-              icon: material/brightness-auto
-              name: Switch to light mode
+            icon: material/brightness-auto
+            name: Switch to light mode
         - media: "(prefers-color-scheme: light)"
           scheme: astral-light
           toggle:
-              icon: material/brightness-7
-              name: Switch to dark mode
+            icon: material/brightness-7
+            name: Switch to dark mode
         - media: "(prefers-color-scheme: dark)"
           scheme: astral-dark
           toggle:
-              icon: material/brightness-4
-              name: Switch to system preference
+            icon: material/brightness-4
+            name: Switch to system preference
 
 plugins:
     - mkdocstrings
@@ -77,12 +77,12 @@ extra:
           link: https://github.com/maxludden
         - icon: fontawesome/brands/python
           link: https://pypi.org/project/rich-gradient
-extra_css:
+    extra_css:
     - "styles/style.css"
     - "styles/extra.css"
-extra_javascript:
+    extra_javascript:
     - "scripts/copy.js"
-markdown_extensions:
+    markdown_extensions:
     - abbr
     - admonition
     - attr_list
@@ -90,11 +90,11 @@ markdown_extensions:
     - footnotes
     - md_in_html
     - toc:
-          permalink: true
+        permalink: true
     - pymdownx.highlight:
-          anchor_linenums: true
-          line_spans: __span
-          pygments_lang_class: true
+        anchor_linenums: true
+        line_spans: __span
+        pygments_lang_class: true
     - pymdownx.inlinehilite
     - pymdownx.snippets
     - pymdownx.superfences
