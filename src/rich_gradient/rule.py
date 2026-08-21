@@ -210,18 +210,20 @@ When no colors are provided, it defaults to a random gradient. ↑",
         )
     )
     console.print(
-        RichText.assemble(*[
-            RichText(
-                "↑ This Rule is left-aligned, with a thickness of 1. When colors \
+        RichText.assemble(
+            *[
+                RichText(
+                    "↑ This Rule is left-aligned, with a thickness of 1. When colors \
 are provided, the gradient is generated using the provided colors: ",
-                style="italic",
-            ),
-            RichText("#F00", style=Style.parse("bold italic #ff0000"), end=""),
-            RichText(", ", style=comment_style, end=""),
-            RichText("#F90", style=Style.parse("bold italic #FF9900"), end=""),
-            RichText(", ", style=comment_style, end=""),
-            RichText("#FF0", style=Style.parse("bold italic #FFFF00"), end=""),
-        ]),
+                    style="italic",
+                ),
+                RichText("#F00", style=Style.parse("bold italic #ff0000"), end=""),
+                RichText(", ", style=comment_style, end=""),
+                RichText("#F90", style=Style.parse("bold italic #FF9900"), end=""),
+                RichText(", ", style=comment_style, end=""),
+                RichText("#FF0", style=Style.parse("bold italic #FFFF00"), end=""),
+            ]
+        ),
         justify="left",
     )
     console.line()
@@ -243,23 +245,25 @@ are provided, the gradient is generated using the provided colors: ",
             colors=list(GRADIENT_COLOR_PALETTE),
         )
     )
-    purple_explanation = Text.assemble(*[
-        RichText(
-            "↑  This Rule is right-aligned, with a thickness of 2. When colors are \
+    purple_explanation = Text.assemble(
+        *[
+            RichText(
+                "↑  This Rule is right-aligned, with a thickness of 2. When colors are \
 provided, the gradient is generated using the provided colors: ",
-            style="italic",
-            end=" ",
-        ),
-        RichText("deeppink", style=Style.parse("bold italic deeppink"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("purple", style=Style.parse("bold italic purple"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("violet", style=Style.parse("bold italic violet"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("blue", style=Style.parse("bold italic blue"), end=""),
-        RichText(", ", style=comment_style, end=""),
-        RichText("dodgerblue", style=Style.parse("bold italic dodgerblue"), end=""),
-    ])
+                style="italic",
+                end=" ",
+            ),
+            RichText("deeppink", style=Style.parse("bold italic deeppink"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("purple", style=Style.parse("bold italic purple"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("violet", style=Style.parse("bold italic violet"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("blue", style=Style.parse("bold italic blue"), end=""),
+            RichText(", ", style=comment_style, end=""),
+            RichText("dodgerblue", style=Style.parse("bold italic dodgerblue"), end=""),
+        ]
+    )
     console.print(purple_explanation, justify="right")
 
     console.line()

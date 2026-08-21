@@ -8,9 +8,9 @@ from __future__ import annotations
 from typing import Any, Iterable, TypeGuard
 
 import pytest
-from rich.console import Console
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
+from rich.console import Console
 from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style

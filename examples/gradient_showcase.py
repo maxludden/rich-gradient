@@ -11,8 +11,12 @@ from rich.table import Table as RichTable
 from rich_gradient import Gradient
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-PANEL_OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "img" / "gradient-panel.svg"
-TABLE_OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "img" / "gradient-table.svg"
+PANEL_OUTPUT = (
+    Path(__file__).resolve().parents[1] / "docs" / "img" / "gradient-panel.svg"
+)
+TABLE_OUTPUT = (
+    Path(__file__).resolve().parents[1] / "docs" / "img" / "gradient-table.svg"
+)
 
 
 def render_panel_example() -> None:
@@ -42,10 +46,19 @@ def render_panel_example() -> None:
 
 def render_table_example() -> None:
     console = Console(record=True, width=88)
-    table = RichTable(title="Renderables that work with Gradient", box=None, show_header=False)
+    table = RichTable(
+        title="Renderables that work with Gradient", box=None, show_header=False
+    )
     table.add_column("Renderable", style="bold")
     table.add_column("Supported", justify="center")
-    for renderable in ("Text", "Panel", "Markdown", "Columns", "Layout", "Live updates"):
+    for renderable in (
+        "Text",
+        "Panel",
+        "Markdown",
+        "Columns",
+        "Layout",
+        "Live updates",
+    ):
         table.add_row(renderable, "[bold green]✓[/]")
     gradient_table = Gradient(table, rainbow=True, repeat_scale=1.8, justify="center")
     console.print(gradient_table, justify="center")

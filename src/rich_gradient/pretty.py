@@ -10,7 +10,8 @@ from rich.console import Console, JustifyMethod, OverflowMethod
 from rich.highlighter import Highlighter
 from rich.pretty import Pretty as RichPretty
 
-from rich_gradient.gradient import ColorType, Gradient, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 
 
 class Pretty(Gradient):

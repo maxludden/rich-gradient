@@ -13,7 +13,6 @@ from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install as tr_install
 
-
 DEFAULT_STYLES: dict[str, StyleType] = {
     "none": Style.null(),
     "reset": Style(

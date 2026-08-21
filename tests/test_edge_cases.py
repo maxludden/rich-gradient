@@ -53,21 +53,23 @@ def test_gradient_empty_string():
     """
     grad = Gradient("", colors=["#f00", "#0f0"])
     out = render_to_text(grad)
-    assert out.strip().replace('\n', '') == ""
+    assert out.strip().replace("\n", "") == ""
 
 
 def test_text_empty_string():
     """
     Test that Text with empty string input produces no output but does not error.
     """
-    from re import match, compile, MULTILINE
+    from re import MULTILINE, compile, match
+
     txt = Text("")
     out = render_to_text(txt)
-    
+
     assert isinstance(out, str)
-    pattern = compile(r'^\s*$', MULTILINE)
+    pattern = compile(r"^\s*$", MULTILINE)
     assert pattern.match(out)
     assert out.strip() == ""
+
 
 def test_gradient_no_colors():
     """

@@ -10,7 +10,8 @@ from rich.console import Console, RenderableType
 from rich.style import StyleType
 from rich.tree import Tree as RichTree
 
-from rich_gradient.gradient import ColorType, Gradient, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 
 
 class Tree(Gradient):
@@ -127,7 +128,8 @@ def demo() -> None:
         highlight_words={
             "docs": "bold cyan",
             "tests": "bold magenta",
-            "src": "bold yellow"},
+            "src": "bold yellow",
+        },
     )
     src = tree.add("src")
     src.add("rich_gradient")

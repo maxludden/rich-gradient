@@ -2,8 +2,8 @@
 Test suite for Rule and AnimatedRule covering rendering, style, color validation, and context helpers.
 """
 
-import time
 import os
+import time
 from pathlib import Path
 
 os.environ.setdefault(
@@ -18,7 +18,7 @@ from rich.style import Style
 from rich.text import Text as RichText
 
 from rich_gradient.animated_rule import AnimatedRule
-from rich_gradient.rule import Rule, CHARACTER_MAP
+from rich_gradient.rule import CHARACTER_MAP, Rule
 
 
 @pytest.mark.parametrize("thickness", [0, 1, 2, 3])
@@ -76,7 +76,7 @@ def test_animated_rule_invalid_thickness(thickness) -> None:
         AnimatedRule(title="Fail", colors=["#f00", "#0f0"], thickness=thickness)
 
 
-@pytest.mark.parametrize("title", [None, ""]) 
+@pytest.mark.parametrize("title", [None, ""])
 def test_gradient_rule_no_title(title) -> None:
     """Rules should instantiate even when title is omitted."""
     rule = Rule(title=title, colors=["#f00", "#0f0"])

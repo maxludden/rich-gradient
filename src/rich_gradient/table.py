@@ -10,10 +10,12 @@ from rich.box import HEAVY_HEAD, Box
 from rich.console import Console, RenderableType
 from rich.padding import PaddingDimensions
 from rich.style import StyleType
-from rich.table import Column, Table as RichTable
+from rich.table import Column
+from rich.table import Table as RichTable
 from rich.text import TextType
 
-from rich_gradient.gradient import ColorType, Gradient, HighlightRegexType, HighlightWordsType
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 
 
 class Table(Gradient):

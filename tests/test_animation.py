@@ -16,11 +16,8 @@ os.environ.setdefault(
 
 from rich.console import Console
 
-from rich_gradient import (
-    CONFIG,  # type: ignore[reportMissingTypeStubs]
-    AnimatedGradient,
-    Gradient,
-)
+from rich_gradient import CONFIG  # type: ignore[reportMissingTypeStubs]
+from rich_gradient import AnimatedGradient, Gradient
 from rich_gradient.animated_gradient import FPS
 
 

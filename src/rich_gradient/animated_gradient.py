@@ -25,6 +25,7 @@ __all__ = [
 
 FPS = 0.12
 
+
 # MARK: AnimatedGradient
 class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
@@ -300,6 +301,7 @@ class AnimatedGradient(Gradient):
         if animate is None:
             return config.animation_enabled
         return bool(animate)
+
 
 # MARK: Example
 def animated_gradient_example() -> None:

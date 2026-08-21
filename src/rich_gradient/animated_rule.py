@@ -236,10 +236,7 @@ class AnimatedRule(AnimatedGradient):
 if __name__ == "__main__":  # pragma: no cover
     _console = Console(width=64)
     _console.line(2)
-    animated_rule = AnimatedRule(
-        title="Animated Gradient Rule",
-        rainbow=True
-    )
+    animated_rule = AnimatedRule(title="Animated Gradient Rule", rainbow=True)
     animated_rule.start()
     sleep(5)
     animated_rule.stop()

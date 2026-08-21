@@ -3,12 +3,12 @@ name = "rich-gradient"
 description = "A gradient generator for the Rich library."
 readme = "README.md"
 authors = [{ name = "Max Ludden", email = "maxludden@me.com" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "loguru>=0.7.3",
     "requests>=2.32.5",
-    "rich>=14.0.0",
-    "rich-color-ext>=0.1.9",
+    "rich>=15.0.0",
+    "rich-color-ext>=2.0.0",
 ]
 dynamic = ["version"]
 
@@ -34,6 +34,9 @@ dev = [
     "mypy>=2.1.0",
     "pytest>=8.3.5",
     "pytest-benchmark>=5.1.0",
+    "black>=24.3.0",
+    "isort>=5.12.0",
+    "pre-commit>=3.4.0",
 ]
 toml = ["tomlkit>=0.13.3"]
 
@@ -44,7 +47,16 @@ packages = ["src/rich_gradient"]
 path = "src/rich_gradient/__init__.py"
 
 [tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+]
 ignore = [
+    "E501", # Line too long in examples and legacy code
     "F401", # Unused imports
     "E741", # Ambiguous variable name
 ]
@@ -59,6 +71,11 @@ disable = [
     "R0914",                      # Too many local variables
     "W0212",                      # Access to a protected member of a client class
 ]
+
+[tool.mypy]
+# Project-level mypy configuration for incremental static typing checks
+files = ["src"]
+ignore_missing_imports = true
 
 [tool.markdownlint]
 disable = [

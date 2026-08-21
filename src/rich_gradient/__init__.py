@@ -17,10 +17,10 @@ from rich_gradient.animated_markdown import AnimatedMarkdown
 from rich_gradient.animated_panel import AnimatedPanel
 from rich_gradient.animated_rule import AnimatedRule
 from rich_gradient.animated_text import AnimatedText
+from rich_gradient.columns import Columns
 from rich_gradient.config import RichGradientConfig
 from rich_gradient.config import config as _config
 from rich_gradient.config import reload_config as _reload_config
-from rich_gradient.columns import Columns
 from rich_gradient.default_styles import DEFAULT_STYLES
 from rich_gradient.gradient import ColorType, Gradient
 from rich_gradient.markdown import Markdown
@@ -68,7 +68,7 @@ __all__ = [
     "Tree",
 ]
 
-__version__ = "0.3.13"
+__version__ = "0.3.14"
 
 
 # Set up logging
