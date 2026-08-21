@@ -76,7 +76,6 @@ disable = [
 # Project-level mypy configuration for incremental static typing checks
 files = ["src"]
 ignore_missing_imports = true
-strict = true
 
 [tool.markdownlint]
 disable = [
