@@ -11,12 +11,8 @@ from rich.console import Console
 from rich.padding import PaddingDimensions
 from rich.syntax import Syntax as RichSyntax
 
-from rich_gradient.gradient import (
-    ColorType,
-    Gradient,
-    HighlightRegexType,
-    HighlightWordsType,
-)
+from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
+                                    HighlightWordsType)
 
 
 class Syntax(Gradient):

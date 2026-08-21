@@ -37,7 +37,11 @@ def test_spectrum_styles_match_colors():
     assert all(isinstance(s, Style) for s in spectrum.styles)
     assert all(s.color is not None for s in spectrum.styles)
     # compare lists of hex strings (lowercase) to ensure exact correspondence
-    style_hexes = [str(s.color.get_truecolor().hex).lower() for s in spectrum.styles if s.color is not None]
+    style_hexes = [
+        str(s.color.get_truecolor().hex).lower()
+        for s in spectrum.styles
+        if s.color is not None
+    ]
     color_hexes = [c.get_truecolor().hex.lower() for c in spectrum.colors]
     assert style_hexes == color_hexes
 
