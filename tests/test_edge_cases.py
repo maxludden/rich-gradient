@@ -63,7 +63,7 @@ def test_text_empty_string():
     from re import match, compile, MULTILINE
     txt = Text("")
     out = render_to_text(txt)
-    
+
     assert isinstance(out, str)
     pattern = compile(r'^\s*$', MULTILINE)
     assert pattern.match(out)

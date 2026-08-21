@@ -76,7 +76,7 @@ def test_animated_rule_invalid_thickness(thickness) -> None:
         AnimatedRule(title="Fail", colors=["#f00", "#0f0"], thickness=thickness)
 
 
-@pytest.mark.parametrize("title", [None, ""]) 
+@pytest.mark.parametrize("title", [None, ""])
 def test_gradient_rule_no_title(title) -> None:
     """Rules should instantiate even when title is omitted."""
     rule = Rule(title=title, colors=["#f00", "#0f0"])
