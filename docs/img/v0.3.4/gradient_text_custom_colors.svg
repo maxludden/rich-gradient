@@ -34,394 +34,384 @@
 
     .text_example_4-r1 { fill: #ffffff }
 .text_example_4-r2 { fill: #ffffff;font-weight: bold }
-.text_example_4-r3 { fill: #00ffff;font-weight: bold }
-.text_example_4-r4 { fill: #00efff;font-weight: bold }
-.text_example_4-r5 { fill: #00deff;font-weight: bold }
-.text_example_4-r6 { fill: #00ccff;font-weight: bold }
-.text_example_4-r7 { fill: #00bcff;font-weight: bold }
-.text_example_4-r8 { fill: #00acff;font-weight: bold }
-.text_example_4-r9 { fill: #0099ff;font-weight: bold }
-.text_example_4-r10 { fill: #308aff;font-weight: bold }
-.text_example_4-r11 { fill: #4279ff;font-weight: bold }
-.text_example_4-r12 { fill: #5065ff;font-weight: bold }
-.text_example_4-r13 { fill: #6360ff;font-weight: bold }
-.text_example_4-r14 { fill: #725bff;font-weight: bold }
-.text_example_4-r15 { fill: #8055ff;font-weight: bold }
-.text_example_4-r16 { fill: #ff00ff }
-.text_example_4-r17 { fill: #ff10fe }
-.text_example_4-r18 { fill: #ff16fe }
-.text_example_4-r19 { fill: #ff1afd }
-.text_example_4-r20 { fill: #ff1efd }
-.text_example_4-r21 { fill: #ff21fd }
-.text_example_4-r22 { fill: #ff24fc }
-.text_example_4-r23 { fill: #ff27fc }
-.text_example_4-r24 { fill: #ff29fb }
-.text_example_4-r25 { fill: #ff2cfb }
-.text_example_4-r26 { fill: #ff2efb }
-.text_example_4-r27 { fill: #ff30fa }
-.text_example_4-r28 { fill: #ff32fa }
-.text_example_4-r29 { fill: #ff34f9 }
-.text_example_4-r30 { fill: #ff35f9 }
-.text_example_4-r31 { fill: #ff37f8 }
-.text_example_4-r32 { fill: #ff39f8 }
-.text_example_4-r33 { fill: #ff3af8 }
-.text_example_4-r34 { fill: #ff3cf7 }
-.text_example_4-r35 { fill: #ff3df7 }
-.text_example_4-r36 { fill: #ff3ff6 }
-.text_example_4-r37 { fill: #ff40f6 }
-.text_example_4-r38 { fill: #ff42f6 }
-.text_example_4-r39 { fill: #ff43f5 }
-.text_example_4-r40 { fill: #ff44f5 }
-.text_example_4-r41 { fill: #ff46f4 }
-.text_example_4-r42 { fill: #ff47f4 }
-.text_example_4-r43 { fill: #ff48f4 }
-.text_example_4-r44 { fill: #ff49f3 }
-.text_example_4-r45 { fill: #ff4bf3 }
-.text_example_4-r46 { fill: #ff4cf2 }
-.text_example_4-r47 { fill: #ff4df2 }
-.text_example_4-r48 { fill: #ff4ef1 }
-.text_example_4-r49 { fill: #ff4ff1 }
-.text_example_4-r50 { fill: #ff50f1 }
-.text_example_4-r51 { fill: #ff51f0 }
-.text_example_4-r52 { fill: #ff52f0 }
-.text_example_4-r53 { fill: #ff53ef }
-.text_example_4-r54 { fill: #ff54ef }
-.text_example_4-r55 { fill: #ff55ee }
-.text_example_4-r56 { fill: #ff56ee }
-.text_example_4-r57 { fill: #ff57ee }
-.text_example_4-r58 { fill: #ff58ed }
-.text_example_4-r59 { fill: #ff59ed }
-.text_example_4-r60 { fill: #ff5aec }
-.text_example_4-r61 { fill: #ff5bec }
-.text_example_4-r62 { fill: #ff5ceb }
-.text_example_4-r63 { fill: #ff5deb }
-.text_example_4-r64 { fill: #ff5eeb }
-.text_example_4-r65 { fill: #ff5fea }
-.text_example_4-r66 { fill: #ff60ea }
-.text_example_4-r67 { fill: #ff61e9 }
-.text_example_4-r68 { fill: #ff62e8 }
-.text_example_4-r69 { fill: #ff63e8 }
-.text_example_4-r70 { fill: #ff64e8 }
-.text_example_4-r71 { fill: #ff65e7 }
-.text_example_4-r72 { fill: #ff66e7 }
-.text_example_4-r73 { fill: #ff66e6 }
-.text_example_4-r74 { fill: #ff67e6 }
-.text_example_4-r75 { fill: #ff68e5 }
-.text_example_4-r76 { fill: #ff69e5 }
-.text_example_4-r77 { fill: #ff6ae4 }
-.text_example_4-r78 { fill: #ff6be4 }
-.text_example_4-r79 { fill: #ff6ce3 }
-.text_example_4-r80 { fill: #ff6de3 }
-.text_example_4-r81 { fill: #ff6de2 }
-.text_example_4-r82 { fill: #ff6ee2 }
-.text_example_4-r83 { fill: #ff6fe1 }
-.text_example_4-r84 { fill: #ff70e1 }
-.text_example_4-r85 { fill: #ff70e0 }
-.text_example_4-r86 { fill: #ff71e0 }
-.text_example_4-r87 { fill: #ff72df }
-.text_example_4-r88 { fill: #ff73de }
-.text_example_4-r89 { fill: #ff74de }
-.text_example_4-r90 { fill: #ff75de }
-.text_example_4-r91 { fill: #ff75dd }
-.text_example_4-r92 { fill: #ff76dd }
-.text_example_4-r93 { fill: #ff77dc }
-.text_example_4-r94 { fill: #ff78db }
-.text_example_4-r95 { fill: #ff79db }
-.text_example_4-r96 { fill: #ff79da }
-.text_example_4-r97 { fill: #ff7ada }
-.text_example_4-r98 { fill: #ff7bd9 }
-.text_example_4-r99 { fill: #ff7cd8 }
-.text_example_4-r100 { fill: #ff7dd7 }
-.text_example_4-r101 { fill: #ff7ed7 }
-.text_example_4-r102 { fill: #ff7ed6 }
-.text_example_4-r103 { fill: #ff7fd6 }
-.text_example_4-r104 { fill: #ff80d5 }
-.text_example_4-r105 { fill: #ff81d4 }
-.text_example_4-r106 { fill: #ff82d3 }
-.text_example_4-r107 { fill: #ff83d3 }
-.text_example_4-r108 { fill: #ff85d1 }
-.text_example_4-r109 { fill: #ff86d1 }
-.text_example_4-r110 { fill: #ff86d0 }
-.text_example_4-r111 { fill: #ff87d0 }
-.text_example_4-r112 { fill: #ff87cf }
-.text_example_4-r113 { fill: #ff88ce }
-.text_example_4-r114 { fill: #ff89ce }
-.text_example_4-r115 { fill: #ff89cd }
-.text_example_4-r116 { fill: #ff8acd }
-.text_example_4-r117 { fill: #ff8acc }
-.text_example_4-r118 { fill: #ff8bcc }
-.text_example_4-r119 { fill: #ff8bcb }
-.text_example_4-r120 { fill: #ff8ccb }
-.text_example_4-r121 { fill: #ff8cca }
-.text_example_4-r122 { fill: #ff8dca }
-.text_example_4-r123 { fill: #ff8ec9 }
-.text_example_4-r124 { fill: #ff8fc8 }
-.text_example_4-r125 { fill: #ff90c7 }
-.text_example_4-r126 { fill: #ff91c6 }
-.text_example_4-r127 { fill: #ff92c5 }
-.text_example_4-r128 { fill: #ff93c4 }
-.text_example_4-r129 { fill: #ff93c3 }
-.text_example_4-r130 { fill: #ff94c3 }
-.text_example_4-r131 { fill: #ff95c2 }
-.text_example_4-r132 { fill: #ff96c1 }
-.text_example_4-r133 { fill: #ff97c0 }
-.text_example_4-r134 { fill: #ff98bf }
-.text_example_4-r135 { fill: #ff99be }
-.text_example_4-r136 { fill: #ff99bd }
-.text_example_4-r137 { fill: #ff9abd }
-.text_example_4-r138 { fill: #ff9abc }
-.text_example_4-r139 { fill: #ff9bbc }
-.text_example_4-r140 { fill: #ff9bbb }
-.text_example_4-r141 { fill: #ff9cbb }
-.text_example_4-r142 { fill: #ffffff;font-style: italic; }
-.text_example_4-r143 { fill: #ff5555 }
-.text_example_4-r144 { fill: #ffa1b4 }
-.text_example_4-r145 { fill: #ffa2b3 }
-.text_example_4-r146 { fill: #ffa2b2 }
-.text_example_4-r147 { fill: #ffa3b2 }
-.text_example_4-r148 { fill: #ffa3b1 }
-.text_example_4-r149 { fill: #ffa4b1 }
-.text_example_4-r150 { fill: #ffa4b0 }
-.text_example_4-r151 { fill: #ffa5af }
-.text_example_4-r152 { fill: #99ff00 }
-.text_example_4-r153 { fill: #ffa9aa }
-.text_example_4-r154 { fill: #ffa9a9 }
-.text_example_4-r155 { fill: #ffa9a8 }
-.text_example_4-r156 { fill: #ffaaa8 }
-.text_example_4-r157 { fill: #ffaaa7 }
-.text_example_4-r158 { fill: #ffaba6 }
-.text_example_4-r159 { fill: #ffaca5 }
-.text_example_4-r160 { fill: #ffaca4 }
-.text_example_4-r161 { fill: #ffada4 }
-.text_example_4-r162 { fill: #ffada3 }
-.text_example_4-r163 { fill: #ffada2 }
-.text_example_4-r164 { fill: #ffaea2 }
-.text_example_4-r165 { fill: #ffaea1 }
-.text_example_4-r166 { fill: #ffafa0 }
-.text_example_4-r167 { fill: #ffb09f }
-.text_example_4-r168 { fill: #ffb09e }
-.text_example_4-r169 { fill: #ffb19d }
-.text_example_4-r170 { fill: #ffb19c }
-.text_example_4-r171 { fill: #ffb29b }
-.text_example_4-r172 { fill: #ffb29a }
-.text_example_4-r173 { fill: #ffb399 }
-.text_example_4-r174 { fill: #ffb498 }
-.text_example_4-r175 { fill: #ffb497 }
-.text_example_4-r176 { fill: #ffb596 }
-.text_example_4-r177 { fill: #ffb595 }
-.text_example_4-r178 { fill: #ffb694 }
-.text_example_4-r179 { fill: #ffb693 }
-.text_example_4-r180 { fill: #ffb793 }
-.text_example_4-r181 { fill: #ffb792 }
-.text_example_4-r182 { fill: #ffb791 }
-.text_example_4-r183 { fill: #ffb890 }
-.text_example_4-r184 { fill: #ffb98f }
-.text_example_4-r185 { fill: #ffbe84 }
-.text_example_4-r186 { fill: #ffbe83 }
-.text_example_4-r187 { fill: #ffbe82 }
-.text_example_4-r188 { fill: #ffbf81 }
-.text_example_4-r189 { fill: #ffbf80 }
-.text_example_4-r190 { fill: #ffc080 }
-.text_example_4-r191 { fill: #ffc07f }
-.text_example_4-r192 { fill: #ffc07e }
-.text_example_4-r193 { fill: #ffc17d }
-.text_example_4-r194 { fill: #ffc17c }
-.text_example_4-r195 { fill: #ffc27a }
-.text_example_4-r196 { fill: #ffc279 }
-.text_example_4-r197 { fill: #ffc378 }
-.text_example_4-r198 { fill: #ffc377 }
-.text_example_4-r199 { fill: #ffc376 }
-.text_example_4-r200 { fill: #ffc475 }
-.text_example_4-r201 { fill: #ffc474 }
-.text_example_4-r202 { fill: #ffc473 }
-.text_example_4-r203 { fill: #ffc572 }
-.text_example_4-r204 { fill: #ffc571 }
-.text_example_4-r205 { fill: #ffc670 }
-.text_example_4-r206 { fill: #ffc66f }
-.text_example_4-r207 { fill: #ffc66e }
-.text_example_4-r208 { fill: #ffc76d }
-.text_example_4-r209 { fill: #ffc76c }
-.text_example_4-r210 { fill: #ffc868 }
-.text_example_4-r211 { fill: #ffc867 }
-.text_example_4-r212 { fill: #ffc966 }
-.text_example_4-r213 { fill: #ffc965 }
-.text_example_4-r214 { fill: #ffca64 }
-.text_example_4-r215 { fill: #ffca62 }
-.text_example_4-r216 { fill: #ffca61 }
-.text_example_4-r217 { fill: #ffcb60 }
-.text_example_4-r218 { fill: #ffcb5f }
-.text_example_4-r219 { fill: #ffcb5d }
-.text_example_4-r220 { fill: #ffcc5c }
-.text_example_4-r221 { fill: #ffcc5b }
-.text_example_4-r222 { fill: #ffcc59 }
-.text_example_4-r223 { fill: #ffcd58 }
-.text_example_4-r224 { fill: #ffcd56 }
-.text_example_4-r225 { fill: #ffcd55 }
-.text_example_4-r226 { fill: #ffce53 }
-.text_example_4-r227 { fill: #ffce52 }
-.text_example_4-r228 { fill: #ffce50 }
-.text_example_4-r229 { fill: #ffcf4f }
-.text_example_4-r230 { fill: #ffcf4d }
-.text_example_4-r231 { fill: #ffd04c }
-.text_example_4-r232 { fill: #ffd04a }
-.text_example_4-r233 { fill: #ffd146 }
-.text_example_4-r234 { fill: #ffd144 }
-.text_example_4-r235 { fill: #ffd142 }
-.text_example_4-r236 { fill: #ffd240 }
-.text_example_4-r237 { fill: #ffd23e }
-.text_example_4-r238 { fill: #ffd23c }
-.text_example_4-r239 { fill: #ffd33a }
-.text_example_4-r240 { fill: #ffd338 }
-.text_example_4-r241 { fill: #ffd335 }
-.text_example_4-r242 { fill: #ffd432 }
-.text_example_4-r243 { fill: #ffd617 }
-.text_example_4-r244 { fill: #ffd60e }
-.text_example_4-r245 { fill: #fed700 }
-.text_example_4-r246 { fill: #fdd700 }
-.text_example_4-r247 { fill: #fcd700 }
-.text_example_4-r248 { fill: #fcd800 }
-.text_example_4-r249 { fill: #00ff7f }
-.text_example_4-r250 { fill: #f5da00 }
-.text_example_4-r251 { fill: #f4da00 }
-.text_example_4-r252 { fill: #f3db00 }
-.text_example_4-r253 { fill: #f2db00 }
-.text_example_4-r254 { fill: #1e90ff }
-.text_example_4-r255 { fill: #ecdd00 }
-.text_example_4-r256 { fill: #ebdd00 }
-.text_example_4-r257 { fill: #ebde00 }
-.text_example_4-r258 { fill: #eade00 }
-.text_example_4-r259 { fill: #e2e000 }
-.text_example_4-r260 { fill: #e1e100 }
-.text_example_4-r261 { fill: #e0e100 }
-.text_example_4-r262 { fill: #dfe100 }
-.text_example_4-r263 { fill: #dee200 }
-.text_example_4-r264 { fill: #dde200 }
-.text_example_4-r265 { fill: #dce200 }
-.text_example_4-r266 { fill: #dbe200 }
-.text_example_4-r267 { fill: #dbe300 }
-.text_example_4-r268 { fill: #dae300 }
-.text_example_4-r269 { fill: #000000 }
-.text_example_4-r270 { fill: #d6e400 }
-.text_example_4-r271 { fill: #d5e400 }
-.text_example_4-r272 { fill: #d4e500 }
-.text_example_4-r273 { fill: #d3e500 }
-.text_example_4-r274 { fill: #d2e500 }
-.text_example_4-r275 { fill: #d1e500 }
-.text_example_4-r276 { fill: #5f00af }
-.text_example_4-r277 { fill: #cce700 }
-.text_example_4-r278 { fill: #cbe700 }
-.text_example_4-r279 { fill: #cae700 }
-.text_example_4-r280 { fill: #cae800 }
-.text_example_4-r281 { fill: #c9e800 }
-.text_example_4-r282 { fill: #c0ea00 }
-.text_example_4-r283 { fill: #bfea00 }
-.text_example_4-r284 { fill: #beea00 }
-.text_example_4-r285 { fill: #beeb00 }
-.text_example_4-r286 { fill: #bdeb00 }
-.text_example_4-r287 { fill: #bceb00 }
-.text_example_4-r288 { fill: #baeb00 }
-.text_example_4-r289 { fill: #b9ec00 }
-.text_example_4-r290 { fill: #b8ec00 }
-.text_example_4-r291 { fill: #b7ec00 }
-.text_example_4-r292 { fill: #b6ec00 }
-.text_example_4-r293 { fill: #b5ed00 }
-.text_example_4-r294 { fill: #b4ed00 }
-.text_example_4-r295 { fill: #b3ed00 }
-.text_example_4-r296 { fill: #b2ed00 }
-.text_example_4-r297 { fill: #b1ed00 }
-.text_example_4-r298 { fill: #b1ee00 }
-.text_example_4-r299 { fill: #b0ee00 }
-.text_example_4-r300 { fill: #afee00 }
-.text_example_4-r301 { fill: #aeee00 }
-.text_example_4-r302 { fill: #adee00 }
-.text_example_4-r303 { fill: #acee00 }
-.text_example_4-r304 { fill: #acef00 }
-.text_example_4-r305 { fill: #abef00 }
-.text_example_4-r306 { fill: #aaef00 }
-.text_example_4-r307 { fill: #a9ef00 }
-.text_example_4-r308 { fill: #a8ef00 }
-.text_example_4-r309 { fill: #a7f000 }
-.text_example_4-r310 { fill: #a6f000 }
-.text_example_4-r311 { fill: #a5f000 }
-.text_example_4-r312 { fill: #a4f000 }
-.text_example_4-r313 { fill: #a3f000 }
-.text_example_4-r314 { fill: #a2f100 }
-.text_example_4-r315 { fill: #a1f100 }
-.text_example_4-r316 { fill: #a0f100 }
-.text_example_4-r317 { fill: #9ff100 }
-.text_example_4-r318 { fill: #9ef100 }
-.text_example_4-r319 { fill: #9df100 }
-.text_example_4-r320 { fill: #9df200 }
-.text_example_4-r321 { fill: #9cf200 }
-.text_example_4-r322 { fill: #9bf200 }
-.text_example_4-r323 { fill: #9af200 }
-.text_example_4-r324 { fill: #99f200 }
-.text_example_4-r325 { fill: #98f200 }
-.text_example_4-r326 { fill: #97f300 }
-.text_example_4-r327 { fill: #96f300 }
-.text_example_4-r328 { fill: #95f300 }
-.text_example_4-r329 { fill: #94f300 }
-.text_example_4-r330 { fill: #93f300 }
-.text_example_4-r331 { fill: #92f300 }
-.text_example_4-r332 { fill: #91f400 }
-.text_example_4-r333 { fill: #90f400 }
-.text_example_4-r334 { fill: #8ff400 }
-.text_example_4-r335 { fill: #8ef400 }
-.text_example_4-r336 { fill: #8df400 }
-.text_example_4-r337 { fill: #8cf500 }
-.text_example_4-r338 { fill: #8bf500 }
-.text_example_4-r339 { fill: #8af500 }
-.text_example_4-r340 { fill: #89f500 }
-.text_example_4-r341 { fill: #88f500 }
-.text_example_4-r342 { fill: #87f500 }
-.text_example_4-r343 { fill: #86f500 }
-.text_example_4-r344 { fill: #85f600 }
-.text_example_4-r345 { fill: #84f600 }
-.text_example_4-r346 { fill: #83f600 }
-.text_example_4-r347 { fill: #82f600 }
-.text_example_4-r348 { fill: #81f600 }
-.text_example_4-r349 { fill: #80f600 }
-.text_example_4-r350 { fill: #7df700 }
-.text_example_4-r351 { fill: #7cf700 }
-.text_example_4-r352 { fill: #7bf700 }
-.text_example_4-r353 { fill: #7af700 }
-.text_example_4-r354 { fill: #79f700 }
-.text_example_4-r355 { fill: #78f700 }
-.text_example_4-r356 { fill: #77f800 }
-.text_example_4-r357 { fill: #76f800 }
-.text_example_4-r358 { fill: #75f800 }
-.text_example_4-r359 { fill: #74f800 }
-.text_example_4-r360 { fill: #73f800 }
-.text_example_4-r361 { fill: #72f800 }
-.text_example_4-r362 { fill: #71f800 }
-.text_example_4-r363 { fill: #6ff800 }
-.text_example_4-r364 { fill: #6ef900 }
-.text_example_4-r365 { fill: #6df900 }
-.text_example_4-r366 { fill: #6cf900 }
-.text_example_4-r367 { fill: #6bf900 }
-.text_example_4-r368 { fill: #68f900 }
-.text_example_4-r369 { fill: #67f900 }
-.text_example_4-r370 { fill: #65fa00 }
-.text_example_4-r371 { fill: #64fa00 }
-.text_example_4-r372 { fill: #63fa00 }
-.text_example_4-r373 { fill: #62fa00 }
-.text_example_4-r374 { fill: #53fb00 }
-.text_example_4-r375 { fill: #51fc00 }
-.text_example_4-r376 { fill: #50fc00 }
-.text_example_4-r377 { fill: #4efc00 }
-.text_example_4-r378 { fill: #4cfc00 }
-.text_example_4-r379 { fill: #4bfc00 }
-.text_example_4-r380 { fill: #ffd700 }
-.text_example_4-r381 { fill: #39fd00 }
-.text_example_4-r382 { fill: #36fd00 }
-.text_example_4-r383 { fill: #34fd00 }
-.text_example_4-r384 { fill: #31fe00 }
-.text_example_4-r385 { fill: #2efe00 }
-.text_example_4-r386 { fill: #2bfe00 }
-.text_example_4-r387 { fill: #24fe00 }
-.text_example_4-r388 { fill: #1ffe00 }
-.text_example_4-r389 { fill: #1afe00 }
-.text_example_4-r390 { fill: #13fe00 }
+.text_example_4-r3 { fill: #5065ff;font-weight: bold }
+.text_example_4-r4 { fill: #6360ff;font-weight: bold }
+.text_example_4-r5 { fill: #725bff;font-weight: bold }
+.text_example_4-r6 { fill: #8055ff;font-weight: bold }
+.text_example_4-r7 { fill: #924bff;font-weight: bold }
+.text_example_4-r8 { fill: #a140ff;font-weight: bold }
+.text_example_4-r9 { fill: #b032ff;font-weight: bold }
+.text_example_4-r10 { fill: #ce2aff;font-weight: bold }
+.text_example_4-r11 { fill: #e81eff;font-weight: bold }
+.text_example_4-r12 { fill: #ff00ff;font-weight: bold }
+.text_example_4-r13 { fill: #ff00e6;font-weight: bold }
+.text_example_4-r14 { fill: #ff00cb;font-weight: bold }
+.text_example_4-r15 { fill: #ff00a9;font-weight: bold }
+.text_example_4-r16 { fill: #800080 }
+.text_example_4-r17 { fill: #80107f }
+.text_example_4-r18 { fill: #81167f }
+.text_example_4-r19 { fill: #821a7f }
+.text_example_4-r20 { fill: #821e7f }
+.text_example_4-r21 { fill: #83217f }
+.text_example_4-r22 { fill: #84247e }
+.text_example_4-r23 { fill: #84277e }
+.text_example_4-r24 { fill: #85297e }
+.text_example_4-r25 { fill: #862c7e }
+.text_example_4-r26 { fill: #862e7d }
+.text_example_4-r27 { fill: #87307d }
+.text_example_4-r28 { fill: #88327d }
+.text_example_4-r29 { fill: #88347d }
+.text_example_4-r30 { fill: #89357d }
+.text_example_4-r31 { fill: #8a377c }
+.text_example_4-r32 { fill: #8a397c }
+.text_example_4-r33 { fill: #8b3a7c }
+.text_example_4-r34 { fill: #8c3c7c }
+.text_example_4-r35 { fill: #8c3d7c }
+.text_example_4-r36 { fill: #8d3f7b }
+.text_example_4-r37 { fill: #8d407b }
+.text_example_4-r38 { fill: #8e427b }
+.text_example_4-r39 { fill: #8f437b }
+.text_example_4-r40 { fill: #8f447b }
+.text_example_4-r41 { fill: #90467a }
+.text_example_4-r42 { fill: #90477a }
+.text_example_4-r43 { fill: #91487a }
+.text_example_4-r44 { fill: #92497a }
+.text_example_4-r45 { fill: #924b7a }
+.text_example_4-r46 { fill: #934c79 }
+.text_example_4-r47 { fill: #934d79 }
+.text_example_4-r48 { fill: #944e79 }
+.text_example_4-r49 { fill: #954f79 }
+.text_example_4-r50 { fill: #955079 }
+.text_example_4-r51 { fill: #965178 }
+.text_example_4-r52 { fill: #965278 }
+.text_example_4-r53 { fill: #975378 }
+.text_example_4-r54 { fill: #985478 }
+.text_example_4-r55 { fill: #985577 }
+.text_example_4-r56 { fill: #995677 }
+.text_example_4-r57 { fill: #995777 }
+.text_example_4-r58 { fill: #9a5877 }
+.text_example_4-r59 { fill: #9a5977 }
+.text_example_4-r60 { fill: #9b5a76 }
+.text_example_4-r61 { fill: #9b5b76 }
+.text_example_4-r62 { fill: #9c5c76 }
+.text_example_4-r63 { fill: #9d5d76 }
+.text_example_4-r64 { fill: #9d5e76 }
+.text_example_4-r65 { fill: #9e5f75 }
+.text_example_4-r66 { fill: #9e6075 }
+.text_example_4-r67 { fill: #9f6175 }
+.text_example_4-r68 { fill: #a06274 }
+.text_example_4-r69 { fill: #a06374 }
+.text_example_4-r70 { fill: #a16474 }
+.text_example_4-r71 { fill: #a16574 }
+.text_example_4-r72 { fill: #a26674 }
+.text_example_4-r73 { fill: #a36673 }
+.text_example_4-r74 { fill: #a36773 }
+.text_example_4-r75 { fill: #a46873 }
+.text_example_4-r76 { fill: #a46973 }
+.text_example_4-r77 { fill: #a56a72 }
+.text_example_4-r78 { fill: #a66b72 }
+.text_example_4-r79 { fill: #a66c72 }
+.text_example_4-r80 { fill: #a76d72 }
+.text_example_4-r81 { fill: #a76d71 }
+.text_example_4-r82 { fill: #a86e71 }
+.text_example_4-r83 { fill: #a86f71 }
+.text_example_4-r84 { fill: #a97071 }
+.text_example_4-r85 { fill: #a97070 }
+.text_example_4-r86 { fill: #aa7170 }
+.text_example_4-r87 { fill: #aa7270 }
+.text_example_4-r88 { fill: #ab7270 }
+.text_example_4-r89 { fill: #ab736f }
+.text_example_4-r90 { fill: #ac746f }
+.text_example_4-r91 { fill: #ac756f }
+.text_example_4-r92 { fill: #ad756f }
+.text_example_4-r93 { fill: #ad766e }
+.text_example_4-r94 { fill: #ae776e }
+.text_example_4-r95 { fill: #af786e }
+.text_example_4-r96 { fill: #af796e }
+.text_example_4-r97 { fill: #b0796d }
+.text_example_4-r98 { fill: #b07a6d }
+.text_example_4-r99 { fill: #b17b6d }
+.text_example_4-r100 { fill: #b27c6c }
+.text_example_4-r101 { fill: #b27d6c }
+.text_example_4-r102 { fill: #b37e6c }
+.text_example_4-r103 { fill: #b37e6b }
+.text_example_4-r104 { fill: #b47f6b }
+.text_example_4-r105 { fill: #b4806b }
+.text_example_4-r106 { fill: #b5806b }
+.text_example_4-r107 { fill: #b5816a }
+.text_example_4-r108 { fill: #b6816a }
+.text_example_4-r109 { fill: #b6826a }
+.text_example_4-r110 { fill: #b7836a }
+.text_example_4-r111 { fill: #b78369 }
+.text_example_4-r112 { fill: #b88569 }
+.text_example_4-r113 { fill: #b98668 }
+.text_example_4-r114 { fill: #ba8768 }
+.text_example_4-r115 { fill: #bb8867 }
+.text_example_4-r116 { fill: #bb8967 }
+.text_example_4-r117 { fill: #bc8967 }
+.text_example_4-r118 { fill: #bc8a67 }
+.text_example_4-r119 { fill: #bc8a66 }
+.text_example_4-r120 { fill: #bd8b66 }
+.text_example_4-r121 { fill: #be8c66 }
+.text_example_4-r122 { fill: #be8c65 }
+.text_example_4-r123 { fill: #bf8d65 }
+.text_example_4-r124 { fill: #bf8e65 }
+.text_example_4-r125 { fill: #c08e65 }
+.text_example_4-r126 { fill: #c08f64 }
+.text_example_4-r127 { fill: #c19064 }
+.text_example_4-r128 { fill: #c19063 }
+.text_example_4-r129 { fill: #c29163 }
+.text_example_4-r130 { fill: #c39263 }
+.text_example_4-r131 { fill: #c39262 }
+.text_example_4-r132 { fill: #c39362 }
+.text_example_4-r133 { fill: #c49362 }
+.text_example_4-r134 { fill: #c49462 }
+.text_example_4-r135 { fill: #c59561 }
+.text_example_4-r136 { fill: #c69661 }
+.text_example_4-r137 { fill: #c79760 }
+.text_example_4-r138 { fill: #c79860 }
+.text_example_4-r139 { fill: #c8985f }
+.text_example_4-r140 { fill: #c8995f }
+.text_example_4-r141 { fill: #c99a5f }
+.text_example_4-r142 { fill: #c99a5e }
+.text_example_4-r143 { fill: #ca9b5e }
+.text_example_4-r144 { fill: #ca9c5d }
+.text_example_4-r145 { fill: #f8f8f2;font-style: italic; }
+.text_example_4-r146 { fill: #ff5555 }
+.text_example_4-r147 { fill: #cfa15a }
+.text_example_4-r148 { fill: #d0a25a }
+.text_example_4-r149 { fill: #d0a259 }
+.text_example_4-r150 { fill: #d0a359 }
+.text_example_4-r151 { fill: #d1a359 }
+.text_example_4-r152 { fill: #d1a458 }
+.text_example_4-r153 { fill: #d2a458 }
+.text_example_4-r154 { fill: #d2a558 }
+.text_example_4-r155 { fill: #d2a557 }
+.text_example_4-r156 { fill: #99ff00 }
+.text_example_4-r157 { fill: #d5a955 }
+.text_example_4-r158 { fill: #d6a955 }
+.text_example_4-r159 { fill: #d6a954 }
+.text_example_4-r160 { fill: #d7aa54 }
+.text_example_4-r161 { fill: #d7ab53 }
+.text_example_4-r162 { fill: #d8ab53 }
+.text_example_4-r163 { fill: #d8ac53 }
+.text_example_4-r164 { fill: #d8ac52 }
+.text_example_4-r165 { fill: #d9ad52 }
+.text_example_4-r166 { fill: #daad51 }
+.text_example_4-r167 { fill: #daae51 }
+.text_example_4-r168 { fill: #dbaf50 }
+.text_example_4-r169 { fill: #dbb050 }
+.text_example_4-r170 { fill: #dcb04f }
+.text_example_4-r171 { fill: #ddb14e }
+.text_example_4-r172 { fill: #ddb24e }
+.text_example_4-r173 { fill: #deb24d }
+.text_example_4-r174 { fill: #deb34d }
+.text_example_4-r175 { fill: #dfb34c }
+.text_example_4-r176 { fill: #dfb44c }
+.text_example_4-r177 { fill: #e0b54b }
+.text_example_4-r178 { fill: #e1b54a }
+.text_example_4-r179 { fill: #e1b64a }
+.text_example_4-r180 { fill: #e2b749 }
+.text_example_4-r181 { fill: #e3b848 }
+.text_example_4-r182 { fill: #e3b947 }
+.text_example_4-r183 { fill: #e8be42 }
+.text_example_4-r184 { fill: #e9be41 }
+.text_example_4-r185 { fill: #e9bf41 }
+.text_example_4-r186 { fill: #e9bf40 }
+.text_example_4-r187 { fill: #eac040 }
+.text_example_4-r188 { fill: #eac03f }
+.text_example_4-r189 { fill: #ebc13e }
+.text_example_4-r190 { fill: #ecc23d }
+.text_example_4-r191 { fill: #ecc33c }
+.text_example_4-r192 { fill: #edc33c }
+.text_example_4-r193 { fill: #edc33b }
+.text_example_4-r194 { fill: #edc43b }
+.text_example_4-r195 { fill: #eec43a }
+.text_example_4-r196 { fill: #eec539 }
+.text_example_4-r197 { fill: #efc538 }
+.text_example_4-r198 { fill: #efc638 }
+.text_example_4-r199 { fill: #efc637 }
+.text_example_4-r200 { fill: #f0c637 }
+.text_example_4-r201 { fill: #f0c736 }
+.text_example_4-r202 { fill: #f1c834 }
+.text_example_4-r203 { fill: #f2c834 }
+.text_example_4-r204 { fill: #f2c933 }
+.text_example_4-r205 { fill: #f2c932 }
+.text_example_4-r206 { fill: #f3ca32 }
+.text_example_4-r207 { fill: #f3ca31 }
+.text_example_4-r208 { fill: #f4cb30 }
+.text_example_4-r209 { fill: #f4cb2f }
+.text_example_4-r210 { fill: #f5cc2e }
+.text_example_4-r211 { fill: #f5cc2d }
+.text_example_4-r212 { fill: #f6cd2c }
+.text_example_4-r213 { fill: #f6cd2b }
+.text_example_4-r214 { fill: #f6cd2a }
+.text_example_4-r215 { fill: #f6ce2a }
+.text_example_4-r216 { fill: #f7ce29 }
+.text_example_4-r217 { fill: #f7ce28 }
+.text_example_4-r218 { fill: #f7cf27 }
+.text_example_4-r219 { fill: #f8cf27 }
+.text_example_4-r220 { fill: #f8d026 }
+.text_example_4-r221 { fill: #f8d025 }
+.text_example_4-r222 { fill: #f9d123 }
+.text_example_4-r223 { fill: #f9d122 }
+.text_example_4-r224 { fill: #fad121 }
+.text_example_4-r225 { fill: #fad220 }
+.text_example_4-r226 { fill: #fad21f }
+.text_example_4-r227 { fill: #fbd21e }
+.text_example_4-r228 { fill: #fbd31d }
+.text_example_4-r229 { fill: #fbd31c }
+.text_example_4-r230 { fill: #fcd31a }
+.text_example_4-r231 { fill: #fcd419 }
+.text_example_4-r232 { fill: #fed60b }
+.text_example_4-r233 { fill: #fed607 }
+.text_example_4-r234 { fill: #fed700 }
+.text_example_4-r235 { fill: #fdd700 }
+.text_example_4-r236 { fill: #fcd700 }
+.text_example_4-r237 { fill: #fcd800 }
+.text_example_4-r238 { fill: #00ff7f }
+.text_example_4-r239 { fill: #f5da00 }
+.text_example_4-r240 { fill: #f4da00 }
+.text_example_4-r241 { fill: #f3db00 }
+.text_example_4-r242 { fill: #f2db00 }
+.text_example_4-r243 { fill: #1e90ff }
+.text_example_4-r244 { fill: #ecdd00 }
+.text_example_4-r245 { fill: #ebdd00 }
+.text_example_4-r246 { fill: #ebde00 }
+.text_example_4-r247 { fill: #eade00 }
+.text_example_4-r248 { fill: #e2e000 }
+.text_example_4-r249 { fill: #e1e100 }
+.text_example_4-r250 { fill: #e0e100 }
+.text_example_4-r251 { fill: #dfe100 }
+.text_example_4-r252 { fill: #dee200 }
+.text_example_4-r253 { fill: #dde200 }
+.text_example_4-r254 { fill: #dce200 }
+.text_example_4-r255 { fill: #dbe200 }
+.text_example_4-r256 { fill: #dbe300 }
+.text_example_4-r257 { fill: #dae300 }
+.text_example_4-r258 { fill: #000000 }
+.text_example_4-r259 { fill: #d6e400 }
+.text_example_4-r260 { fill: #d5e400 }
+.text_example_4-r261 { fill: #d4e500 }
+.text_example_4-r262 { fill: #d3e500 }
+.text_example_4-r263 { fill: #d2e500 }
+.text_example_4-r264 { fill: #d1e500 }
+.text_example_4-r265 { fill: #5f00af }
+.text_example_4-r266 { fill: #cce700 }
+.text_example_4-r267 { fill: #cbe700 }
+.text_example_4-r268 { fill: #cae700 }
+.text_example_4-r269 { fill: #cae800 }
+.text_example_4-r270 { fill: #c9e800 }
+.text_example_4-r271 { fill: #c0ea00 }
+.text_example_4-r272 { fill: #bfea00 }
+.text_example_4-r273 { fill: #beea00 }
+.text_example_4-r274 { fill: #beeb00 }
+.text_example_4-r275 { fill: #bdeb00 }
+.text_example_4-r276 { fill: #bceb00 }
+.text_example_4-r277 { fill: #baeb00 }
+.text_example_4-r278 { fill: #b9ec00 }
+.text_example_4-r279 { fill: #b8ec00 }
+.text_example_4-r280 { fill: #b7ec00 }
+.text_example_4-r281 { fill: #b6ec00 }
+.text_example_4-r282 { fill: #b5ed00 }
+.text_example_4-r283 { fill: #b4ed00 }
+.text_example_4-r284 { fill: #b3ed00 }
+.text_example_4-r285 { fill: #b2ed00 }
+.text_example_4-r286 { fill: #b1ed00 }
+.text_example_4-r287 { fill: #b1ee00 }
+.text_example_4-r288 { fill: #b0ee00 }
+.text_example_4-r289 { fill: #afee00 }
+.text_example_4-r290 { fill: #aeee00 }
+.text_example_4-r291 { fill: #adee00 }
+.text_example_4-r292 { fill: #acee00 }
+.text_example_4-r293 { fill: #acef00 }
+.text_example_4-r294 { fill: #abef00 }
+.text_example_4-r295 { fill: #aaef00 }
+.text_example_4-r296 { fill: #a9ef00 }
+.text_example_4-r297 { fill: #a8ef00 }
+.text_example_4-r298 { fill: #a7f000 }
+.text_example_4-r299 { fill: #a6f000 }
+.text_example_4-r300 { fill: #a5f000 }
+.text_example_4-r301 { fill: #a4f000 }
+.text_example_4-r302 { fill: #a3f000 }
+.text_example_4-r303 { fill: #a2f100 }
+.text_example_4-r304 { fill: #a1f100 }
+.text_example_4-r305 { fill: #a0f100 }
+.text_example_4-r306 { fill: #9ff100 }
+.text_example_4-r307 { fill: #9ef100 }
+.text_example_4-r308 { fill: #9df100 }
+.text_example_4-r309 { fill: #9df200 }
+.text_example_4-r310 { fill: #9cf200 }
+.text_example_4-r311 { fill: #9bf200 }
+.text_example_4-r312 { fill: #9af200 }
+.text_example_4-r313 { fill: #99f200 }
+.text_example_4-r314 { fill: #98f200 }
+.text_example_4-r315 { fill: #97f300 }
+.text_example_4-r316 { fill: #96f300 }
+.text_example_4-r317 { fill: #95f300 }
+.text_example_4-r318 { fill: #94f300 }
+.text_example_4-r319 { fill: #93f300 }
+.text_example_4-r320 { fill: #92f300 }
+.text_example_4-r321 { fill: #91f400 }
+.text_example_4-r322 { fill: #90f400 }
+.text_example_4-r323 { fill: #8ff400 }
+.text_example_4-r324 { fill: #8ef400 }
+.text_example_4-r325 { fill: #8df400 }
+.text_example_4-r326 { fill: #8cf500 }
+.text_example_4-r327 { fill: #8bf500 }
+.text_example_4-r328 { fill: #8af500 }
+.text_example_4-r329 { fill: #89f500 }
+.text_example_4-r330 { fill: #88f500 }
+.text_example_4-r331 { fill: #87f500 }
+.text_example_4-r332 { fill: #86f500 }
+.text_example_4-r333 { fill: #85f600 }
+.text_example_4-r334 { fill: #84f600 }
+.text_example_4-r335 { fill: #83f600 }
+.text_example_4-r336 { fill: #82f600 }
+.text_example_4-r337 { fill: #81f600 }
+.text_example_4-r338 { fill: #80f600 }
+.text_example_4-r339 { fill: #7df700 }
+.text_example_4-r340 { fill: #7cf700 }
+.text_example_4-r341 { fill: #7bf700 }
+.text_example_4-r342 { fill: #7af700 }
+.text_example_4-r343 { fill: #79f700 }
+.text_example_4-r344 { fill: #78f700 }
+.text_example_4-r345 { fill: #77f800 }
+.text_example_4-r346 { fill: #76f800 }
+.text_example_4-r347 { fill: #75f800 }
+.text_example_4-r348 { fill: #74f800 }
+.text_example_4-r349 { fill: #73f800 }
+.text_example_4-r350 { fill: #72f800 }
+.text_example_4-r351 { fill: #71f800 }
+.text_example_4-r352 { fill: #6ff800 }
+.text_example_4-r353 { fill: #6ef900 }
+.text_example_4-r354 { fill: #6df900 }
+.text_example_4-r355 { fill: #6cf900 }
+.text_example_4-r356 { fill: #6bf900 }
+.text_example_4-r357 { fill: #68f900 }
+.text_example_4-r358 { fill: #67f900 }
+.text_example_4-r359 { fill: #65fa00 }
+.text_example_4-r360 { fill: #64fa00 }
+.text_example_4-r361 { fill: #63fa00 }
+.text_example_4-r362 { fill: #62fa00 }
+.text_example_4-r363 { fill: #ff00ff }
+.text_example_4-r364 { fill: #53fb00 }
+.text_example_4-r365 { fill: #51fc00 }
+.text_example_4-r366 { fill: #50fc00 }
+.text_example_4-r367 { fill: #4efc00 }
+.text_example_4-r368 { fill: #4cfc00 }
+.text_example_4-r369 { fill: #4bfc00 }
+.text_example_4-r370 { fill: #ffd700 }
+.text_example_4-r371 { fill: #39fd00 }
+.text_example_4-r372 { fill: #36fd00 }
+.text_example_4-r373 { fill: #34fd00 }
+.text_example_4-r374 { fill: #31fe00 }
+.text_example_4-r375 { fill: #2efe00 }
+.text_example_4-r376 { fill: #2bfe00 }
+.text_example_4-r377 { fill: #24fe00 }
+.text_example_4-r378 { fill: #1ffe00 }
+.text_example_4-r379 { fill: #1afe00 }
+.text_example_4-r380 { fill: #13fe00 }
     </style>
 
     <defs>
@@ -530,31 +520,31 @@
     <text class="text_example_4-r1" x="0" y="20" textLength="24.4" clip-path="url(#text_example_4-line-0)">╭─</text><text class="text_example_4-r1" x="24.4" y="20" textLength="268.4" clip-path="url(#text_example_4-line-0)">──────────────────────</text><text class="text_example_4-r3" x="305" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">C</text><text class="text_example_4-r4" x="317.2" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">o</text><text class="text_example_4-r5" x="329.4" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">l</text><text class="text_example_4-r6" x="341.6" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">o</text><text class="text_example_4-r7" x="353.8" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">r</text><text class="text_example_4-r9" x="378.2" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">F</text><text class="text_example_4-r10" x="390.4" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">o</text><text class="text_example_4-r11" x="402.6" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">r</text><text class="text_example_4-r12" x="414.8" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">m</text><text class="text_example_4-r13" x="427" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">a</text><text class="text_example_4-r14" x="439.2" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">t</text><text class="text_example_4-r15" x="451.4" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">s</text><text class="text_example_4-r1" x="475.8" y="20" textLength="280.6" clip-path="url(#text_example_4-line-0)">───────────────────────</text><text class="text_example_4-r1" x="756.4" y="20" textLength="24.4" clip-path="url(#text_example_4-line-0)">─╮</text><text class="text_example_4-r1" x="780.8" y="20" textLength="12.2" clip-path="url(#text_example_4-line-0)">
 </text><text class="text_example_4-r1" x="0" y="44.4" textLength="12.2" clip-path="url(#text_example_4-line-1)">│</text><text class="text_example_4-r1" x="768.6" y="44.4" textLength="12.2" clip-path="url(#text_example_4-line-1)">│</text><text class="text_example_4-r1" x="780.8" y="44.4" textLength="12.2" clip-path="url(#text_example_4-line-1)">
 </text><text class="text_example_4-r1" x="0" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">│</text><text class="text_example_4-r16" x="61" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">I</text><text class="text_example_4-r17" x="73.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">f</text><text class="text_example_4-r19" x="97.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">y</text><text class="text_example_4-r20" x="109.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r21" x="122" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">u</text><text class="text_example_4-r23" x="146.4" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">l</text><text class="text_example_4-r24" x="158.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">i</text><text class="text_example_4-r25" x="170.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">k</text><text class="text_example_4-r26" x="183" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">e</text><text class="text_example_4-r28" x="207.4" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">t</text><text class="text_example_4-r29" x="219.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r31" x="244" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">s</text><text class="text_example_4-r32" x="256.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">p</text><text class="text_example_4-r33" x="268.4" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">e</text><text class="text_example_4-r34" x="280.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">c</text><text class="text_example_4-r35" x="292.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">i</text><text class="text_example_4-r36" x="305" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">f</text><text class="text_example_4-r37" x="317.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">y</text><text class="text_example_4-r39" x="341.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">y</text><text class="text_example_4-r40" x="353.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r41" x="366" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">u</text><text class="text_example_4-r42" x="378.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">r</text><text class="text_example_4-r44" x="402.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r45" x="414.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">w</text><text class="text_example_4-r46" x="427" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">n</text><text class="text_example_4-r48" x="451.4" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">c</text><text class="text_example_4-r49" x="463.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r50" x="475.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">l</text><text class="text_example_4-r51" x="488" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r52" x="500.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">r</text><text class="text_example_4-r53" x="512.4" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">s</text><text class="text_example_4-r54" x="524.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">,</text><text class="text_example_4-r56" x="549" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">y</text><text class="text_example_4-r57" x="561.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">o</text><text class="text_example_4-r58" x="573.4" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">u</text><text class="text_example_4-r60" x="597.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">c</text><text class="text_example_4-r61" x="610" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">a</text><text class="text_example_4-r62" x="622.2" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">n</text><text class="text_example_4-r1" x="768.6" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">│</text><text class="text_example_4-r1" x="780.8" y="68.8" textLength="12.2" clip-path="url(#text_example_4-line-2)">
-</text><text class="text_example_4-r1" x="0" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">│</text><text class="text_example_4-r64" x="61" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r65" x="73.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">p</text><text class="text_example_4-r66" x="85.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r67" x="97.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r67" x="109.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r68" x="122" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">f</text><text class="text_example_4-r69" x="134.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">y</text><text class="text_example_4-r71" x="158.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">a</text><text class="text_example_4-r73" x="183" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">l</text><text class="text_example_4-r74" x="195.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r75" x="207.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r76" x="219.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">t</text><text class="text_example_4-r77" x="244" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r78" x="256.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">f</text><text class="text_example_4-r80" x="280.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r81" x="292.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r82" x="305" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">l</text><text class="text_example_4-r83" x="317.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r84" x="329.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">r</text><text class="text_example_4-r85" x="341.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r86" x="353.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">.</text><text class="text_example_4-r87" x="378.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">C</text><text class="text_example_4-r88" x="390.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r89" x="402.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">l</text><text class="text_example_4-r90" x="414.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r91" x="427" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">r</text><text class="text_example_4-r92" x="439.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r93" x="463.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r94" x="475.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">a</text><text class="text_example_4-r95" x="488" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">n</text><text class="text_example_4-r97" x="512.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">b</text><text class="text_example_4-r98" x="524.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r99" x="549" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r99" x="561.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">p</text><text class="text_example_4-r100" x="573.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r101" x="585.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r102" x="597.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r103" x="610" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">f</text><text class="text_example_4-r104" x="622.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r104" x="634.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r105" x="646.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">d</text><text class="text_example_4-r106" x="671" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">a</text><text class="text_example_4-r107" x="683.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r107" x="695.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">:</text><text class="text_example_4-r1" x="768.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">│</text><text class="text_example_4-r1" x="780.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">
+</text><text class="text_example_4-r1" x="0" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">│</text><text class="text_example_4-r64" x="61" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r65" x="73.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">p</text><text class="text_example_4-r66" x="85.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r67" x="97.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r67" x="109.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r68" x="122" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">f</text><text class="text_example_4-r69" x="134.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">y</text><text class="text_example_4-r71" x="158.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">a</text><text class="text_example_4-r73" x="183" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">l</text><text class="text_example_4-r74" x="195.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r75" x="207.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r76" x="219.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">t</text><text class="text_example_4-r77" x="244" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r78" x="256.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">f</text><text class="text_example_4-r80" x="280.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r81" x="292.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r82" x="305" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">l</text><text class="text_example_4-r83" x="317.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r84" x="329.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">r</text><text class="text_example_4-r85" x="341.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r86" x="353.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">.</text><text class="text_example_4-r88" x="378.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">C</text><text class="text_example_4-r89" x="390.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r90" x="402.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">l</text><text class="text_example_4-r91" x="414.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">o</text><text class="text_example_4-r92" x="427" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">r</text><text class="text_example_4-r93" x="439.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r94" x="463.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r95" x="475.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">a</text><text class="text_example_4-r96" x="488" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">n</text><text class="text_example_4-r98" x="512.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">b</text><text class="text_example_4-r99" x="524.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r100" x="549" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r100" x="561.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">p</text><text class="text_example_4-r101" x="573.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r102" x="585.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">c</text><text class="text_example_4-r103" x="597.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r104" x="610" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">f</text><text class="text_example_4-r105" x="622.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">i</text><text class="text_example_4-r106" x="634.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">e</text><text class="text_example_4-r107" x="646.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">d</text><text class="text_example_4-r109" x="671" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">a</text><text class="text_example_4-r110" x="683.2" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">s</text><text class="text_example_4-r111" x="695.4" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">:</text><text class="text_example_4-r1" x="768.6" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">│</text><text class="text_example_4-r1" x="780.8" y="93.2" textLength="12.2" clip-path="url(#text_example_4-line-3)">
 </text><text class="text_example_4-r1" x="0" y="117.6" textLength="12.2" clip-path="url(#text_example_4-line-4)">│</text><text class="text_example_4-r1" x="768.6" y="117.6" textLength="12.2" clip-path="url(#text_example_4-line-4)">│</text><text class="text_example_4-r1" x="780.8" y="117.6" textLength="12.2" clip-path="url(#text_example_4-line-4)">
-</text><text class="text_example_4-r1" x="0" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">│</text><text class="text_example_4-r112" x="109.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">-</text><text class="text_example_4-r114" x="134.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">3</text><text class="text_example_4-r116" x="158.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">a</text><text class="text_example_4-r117" x="170.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">n</text><text class="text_example_4-r118" x="183" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">d</text><text class="text_example_4-r120" x="207.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">6</text><text class="text_example_4-r122" x="231.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">d</text><text class="text_example_4-r123" x="244" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">i</text><text class="text_example_4-r123" x="256.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">g</text><text class="text_example_4-r124" x="268.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">i</text><text class="text_example_4-r124" x="280.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">t</text><text class="text_example_4-r125" x="305" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">h</text><text class="text_example_4-r126" x="317.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">e</text><text class="text_example_4-r126" x="329.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">x</text><text class="text_example_4-r127" x="353.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">s</text><text class="text_example_4-r128" x="366" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">t</text><text class="text_example_4-r129" x="378.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">r</text><text class="text_example_4-r130" x="390.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">i</text><text class="text_example_4-r131" x="402.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">n</text><text class="text_example_4-r131" x="414.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">g</text><text class="text_example_4-r132" x="427" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">s</text><text class="text_example_4-r132" x="439.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">:</text><text class="text_example_4-r1" x="768.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">│</text><text class="text_example_4-r1" x="780.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">
-</text><text class="text_example_4-r1" x="0" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">│</text><text class="text_example_4-r140" x="158.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">-</text><text class="text_example_4-r142" x="183" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">&#x27;</text><text class="text_example_4-r143" x="195.2" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">#</text><text class="text_example_4-r143" x="207.4" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">f</text><text class="text_example_4-r143" x="219.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">f</text><text class="text_example_4-r143" x="231.8" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r143" x="244" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r143" x="256.2" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r143" x="268.4" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r142" x="280.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">│</text><text class="text_example_4-r1" x="780.8" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">
-</text><text class="text_example_4-r1" x="0" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">│</text><text class="text_example_4-r151" x="158.6" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">-</text><text class="text_example_4-r142" x="183" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">&#x27;</text><text class="text_example_4-r152" x="195.2" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">#</text><text class="text_example_4-r152" x="207.4" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">9</text><text class="text_example_4-r152" x="219.6" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">F</text><text class="text_example_4-r152" x="231.8" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">0</text><text class="text_example_4-r142" x="244" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">│</text><text class="text_example_4-r1" x="780.8" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">
-</text><text class="text_example_4-r1" x="0" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">│</text><text class="text_example_4-r157" x="109.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">-</text><text class="text_example_4-r158" x="134.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">R</text><text class="text_example_4-r159" x="146.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">G</text><text class="text_example_4-r160" x="158.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">B</text><text class="text_example_4-r162" x="183" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">t</text><text class="text_example_4-r163" x="195.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">u</text><text class="text_example_4-r164" x="207.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">p</text><text class="text_example_4-r165" x="219.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">l</text><text class="text_example_4-r166" x="231.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">e</text><text class="text_example_4-r166" x="244" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">s</text><text class="text_example_4-r168" x="268.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">o</text><text class="text_example_4-r168" x="280.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">r</text><text class="text_example_4-r170" x="305" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">s</text><text class="text_example_4-r171" x="317.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">t</text><text class="text_example_4-r171" x="329.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">r</text><text class="text_example_4-r172" x="341.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">i</text><text class="text_example_4-r173" x="353.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">n</text><text class="text_example_4-r173" x="366" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">g</text><text class="text_example_4-r174" x="378.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">s</text><text class="text_example_4-r175" x="390.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">:</text><text class="text_example_4-r1" x="768.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">│</text><text class="text_example_4-r1" x="780.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">
-</text><text class="text_example_4-r1" x="0" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">│</text><text class="text_example_4-r183" x="158.6" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">-</text><text class="text_example_4-r143" x="183" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">(</text><text class="text_example_4-r143" x="195.2" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">2</text><text class="text_example_4-r143" x="207.4" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">5</text><text class="text_example_4-r143" x="219.6" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">5</text><text class="text_example_4-r143" x="231.8" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">,</text><text class="text_example_4-r143" x="256.2" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">0</text><text class="text_example_4-r143" x="268.4" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">,</text><text class="text_example_4-r143" x="292.8" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">0</text><text class="text_example_4-r143" x="305" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">)</text><text class="text_example_4-r1" x="768.6" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">│</text><text class="text_example_4-r1" x="780.8" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">
-</text><text class="text_example_4-r1" x="0" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">│</text><text class="text_example_4-r193" x="158.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">-</text><text class="text_example_4-r142" x="183" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">&#x27;</text><text class="text_example_4-r195" x="195.2" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">r</text><text class="text_example_4-r196" x="207.4" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">g</text><text class="text_example_4-r197" x="219.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">b</text><text class="text_example_4-r198" x="231.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">(</text><text class="text_example_4-r199" x="244" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">9</text><text class="text_example_4-r200" x="256.2" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">5</text><text class="text_example_4-r201" x="268.4" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">,</text><text class="text_example_4-r203" x="292.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">0</text><text class="text_example_4-r204" x="305" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">,</text><text class="text_example_4-r206" x="329.4" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">2</text><text class="text_example_4-r207" x="341.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">5</text><text class="text_example_4-r208" x="353.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">5</text><text class="text_example_4-r209" x="366" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">)</text><text class="text_example_4-r142" x="378.2" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">│</text><text class="text_example_4-r1" x="780.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">
-</text><text class="text_example_4-r1" x="0" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">│</text><text class="text_example_4-r214" x="109.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">-</text><text class="text_example_4-r216" x="134.2" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">C</text><text class="text_example_4-r217" x="146.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">S</text><text class="text_example_4-r218" x="158.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">S</text><text class="text_example_4-r219" x="170.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">3</text><text class="text_example_4-r221" x="195.2" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">C</text><text class="text_example_4-r222" x="207.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">o</text><text class="text_example_4-r223" x="219.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">l</text><text class="text_example_4-r224" x="231.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">o</text><text class="text_example_4-r225" x="244" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">r</text><text class="text_example_4-r227" x="268.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">n</text><text class="text_example_4-r228" x="280.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">a</text><text class="text_example_4-r229" x="292.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">m</text><text class="text_example_4-r230" x="305" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">e</text><text class="text_example_4-r231" x="317.2" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">s</text><text class="text_example_4-r232" x="329.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">:</text><text class="text_example_4-r1" x="768.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">│</text><text class="text_example_4-r1" x="780.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">
-</text><text class="text_example_4-r1" x="0" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">│</text><text class="text_example_4-r241" x="158.6" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">-</text><text class="text_example_4-r142" x="183" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">&#x27;</text><text class="text_example_4-r143" x="195.2" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">r</text><text class="text_example_4-r143" x="207.4" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">e</text><text class="text_example_4-r143" x="219.6" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">d</text><text class="text_example_4-r142" x="231.8" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">│</text><text class="text_example_4-r1" x="780.8" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">
-</text><text class="text_example_4-r1" x="0" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">│</text><text class="text_example_4-r247" x="158.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">-</text><text class="text_example_4-r142" x="183" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">&#x27;</text><text class="text_example_4-r249" x="195.2" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">s</text><text class="text_example_4-r249" x="207.4" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">p</text><text class="text_example_4-r249" x="219.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">r</text><text class="text_example_4-r249" x="231.8" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">i</text><text class="text_example_4-r249" x="244" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">n</text><text class="text_example_4-r249" x="256.2" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">g</text><text class="text_example_4-r249" x="268.4" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">g</text><text class="text_example_4-r249" x="280.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">r</text><text class="text_example_4-r249" x="292.8" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">e</text><text class="text_example_4-r249" x="305" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">e</text><text class="text_example_4-r249" x="317.2" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">n</text><text class="text_example_4-r142" x="329.4" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">│</text><text class="text_example_4-r1" x="780.8" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">
-</text><text class="text_example_4-r1" x="0" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">│</text><text class="text_example_4-r253" x="158.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">-</text><text class="text_example_4-r142" x="183" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">&#x27;</text><text class="text_example_4-r254" x="195.2" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">d</text><text class="text_example_4-r254" x="207.4" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">o</text><text class="text_example_4-r254" x="219.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">d</text><text class="text_example_4-r254" x="231.8" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">g</text><text class="text_example_4-r254" x="244" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">e</text><text class="text_example_4-r254" x="256.2" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">r</text><text class="text_example_4-r254" x="268.4" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">b</text><text class="text_example_4-r254" x="280.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">l</text><text class="text_example_4-r254" x="292.8" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">u</text><text class="text_example_4-r254" x="305" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">e</text><text class="text_example_4-r142" x="317.2" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">│</text><text class="text_example_4-r1" x="780.8" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">
-</text><text class="text_example_4-r1" x="0" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">│</text><text class="text_example_4-r258" x="109.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">-</text><text class="text_example_4-r142" x="134.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">r</text><text class="text_example_4-r142" x="146.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">i</text><text class="text_example_4-r142" x="158.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">c</text><text class="text_example_4-r142" x="170.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">h</text><text class="text_example_4-r142" x="183" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">.</text><text class="text_example_4-r142" x="195.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">c</text><text class="text_example_4-r142" x="207.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r142" x="219.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">l</text><text class="text_example_4-r142" x="231.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r142" x="244" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">r</text><text class="text_example_4-r142" x="256.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">.</text><text class="text_example_4-r142" x="268.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">C</text><text class="text_example_4-r142" x="280.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r142" x="292.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">l</text><text class="text_example_4-r142" x="305" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r142" x="317.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">r</text><text class="text_example_4-r260" x="341.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">n</text><text class="text_example_4-r260" x="353.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">a</text><text class="text_example_4-r260" x="366" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">m</text><text class="text_example_4-r261" x="378.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">e</text><text class="text_example_4-r261" x="390.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">s</text><text class="text_example_4-r262" x="402.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">:</text><text class="text_example_4-r1" x="768.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">│</text><text class="text_example_4-r1" x="780.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">
-</text><text class="text_example_4-r1" x="0" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">│</text><text class="text_example_4-r267" x="158.6" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">-</text><text class="text_example_4-r142" x="183" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">&#x27;</text><text class="text_example_4-r269" x="195.2" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">g</text><text class="text_example_4-r269" x="207.4" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">r</text><text class="text_example_4-r269" x="219.6" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">e</text><text class="text_example_4-r269" x="231.8" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">y</text><text class="text_example_4-r269" x="244" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">0</text><text class="text_example_4-r142" x="256.2" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">│</text><text class="text_example_4-r1" x="780.8" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">
-</text><text class="text_example_4-r1" x="0" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">│</text><text class="text_example_4-r274" x="158.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">-</text><text class="text_example_4-r142" x="183" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">&#x27;</text><text class="text_example_4-r276" x="195.2" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">p</text><text class="text_example_4-r276" x="207.4" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">u</text><text class="text_example_4-r276" x="219.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">r</text><text class="text_example_4-r276" x="231.8" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">p</text><text class="text_example_4-r276" x="244" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">l</text><text class="text_example_4-r276" x="256.2" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">e</text><text class="text_example_4-r276" x="268.4" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">4</text><text class="text_example_4-r142" x="280.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">│</text><text class="text_example_4-r1" x="780.8" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">
-</text><text class="text_example_4-r1" x="0" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">│</text><text class="text_example_4-r280" x="109.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">-</text><text class="text_example_4-r142" x="134.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">r</text><text class="text_example_4-r142" x="146.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">i</text><text class="text_example_4-r142" x="158.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">c</text><text class="text_example_4-r142" x="170.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">h</text><text class="text_example_4-r142" x="183" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">.</text><text class="text_example_4-r142" x="195.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">c</text><text class="text_example_4-r142" x="207.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r142" x="219.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">l</text><text class="text_example_4-r142" x="231.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r142" x="244" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">r</text><text class="text_example_4-r142" x="256.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">.</text><text class="text_example_4-r142" x="268.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">C</text><text class="text_example_4-r142" x="280.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r142" x="292.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">l</text><text class="text_example_4-r142" x="305" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r142" x="317.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">r</text><text class="text_example_4-r283" x="341.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r283" x="353.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">b</text><text class="text_example_4-r284" x="366" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">j</text><text class="text_example_4-r285" x="378.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">e</text><text class="text_example_4-r286" x="390.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">c</text><text class="text_example_4-r286" x="402.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">t</text><text class="text_example_4-r287" x="414.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">s</text><text class="text_example_4-r1" x="768.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">│</text><text class="text_example_4-r1" x="780.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">
+</text><text class="text_example_4-r1" x="0" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">│</text><text class="text_example_4-r114" x="109.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">-</text><text class="text_example_4-r116" x="134.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">3</text><text class="text_example_4-r118" x="158.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">a</text><text class="text_example_4-r119" x="170.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">n</text><text class="text_example_4-r120" x="183" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">d</text><text class="text_example_4-r121" x="207.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">6</text><text class="text_example_4-r123" x="231.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">d</text><text class="text_example_4-r124" x="244" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">i</text><text class="text_example_4-r125" x="256.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">g</text><text class="text_example_4-r126" x="268.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">i</text><text class="text_example_4-r126" x="280.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">t</text><text class="text_example_4-r128" x="305" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">h</text><text class="text_example_4-r129" x="317.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">e</text><text class="text_example_4-r129" x="329.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">x</text><text class="text_example_4-r131" x="353.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">s</text><text class="text_example_4-r132" x="366" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">t</text><text class="text_example_4-r133" x="378.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">r</text><text class="text_example_4-r134" x="390.4" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">i</text><text class="text_example_4-r135" x="402.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">n</text><text class="text_example_4-r135" x="414.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">g</text><text class="text_example_4-r136" x="427" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">s</text><text class="text_example_4-r136" x="439.2" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">:</text><text class="text_example_4-r1" x="768.6" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">│</text><text class="text_example_4-r1" x="780.8" y="142" textLength="12.2" clip-path="url(#text_example_4-line-5)">
+</text><text class="text_example_4-r1" x="0" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">│</text><text class="text_example_4-r143" x="158.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">-</text><text class="text_example_4-r145" x="183" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">&#x27;</text><text class="text_example_4-r146" x="195.2" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">#</text><text class="text_example_4-r146" x="207.4" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">f</text><text class="text_example_4-r146" x="219.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">f</text><text class="text_example_4-r146" x="231.8" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r146" x="244" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r146" x="256.2" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r146" x="268.4" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">0</text><text class="text_example_4-r145" x="280.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">│</text><text class="text_example_4-r1" x="780.8" y="166.4" textLength="12.2" clip-path="url(#text_example_4-line-6)">
+</text><text class="text_example_4-r1" x="0" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">│</text><text class="text_example_4-r154" x="158.6" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">-</text><text class="text_example_4-r145" x="183" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">&#x27;</text><text class="text_example_4-r156" x="195.2" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">#</text><text class="text_example_4-r156" x="207.4" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">9</text><text class="text_example_4-r156" x="219.6" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">F</text><text class="text_example_4-r156" x="231.8" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">0</text><text class="text_example_4-r145" x="244" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">│</text><text class="text_example_4-r1" x="780.8" y="190.8" textLength="12.2" clip-path="url(#text_example_4-line-7)">
+</text><text class="text_example_4-r1" x="0" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">│</text><text class="text_example_4-r160" x="109.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">-</text><text class="text_example_4-r162" x="134.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">R</text><text class="text_example_4-r163" x="146.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">G</text><text class="text_example_4-r164" x="158.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">B</text><text class="text_example_4-r165" x="183" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">t</text><text class="text_example_4-r166" x="195.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">u</text><text class="text_example_4-r167" x="207.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">p</text><text class="text_example_4-r167" x="219.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">l</text><text class="text_example_4-r168" x="231.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">e</text><text class="text_example_4-r168" x="244" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">s</text><text class="text_example_4-r170" x="268.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">o</text><text class="text_example_4-r170" x="280.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">r</text><text class="text_example_4-r171" x="305" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">s</text><text class="text_example_4-r172" x="317.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">t</text><text class="text_example_4-r173" x="329.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">r</text><text class="text_example_4-r173" x="341.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">i</text><text class="text_example_4-r174" x="353.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">n</text><text class="text_example_4-r175" x="366" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">g</text><text class="text_example_4-r176" x="378.2" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">s</text><text class="text_example_4-r176" x="390.4" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">:</text><text class="text_example_4-r1" x="768.6" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">│</text><text class="text_example_4-r1" x="780.8" y="215.2" textLength="12.2" clip-path="url(#text_example_4-line-8)">
+</text><text class="text_example_4-r1" x="0" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">│</text><text class="text_example_4-r181" x="158.6" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">-</text><text class="text_example_4-r146" x="183" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">(</text><text class="text_example_4-r146" x="195.2" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">2</text><text class="text_example_4-r146" x="207.4" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">5</text><text class="text_example_4-r146" x="219.6" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">5</text><text class="text_example_4-r146" x="231.8" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">,</text><text class="text_example_4-r146" x="256.2" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">0</text><text class="text_example_4-r146" x="268.4" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">,</text><text class="text_example_4-r146" x="292.8" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">0</text><text class="text_example_4-r146" x="305" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">)</text><text class="text_example_4-r1" x="768.6" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">│</text><text class="text_example_4-r1" x="780.8" y="239.6" textLength="12.2" clip-path="url(#text_example_4-line-9)">
+</text><text class="text_example_4-r1" x="0" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">│</text><text class="text_example_4-r189" x="158.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">-</text><text class="text_example_4-r145" x="183" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">&#x27;</text><text class="text_example_4-r190" x="195.2" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">r</text><text class="text_example_4-r190" x="207.4" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">g</text><text class="text_example_4-r191" x="219.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">b</text><text class="text_example_4-r192" x="231.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">(</text><text class="text_example_4-r193" x="244" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">9</text><text class="text_example_4-r194" x="256.2" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">5</text><text class="text_example_4-r195" x="268.4" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">,</text><text class="text_example_4-r196" x="292.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">0</text><text class="text_example_4-r197" x="305" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">,</text><text class="text_example_4-r199" x="329.4" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">2</text><text class="text_example_4-r200" x="341.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">5</text><text class="text_example_4-r201" x="353.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">5</text><text class="text_example_4-r201" x="366" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">)</text><text class="text_example_4-r145" x="378.2" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">│</text><text class="text_example_4-r1" x="780.8" y="264" textLength="12.2" clip-path="url(#text_example_4-line-10)">
+</text><text class="text_example_4-r1" x="0" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">│</text><text class="text_example_4-r206" x="109.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">-</text><text class="text_example_4-r207" x="134.2" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">C</text><text class="text_example_4-r208" x="146.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">S</text><text class="text_example_4-r209" x="158.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">S</text><text class="text_example_4-r209" x="170.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">3</text><text class="text_example_4-r211" x="195.2" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">C</text><text class="text_example_4-r211" x="207.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">o</text><text class="text_example_4-r212" x="219.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">l</text><text class="text_example_4-r213" x="231.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">o</text><text class="text_example_4-r214" x="244" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">r</text><text class="text_example_4-r216" x="268.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">n</text><text class="text_example_4-r217" x="280.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">a</text><text class="text_example_4-r218" x="292.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">m</text><text class="text_example_4-r219" x="305" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">e</text><text class="text_example_4-r220" x="317.2" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">s</text><text class="text_example_4-r221" x="329.4" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">:</text><text class="text_example_4-r1" x="768.6" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">│</text><text class="text_example_4-r1" x="780.8" y="288.4" textLength="12.2" clip-path="url(#text_example_4-line-11)">
+</text><text class="text_example_4-r1" x="0" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">│</text><text class="text_example_4-r230" x="158.6" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">-</text><text class="text_example_4-r145" x="183" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">&#x27;</text><text class="text_example_4-r146" x="195.2" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">r</text><text class="text_example_4-r146" x="207.4" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">e</text><text class="text_example_4-r146" x="219.6" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">d</text><text class="text_example_4-r145" x="231.8" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">│</text><text class="text_example_4-r1" x="780.8" y="312.8" textLength="12.2" clip-path="url(#text_example_4-line-12)">
+</text><text class="text_example_4-r1" x="0" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">│</text><text class="text_example_4-r236" x="158.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">-</text><text class="text_example_4-r145" x="183" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">&#x27;</text><text class="text_example_4-r238" x="195.2" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">s</text><text class="text_example_4-r238" x="207.4" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">p</text><text class="text_example_4-r238" x="219.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">r</text><text class="text_example_4-r238" x="231.8" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">i</text><text class="text_example_4-r238" x="244" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">n</text><text class="text_example_4-r238" x="256.2" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">g</text><text class="text_example_4-r238" x="268.4" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">g</text><text class="text_example_4-r238" x="280.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">r</text><text class="text_example_4-r238" x="292.8" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">e</text><text class="text_example_4-r238" x="305" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">e</text><text class="text_example_4-r238" x="317.2" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">n</text><text class="text_example_4-r145" x="329.4" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">│</text><text class="text_example_4-r1" x="780.8" y="337.2" textLength="12.2" clip-path="url(#text_example_4-line-13)">
+</text><text class="text_example_4-r1" x="0" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">│</text><text class="text_example_4-r242" x="158.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">-</text><text class="text_example_4-r145" x="183" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">&#x27;</text><text class="text_example_4-r243" x="195.2" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">d</text><text class="text_example_4-r243" x="207.4" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">o</text><text class="text_example_4-r243" x="219.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">d</text><text class="text_example_4-r243" x="231.8" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">g</text><text class="text_example_4-r243" x="244" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">e</text><text class="text_example_4-r243" x="256.2" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">r</text><text class="text_example_4-r243" x="268.4" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">b</text><text class="text_example_4-r243" x="280.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">l</text><text class="text_example_4-r243" x="292.8" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">u</text><text class="text_example_4-r243" x="305" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">e</text><text class="text_example_4-r145" x="317.2" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">│</text><text class="text_example_4-r1" x="780.8" y="361.6" textLength="12.2" clip-path="url(#text_example_4-line-14)">
+</text><text class="text_example_4-r1" x="0" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">│</text><text class="text_example_4-r247" x="109.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">-</text><text class="text_example_4-r145" x="134.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">r</text><text class="text_example_4-r145" x="146.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">i</text><text class="text_example_4-r145" x="158.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">c</text><text class="text_example_4-r145" x="170.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">h</text><text class="text_example_4-r145" x="183" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">.</text><text class="text_example_4-r145" x="195.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">c</text><text class="text_example_4-r145" x="207.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r145" x="219.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">l</text><text class="text_example_4-r145" x="231.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r145" x="244" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">r</text><text class="text_example_4-r145" x="256.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">.</text><text class="text_example_4-r145" x="268.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">C</text><text class="text_example_4-r145" x="280.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r145" x="292.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">l</text><text class="text_example_4-r145" x="305" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">o</text><text class="text_example_4-r145" x="317.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">r</text><text class="text_example_4-r249" x="341.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">n</text><text class="text_example_4-r249" x="353.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">a</text><text class="text_example_4-r249" x="366" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">m</text><text class="text_example_4-r250" x="378.2" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">e</text><text class="text_example_4-r250" x="390.4" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">s</text><text class="text_example_4-r251" x="402.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">:</text><text class="text_example_4-r1" x="768.6" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">│</text><text class="text_example_4-r1" x="780.8" y="386" textLength="12.2" clip-path="url(#text_example_4-line-15)">
+</text><text class="text_example_4-r1" x="0" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">│</text><text class="text_example_4-r256" x="158.6" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">-</text><text class="text_example_4-r145" x="183" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">&#x27;</text><text class="text_example_4-r258" x="195.2" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">g</text><text class="text_example_4-r258" x="207.4" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">r</text><text class="text_example_4-r258" x="219.6" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">e</text><text class="text_example_4-r258" x="231.8" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">y</text><text class="text_example_4-r258" x="244" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">0</text><text class="text_example_4-r145" x="256.2" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">│</text><text class="text_example_4-r1" x="780.8" y="410.4" textLength="12.2" clip-path="url(#text_example_4-line-16)">
+</text><text class="text_example_4-r1" x="0" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">│</text><text class="text_example_4-r263" x="158.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">-</text><text class="text_example_4-r145" x="183" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">&#x27;</text><text class="text_example_4-r265" x="195.2" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">p</text><text class="text_example_4-r265" x="207.4" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">u</text><text class="text_example_4-r265" x="219.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">r</text><text class="text_example_4-r265" x="231.8" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">p</text><text class="text_example_4-r265" x="244" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">l</text><text class="text_example_4-r265" x="256.2" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">e</text><text class="text_example_4-r265" x="268.4" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">4</text><text class="text_example_4-r145" x="280.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">│</text><text class="text_example_4-r1" x="780.8" y="434.8" textLength="12.2" clip-path="url(#text_example_4-line-17)">
+</text><text class="text_example_4-r1" x="0" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">│</text><text class="text_example_4-r269" x="109.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">-</text><text class="text_example_4-r145" x="134.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">r</text><text class="text_example_4-r145" x="146.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">i</text><text class="text_example_4-r145" x="158.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">c</text><text class="text_example_4-r145" x="170.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">h</text><text class="text_example_4-r145" x="183" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">.</text><text class="text_example_4-r145" x="195.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">c</text><text class="text_example_4-r145" x="207.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r145" x="219.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">l</text><text class="text_example_4-r145" x="231.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r145" x="244" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">r</text><text class="text_example_4-r145" x="256.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">.</text><text class="text_example_4-r145" x="268.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">C</text><text class="text_example_4-r145" x="280.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r145" x="292.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">l</text><text class="text_example_4-r145" x="305" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r145" x="317.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">r</text><text class="text_example_4-r272" x="341.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">o</text><text class="text_example_4-r272" x="353.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">b</text><text class="text_example_4-r273" x="366" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">j</text><text class="text_example_4-r274" x="378.2" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">e</text><text class="text_example_4-r275" x="390.4" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">c</text><text class="text_example_4-r275" x="402.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">t</text><text class="text_example_4-r276" x="414.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">s</text><text class="text_example_4-r1" x="768.6" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">│</text><text class="text_example_4-r1" x="780.8" y="459.2" textLength="12.2" clip-path="url(#text_example_4-line-18)">
 </text><text class="text_example_4-r1" x="0" y="483.6" textLength="12.2" clip-path="url(#text_example_4-line-19)">│</text><text class="text_example_4-r1" x="768.6" y="483.6" textLength="12.2" clip-path="url(#text_example_4-line-19)">│</text><text class="text_example_4-r1" x="780.8" y="483.6" textLength="12.2" clip-path="url(#text_example_4-line-19)">
-</text><text class="text_example_4-r1" x="0" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">│</text><text class="text_example_4-r288" x="61" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">J</text><text class="text_example_4-r288" x="73.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">u</text><text class="text_example_4-r289" x="85.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r289" x="97.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r291" x="122" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">m</text><text class="text_example_4-r291" x="134.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r292" x="146.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">k</text><text class="text_example_4-r292" x="158.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">e</text><text class="text_example_4-r294" x="183" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r294" x="195.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">u</text><text class="text_example_4-r295" x="207.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">r</text><text class="text_example_4-r295" x="219.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">e</text><text class="text_example_4-r297" x="244" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r298" x="256.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r299" x="280.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">p</text><text class="text_example_4-r300" x="292.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r301" x="305" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r301" x="317.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r303" x="341.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r304" x="353.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r305" x="378.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">l</text><text class="text_example_4-r306" x="390.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">e</text><text class="text_example_4-r307" x="402.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r307" x="414.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r308" x="427" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r309" x="451.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r310" x="463.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">w</text><text class="text_example_4-r311" x="475.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r312" x="500.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">c</text><text class="text_example_4-r313" x="512.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r313" x="524.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">l</text><text class="text_example_4-r314" x="536.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r315" x="549" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">r</text><text class="text_example_4-r315" x="561.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r316" x="573.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">.</text><text class="text_example_4-r317" x="585.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">.</text><text class="text_example_4-r317" x="597.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">.</text><text class="text_example_4-r1" x="768.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">│</text><text class="text_example_4-r1" x="780.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">
-</text><text class="text_example_4-r1" x="0" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">│</text><text class="text_example_4-r319" x="61" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">o</text><text class="text_example_4-r320" x="73.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">t</text><text class="text_example_4-r321" x="85.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">h</text><text class="text_example_4-r322" x="97.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r323" x="109.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">r</text><text class="text_example_4-r323" x="122" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">w</text><text class="text_example_4-r324" x="134.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">i</text><text class="text_example_4-r325" x="146.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r326" x="158.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r327" x="183" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">t</text><text class="text_example_4-r328" x="195.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">h</text><text class="text_example_4-r328" x="207.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r330" x="231.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">g</text><text class="text_example_4-r331" x="244" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">r</text><text class="text_example_4-r332" x="256.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">a</text><text class="text_example_4-r332" x="268.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">d</text><text class="text_example_4-r333" x="280.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">i</text><text class="text_example_4-r334" x="292.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r335" x="305" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">n</text><text class="text_example_4-r335" x="317.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">t</text><text class="text_example_4-r337" x="341.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">i</text><text class="text_example_4-r338" x="353.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r340" x="378.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r340" x="390.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">u</text><text class="text_example_4-r341" x="402.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">p</text><text class="text_example_4-r342" x="414.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r343" x="427" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">r</text><text class="text_example_4-r344" x="439.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">f</text><text class="text_example_4-r345" x="451.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">l</text><text class="text_example_4-r345" x="463.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">u</text><text class="text_example_4-r346" x="475.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">o</text><text class="text_example_4-r347" x="488" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">u</text><text class="text_example_4-r348" x="500.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r349" x="512.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">!</text><text class="text_example_4-r1" x="768.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">│</text><text class="text_example_4-r1" x="780.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">
+</text><text class="text_example_4-r1" x="0" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">│</text><text class="text_example_4-r277" x="61" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">J</text><text class="text_example_4-r277" x="73.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">u</text><text class="text_example_4-r278" x="85.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r278" x="97.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r280" x="122" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">m</text><text class="text_example_4-r280" x="134.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r281" x="146.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">k</text><text class="text_example_4-r281" x="158.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">e</text><text class="text_example_4-r283" x="183" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r283" x="195.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">u</text><text class="text_example_4-r284" x="207.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">r</text><text class="text_example_4-r284" x="219.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">e</text><text class="text_example_4-r286" x="244" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r287" x="256.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r288" x="280.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">p</text><text class="text_example_4-r289" x="292.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r290" x="305" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r290" x="317.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r292" x="341.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r293" x="353.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r294" x="378.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">l</text><text class="text_example_4-r295" x="390.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">e</text><text class="text_example_4-r296" x="402.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">a</text><text class="text_example_4-r296" x="414.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r297" x="427" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r298" x="451.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">t</text><text class="text_example_4-r299" x="463.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">w</text><text class="text_example_4-r300" x="475.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r301" x="500.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">c</text><text class="text_example_4-r302" x="512.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r302" x="524.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">l</text><text class="text_example_4-r303" x="536.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">o</text><text class="text_example_4-r304" x="549" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">r</text><text class="text_example_4-r304" x="561.2" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">s</text><text class="text_example_4-r305" x="573.4" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">.</text><text class="text_example_4-r306" x="585.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">.</text><text class="text_example_4-r306" x="597.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">.</text><text class="text_example_4-r1" x="768.6" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">│</text><text class="text_example_4-r1" x="780.8" y="508" textLength="12.2" clip-path="url(#text_example_4-line-20)">
+</text><text class="text_example_4-r1" x="0" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">│</text><text class="text_example_4-r308" x="61" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">o</text><text class="text_example_4-r309" x="73.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">t</text><text class="text_example_4-r310" x="85.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">h</text><text class="text_example_4-r311" x="97.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r312" x="109.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">r</text><text class="text_example_4-r312" x="122" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">w</text><text class="text_example_4-r313" x="134.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">i</text><text class="text_example_4-r314" x="146.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r315" x="158.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r316" x="183" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">t</text><text class="text_example_4-r317" x="195.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">h</text><text class="text_example_4-r317" x="207.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r319" x="231.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">g</text><text class="text_example_4-r320" x="244" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">r</text><text class="text_example_4-r321" x="256.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">a</text><text class="text_example_4-r321" x="268.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">d</text><text class="text_example_4-r322" x="280.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">i</text><text class="text_example_4-r323" x="292.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r324" x="305" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">n</text><text class="text_example_4-r324" x="317.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">t</text><text class="text_example_4-r326" x="341.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">i</text><text class="text_example_4-r327" x="353.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r329" x="378.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r329" x="390.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">u</text><text class="text_example_4-r330" x="402.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">p</text><text class="text_example_4-r331" x="414.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">e</text><text class="text_example_4-r332" x="427" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">r</text><text class="text_example_4-r333" x="439.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">f</text><text class="text_example_4-r334" x="451.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">l</text><text class="text_example_4-r334" x="463.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">u</text><text class="text_example_4-r335" x="475.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">o</text><text class="text_example_4-r336" x="488" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">u</text><text class="text_example_4-r337" x="500.2" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">s</text><text class="text_example_4-r338" x="512.4" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">!</text><text class="text_example_4-r1" x="768.6" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">│</text><text class="text_example_4-r1" x="780.8" y="532.4" textLength="12.2" clip-path="url(#text_example_4-line-21)">
 </text><text class="text_example_4-r1" x="0" y="556.8" textLength="12.2" clip-path="url(#text_example_4-line-22)">│</text><text class="text_example_4-r1" x="768.6" y="556.8" textLength="12.2" clip-path="url(#text_example_4-line-22)">│</text><text class="text_example_4-r1" x="780.8" y="556.8" textLength="12.2" clip-path="url(#text_example_4-line-22)">
-</text><text class="text_example_4-r1" x="0" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">│</text><text class="text_example_4-r350" x="61" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">T</text><text class="text_example_4-r351" x="73.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">h</text><text class="text_example_4-r352" x="85.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">i</text><text class="text_example_4-r353" x="97.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">s</text><text class="text_example_4-r354" x="122" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">g</text><text class="text_example_4-r355" x="134.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">r</text><text class="text_example_4-r356" x="146.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">a</text><text class="text_example_4-r357" x="158.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">d</text><text class="text_example_4-r358" x="170.8" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">i</text><text class="text_example_4-r359" x="183" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">e</text><text class="text_example_4-r360" x="195.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">n</text><text class="text_example_4-r361" x="207.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">t</text><text class="text_example_4-r363" x="231.8" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">u</text><text class="text_example_4-r364" x="244" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">s</text><text class="text_example_4-r365" x="256.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">e</text><text class="text_example_4-r366" x="268.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">s</text><text class="text_example_4-r367" x="280.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">:</text><text class="text_example_4-r1" x="768.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">│</text><text class="text_example_4-r1" x="780.8" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">
+</text><text class="text_example_4-r1" x="0" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">│</text><text class="text_example_4-r339" x="61" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">T</text><text class="text_example_4-r340" x="73.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">h</text><text class="text_example_4-r341" x="85.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">i</text><text class="text_example_4-r342" x="97.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">s</text><text class="text_example_4-r343" x="122" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">g</text><text class="text_example_4-r344" x="134.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">r</text><text class="text_example_4-r345" x="146.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">a</text><text class="text_example_4-r346" x="158.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">d</text><text class="text_example_4-r347" x="170.8" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">i</text><text class="text_example_4-r348" x="183" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">e</text><text class="text_example_4-r349" x="195.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">n</text><text class="text_example_4-r350" x="207.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">t</text><text class="text_example_4-r352" x="231.8" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">u</text><text class="text_example_4-r353" x="244" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">s</text><text class="text_example_4-r354" x="256.2" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">e</text><text class="text_example_4-r355" x="268.4" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">s</text><text class="text_example_4-r356" x="280.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">:</text><text class="text_example_4-r1" x="768.6" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">│</text><text class="text_example_4-r1" x="780.8" y="581.2" textLength="12.2" clip-path="url(#text_example_4-line-23)">
 </text><text class="text_example_4-r1" x="0" y="605.6" textLength="12.2" clip-path="url(#text_example_4-line-24)">│</text><text class="text_example_4-r1" x="768.6" y="605.6" textLength="12.2" clip-path="url(#text_example_4-line-24)">│</text><text class="text_example_4-r1" x="780.8" y="605.6" textLength="12.2" clip-path="url(#text_example_4-line-24)">
-</text><text class="text_example_4-r1" x="0" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">│</text><text class="text_example_4-r372" x="109.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">-</text><text class="text_example_4-r142" x="134.2" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">&#x27;</text><text class="text_example_4-r16" x="146.4" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">m</text><text class="text_example_4-r16" x="158.6" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">a</text><text class="text_example_4-r16" x="170.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">g</text><text class="text_example_4-r16" x="183" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">e</text><text class="text_example_4-r16" x="195.2" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">n</text><text class="text_example_4-r16" x="207.4" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">t</text><text class="text_example_4-r16" x="219.6" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">a</text><text class="text_example_4-r142" x="231.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">│</text><text class="text_example_4-r1" x="780.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">
-</text><text class="text_example_4-r1" x="0" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">│</text><text class="text_example_4-r378" x="109.8" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">-</text><text class="text_example_4-r142" x="134.2" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">&#x27;</text><text class="text_example_4-r380" x="146.4" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">g</text><text class="text_example_4-r380" x="158.6" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">o</text><text class="text_example_4-r380" x="170.8" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">l</text><text class="text_example_4-r380" x="183" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">d</text><text class="text_example_4-r380" x="195.2" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">1</text><text class="text_example_4-r142" x="207.4" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">│</text><text class="text_example_4-r1" x="780.8" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">
-</text><text class="text_example_4-r1" x="0" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">│</text><text class="text_example_4-r385" x="109.8" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">-</text><text class="text_example_4-r142" x="134.2" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">&#x27;</text><text class="text_example_4-r387" x="146.4" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">#</text><text class="text_example_4-r388" x="158.6" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">0</text><text class="text_example_4-r389" x="170.8" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">f</text><text class="text_example_4-r390" x="183" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">0</text><text class="text_example_4-r142" x="195.2" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">│</text><text class="text_example_4-r1" x="780.8" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">
+</text><text class="text_example_4-r1" x="0" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">│</text><text class="text_example_4-r361" x="109.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">-</text><text class="text_example_4-r145" x="134.2" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">&#x27;</text><text class="text_example_4-r363" x="146.4" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">m</text><text class="text_example_4-r363" x="158.6" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">a</text><text class="text_example_4-r363" x="170.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">g</text><text class="text_example_4-r363" x="183" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">e</text><text class="text_example_4-r363" x="195.2" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">n</text><text class="text_example_4-r363" x="207.4" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">t</text><text class="text_example_4-r363" x="219.6" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">a</text><text class="text_example_4-r145" x="231.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">│</text><text class="text_example_4-r1" x="780.8" y="630" textLength="12.2" clip-path="url(#text_example_4-line-25)">
+</text><text class="text_example_4-r1" x="0" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">│</text><text class="text_example_4-r368" x="109.8" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">-</text><text class="text_example_4-r145" x="134.2" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">&#x27;</text><text class="text_example_4-r370" x="146.4" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">g</text><text class="text_example_4-r370" x="158.6" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">o</text><text class="text_example_4-r370" x="170.8" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">l</text><text class="text_example_4-r370" x="183" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">d</text><text class="text_example_4-r370" x="195.2" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">1</text><text class="text_example_4-r145" x="207.4" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">│</text><text class="text_example_4-r1" x="780.8" y="654.4" textLength="12.2" clip-path="url(#text_example_4-line-26)">
+</text><text class="text_example_4-r1" x="0" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">│</text><text class="text_example_4-r375" x="109.8" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">-</text><text class="text_example_4-r145" x="134.2" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">&#x27;</text><text class="text_example_4-r377" x="146.4" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">#</text><text class="text_example_4-r378" x="158.6" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">0</text><text class="text_example_4-r379" x="170.8" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">f</text><text class="text_example_4-r380" x="183" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">0</text><text class="text_example_4-r145" x="195.2" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">&#x27;</text><text class="text_example_4-r1" x="768.6" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">│</text><text class="text_example_4-r1" x="780.8" y="678.8" textLength="12.2" clip-path="url(#text_example_4-line-27)">
 </text><text class="text_example_4-r1" x="0" y="703.2" textLength="12.2" clip-path="url(#text_example_4-line-28)">│</text><text class="text_example_4-r1" x="768.6" y="703.2" textLength="12.2" clip-path="url(#text_example_4-line-28)">│</text><text class="text_example_4-r1" x="780.8" y="703.2" textLength="12.2" clip-path="url(#text_example_4-line-28)">
 </text><text class="text_example_4-r1" x="0" y="727.6" textLength="780.8" clip-path="url(#text_example_4-line-29)">╰──────────────────────────────────────────────────────────────╯</text><text class="text_example_4-r1" x="780.8" y="727.6" textLength="12.2" clip-path="url(#text_example_4-line-29)">
 </text>
