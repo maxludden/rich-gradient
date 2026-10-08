@@ -91,9 +91,9 @@ class Gradient(JupyterMixin):
             sequence of tuples describing the highlights.
 
             Examples:
-            - {'error': 'bold italic red', 'warning': '#FFFF00', 'lime': '#0f0'}
-            - [('error', 'bold red'), (('warning', 'caution'), 'yellow', False)]
-            - [HighlightWords(words=('error',), style=Style(bold=True, color='red'))]
+            - {'error': 'bold italic #f00', 'warning': '#FFFF00', 'lime': '#0f0'}
+            - [('error', 'bold #f00'), (('warning', 'caution'), 'yellow', False)]
+            - [HighlightWords(words=('error',), style=Style(bold=True, color='#f00'))]
 
         highlight_regex(HighlightRegexType|HighlightRegex|Sequence[HighlightRegex], Optional):
             Optional configurations describing regex highlights to apply. Accepts either \
@@ -101,9 +101,9 @@ class Gradient(JupyterMixin):
             the highlights.
 
             Examples:
-            - {r'\berror\b': 'bold italic red', r'warning|caution': '#FFFF00'}
-            - [(r'\berror\b', 'bold red'), (r'warning|caution', 'yellow')]
-            - [HighlightRegex(pattern=r'\berror\b', style=Style(bold=True, color='red'))]
+            - {r'\berror\b': 'bold italic #f00', r'warning|caution': '#FFFF00'}
+            - [(r'\berror\b', 'bold #f00'), (r'warning|caution', 'yellow')]
+            - [HighlightRegex(pattern=r'\berror\b', style=Style(bold=True, color='#f00'))]
 
         animated(bool, Optional): Whether the gradient is animated. Defaults to False.
     """
