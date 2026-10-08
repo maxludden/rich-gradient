@@ -25,7 +25,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   or set `RICH_GRADIENT_TRACEBACKS=1` in the environment to restore the old
   automatic behavior with no code changes.
 
+### Changed
+
+- Now requires `rich-color-ext>=3.0.0`. `_color_ext.py` imports `get_css_map`,
+  `install` and `is_installed` directly and drops the compatibility fallbacks
+  and the `sys.excepthook` snapshot/restore that only older releases needed.
+- The duplicated "install if needed" checks in `__init__`, `config` and
+  `spectrum` are replaced by a single `ensure_installed()` helper.
+- Color parsing is now Rich-first, matching rich-color-ext 3.0: Rich's own
+  parser runs first and CSS names / 3-digit hex are only tried when Rich rejects
+  the input. Names that Rich also defines now resolve to Rich's ANSI palette
+  instead of the CSS value, for gradient colors and `Style` strings alike
+  (`red` is `#800000`, not `#ff0000`). Ten names are affected: `red`, `blue`,
+  `yellow`, `cyan`, `magenta`, `white`, `purple`, `violet`, `orchid` and `tan`;
+  use a hex code (e.g. `#ff0000`) for the exact CSS value. A bare `abc` (no `#`)
+  is no longer accepted as hex.
+
 ### Fixed
+
+- Gradient color stops (`Text`, `Gradient`, `Spectrum`) are resolved through
+  `parse_color()`, which tries Rich first and then falls back to CSS names and
+  `#abc` hex itself. CSS names such as `tomato` therefore keep working if the
+  patch was removed with `rich_color_ext.uninstall()`, instead of raising
+  `ColorParseError`.
 
 - `get_logger(enabled=True)` no longer calls `loguru.logger.remove()`, which
   destroyed every handler the host application had configured. It now tracks

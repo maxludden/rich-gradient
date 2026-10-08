@@ -11,10 +11,9 @@ from typing import Any, ClassVar
 
 from loguru import logger
 
-from ._color_ext import install, is_installed
+from ._color_ext import ensure_installed
 
-if not is_installed():
-    install()
+ensure_installed()
 
 
 def _deep_update(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:

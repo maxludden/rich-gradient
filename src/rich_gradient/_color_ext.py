@@ -1,63 +1,55 @@
-"""Compatibility wrapper for :mod:`rich_color_ext` optional helpers."""
+"""Thin wrapper around :mod:`rich_color_ext` (>= 3.0.0).
+
+rich-color-ext extends ``rich.color.Color.parse`` with 3-digit hex codes and CSS
+color names by monkey-patching Rich. This module centralizes that dependency so
+the rest of the package never touches the patch state directly.
+"""
 
 from __future__ import annotations
 
-import sys
-from collections.abc import Callable
-from functools import lru_cache
-from typing import cast
+from rich.color import Color, ColorParseError
 
-# rich_color_ext (<=0.1.x) installs Rich's traceback handler as an import side
-# effect; restore whatever excepthook the host application had once the import
-# completes. Caveats: under IPython/Jupyter, rich.traceback.install patches the
-# shell's showtraceback rather than sys.excepthook, so this restore cannot
-# undo it there; and a hook installed by another thread between snapshot and
-# restore would be clobbered. rich-color-ext >= 0.2.0 removes the side effect
-# at the source, making this a defensive no-op.
-_previous_excepthook = sys.excepthook
 try:
-    import rich_color_ext as _rce
-except ImportError as exc:  # pragma: no cover - dependency missing
+    from rich_color_ext import get_css_map, install, is_installed
+except ImportError as exc:  # pragma: no cover - dependency missing/too old
     raise ImportError(
-        "rich-gradient requires the 'rich-color-ext' package at runtime."
+        "rich-gradient requires 'rich-color-ext>=3.0.0' at runtime."
     ) from exc
-finally:
-    sys.excepthook = _previous_excepthook
-del _previous_excepthook
 
-__all__ = ["get_css_map", "install", "is_installed"]
+__all__ = ["ensure_installed", "get_css_map", "install", "is_installed", "parse_color"]
 
-
-def _fetch_callable(name: str, default: Callable[[], object]) -> Callable[[], object]:
-    """Return a callable attribute from ``rich_color_ext`` or a default fallback."""
-    # Lookup is dynamic because older versions may lack these helpers.
-    attr = getattr(_rce, name, None)
-    if callable(attr):
-        return cast(Callable[[], object], attr)
-    return default
+_HEX_DIGITS = frozenset("0123456789abcdef")
 
 
-def _noop_install() -> None:
-    """Fallback install hook for older ``rich_color_ext`` releases."""
+def ensure_installed() -> None:
+    """Install the ``Color.parse`` extension if it is not already active."""
+    if not is_installed():
+        install()
 
 
-def _default_is_installed() -> bool:
-    """Fallback indicating the extension is effectively always installed."""
-    return True
+def parse_color(value: str) -> Color:
+    """Parse a color string the way rich-color-ext >= 3.0 does: Rich first.
 
+    Rich's own parser always runs first, so anything Rich understands (including
+    its ANSI names such as ``red``, ``blue`` or ``purple``) resolves exactly as
+    ``rich.color.Color.parse`` does. Only if Rich rejects the input are CSS
+    color names and ``#abc`` hex codes tried.
 
-install: Callable[[], object] = _fetch_callable("install", _noop_install)
-is_installed: Callable[[], object] = _fetch_callable(
-    "is_installed", _default_is_installed
-)
+    With rich-color-ext installed ``Color.parse`` already does this; the explicit
+    fallback keeps CSS names working when the patch has been removed (e.g. after
+    ``rich_color_ext.uninstall()``) without re-patching Rich behind the
+    application's back.
 
-
-@lru_cache(maxsize=1)
-def get_css_map() -> dict[str, str]:
-    """Return the CSS color mapping, falling back gracefully if unavailable."""
-    # Prefer the extension's map if present; otherwise degrade to an empty mapping.
-    getter = getattr(_rce, "get_css_map", None)
-    if callable(getter):
-        return cast(Callable[[], dict[str, str]], getter)()
-    # Older releases lacked get_css_map, so return an empty mapping instead of failing.
-    return {}
+    Raises:
+        ColorParseError: If ``value`` is not a valid color in any supported form.
+    """
+    try:
+        return Color.parse(value)
+    except ColorParseError:
+        key = value.strip().lower()
+        if len(key) == 4 and key[0] == "#" and _HEX_DIGITS.issuperset(key[1:]):
+            return Color.parse("#" + "".join(ch * 2 for ch in key[1:]))
+        css_hex = get_css_map().get(key)
+        if css_hex is not None:
+            return Color.parse(css_hex)
+        raise

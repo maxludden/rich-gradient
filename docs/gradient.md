@@ -94,7 +94,7 @@ from rich_gradient import Gradient
 from rich_gradient._highlight import HighlightRegex, HighlightWords
 
 rules_words = [
-    HighlightWords(words=("error", "warning"), style=Style.parse("bold red")),
+    HighlightWords(words=("error", "warning"), style=Style.parse("bold #f00")),
     HighlightWords(words=("hint",), style=Style.parse("italic cyan"), case_sensitive=False),
 ]
 

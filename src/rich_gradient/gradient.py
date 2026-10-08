@@ -30,6 +30,7 @@ from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
+from rich_gradient._color_ext import parse_color
 from rich_gradient._gradient_ramp import GradientRamp
 from rich_gradient._highlight import (HighlightRegex, HighlightRegexType,
                                       HighlightWords, HighlightWordsType)
@@ -90,9 +91,9 @@ class Gradient(JupyterMixin):
             sequence of tuples describing the highlights.
 
             Examples:
-            - {'error': 'bold italic red', 'warning': '#FFFF00', 'lime': '#0f0'}
-            - [('error', 'bold red'), (('warning', 'caution'), 'yellow', False)]
-            - [HighlightWords(words=('error',), style=Style(bold=True, color='red'))]
+            - {'error': 'bold italic #f00', 'warning': '#FFFF00', 'lime': '#0f0'}
+            - [('error', 'bold #f00'), (('warning', 'caution'), 'yellow', False)]
+            - [HighlightWords(words=('error',), style=Style(bold=True, color='#f00'))]
 
         highlight_regex(HighlightRegexType|HighlightRegex|Sequence[HighlightRegex], Optional):
             Optional configurations describing regex highlights to apply. Accepts either \
@@ -100,9 +101,9 @@ class Gradient(JupyterMixin):
             the highlights.
 
             Examples:
-            - {r'\berror\b': 'bold italic red', r'warning|caution': '#FFFF00'}
-            - [(r'\berror\b', 'bold red'), (r'warning|caution', 'yellow')]
-            - [HighlightRegex(pattern=r'\berror\b', style=Style(bold=True, color='red'))]
+            - {r'\berror\b': 'bold italic #f00', r'warning|caution': '#FFFF00'}
+            - [(r'\berror\b', 'bold #f00'), (r'warning|caution', 'yellow')]
+            - [HighlightRegex(pattern=r'\berror\b', style=Style(bold=True, color='#f00'))]
 
         animated(bool, Optional): Whether the gradient is animated. Defaults to False.
     """
@@ -416,7 +417,7 @@ class Gradient(JupyterMixin):
                     h = color[1:]
                     if all(ch in "0123456789abcdefABCDEF" for ch in h):
                         color = "#" + "".join(ch * 2 for ch in h)
-                triplets.append(Color.parse(color).get_truecolor())
+                triplets.append(parse_color(color).get_truecolor())
             else:
                 raise ColorParseError(
                     f"Unsupported color type: {type(c)}\n\tCould not parse color: {c}"
