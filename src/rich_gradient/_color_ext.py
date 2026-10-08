@@ -7,7 +7,7 @@ the rest of the package never touches the patch state directly.
 
 from __future__ import annotations
 
-from rich.color import Color
+from rich.color import Color, ColorParseError
 
 try:
     from rich_color_ext import get_css_map, install, is_installed
@@ -28,26 +28,28 @@ def ensure_installed() -> None:
 
 
 def parse_color(value: str) -> Color:
-    """Parse a gradient color string, resolving CSS names and ``#abc`` hex first.
+    """Parse a color string the way rich-color-ext >= 3.0 does: Rich first.
 
-    rich-color-ext >= 3.0 lets Rich's own parser win, so names that Rich also
-    defines (``red``, ``blue``, ``purple``, ``yellow``, ...) resolve to the
-    terminal-dependent ANSI palette. Gradient stops need exact, theme-independent
-    colors, so CSS names and 3-digit hex codes are resolved here, before
-    ``Color.parse``. This also keeps gradients working when the patch is not
-    installed (e.g. after ``rich_color_ext.uninstall()``) without re-patching
-    Rich behind the application's back.
+    Rich's own parser always runs first, so anything Rich understands (including
+    its ANSI names such as ``red``, ``blue`` or ``purple``) resolves exactly as
+    ``rich.color.Color.parse`` does. Only if Rich rejects the input are CSS
+    color names and ``#abc`` hex codes tried.
 
-    Anything else (6-digit hex, ``rgb(...)``, ``color(n)``, ``default``) is
-    delegated to ``Color.parse``.
+    With rich-color-ext installed ``Color.parse`` already does this; the explicit
+    fallback keeps CSS names working when the patch has been removed (e.g. after
+    ``rich_color_ext.uninstall()``) without re-patching Rich behind the
+    application's back.
 
     Raises:
         ColorParseError: If ``value`` is not a valid color in any supported form.
     """
-    key = value.strip().lower()
-    css_hex = get_css_map().get(key)
-    if css_hex is not None:
-        return Color.parse(css_hex)
-    if len(key) == 4 and key[0] == "#" and _HEX_DIGITS.issuperset(key[1:]):
-        return Color.parse("#" + "".join(ch * 2 for ch in key[1:]))
-    return Color.parse(value)
+    try:
+        return Color.parse(value)
+    except ColorParseError:
+        key = value.strip().lower()
+        if len(key) == 4 and key[0] == "#" and _HEX_DIGITS.issuperset(key[1:]):
+            return Color.parse("#" + "".join(ch * 2 for ch in key[1:]))
+        css_hex = get_css_map().get(key)
+        if css_hex is not None:
+            return Color.parse(css_hex)
+        raise

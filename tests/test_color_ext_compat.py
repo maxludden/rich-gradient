@@ -7,7 +7,7 @@ import rich_color_ext
 from rich.color import Color, ColorParseError
 
 from rich_gradient import Gradient, Text
-from rich_gradient._color_ext import ensure_installed, parse_color
+from rich_gradient._color_ext import ensure_installed, get_css_map, parse_color
 
 
 @pytest.fixture
@@ -53,28 +53,42 @@ def test_parse_color_with_and_without_patch(value, expected, uninstalled):
     assert parse_color(value).get_truecolor().hex == expected
 
 
-# Names that rich-color-ext >= 3.0 leaves to Rich's ANSI palette in Color.parse
-# (e.g. "red" -> #800000). Gradient stops must still get the exact CSS value.
+# Names that Rich itself defines are resolved by Rich first (ANSI palette), not by
+# the CSS map, matching rich-color-ext >= 3.0 (e.g. "red" -> #800000, not #ff0000).
 @pytest.mark.parametrize(
-    "name, css_hex",
+    "name, rich_hex",
     [
-        ("red", "#ff0000"),
-        ("blue", "#0000ff"),
-        ("yellow", "#ffff00"),
-        ("cyan", "#00ffff"),
-        ("magenta", "#ff00ff"),
-        ("white", "#ffffff"),
-        ("purple", "#800080"),
-        ("violet", "#ee82ee"),
-        ("orchid", "#da70d6"),
-        ("tan", "#d2b48c"),
+        ("red", "#800000"),
+        ("blue", "#000080"),
+        ("yellow", "#808000"),
+        ("cyan", "#008080"),
+        ("magenta", "#800080"),
+        ("white", "#c0c0c0"),
+        ("purple", "#af00ff"),
+        ("violet", "#d787ff"),
+        ("orchid", "#d75fd7"),
+        ("tan", "#d7af87"),
     ],
 )
-def test_parse_color_prefers_css_over_ansi(name, css_hex):
-    assert parse_color(name).get_truecolor().hex == css_hex
+def test_parse_color_is_rich_first(name, rich_hex):
+    assert parse_color(name).get_truecolor().hex == rich_hex
     text = Text("hello", colors=[name, "#000"])
-    assert text.colors[0].get_truecolor().hex == css_hex
-    assert Gradient._to_color_triplets([name])[0].hex == css_hex
+    assert text.colors[0].get_truecolor().hex == rich_hex
+    assert Gradient._to_color_triplets([name])[0].hex == rich_hex
+
+
+def test_parse_color_matches_color_parse_for_every_css_name():
+    """parse_color agrees with the patched Color.parse, with or without the patch."""
+    names = list(get_css_map())
+    expected = {name: Color.parse(name) for name in names}
+    for name in names:
+        assert parse_color(name) == expected[name], name
+    rich_color_ext.uninstall()
+    try:
+        for name in names:
+            assert parse_color(name) == expected[name], name
+    finally:
+        rich_color_ext.install()
 
 
 def test_parse_color_rejects_invalid():

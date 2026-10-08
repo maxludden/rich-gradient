@@ -32,21 +32,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and the `sys.excepthook` snapshot/restore that only older releases needed.
 - The duplicated "install if needed" checks in `__init__`, `config` and
   `spectrum` are replaced by a single `ensure_installed()` helper.
-- rich-color-ext 3.0 lets Rich's own parser win and only falls back to CSS names
-  and 3-digit hex when Rich rejects the input, so `Color.parse("red")` is now
-  the ANSI color rather than `#ff0000`. This also applies to `Style` strings
-  such as `"bold red"` or `"white"` passed to Rich. Bare `abc` (no `#`) is no
-  longer accepted as hex.
+- Color parsing is now Rich-first, matching rich-color-ext 3.0: Rich's own
+  parser runs first and CSS names / 3-digit hex are only tried when Rich rejects
+  the input. Names that Rich also defines now resolve to Rich's ANSI palette
+  instead of the CSS value, for gradient colors and `Style` strings alike
+  (`red` is `#800000`, not `#ff0000`). Ten names are affected: `red`, `blue`,
+  `yellow`, `cyan`, `magenta`, `white`, `purple`, `violet`, `orchid` and `tan`;
+  use a hex code (e.g. `#ff0000`) for the exact CSS value. A bare `abc` (no `#`)
+  is no longer accepted as hex.
 
 ### Fixed
 
 - Gradient color stops (`Text`, `Gradient`, `Spectrum`) are resolved through
-  `parse_color()`, which checks CSS names and `#abc` hex before `Color.parse`.
-  Without it, rich-color-ext 3.0 would turn `colors=["red", "blue"]` into the
-  dull ANSI values `#800000 -> #000080` (10 names are affected: `red`, `blue`,
-  `yellow`, `cyan`, `magenta`, `white`, `purple`, `violet`, `orchid`, `tan`).
-  It also keeps CSS names working if the patch was removed with
-  `rich_color_ext.uninstall()`, instead of raising `ColorParseError`.
+  `parse_color()`, which tries Rich first and then falls back to CSS names and
+  `#abc` hex itself. CSS names such as `tomato` therefore keep working if the
+  patch was removed with `rich_color_ext.uninstall()`, instead of raising
+  `ColorParseError`.
+
 - `get_logger(enabled=True)` no longer calls `loguru.logger.remove()`, which
   destroyed every handler the host application had configured. It now tracks
   and removes only its own sinks, filters them to `rich_gradient` records so
