@@ -36,6 +36,18 @@
                     "endsPattern": "^(Serving .* on http|Build finished)"
                 }
             }
+        },
+        {
+            "label": "Pandoc: preview current file",
+            "type": "shell",
+            "command": "mkdir -p .cache/pandoc && pandoc --from markdown --to html --standalone --embed-resources --toc \"${file}\" -o \".cache/pandoc/${fileBasenameNoExtension}.html\" && open \".cache/pandoc/${fileBasenameNoExtension}.html\"",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
         }
     ]
 }
