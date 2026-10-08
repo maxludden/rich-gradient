@@ -186,7 +186,7 @@ instances. Defaults to None.
         - rgb tuples (e.g., `(255, 0, 0)`)
         - 3-digit hex colors (e.g., `'#f00'`, `'#F90'`)
         - 6-digit hex colors (e.g., `'#ff0000'`, `'#00FF00'`)
-        - CSS names (e.g., `'red'`, `'aliceblue'`)
+        - CSS names (e.g., `'tomato'`, `'aliceblue'`)
         - rich.color.Color objects (e.g., `Color.parse('#FF0000')`)
         Args:
             colors (Optional[Sequence[ColorType | Color]]): A list of colors as Color
@@ -504,7 +504,7 @@ as:
         - (255, 0, 0)
         - 'rgb(95, 0, 255)'
     - CSS3 Color names:
-        - 'red'
+        - 'tomato'
         - 'springgreen'
         - 'dodgerblue'
     - rich.color.Color names:
@@ -528,7 +528,8 @@ is superfluous!\n\nThis gradient uses:
         specified_colors.highlight_regex(r"grey0", style="grey0")
         specified_colors.highlight_regex(r"purple4", style="purple4")
         specified_colors.highlight_regex(r"#f09", style="#f09")
-        specified_colors.highlight_regex(r"red|#ff0000|\(255, 0, 0\)", style="red")
+        specified_colors.highlight_regex(r"#ff0000|\(255, 0, 0\)", style="#f00")
+        specified_colors.highlight_regex(r"tomato", style="#ff6347")
         specified_colors.highlight_regex(r"#00FFFF", style="#00FFFF")
         specified_colors.highlight_regex(
             r"rich_gradient\.color\.Color|rich_gradient\.style\.Style|rich\.color\.Color|'|white",

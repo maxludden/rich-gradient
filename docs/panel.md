@@ -44,7 +44,7 @@ Panel(
     title="Status",
     highlight_regex=[
         (r"\bOK\b", "bold green"),
-        (r"\berror\b", "bold red", re.IGNORECASE),
+        (r"\berror\b", "bold #f00", re.IGNORECASE),
     ],
 )
 ```

@@ -168,13 +168,13 @@ expected.
 console.print(
     Text(
         "This a gradient with two colors.",
-        colors=["red", "orange"],
+        colors=["#f00", "orange"],
     ),
     justify="center"
 )
 ```
 
-![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/v0.3.3/two_color_gradient.svg)
+![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/two_color_gradient.svg)
 
 ---
 
@@ -184,7 +184,7 @@ console.print(
 console.print(
     Text(
         "This a gradient uses four specific colors.",
-        colors=["red", "#ff9900", "#ff0", "Lime"],
+        colors=["#f00", "#ff9900", "#ff0", "Lime"],
         justify="center",
     ),
 )

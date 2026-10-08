@@ -9,8 +9,7 @@ from typing import Any, Optional
 from rich.console import Console
 from rich.traceback import install as tr_install
 
-from rich_gradient._color_ext import get_css_map, is_installed
-from rich_gradient._color_ext import install as rc_install
+from rich_gradient._color_ext import ensure_installed, get_css_map
 from rich_gradient._logger import get_logger
 from rich_gradient.animated_gradient import AnimatedGradient
 from rich_gradient.animated_markdown import AnimatedMarkdown
@@ -34,8 +33,7 @@ from rich_gradient.text import Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 from rich_gradient.tree import Tree
 
-if not is_installed():
-    rc_install()
+ensure_installed()
 
 
 def install_tracebacks(**kwargs: Any) -> None:
