@@ -1,4 +1,4 @@
-"""Compatibility tests for the rich-color-ext (>= 2.0.0) integration."""
+"""Compatibility tests for the rich-color-ext (>= 3.0.0) integration."""
 
 import sys
 
@@ -53,11 +53,37 @@ def test_parse_color_with_and_without_patch(value, expected, uninstalled):
     assert parse_color(value).get_truecolor().hex == expected
 
 
+# Names that rich-color-ext >= 3.0 leaves to Rich's ANSI palette in Color.parse
+# (e.g. "red" -> #800000). Gradient stops must still get the exact CSS value.
+@pytest.mark.parametrize(
+    "name, css_hex",
+    [
+        ("red", "#ff0000"),
+        ("blue", "#0000ff"),
+        ("yellow", "#ffff00"),
+        ("cyan", "#00ffff"),
+        ("magenta", "#ff00ff"),
+        ("white", "#ffffff"),
+        ("purple", "#800080"),
+        ("violet", "#ee82ee"),
+        ("orchid", "#da70d6"),
+        ("tan", "#d2b48c"),
+    ],
+)
+def test_parse_color_prefers_css_over_ansi(name, css_hex):
+    assert parse_color(name).get_truecolor().hex == css_hex
+    text = Text("hello", colors=[name, "#000"])
+    assert text.colors[0].get_truecolor().hex == css_hex
+    assert Gradient._to_color_triplets([name])[0].hex == css_hex
+
+
 def test_parse_color_rejects_invalid():
     with pytest.raises(ColorParseError):
         parse_color("notacolor")
     with pytest.raises(ColorParseError):
         parse_color("#abcd")
+    with pytest.raises(ColorParseError):
+        parse_color("#ggg")
 
 
 def test_gradient_and_text_survive_uninstall(uninstalled):
