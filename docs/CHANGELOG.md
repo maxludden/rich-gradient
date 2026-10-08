@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A `Docs` GitHub Actions workflow builds the site with Zensical and deploys it
+  to GitHub Pages on every push to `main` (or on demand). `zensical.toml` now sets
+  `site_url` so canonical links and instant navigation resolve correctly.
 - CI now runs the test suite on Python 3.11, 3.12, 3.13, and 3.14 (using `uv`
   with the locked dependencies) and has a separate job that builds the docs.
 - Docs are now built with [Zensical](https://zensical.org) (`zensical.toml`),

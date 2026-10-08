@@ -2,6 +2,7 @@
 site_name = "rich-gradient"
 site_description = "rich-gradient is a python package built on the great rich library that automates the generation of gradient colored rich renderables."
 site_author = "Max Ludden"
+site_url = "https://maxludden.github.io/rich-gradient/"
 repo_name = "rich-gradient"
 repo_url = "https://github.com/maxludden/rich-gradient"
 edit_uri = "root/docs"
