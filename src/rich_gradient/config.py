@@ -11,7 +11,9 @@ from typing import Any, ClassVar
 
 from loguru import logger
 
-from ._color_ext import ensure_installed
+from rich.color import ColorParseError
+
+from ._color_ext import ensure_installed, parse_color
 
 ensure_installed()
 
@@ -24,6 +26,55 @@ def _deep_update(base: dict[str, Any], override: dict[str, Any]) -> dict[str, An
         else:
             base[k] = v
     return base
+
+
+_TRUTHY = ("1", "true", "yes", "on")
+_FALSY = ("0", "false", "no", "off", "")
+
+
+def _parse_bool(value: Any, *, default: bool, source: str) -> bool:
+    """Interpret a config/env value as a boolean.
+
+    Real booleans pass through, and strings use the same truthy values as the
+    ``RICH_GRADIENT_ANIMATE`` environment variable. Anything unrecognised
+    falls back to ``default`` with a warning instead of silently becoming
+    ``False``.
+    """
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in _TRUTHY:
+            return True
+        if lowered in _FALSY:
+            return False
+    logger.warning(f"Ignoring invalid boolean {value!r} from {source}")
+    return default
+
+
+def _clean_colors(candidate: Any, *, source: str) -> dict[str, str]:
+    """Return only the usable ``name -> color`` entries from ``candidate``.
+
+    Entries whose name or value is not a string, or whose value no color
+    parser understands, are dropped with a warning. Without this a single bad
+    entry in a config file would surface later as a confusing error the first
+    time a ``Spectrum`` is built.
+    """
+    if not isinstance(candidate, dict):
+        logger.warning(f"Ignoring colors from {source}: expected a JSON object")
+        return {}
+    cleaned: dict[str, str] = {}
+    for name, value in candidate.items():
+        if not isinstance(name, str) or not isinstance(value, str):
+            logger.warning(f"Ignoring color {name!r}={value!r} from {source}")
+            continue
+        try:
+            parse_color(value)
+        except ColorParseError:
+            logger.warning(f"Ignoring color {name!r}: {value!r} from {source} is invalid")
+            continue
+        cleaned[name] = value
+    return cleaned
 
 
 @dataclass
@@ -55,7 +106,7 @@ class Colors:
             Color("purple", "#8055FF"),
             Color("violet", "#B033FF"),
             Color("magenta", "#FF00FF"),
-            Color("hotpink", "#FF00AA"),
+            Color("pink", "#FF00AA"),
             Color("rose", "#FF0055"),
         ]
     )
@@ -127,52 +178,62 @@ class RichGradientConfig:
     def load(cls, config_path: Path | None = None) -> RichGradientConfig:
         """Load configuration.
 
+        Precedence, lowest to highest: built-in defaults, the JSON config file,
+        environment variables.
+
         Args:
             config_path: optional explicit Path to a JSON config file. If None,
-                the loader will look for $HOME/.rich-gradient/config.json.
+                the loader will look for ``config.json`` in the home directory
+                (``~/.rich-gradient`` unless ``RICH_GRADIENT_HOME_DIR`` is set).
 
         Environment variable overrides supported:
-            RICH_GRADIENT_EXE -> string path to exe
-            RICH_GRADIENT_ANIMATE -> '1','0','true','false' (case-insensitive)
-            RICH_GRADIENT_COLORS -> JSON string of mapping name->hex (will merge)
-            RICH_GRADIENT_HOME_DIR -> overrides rich-gradient-home-dir value
+            RICH_GRADIENT_HOME_DIR -> directory containing ``config.json``
+            RICH_GRADIENT_ANIMATE -> '1', 'true', 'yes', 'on' enable animation;
+                '0', 'false', 'no', 'off' disable it
+            RICH_GRADIENT_COLORS -> JSON object mapping name->color (merged)
+            RICH_GRADIENT_EXE -> kept for external wrappers; unused by the core
+
+        Invalid values (a malformed file, a non-boolean ``animate``, colors no
+        parser understands) are ignored with a logged warning and the previous
+        layer's value is kept.
         """
 
         merged: dict[str, Any] = json.loads(json.dumps(cls.DEFAULT_CONFIG))
 
-        # step 1: read file if present
-        # Allow environment to override home dir before attempting to read a
-        # configuration file. This ensures callers can point the loader at a
-        # temporary directory via RICH_GRADIENT_HOME_DIR and have the loader
-        # pick up that config file on first import.
+        # The home directory decides where the config file lives, so the
+        # environment override is applied before the file is read.
         home_env = os.environ.get("RICH_GRADIENT_HOME_DIR")
         if home_env:
             merged["rich-gradient-home-dir"] = home_env
+        home_dir = Path(str(merged["rich-gradient-home-dir"])).expanduser()
 
-        if config_path is None:
-            home_dir = Path(
-                merged.get("rich-gradient-home-dir", Path.home() / ".rich-gradient")
-            )
-            cfg_file = home_dir / "config.json"
-        else:
-            cfg_file = Path(config_path)
-
+        # step 1: read file if present
+        cfg_file = (
+            Path(config_path).expanduser()
+            if config_path is not None
+            else home_dir / "config.json"
+        )
+        file_colors: dict[str, str] = {}
         if cfg_file.exists():
             try:
                 with cfg_file.open("r", encoding="utf8") as fh:
                     data = json.load(fh)
-                if isinstance(data, dict):
-                    _deep_update(merged, data)
-                    logger.debug(f"Loaded rich-gradient config from {cfg_file}")
-                else:
-                    logger.warning(
-                        f"Config file {cfg_file} did not contain a JSON object; ignoring"
+            except (OSError, json.JSONDecodeError) as exc:
+                logger.warning(f"Failed to load config file {cfg_file}: {exc}")
+                data = None
+            if isinstance(data, dict):
+                if "colors" in data:
+                    file_colors = _clean_colors(data.pop("colors"), source=str(cfg_file))
+                if "animate" in data:
+                    data["animate"] = _parse_bool(
+                        data["animate"], default=merged["animate"], source=str(cfg_file)
                     )
-            except (
-                OSError,
-                json.JSONDecodeError,
-            ) as exc:  # pragma: no cover - defensive logging
-                logger.exception(f"Failed to load config file {cfg_file}: {exc}")
+                _deep_update(merged, data)
+                logger.debug(f"Loaded rich-gradient config from {cfg_file}")
+            elif data is not None:
+                logger.warning(
+                    f"Config file {cfg_file} did not contain a JSON object; ignoring"
+                )
 
         # step 2: environment overrides
         exe_env = os.environ.get("RICH_GRADIENT_EXE")
@@ -181,50 +242,32 @@ class RichGradientConfig:
 
         animate_env = os.environ.get("RICH_GRADIENT_ANIMATE")
         if animate_env is not None:
-            merged["animate"] = str(animate_env).lower() in ("1", "true", "yes", "on")
+            merged["animate"] = _parse_bool(
+                animate_env, default=merged["animate"], source="RICH_GRADIENT_ANIMATE"
+            )
 
-        home_env = os.environ.get("RICH_GRADIENT_HOME_DIR")
-        if home_env:
-            merged["rich-gradient-home-dir"] = home_env
-
+        env_colors: dict[str, str] = {}
         colors_env = os.environ.get("RICH_GRADIENT_COLORS")
         if colors_env:
             try:
-                parsed = json.loads(colors_env)
-                if isinstance(parsed, dict):
-                    merged_colors = merged.setdefault("colors", {})
-                    _deep_update(merged_colors, parsed)
-                else:
-                    logger.warning(
-                        "RICH_GRADIENT_COLORS must be a JSON object mapping names to hex strings"
-                    )
+                env_colors = _clean_colors(
+                    json.loads(colors_env), source="RICH_GRADIENT_COLORS"
+                )
             except json.JSONDecodeError:
-                logger.exception(
+                logger.warning(
                     "Failed to parse RICH_GRADIENT_COLORS environment variable as JSON"
                 )
 
-        # ensure colors dict exists and merge with defaults so missing keys fall back
-        merged_colors = dict(cls.DEFAULT_CONFIG.get("colors", {}))
-        incoming_colors = merged.get("colors", {})
-        _deep_update(merged_colors, incoming_colors)
-        merged["colors"] = merged_colors
+        # Defaults first, then file, then environment, so missing keys fall back.
+        colors = dict(cls.DEFAULT_CONFIG["colors"])
+        colors.update(file_colors)
+        colors.update(env_colors)
 
-        # build final instance
-        animate = bool(merged.get("animate", True))
-        colors = dict(merged.get("colors", {}))
-
-        home_dir_value = Path(
-            str(
-                merged.get(
-                    "rich-gradient-home-dir",
-                    cls.DEFAULT_CONFIG.get(
-                        "rich-gradient-home-dir", Path.home() / ".rich-gradient"
-                    ),
-                )
-            )
+        return cls(
+            animate=bool(merged["animate"]),
+            colors=colors,
+            home_dir=home_dir,
         )
-
-        return cls(animate=animate, colors=colors, home_dir=home_dir_value)
 
 
 config = RichGradientConfig.load()

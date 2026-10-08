@@ -33,14 +33,31 @@ override those defaults with this shape:
 - `colors` customises the named spectrum palette. Missing default colours are
   merged back in, so you can override only the entries you care about.
 
+### Precedence and validation
+
+Settings are layered, lowest to highest: built-in defaults, the JSON file,
+then environment variables.
+
+Bad input never stops the import. Invalid values are ignored with a logged
+warning (see [Logging](#logging)) and the previous layer's value is kept:
+
+- a missing, unreadable, or malformed file, or one that is not a JSON object;
+- an `animate` value that is not a boolean (or a recognised string);
+- `colors` that is not an object, or individual entries whose name or value is
+  not a string or whose value no color parser understands. Valid entries in
+  the same object still apply.
+
+Color values accept anything rich-gradient accepts elsewhere: hex, CSS names,
+and Rich color names.
+
 ### Environment overrides
 
 The loader also accepts environment overrides:
 
 | Variable | Meaning |
 | --- | --- |
-| `RICH_GRADIENT_HOME_DIR` | Directory containing `config.json`. |
-| `RICH_GRADIENT_ANIMATE` | `1`, `true`, `yes`, or `on` enables animation; any other value disables it. |
+| `RICH_GRADIENT_HOME_DIR` | Directory containing `config.json` (`~` is expanded). |
+| `RICH_GRADIENT_ANIMATE` | `1`, `true`, `yes`, or `on` enables animation; `0`, `false`, `no`, or `off` disables it. Any other value is ignored with a warning. |
 | `RICH_GRADIENT_COLORS` | JSON object merged into the named color palette. |
 | `RICH_GRADIENT_TRACEBACKS` | `1`, `true`, `yes`, or `on` installs Rich's pretty traceback handler at import time (the pre-v0.4.0 automatic behavior). Equivalent to calling `rich_gradient.install_tracebacks()`. |
 | `RICH_GRADIENT_EXE` | Preserved for compatibility with external wrappers; unused by the core library. |

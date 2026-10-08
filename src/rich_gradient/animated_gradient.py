@@ -2,7 +2,7 @@
 
 import signal
 import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import suppress
 from threading import Event, RLock, Thread
 from typing import Any
@@ -63,7 +63,7 @@ class AnimatedGradient(Gradient):
 
     def __init__(
         self,
-        renderables: list[ConsoleRenderable] | ConsoleRenderable | str | None = None,
+        renderables: Iterable[ConsoleRenderable] | ConsoleRenderable | str | None = None,
         # color args
         colors: list[ColorType] | None = None,
         bg_colors: list[ColorType] | None = None,
@@ -123,7 +123,7 @@ class AnimatedGradient(Gradient):
 
         # Initialise Gradient (this sets _renderables, colors, etc.)
         super().__init__(
-            renderables=renderables or [],
+            renderables=[] if renderables is None else renderables,
             colors=colors,
             bg_colors=bg_colors,
             console=self.live.console,

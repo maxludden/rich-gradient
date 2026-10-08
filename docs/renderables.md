@@ -8,6 +8,8 @@ highlight rules.
 
 ## Table
 
+_Full guide: [Table](table.md) · [reference](table_ref.md)._
+
 `Table` wraps `rich.table.Table` and forwards `add_column()` and `add_row()`.
 
 ```python
@@ -32,6 +34,8 @@ console.print(table)
 
 ## Tree
 
+_Full guide: [Tree](tree.md) · [reference](tree_ref.md)._
+
 `Tree` wraps `rich.tree.Tree` and forwards `add()` for nested branches.
 
 ```python
@@ -46,6 +50,8 @@ tree.add("docs").add("gradient.md")
 ![Gradient tree](img/renderables-tree.svg)
 
 ## Columns
+
+_Full guide: [Columns](columns.md) · [reference](columns_ref.md)._
 
 `Columns` wraps `rich.columns.Columns` for multi-column lists of renderables.
 
@@ -64,6 +70,8 @@ columns = Columns(
 
 ## Pretty
 
+_Full guide: [Pretty](pretty.md) · [reference](pretty_ref.md)._
+
 `Pretty` wraps `rich.pretty.Pretty` for structured Python objects.
 
 ```python
@@ -80,6 +88,8 @@ Pretty(
 ![Gradient pretty](img/renderables-pretty.svg)
 
 ## Syntax
+
+_Full guide: [Syntax](syntax.md) · [reference](syntax_ref.md)._
 
 `Syntax` wraps `rich.syntax.Syntax` for syntax-highlighted code.
 

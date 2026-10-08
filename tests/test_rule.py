@@ -62,6 +62,29 @@ def test_gradient_rule_color_validation(bad) -> None:
         Rule(title="BadColor", colors=bad)
 
 
+@pytest.mark.parametrize("bad", [[123], [None]])
+def test_gradient_rule_unsupported_color_type(bad) -> None:
+    """Unsupported color types are reported as invalid colors, not left as TypeError."""
+    with pytest.raises(ValueError, match="Invalid color for Rule") as excinfo:
+        Rule(title="BadType", colors=bad)
+    assert isinstance(excinfo.value.__cause__, (TypeError, ColorParseError))
+
+
+def test_gradient_rule_color_error_names_the_color() -> None:
+    """The relabelled message keeps the underlying cause and chains it."""
+    with pytest.raises(ValueError, match="Invalid color for Rule") as excinfo:
+        Rule(title="Bad", colors=["not-a-color"])
+    assert "not-a-color" in str(excinfo.value)
+    assert isinstance(excinfo.value.__cause__, ColorParseError)
+
+
+def test_gradient_rule_non_color_errors_are_not_relabelled() -> None:
+    """A failure unrelated to colors keeps its own message."""
+    with pytest.raises(ValueError, match="at least 2") as excinfo:
+        Rule(title="Hues", hues=1)
+    assert "Invalid color" not in str(excinfo.value)
+
+
 @pytest.mark.parametrize("thickness", [-1, 5])
 def test_gradient_rule_invalid_thickness(thickness) -> None:
     """Out-of-range thickness values should be rejected."""

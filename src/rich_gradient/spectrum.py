@@ -52,24 +52,44 @@ try:
     COLOR_STOPS = dict(getattr(config, "colors", {}) or {})
 except (AttributeError, TypeError, ValueError):
     COLOR_STOPS = {
-        "red": "#FF0000",
-        "tomato": "#FF5500",
-        "orange": "#FF9900",
-        "gold": "#FFCC00",
-        "yellow": "#FFFF00",
-        "green": "#AAFF00",
-        "lime": "#00FF00",
-        "mint": "#00FF99",
-        "cyan": "#00FFFF",
-        "lightblue": "#00CCFF",
-        "skyblue": "#0099FF",
-        "blue": "#5066FF",
-        "purple": "#8055FF",
-        "violet": "#B033FF",
-        "magenta": "#FF00FF",
-        "pink": "#FF00AA",
-        "rose": "#FF0055",
+        "red": "#FF0000", #  1
+        "tomato": "#FF5500", #  2
+        "orange": "#FF9900", #  3
+        "gold": "#FFCC00", #  4
+        "yellow": "#FFFF00", #  5
+        "green": "#AAFF00", #  6
+        "lime": "#00FF00", #  7
+        "mint": "#00FF99", #  8
+        "cyan": "#00FFFF", #  9
+        "lightblue": "#00CCFF", #  10
+        "skyblue": "#0099FF", #  11
+        "blue": "#5066FF", #  12
+        "purple": "#8055FF", #  13
+        "violet": "#B033FF", #  14
+        "magenta": "#FF00FF", #  15
+        "pink": "#FF00AA", #  16
+        "rose": "#FF0055", #  17
     }
+
+
+MIN_HUES = 2
+
+
+def validate_hues(hues: int) -> int:
+    """Return ``hues`` if it meets the minimum, otherwise raise.
+
+    Args:
+        hues: Requested number of hues.
+
+    Returns:
+        int: ``hues`` unchanged.
+
+    Raises:
+        ValueError: If ``hues`` is less than ``MIN_HUES`` (2).
+    """
+    if hues < MIN_HUES:
+        raise ValueError(f"hues must be at least {MIN_HUES}; got {hues}")
+    return hues
 
 
 class Spectrum:
@@ -104,8 +124,7 @@ deterministic color order.
             ValueError: If hues < 2.
             ValueError: If seed is not None and not an integer.
         """
-        if hues < 2:
-            raise ValueError("hues must be at least 2")
+        validate_hues(hues)
         if hues > len(COLOR_STOPS):
             raise ValueError(
                 f"hues must be at most {len(COLOR_STOPS)} (the size of the "

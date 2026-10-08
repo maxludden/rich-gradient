@@ -9,7 +9,7 @@ from rich.console import Console
 from rich_gradient.spectrum import Spectrum
 
 console = Console()
-spectrum = Spectrum(hues=8, seed=42)
+spectrum = Spectrum(hues=17, seed=42)
 console.print(spectrum, justify="center")
 
 # Use the palette elsewhere
@@ -19,7 +19,7 @@ hex_codes = spectrum.hex
 
 Key options:
 
-- `hues`: number of colors to produce (minimum 2).
+- `hues`: number of colors to produce, from 2 up to the size of the palette (17 by default).
 - `invert`: reverse the resulting palette.
 - `seed`: control reproducibility without disturbing the global random state.
 

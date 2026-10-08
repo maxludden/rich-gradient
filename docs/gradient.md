@@ -42,26 +42,31 @@ The full example lives in `examples/gradient_showcase.py`.
 `Gradient` accepts a single renderable or an iterable. Each renderable is measured and interpolated to share the gradient stops, so you can layer panels, tables, and custom objects together.
 
 ```python
-from rich.table import Table as RichTable
-from rich_gradient import Gradient
+from rich.console import Console
+from rich_gradient import Table
 
-table = RichTable(title="Renderables that work with Gradient", show_header=False)
-table.add_column("Renderable", style="bold")
-table.add_column("Supported", justify="center")
-for item in ("Text", "Panel", "Markdown", "Columns", "Layout", "Live updates"):
-    table.add_row(item, "[bold green]✓[/]")
+table = Table(
+    "Renderable",
+    "Works",
+    title="Renderables that work",
+    rainbow=True,
+)
+for item in ("Text", "Gradient", "Panel", "Rule", "Markdown", "Table", "Tree", "Columns", "Pretty", "Syntax"):
+    table.add_row(item, "✓")
 
-Gradient(table, rainbow=True, repeat_scale=1.8)
+Console().print(table)
 ```
 
-![Gradient table](img/gradient-table.svg)
+![Renderables that work](img/renderables-that-work.svg){ width="240" style="display: block; margin: 1.5rem auto;" }
 
 Key options:
 
 - `colors` / `bg_colors`: list of color stops (same rules as [`Text`](text.md)).
 - `rainbow` and `hues`: auto-generate palettes.
 - `justify` / `vertical_justify`: align the renderable inside the gradient frame.
-- `repeat_scale`: stretch or compress the gradient repeats.
+- `repeat_scale`: stretch or compress the gradient repeats. By default it is derived
+  from the colors so one pass across the renderable runs from the first color to
+  the last (`1.0` for two colors, `2.0` for three or more). Pass a number to override it.
 - `highlight_words` / `highlight_regex`: apply extra styles after the gradient pass.
 
 ## Rendering performance

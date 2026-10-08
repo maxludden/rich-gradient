@@ -31,7 +31,8 @@ class Columns(Gradient):
         bg_colors: Background gradient color stops.
         rainbow: Whether to generate a rainbow palette.
         hues: Number of auto-generated hues.
-        repeat_scale: Scale factor controlling gradient repeats.
+        repeat_scale: Scale factor controlling gradient repeats. Defaults to None,
+            which derives it from the color stops.
         expand: Whether the gradient frame expands.
         justify: Horizontal alignment.
         vertical_justify: Vertical alignment.
@@ -56,7 +57,7 @@ class Columns(Gradient):
         bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
-        repeat_scale: float = 2.0,
+        repeat_scale: float | None = None,
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
@@ -104,10 +105,10 @@ def demo() -> None:
     columns = Columns(
         ["Text", "Gradient", "Panel", "Rule", "Table", "Tree", "Syntax", "Pretty"],
         title="Gradient Columns",
-        colors=["#34d399", "#60a5fa", "#f59e0b"],
+        colors=["#00ff55", "#00ffdd", "#0b8cf5"],
         equal=True,
         columns_expand=True,
-        highlight_words={"Gradient": "bold white", "Syntax": "bold cyan"},
+        highlight_words={"Gradient Columns": "bold white"},
     )
     console.print(columns)
 

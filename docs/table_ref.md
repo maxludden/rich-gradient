@@ -1,5 +1,7 @@
 # Table Reference
 
+See the [Table guide](table.md) for usage examples.
+
 ::: rich_gradient.table.Table
     :docstring:
     :members:

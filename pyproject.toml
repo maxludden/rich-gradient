@@ -6,7 +6,6 @@ authors = [{ name = "Max Ludden", email = "maxludden@me.com" }]
 requires-python = ">=3.11"
 dependencies = [
     "loguru>=0.7.3",
-    "requests>=2.32.5",
     "rich>=15.0.0",
     "rich-color-ext>=3.0.0",
 ]
@@ -27,8 +26,6 @@ build-backend = "hatchling.build"
 [dependency-groups]
 config = ["pydantic-settings>=2.11.0"]
 dev = [
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.6.7",
     "mkdocstrings>=0.29.0",
     "mkdocstrings-python>=1.16.5",
     "mypy>=2.1.0",
@@ -37,6 +34,7 @@ dev = [
     "black>=24.3.0",
     "isort>=5.12.0",
     "pre-commit>=3.4.0",
+    "zensical>=0.0.68",
 ]
 toml = ["tomlkit>=0.13.3"]
 

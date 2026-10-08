@@ -24,7 +24,7 @@ from rich.text import Text as RichText
 from rich.text import TextType
 
 from rich_gradient._color_ext import parse_color
-from rich_gradient.spectrum import Spectrum
+from rich_gradient.spectrum import Spectrum, validate_hues
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 ColorType: TypeAlias = str | Color | ColorTriplet | tuple[int, int, int]
@@ -98,6 +98,7 @@ instances. Defaults to None.
             tab_size=tab_size,
             spans=parsed_spans,
         )
+        validate_hues(hues)
         self._interpolate_bg_colors = False  # Ensure flag is always initialized
         # Normalize color inputs into rich.color.Color instances
         self.colors = self.parse_colors(colors, hues, rainbow)
@@ -145,8 +146,8 @@ instances. Defaults to None.
     def _normalize_color(value: ColorType) -> Color:
         """Normalize a single color-like value to a rich.color.Color.
         Accepts: Color, ColorTriplet, 3-tuple of ints, or string parsable
-        by Color.parse. Note that rich-color-ext expands what is considered
-        a valid color input.
+        by Rich's color parser, falling back to rich-color-ext (CSS names and
+        3-digit hex) when Rich rejects it.
 
         Args:
             value (ColorType): The color-like value to normalize.
@@ -195,7 +196,7 @@ instances. Defaults to None.
                 any colors or hues provided. Defaults to False
         Raises:
             ColorParseError: If any color value cannot be parsed.
-            ValueError: If no colors are provided, rainbow is False, and hues < 2.
+            ValueError: If hues < 2.
         Returns:
             List[rich.color.Color]: A list of Color objects.
         """
@@ -205,12 +206,7 @@ instances. Defaults to None.
 
         # If no colors are provided, fall back to Spectrum with the specified hues
         if colors is None or len(colors) == 0:
-            if hues < 2:
-                raise ValueError(
-                    f"If `rainbow=False` and no colors are provided, hues must be \
-at least 2. Invalid hues value: {hues}"
-                )
-            return Spectrum(hues).colors
+            return Spectrum(validate_hues(hues)).colors
 
         # If we have colors, parse and normalize them
         parsed: list[Color] = []

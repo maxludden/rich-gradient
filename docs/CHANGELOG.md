@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.4.0 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
 
 ### Breaking
 
@@ -25,7 +25,100 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   or set `RICH_GRADIENT_TRACEBACKS=1` in the environment to restore the old
   automatic behavior with no code changes.
 
+### Added
+
+- A `Docs` GitHub Actions workflow builds the site with Zensical and deploys it
+  to GitHub Pages on every push to `main` (or on demand). `zensical.toml` now sets
+  `site_url` so canonical links and instant navigation resolve correctly.
+- CI now runs the test suite on Python 3.11, 3.12, 3.13, and 3.14 (using `uv`
+  with the locked dependencies) and has a separate job that builds the docs.
+- Docs are now built with [Zensical](https://zensical.org) (`zensical.toml`),
+  using the classic theme variant with the Astral light/dark palettes, Inter
+  and Roboto Mono fonts, and an animated rainbow accent (header title, links,
+  active navigation, and heading underline). It respects
+  `prefers-reduced-motion`.
+- Guide pages for `Table`, `Tree`, `Columns`, `Pretty`, and `Syntax` (`docs/table.md`,
+  `tree.md`, `columns.md`, `pretty.md`, `syntax.md`), each with runnable examples
+  and a link to its reference page. They appear under the User Guide.
+- `examples/renderables_that_work.py` renders every rich-gradient renderable,
+  reports which ones work, and saves a compact summary table to
+  `docs/img/renderables-that-work.svg`. It replaces `gradient-table.svg` in the
+  Gradient docs.
+- Test coverage for color parsing precedence (`tests/test_color_parsing.py`),
+  the `hues` minimum across every renderable (`tests/test_hues.py`), the derived
+  `repeat_scale` (`tests/test_repeat_scale.py`), configuration loading and
+  validation (`tests/test_config.py`), empty `Gradient` output, and `Gradient`
+  accepting tuples and generators of renderables.
+
 ### Changed
+
+- The documentation moved from MkDocs to Zensical. `mkdocs.yml` is gone;
+  configuration lives in `zensical.toml`. Use `uv run zensical serve` to preview
+  and `uv run zensical build --clean` to build (replacing `uv run mkdocs serve`
+  and `uv run mkdocs build`). The `mkdocs` and `mkdocs-material` dev
+  dependencies were removed; `mkdocstrings` is still used for the API
+  reference. `CLAUDE.md`, the Copilot instructions, and `.readthedocs.yaml` were
+  updated to match.
+
+- Color strings are now parsed with Rich's own parser first, falling back to
+  `rich-color-ext` (CSS names and 3-digit hex) only when Rich rejects them.
+  Names Rich defines keep Rich's meaning, so `"red"` is ANSI red (`#800000`)
+  rather than CSS red (`#ff0000`); use `"#ff0000"` for pure red. CSS-only names
+  such as `"tomato"` are unaffected. Requires `rich-color-ext>=3.0.0`.
+
+- `hues` now has a minimum of 2 everywhere. `Gradient` (and the renderables built
+  on it) previously clamped smaller values up to 2 silently, and `Text` only
+  rejected them when it had to auto-generate colors. All of them now raise
+  `ValueError` for `hues < 2`, matching `Spectrum`.
+
+- Configuration loading is stricter and quieter. Invalid `animate` values,
+  uncolorable palette entries, and malformed config files are ignored with a
+  logged warning instead of raising later (or, for `RICH_GRADIENT_ANIMATE`,
+  silently disabling animation on a typo). Accepted `RICH_GRADIENT_ANIMATE`
+  values now include `0`, `false`, `no`, and `off`. `~` in
+  `RICH_GRADIENT_HOME_DIR` is expanded.
+
+- The default palette entry `hotpink` (`#FF00AA`) is now named `pink`, matching
+  the fallback palette in `spectrum.py`. If your config file overrides
+  `hotpink`, rename the key to `pink`; otherwise both entries are kept and the
+  palette grows to 18 colors.
+
+- `rich-color-ext>=3.0.0` is now required, and `zensical` joins the dev
+  dependencies.
+
+- The docs stylesheets were cleaned up: a stray `body { background: #000 }`,
+  unrelated button-animation rules, and dark-only table rules that applied in
+  light mode were removed, and code blocks now use the theme's code colors.
+
+- Corrected stale docstrings and documentation: `vertical_justify` accepts
+  `"middle"` (not `"center"`), `Text` background colors use `bg_colors` (docs
+  previously said `bgcolors`), and default values in `Panel` /
+  `AnimatedGradient` docstrings now match their signatures.
+
+### Fixed
+
+- Gradients now reach their first and last colors. `repeat_scale` defaults to
+  `None` and is derived from the color stops (`1.0` for two colors, `2.0` for
+  three or more, with a background gradient mirrored to share the same period).
+  Previously `Gradient` defaulted to `2.0`, which stopped halfway through a
+  two-color gradient, and `Markdown` defaulted to `4.0`, which only reached the
+  second color. This changes the look of existing `Gradient`, `Panel`, `Rule`,
+  `Markdown`, `Table`, `Tree`, `Columns`, `Pretty`, and `Syntax` output; pass an
+  explicit `repeat_scale` to keep the old spread. The animated renderables keep
+  their explicit defaults.
+- `Gradient` now accepts a tuple or generator of renderables, as documented,
+  instead of raising `NotRenderableError`. Lists, tuples, and iterators are
+  treated as several renderables; strings and single renderables (including
+  `rich.text.Text`) stay whole. `AnimatedGradient` no longer replaces an empty
+  renderable with an empty list via a truthiness check.
+- `Gradient("")` (and any `Gradient` made only of empty text) now prints a blank
+  line, exactly like `console.print("")`, instead of printing nothing. A
+  `Gradient` with no renderables at all still prints nothing, like an empty
+  Rich `Group`.
+- `Rule` only converts genuine color errors (`ColorParseError`, `TypeError`)
+  into `ValueError`, with the message `Invalid color for Rule: ...`. Other
+  errors, such as an invalid `hues`, now propagate with their own message
+  instead of being reported as "Invalid color provided".
 
 - Now requires `rich-color-ext>=3.0.0`. `_color_ext.py` imports `get_css_map`,
   `install` and `is_installed` directly and drops the compatibility fallbacks
@@ -64,12 +157,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Rule` reports an accurate error message for out-of-range `thickness` values.
 - Removed the unused `requests` runtime dependency.
 
+
+## v0.3.15 - 2026-08-21 | <span style="color: rgb(215, 255, 100)">Documentation refresh</span>
+
 ### Changed
 
-- Corrected stale docstrings and documentation: `vertical_justify` accepts
-  `"middle"` (not `"center"`), `Text` background colors use `bg_colors` (docs
-  previously said `bgcolors`), and default values in `Panel` /
-  `AnimatedGradient` docstrings now match their signatures.
+- Refreshed the README and the docs landing page, and updated the bundled
+  images.
+
+## v0.3.14 - 2026-08-21 | <span style="color: rgb(215, 255, 100)">Rich 15</span>
+
+### Changed
+
+- Raised the minimum Rich version to `rich>=15.0.0`.
+- Added a type annotation to `theme.__all__`.
 
 ## v0.3.13 - 2026-06-02 | <span style="color: rgb(215, 255, 100)">Renderables, ramp caching, and animation fixes</span>
 
@@ -367,7 +468,7 @@ After switching to [uv](https://github.com/astral-sh/uv), the package has been u
 
 ### v0.2.0 Added
 
-- `src/rich_gradient/_base_color.py`: stores the color logic from pydantic-extra-types.color modules stripped of the pydantic framwork.
+- `src/rich_gradient/_base_color.py`: stores the color logic from pydantic-extra-types.color modules stripped of the pydantic framework.
 
 ## v0.1.7 - 2024-7-16 | Added support for Two-Color Gradients
 
@@ -392,20 +493,20 @@ Gradients to work when only supplied with two colors.
 ### v0.1.5 Updated
 
 - Updated requirements for minimum versions of python from 3.8 -> 3.10.
-- Added `pytest` to dev-dependancies.
+- Added `pytest` to dev-dependencies.
 
 ### v0.1.5 Added
 
 - Tests for:
   - Color
-  - Specturm
+  - Spectrum
   - SimpleGradient
 
-## v0.1.4 | 2024-6-28 | Resolved Dependancies
+## v0.1.4 | 2024-6-28 | Resolved Dependencies
 
 ### v0.1.4 Updated
 
-- This release is primarily to prune unnecessary dependancies.
+- This release is primarily to prune unnecessary dependencies.
 - Removed `numpy` to avoid issues of `numpy` version 2.0.0 conflicting with `torch`.
 
 ## v0.1.3 - 2021-10-10
@@ -419,7 +520,7 @@ Gradients to work when only supplied with two colors.
 ### v0.1.2 Updated
 
 - Updated PyProject.toml description.
-- Moved MKDocs and related dependancies to dev-dependancies.
+- Moved MKDocs and related dependencies to dev-dependencies.
 
 ### v0.1.2 Fixed
 
