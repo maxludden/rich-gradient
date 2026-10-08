@@ -23,6 +23,7 @@ from rich.text import Span
 from rich.text import Text as RichText
 from rich.text import TextType
 
+from rich_gradient._color_ext import parse_color
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
@@ -163,7 +164,7 @@ instances. Defaults to None.
                 r, g, b = value
                 return Color.from_rgb(int(r), int(g), int(b))
             elif isinstance(value, str):
-                return Color.parse(value)
+                return parse_color(value)
             else:
                 # Reject unsupported types explicitly (e.g., int, None)
                 raise TypeError(f"Unsupported color type: {type(value)!r}")

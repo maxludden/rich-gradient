@@ -25,7 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   or set `RICH_GRADIENT_TRACEBACKS=1` in the environment to restore the old
   automatic behavior with no code changes.
 
+### Changed
+
+- Updated the `rich-color-ext` integration for 2.0.0 (the minimum supported
+  version). `_color_ext.py` now imports `get_css_map`, `install` and
+  `is_installed` directly and drops the compatibility fallbacks and the
+  `sys.excepthook` snapshot/restore that only older releases needed.
+- The duplicated "install if needed" checks in `__init__`, `config` and
+  `spectrum` are replaced by a single `ensure_installed()` helper.
+
 ### Fixed
+
+- Color strings are now resolved through `parse_color()`, which falls back to
+  rich-color-ext's CSS color map and 3-digit hex helpers when the `Color.parse`
+  patch has been removed with `rich_color_ext.uninstall()`. Previously
+  `Text`, `Gradient` and `Spectrum` raised `ColorParseError` for CSS names such
+  as `tomato` in that situation.
 
 - `get_logger(enabled=True)` no longer calls `loguru.logger.remove()`, which
   destroyed every handler the host application had configured. It now tracks
