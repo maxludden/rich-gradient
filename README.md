@@ -133,7 +133,7 @@ Color can be parsed from a variety of formats including:
 console.print(
     Text(
         "This a gradient with two colors.",
-        colors=["red", "orange"],
+        colors=["#ff0000", "orange"],
     ),
     justify="center"
 )

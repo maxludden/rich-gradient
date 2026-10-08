@@ -19,7 +19,7 @@ def main() -> None:
     console.print(
         Text(
             "This a gradient with two colors.",
-            colors=["red", "orange"],
+            colors=["#ff0000", "orange"],
         ),
         justify="center",
     )
