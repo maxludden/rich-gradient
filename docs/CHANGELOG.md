@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.3.15 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
+## v0.4.0 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
 
 ### Breaking
 
@@ -37,6 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and Roboto Mono fonts, and an animated rainbow accent (header title, links,
   active navigation, and heading underline). It respects
   `prefers-reduced-motion`.
+- Guide pages for `Table`, `Tree`, `Columns`, `Pretty`, and `Syntax` (`docs/table.md`,
+  `tree.md`, `columns.md`, `pretty.md`, `syntax.md`), each with runnable examples
+  and a link to its reference page. They appear under the User Guide.
 - `examples/renderables_that_work.py` renders every rich-gradient renderable,
   reports which ones work, and saves a compact summary table to
   `docs/img/renderables-that-work.svg`. It replaces `gradient-table.svg` in the

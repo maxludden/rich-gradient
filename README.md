@@ -46,7 +46,7 @@ animated variants, and utilities for building palettes.
   Invalid settings are ignored with a logged warning rather than raising.
 - Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
 
-### What's new in the next release
+### What's new in v0.4.0
 
 - **Breaking** — importing `rich_gradient` no longer installs Rich's pretty
   traceback handler (it previously replaced `sys.excepthook` as an import side
