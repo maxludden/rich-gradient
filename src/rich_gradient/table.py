@@ -52,7 +52,8 @@ class Table(Gradient):
         bg_colors: Background gradient color stops.
         rainbow: Whether to generate a rainbow palette.
         hues: Number of auto-generated hues.
-        repeat_scale: Scale factor controlling gradient repeats.
+        repeat_scale: Scale factor controlling gradient repeats. Defaults to None,
+            which derives it from the color stops.
         justify: Horizontal alignment of the table in the gradient frame.
         vertical_justify: Vertical alignment of the table in the gradient frame.
         console: Optional Rich console.
@@ -92,7 +93,7 @@ class Table(Gradient):
         bg_colors: Sequence[ColorType] | None = None,
         rainbow: bool = False,
         hues: int = 5,
-        repeat_scale: float = 2.0,
+        repeat_scale: float | None = None,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
         console: Console | None = None,

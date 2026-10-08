@@ -5,7 +5,7 @@
 
 <p align="center">
   <a href="https://www.python.org/"><img
-    src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12%2C%203.13-blue" alt="Python versions"></a>
+    src="https://img.shields.io/badge/Python-3.11%2C%203.12%2C%203.13%2C%203.14-blue" alt="Python versions"></a>
   <a href="https://pypi.org/project/rich_gradient/"><img
   src="https://img.shields.io/pypi/v/rich-gradient" alt="PyPI version"></a>
   <a href="https://pypi.org/project/rich_gradient/"><img
@@ -31,6 +31,7 @@ utilities for building palettes, and animated variants for live terminal output.
   - [`Panel`](panel.md)
   - [`Rule`](rule.md)
   - [`Spectrum`](spectrum.md)
+  - [`Markdown`](gradient.md)
   - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](renderables.md)
   - And their animated counterparts.
 

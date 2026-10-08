@@ -6,6 +6,7 @@ from collections.abc import Sequence
 from typing import Optional
 
 from rich.align import AlignMethod
+from rich.color import ColorParseError
 from rich.console import Console, ConsoleOptions, RenderResult
 from rich.rule import Rule as RichRule
 from rich.style import Style, StyleType
@@ -82,11 +83,12 @@ class Rule(Gradient):
                 vertical_justify="middle",
                 highlight_words=highlight_words,
             )
-        except Exception as err:
-            # Normalize any parsing/validation error into ValueError for the
-            # public Rule API so callers receive a consistent exception type
-            # for invalid color inputs.
-            raise ValueError(f"Invalid color provided: {err}") from err
+        except (ColorParseError, TypeError) as err:
+            # Bad color inputs raise ColorParseError (unparseable strings) or
+            # TypeError (unsupported types). Normalize those into ValueError so
+            # Rule callers get one exception type for invalid colors. Other
+            # errors, such as an invalid ``hues``, propagate unchanged.
+            raise ValueError(f"Invalid color for Rule: {err}") from err
 
     @property
     def thickness(self) -> int:
@@ -122,7 +124,7 @@ class Rule(Gradient):
         # Validate thickness
         if not isinstance(self.thickness, int):
             raise TypeError(
-                f"thickness must be an integer, recieved {type(self.thickness).__name__}"
+                f"thickness must be an integer, received {type(self.thickness).__name__}"
             )
         if not 0 <= self.thickness <= 3:
             raise ValueError("thickness must be an integer between 0 and 3 (inclusive)")

@@ -35,7 +35,7 @@ Text("Auto hues", hues=6)  # draws from Spectrum(hues=6)
 Text("Spectrum seed", colors=Spectrum(hues=5, seed=7).triplets)
 ```
 
-Behind the scenes `rich-gradient` relies on [rich-color-ext](https://github.com/maxludden/rich-color-ext) so three-digit hex codes and CSS color names resolve without extra work.
+Behind the scenes `rich-gradient` relies on [rich-color-ext](https://github.com/maxludden/rich-color-ext) so three-digit hex codes and CSS color names resolve without extra work. Colors are parsed with Rich's own parser first and `rich-color-ext` only as a fallback, so names Rich defines keep Rich's meaning: `"red"` is ANSI red (`#800000`), while `"#ff0000"` gives pure red.
 
 ## Background gradients
 

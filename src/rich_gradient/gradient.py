@@ -12,7 +12,7 @@ correction, and flexible alignment options.
 from __future__ import annotations
 
 import re
-from collections.abc import Sequence
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from typing import TypeAlias, cast
 
@@ -30,10 +30,11 @@ from rich.segment import Segment
 from rich.style import Style, StyleType
 from rich.text import Text as RichText
 
+from rich_gradient._color_ext import parse_color
 from rich_gradient._gradient_ramp import GradientRamp
 from rich_gradient._highlight import (HighlightRegex, HighlightRegexType,
                                       HighlightWords, HighlightWordsType)
-from rich_gradient.spectrum import Spectrum
+from rich_gradient.spectrum import Spectrum, validate_hues
 
 ColorType: TypeAlias = str | Color | ColorTriplet | tuple[int, int, int]
 _GradientRampKey: TypeAlias = tuple[
@@ -60,8 +61,8 @@ class Gradient(JupyterMixin):
     """Initialize a Gradient instance.
 
     Args:
-        renderables (str|ConsoleRenderable|List[ConsoleRenderable]): A single renderable or list \
-            of renderable objects to which the gradient will be applied.
+        renderables (str|ConsoleRenderable|Iterable[ConsoleRenderable]): A single renderable, or \
+            a list, tuple, or iterator of renderables, to which the gradient will be applied.
         colors (List[str|ColorTriplet], Optional): list of colors for the gradient foreground. \
             If omitted and rainbow is False, a spectrum of `hues` colors is used. Accepts \
             3-digit hex strings ('#0f0'), 6-digit hex strings ('#00ff00'), and CSS color \
@@ -83,7 +84,9 @@ class Gradient(JupyterMixin):
         vertical_justify(str|VerticalAlignMethod): Vertical alignment: 'top', 'middle', or \
             'bottom'. Defaults to 'middle'.
         repeat_scale(float, Optional): Scale factor controlling gradient repeat span. \
-            defaults to 2.0.
+            Defaults to None, which sizes the gradient so a single pass across the \
+            renderable runs from the first color to the last (1.0 for two colors, \
+            2.0 when there are three or more).
         highlight_words(HighlightWordsType|HighlightWords|Sequence[HighlightWords]\
             , Optional): Optional configurations describing \
             word highlights to apply. Accepts either a mapping of words to styles, or a \
@@ -112,7 +115,7 @@ class Gradient(JupyterMixin):
 
     def __init__(
         self,
-        renderables: str | ConsoleRenderable | list[ConsoleRenderable],
+        renderables: str | ConsoleRenderable | Iterable[ConsoleRenderable],
         colors: list[ColorType] | None = None,
         bg_colors: list[ColorType] | None = None,
         *,
@@ -122,7 +125,7 @@ class Gradient(JupyterMixin):
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "middle",
-        repeat_scale: float = 2.0,
+        repeat_scale: float | None = None,
         highlight_words: HighlightWordsType | HighlightWords | \
             Sequence[HighlightWords] | None = None,
         highlight_regex: HighlightRegexType | HighlightRegex | \
@@ -133,8 +136,8 @@ class Gradient(JupyterMixin):
         Initialize a Gradient instance.
 
         Args:
-            renderables: A single renderable or list of renderable objects to
-                which the gradient will be applied.
+            renderables: A single renderable, or a list, tuple, or iterator of
+                renderables, to which the gradient will be applied.
             colors: Optional list of colors (strings, Color, or
                 ColorTriplet) for the gradient foreground. If omitted and
                 rainbow is False, a spectrum of `hues` colors is used.
@@ -143,18 +146,21 @@ class Gradient(JupyterMixin):
             console: Optional Rich Console to render to. Defaults to
                 `rich.get_console()`.
             hues: Number of hues to generate if no explicit colors are given.
+                Must be at least 2.
             rainbow: If True, ignore `colors` and use a full rainbow.
             expand: Whether to expand renderables to the full console width.
             justify: Horizontal alignment: 'left', 'center', or 'right'.
             vertical_justify: Vertical alignment: 'top', 'middle', or 'bottom'.
-            repeat_scale: Scale factor controlling gradient repeat span.
+            repeat_scale: Scale factor controlling gradient repeat span. When
+                None (the default) it is derived from the color stops so the
+                first and last colors are both reached across the span.
             highlight_words: Optional configurations describing word highlights to apply.
             highlight_regex: Optional configurations describing regex highlights to apply.
         """
         self.console: Console = console or get_console()
-        self.hues: int = max(hues, 2)
+        self.hues: int = validate_hues(hues)
         self.rainbow: bool = rainbow
-        self.repeat_scale: float = repeat_scale
+        self.repeat_scale: float | None = repeat_scale
         self.phase: float = 0.0
         self._gradient_ramp: GradientRamp | None = None
         self._gradient_ramp_key: _GradientRampKey | None = None
@@ -252,21 +258,25 @@ class Gradient(JupyterMixin):
 
     @renderables.setter
     def renderables(
-        self, value: str | ConsoleRenderable | list[ConsoleRenderable]
+        self, value: str | ConsoleRenderable | Iterable[ConsoleRenderable]
     ) -> None:
         """Set and normalize the list of renderables."""
         self._set_renderables(value)
 
     def _set_renderables(
-        self, value: str | ConsoleRenderable | list[ConsoleRenderable]
+        self, value: str | ConsoleRenderable | Iterable[ConsoleRenderable]
     ) -> None:
-        """Normalize and store renderables without going through the descriptor."""
-        if isinstance(value, list):
-            render_list: list[str | ConsoleRenderable] = cast(
-                list[str | ConsoleRenderable], value
-            )
+        """Normalize and store renderables without going through the descriptor.
+
+        Lists, tuples, and iterators are treated as several renderables (an
+        iterator is consumed once). Anything else, including strings, is a
+        single renderable. A blanket ``Iterable`` check is avoided on purpose:
+        ``str`` and ``rich.text.Text`` are iterable but must stay whole.
+        """
+        if isinstance(value, (list, tuple, Iterator)):
+            render_list: list[str | ConsoleRenderable] = list(value)
         else:
-            render_list = [value]
+            render_list = [cast(ConsoleRenderable, value)]
         normalized: list[ConsoleRenderable] = []
         for item in render_list:
             if isinstance(item, str):
@@ -411,12 +421,7 @@ class Gradient(JupyterMixin):
                     )
                 triplets.append(ColorTriplet(red, green, blue))
             elif isinstance(c, str):
-                color = c.strip()
-                if len(color) == 4 and color.startswith("#"):
-                    h = color[1:]
-                    if all(ch in "0123456789abcdefABCDEF" for ch in h):
-                        color = "#" + "".join(ch * 2 for ch in h)
-                triplets.append(Color.parse(color).get_truecolor())
+                triplets.append(parse_color(c).get_truecolor())
             else:
                 raise ColorParseError(
                     f"Unsupported color type: {type(c)}\n\tCould not parse color: {c}"
@@ -460,6 +465,14 @@ class Gradient(JupyterMixin):
             Segment: Colored text segments for gradient effect.
         """
         width = options.max_width
+        if self.renderables and all(
+            isinstance(r, RichText) and not r.plain for r in self.renderables
+        ):
+            # Rich prints each empty text as a single newline, whatever its ``end``,
+            # but rendering it as lines yields nothing, so emit it directly.
+            for _ in self.renderables:
+                yield Segment.line()
+            return
         content = Align(
             Group(*self.renderables),
             align=self.justify,
@@ -609,13 +622,48 @@ class Gradient(JupyterMixin):
 
     def _build_gradient_ramp_key(self, span: int) -> _GradientRampKey:
         """Build a hashable cache key for the active gradient ramp."""
+        foreground, background, scale = self._ramp_stops()
         return (
-            tuple(self.colors),
-            tuple(self.bg_colors),
+            tuple(foreground),
+            tuple(background),
             int(span or 0),
-            float(self.repeat_scale or 1.0),
+            float(scale),
             float(self._GAMMA_CORRECTION),
         )
+
+    def _effective_repeat_scale(self) -> float:
+        """Return ``repeat_scale``, or the value derived from the color stops."""
+        return self._ramp_stops()[2]
+
+    def _ramp_stops(
+        self,
+    ) -> tuple[list[ColorTriplet], list[ColorTriplet], float]:
+        """Return the foreground stops, background stops, and scale for the ramp.
+
+        An explicit ``repeat_scale`` is used as given, with the stops untouched.
+        When it is None the scale is derived so one pass across the span runs
+        from the first color to the last:
+
+        - Two colors, or a solid background, need no repeat: scale 1.0.
+        - Three or more colors are stored as a palindrome (``a, b, c, b, a``),
+          so scale 2.0 shows exactly ``a, b, c``. Any other list in play (a
+          two-color foreground, or a varying background) is mirrored the same
+          way so both share one period.
+        """
+        foreground = list(self.colors)
+        background = list(self.bg_colors)
+        if self.repeat_scale:
+            return foreground, background, float(self.repeat_scale)
+
+        background_varies = len(set(background)) > 1
+        needs_mirror = len(foreground) > 2 or (background_varies and len(background) > 2)
+        if not needs_mirror:
+            return foreground, background, 1.0
+        if len(foreground) == 2:
+            foreground = foreground + foreground[-2::-1]
+        if background_varies:
+            background = background + background[-2::-1]
+        return foreground, background, 2.0
 
     def _invalidate_gradient_ramp(self) -> None:
         """Clear cached gradient ramp state after color changes."""
@@ -634,7 +682,7 @@ class Gradient(JupyterMixin):
         Returns:
             float: Fraction between 0.0 and 1.0.
         """
-        total_width = (span or 0) * (self.repeat_scale or 1.0)
+        total_width = (span or 0) * self._effective_repeat_scale()
         if total_width <= 0:
             # Avoid division by zero; return phase-only fraction.
             return self.phase % 1.0

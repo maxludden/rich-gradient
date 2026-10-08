@@ -44,7 +44,7 @@
 .spectrum_example-r10 { fill: #ffffff;font-weight: bold }
 .spectrum_example-r11 { fill: #00ccff;font-weight: bold }
 .spectrum_example-r12 { fill: #000000;font-weight: bold }
-.spectrum_example-r13 { fill: #ffffff;font-weight: bold;font-style: italic; }
+.spectrum_example-r13 { fill: #f8f8f2;font-weight: bold;font-style: italic; }
 .spectrum_example-r14 { fill: #ff0000;font-weight: bold }
 .spectrum_example-r15 { fill: #555555;font-weight: bold;font-style: italic; }
 .spectrum_example-r16 { fill: #00ff00;font-weight: bold }

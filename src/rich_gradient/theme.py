@@ -41,7 +41,7 @@ class GradientTheme(Theme):
 
     @theme.setter
     def theme(self, theme: Theme = Theme(DEFAULT_STYLES)) -> None:
-        self._theme= theme
+        self._theme = theme
 
     def __call__(self) -> Theme:
         return self.theme
