@@ -139,7 +139,7 @@ console.print(
 )
 ```
 
-![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/v0.3.3/two_color_gradient.svg)
+![Two Color Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/two_color_gradient.svg)
 
 ---
 
