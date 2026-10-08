@@ -15,6 +15,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.segment import Segment
 from rich.style import Style
+from rich.text import Text as RichText
 
 from rich_gradient.gradient import Gradient
 
@@ -295,3 +296,100 @@ def test_gradient_justify_center_centers_text() -> None:
     first_line = _first_line_from_segments(segment_list)
     assert first_line.startswith(" " * 4)
     assert first_line.strip() == "Hi"
+
+
+def _plain(gradient: Gradient) -> list[str]:
+    """Return the plain text of each stored renderable."""
+    return [getattr(r, "plain", "") for r in gradient.renderables]
+
+
+def test_gradient_accepts_tuple_of_renderables() -> None:
+    """A tuple is treated as several renderables."""
+    gradient = Gradient((RichText("a"), RichText("b")), colors=["red", "blue"])
+    assert _plain(gradient) == ["a", "b"]
+    assert list(gradient.__rich_console__(Console(), Console().options))
+
+
+def test_gradient_accepts_generator_of_renderables() -> None:
+    """A generator is consumed once and stored as a stable list."""
+    gradient = Gradient((RichText(ch) for ch in "ab"), colors=["red", "blue"])
+    assert _plain(gradient) == ["a", "b"]
+    assert _plain(gradient) == ["a", "b"]  # still there on a second read
+
+
+def test_gradient_accepts_list_of_renderables() -> None:
+    """Lists keep working."""
+    gradient = Gradient([RichText("a"), RichText("b")], colors=["red", "blue"])
+    assert _plain(gradient) == ["a", "b"]
+
+
+def test_gradient_single_renderable_is_not_split() -> None:
+    """A single renderable stays whole, even though rich Text is iterable."""
+    gradient = Gradient(RichText("abc"), colors=["red", "blue"])
+    assert _plain(gradient) == ["abc"]
+
+
+def test_gradient_string_is_one_renderable() -> None:
+    """A string is a single renderable, not a sequence of characters."""
+    gradient = Gradient("abc", colors=["red", "blue"])
+    assert _plain(gradient) == ["abc"]
+
+
+def test_gradient_empty_tuple_has_no_renderables() -> None:
+    """An empty tuple yields no renderables instead of raising."""
+    gradient = Gradient((), colors=["red", "blue"])
+    assert gradient.renderables == []
+
+
+def test_gradient_renderables_setter_accepts_tuple() -> None:
+    """The renderables setter normalizes tuples too."""
+    gradient = Gradient("x", colors=["red", "blue"])
+    gradient.renderables = (RichText("a"), "b")
+    assert _plain(gradient) == ["a", "b"]
+
+
+def _printed(renderable: object) -> str:
+    """Return exactly what Console.print writes for ``renderable``."""
+    import io
+
+    console = Console(file=io.StringIO(), width=10, force_terminal=False)
+    console.print(renderable)
+    return console.file.getvalue()  # type: ignore[attr-defined]
+
+
+@pytest.mark.parametrize(
+    "build",
+    [
+        lambda: "",
+        lambda: RichText(""),
+        lambda: RichText("", end=""),
+        lambda: RichText("", end="!\n"),
+    ],
+)
+def test_empty_gradient_matches_rich(build) -> None:
+    """An empty Gradient prints exactly what Rich prints for the same input."""
+    source = build()
+    assert _printed(Gradient(source, colors=["red", "blue"])) == _printed(source)
+
+
+def test_empty_gradient_prints_a_newline() -> None:
+    """``Gradient("")`` prints a blank line, like ``console.print("")``."""
+    assert _printed(Gradient("", colors=["red", "blue"])) == "\n"
+
+
+def test_gradient_without_renderables_prints_nothing() -> None:
+    """No renderables at all still prints nothing, like an empty Rich Group."""
+    assert _printed(Gradient((), colors=["red", "blue"])) == ""
+
+
+def test_non_empty_gradient_is_unchanged() -> None:
+    """Non-empty content still renders through the gradient path."""
+    assert "hi" in _printed(Gradient("hi", colors=["red", "blue"]))
+
+
+def test_multiple_empty_renderables_print_one_newline_each() -> None:
+    """Two empty texts print two blank lines, like a Rich Group of empty Text."""
+    from rich.console import Group
+
+    expected = _printed(Group(RichText(""), RichText("")))
+    assert _printed(Gradient(["", ""], colors=["red", "blue"])) == expected == "\n\n"

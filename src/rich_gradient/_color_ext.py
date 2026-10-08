@@ -7,6 +7,8 @@ from collections.abc import Callable
 from functools import lru_cache
 from typing import cast
 
+from rich.color import Color, ColorParseError
+
 # rich_color_ext (<=0.1.x) installs Rich's traceback handler as an import side
 # effect; restore whatever excepthook the host application had once the import
 # completes. Caveats: under IPython/Jupyter, rich.traceback.install patches the
@@ -25,7 +27,7 @@ finally:
     sys.excepthook = _previous_excepthook
 del _previous_excepthook
 
-__all__ = ["get_css_map", "install", "is_installed"]
+__all__ = ["get_css_map", "install", "is_installed", "parse_color"]
 
 
 def _fetch_callable(name: str, default: Callable[[], object]) -> Callable[[], object]:
@@ -61,3 +63,36 @@ def get_css_map() -> dict[str, str]:
         return cast(Callable[[], dict[str, str]], getter)()
     # Older releases lacked get_css_map, so return an empty mapping instead of failing.
     return {}
+
+
+_HEX_DIGITS = frozenset("0123456789abcdefABCDEF")
+
+
+def parse_color(value: str) -> Color:
+    """Parse a color string with Rich first, then fall back to rich-color-ext.
+
+    Rich's own parser wins whenever it understands the string, so names that
+    Rich defines (``"red"``, ``"blue"``, ``"default"``, ``"color(5)"``, ...)
+    keep Rich's meaning, including its ANSI palette colors. Only when Rich
+    rejects the string is rich-color-ext consulted, which adds 3-digit hex
+    (``"#f90"``) and the CSS color names (``"tomato"``, ``"aliceblue"``).
+
+    Args:
+        value: The color string to parse.
+
+    Returns:
+        Color: The parsed color.
+
+    Raises:
+        ColorParseError: If neither Rich nor rich-color-ext understands ``value``.
+    """
+    text = value.strip()
+    try:
+        return Color.parse(text)
+    except ColorParseError as rich_error:
+        if len(text) == 4 and text.startswith("#") and set(text[1:]) <= _HEX_DIGITS:
+            return Color.parse("#" + "".join(ch * 2 for ch in text[1:]))
+        css_hex = get_css_map().get(text.lower())
+        if css_hex is not None:
+            return Color.parse(css_hex)
+        raise rich_error

@@ -1,0 +1,119 @@
+[project]
+site_name = "rich-gradient"
+site_description = "rich-gradient is a python package built on the great rich library that automates the generation of gradient colored rich renderables."
+site_author = "Max Ludden"
+site_url = "https://maxludden.github.io/rich-gradient/"
+repo_name = "rich-gradient"
+repo_url = "https://github.com/maxludden/rich-gradient"
+edit_uri = "root/docs"
+
+extra_css = ["stylesheets/extra.css", "stylesheets/style.css"]
+extra_javascript = ["scripts/copy.js"]
+
+nav = [
+    { "Getting Started" = "index.md" },
+    { "User Guide" = [
+        { "Text" = "text.md" },
+        { "Gradient" = "gradient.md" },
+        { "Panel" = "panel.md" },
+        { "Rule" = "rule.md" },
+        { "Convenience Renderables" = "renderables.md" },
+        { "Spectrum" = "spectrum.md" },
+        { "Animation" = "animation.md" },
+        { "Configuration" = "configuration.md" },
+    ] },
+    { "References" = [
+        { "Animated Text Reference" = "animated_text_ref.md" },
+        { "Animated Gradient Reference" = "animated_gradient_ref.md" },
+        { "Animated Panel Reference" = "animated_panel_ref.md" },
+        { "Columns Reference" = "columns_ref.md" },
+        { "Gradient Reference" = "gradient_ref.md" },
+        { "Panel Reference" = "panel_ref.md" },
+        { "Pretty Reference" = "pretty_ref.md" },
+        { "Rule Reference" = "rule_ref.md" },
+        { "Spectrum Reference" = "spectrum_ref.md" },
+        { "Syntax Reference" = "syntax_ref.md" },
+        { "Table Reference" = "table_ref.md" },
+        { "Text Reference" = "text_ref.md" },
+        { "Theme Reference" = "theme_ref.md" },
+        { "Tree Reference" = "tree_ref.md" },
+    ] },
+    { "Changelog" = "CHANGELOG.md" },
+]
+
+[project.theme]
+variant = "classic"
+logo = "img/rich-gradient-icon.svg"
+favicon = "img/rich-gradient-icon.svg"
+features = [
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.instant.progress",
+    "navigation.tracking",
+    "navigation.sections",
+    "navigation.path",
+    "navigation.top",
+    "navigation.footer",
+    "toc.follow",
+    "search.suggest",
+    "search.highlight",
+    "content.code.annotate",
+    "content.code.copy",
+    "content.tabs.link",
+]
+
+[project.theme.font]
+text = "Inter"
+code = "Roboto Mono"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+scheme = "astral-dark"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "astral-light"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "astral-dark"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.plugins.mkdocstrings]
+
+[project.extra]
+social = [
+    { icon = "fontawesome/brands/github", link = "https://github.com/maxludden" },
+    { icon = "fontawesome/brands/python", link = "https://pypi.org/project/rich-gradient" },
+]
+
+[project.markdown_extensions.abbr]
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.footnotes]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.snippets]
+[project.markdown_extensions.pymdownx.superfences]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+[project.markdown_extensions.tables]

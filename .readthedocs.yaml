@@ -1,14 +1,18 @@
-# Read the Docs configuration file for MkDocs projects
+# Read the Docs configuration file
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+#
+# The docs are built with Zensical (zensical.toml), which Read the Docs does not
+# support natively, so the build is a custom command list.
 
-# Required
 version: 2
 
-# Set the version of Python and other tools you might need
 build:
-  os: ubuntu-22.04
+  os: ubuntu-24.04
   tools:
-    python: "3.10"
-
-mkdocs:
-  configuration: mkdocs.yml
+    python: "3.12"
+  commands:
+    - pip install uv
+    - uv sync --locked
+    - uv run zensical build --clean
+    - mkdir -p $READTHEDOCS_OUTPUT/html
+    - cp -r site/. $READTHEDOCS_OUTPUT/html/

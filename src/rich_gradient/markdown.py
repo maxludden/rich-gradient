@@ -67,7 +67,7 @@ class Markdown(Gradient):
         expand: bool = True,
         justify: AlignMethod = "left",
         vertical_justify: VerticalAlignMethod = "top",
-        repeat_scale: float = 4.0,
+        repeat_scale: float | None = None,
         console: Console | None = None,
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,

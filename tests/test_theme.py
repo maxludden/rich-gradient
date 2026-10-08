@@ -13,4 +13,6 @@ def test_gradient_theme_uses_custom_styles() -> None:
     assert isinstance(resolved, Style)
     assert resolved.bold
     assert resolved.color is not None
-    assert resolved.color.get_truecolor().hex.lower() == "#ff0000"
+    # Rich's parser wins for names it defines, so "red" is the ANSI palette red.
+    assert resolved.color.name == "red"
+    assert resolved.color.get_truecolor().hex.lower() == "#800000"

@@ -3,7 +3,7 @@
 <!-- markdownlint-disable MD033 MD013 -->
 <p align="center">
   <a href="https://www.python.org/"><img
-    src="https://img.shields.io/badge/Python-3.10%2C%203.11%2C%203.12%2C%203.13-blue" alt="Python versions"></a>
+    src="https://img.shields.io/badge/Python-3.11%2C%203.12%2C%203.13%2C%203.14-blue" alt="Python versions"></a>
   <a href="https://pypi.org/project/rich_gradient/"><img
   src="https://img.shields.io/pypi/v/rich-gradient" alt="PyPI version"></a>
   <a href="https://pepy.tech/project/rich-gradient"><img
@@ -43,6 +43,7 @@ animated variants, and utilities for building palettes.
   `AnimatedMarkdown` for live gradient updates.
 - Loads optional JSON configuration from `~/.rich-gradient/config.json`, where
   you can toggle animation globally and customize the default spectrum palette.
+  Invalid settings are ignored with a logged warning rather than raising.
 - Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
 
 ### What's new in the next release
@@ -53,6 +54,25 @@ animated variants, and utilities for building palettes.
   affected. To keep Rich tracebacks, call `rich_gradient.install_tracebacks()`
   once at startup, or set `RICH_GRADIENT_TRACEBACKS=1` for the old automatic
   behavior with no code changes.
+- **Changed** — color strings are parsed with Rich's own parser first, falling
+  back to `rich-color-ext` (CSS names and 3-digit hex). Names Rich defines keep
+  Rich's meaning, so `"red"` is ANSI red (`#800000`); use `"#ff0000"` for pure
+  red. Requires `rich-color-ext>=3.0.0`.
+- **Changed** — `hues` has a minimum of 2 everywhere and raises `ValueError`
+  below that (`Gradient` used to clamp silently).
+- **Changed** — configuration loading is stricter and quieter: invalid values
+  are ignored with a warning, `RICH_GRADIENT_ANIMATE` also accepts
+  `0`/`false`/`no`/`off`, and the default `hotpink` palette entry is now `pink`.
+- **Changed** — the docs moved from MkDocs to [Zensical](https://zensical.org)
+  (`zensical.toml`), and CI now tests Python 3.11–3.14 and builds the docs.
+- **Fixed** gradients now reach their first and last colors: `repeat_scale`
+  defaults to `None` and is derived from the color stops (previously `Markdown`
+  stopped at the second color and two-color gradients stopped halfway). Pass an
+  explicit `repeat_scale` to keep the old spread.
+- **Fixed** `Gradient` accepts a tuple or generator of renderables, as
+  documented, and `Gradient("")` prints a blank line like `console.print("")`.
+- **Fixed** `Rule` only reports "Invalid color for Rule" for real color errors;
+  other errors (such as a bad `hues`) keep their own message.
 - **Fixed** `Panel` crashing when `style` was passed as a `rich.style.Style`
   instance instead of a string.
 - **Fixed** `Rule()` can now be constructed without a title, matching
@@ -61,11 +81,11 @@ animated variants, and utilities for building palettes.
   enabled via the global config, not only when `animate=True` is passed.
 - **Removed** the unused `requests` runtime dependency for lighter installs.
 
-- See the [CHANGELOG](docs/CHANGELOG.md) for more details.
+See the [CHANGELOG](docs/CHANGELOG.md) for more details.
 
 ## Installation
 
-`rich-gradient` targets Python 3.10+.
+`rich-gradient` requires Python 3.11 or newer.
 
 ### [uv](https://github.com/astral-sh/uv)
 
@@ -90,9 +110,18 @@ pip install rich-gradient
 
 ### Contributor notes
 
-- Tests: `pytest` works without an editable install because
-  `tests/conftest.py` adds `src/` to `sys.path`. No extra
-  env tweaks needed; just install deps and run `pytest`.
+Use [uv](https://github.com/astral-sh/uv) for everything:
+
+- Install: `uv sync`
+- Tests: `uv run pytest` works without an editable install because
+  `tests/conftest.py` adds `src/` to `sys.path`.
+- Type check: `uv run mypy`
+- Docs: `uv run zensical serve` to preview and `uv run zensical build --clean`
+  to build (the docs use [Zensical](https://zensical.org); there is no
+  `mkdocs.yml`).
+
+CI runs the tests on Python 3.11, 3.12, 3.13, and 3.14 and builds the docs, so
+run `uv run pytest` and `uv run zensical build --clean` before committing.
 
 ## Usage
 
@@ -106,7 +135,7 @@ from rich.console import Console
 from rich_gradient import Text
 
 console = Console()
-console.print(Text("Hello, World!"))
+console.print(Text("[i]Hello[/i] [b u] World![/b u]"))
 ```
 
 ![Hello, World!](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/hello_world.svg)
@@ -124,6 +153,12 @@ by passing them as a list of colors to the `colors` parameter.
 Color can be parsed from a variety of formats including:
 
 ![3 or 6 digit hex colors, rgb/rgba colors, and CSS3 Named Colors](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/v0.3.4/gradient_text_custom_colors.svg)
+
+Colors are parsed with Rich's own parser first, falling back to
+[`rich-color-ext`](https://github.com/maxludden/rich-color-ext) for CSS names
+and 3-digit hex. Names Rich defines keep Rich's meaning, so `"red"` is ANSI red
+(`#800000`) while `"#ff0000"` is pure red; CSS-only names like `"tomato"` work as
+expected.
 
 ### Example Code
 
@@ -230,6 +265,14 @@ console.print(
 )
 ```
 
+Pass a list, tuple, or generator to wrap several renderables at once. See
+[`examples/renderables_that_work.py`](examples/renderables_that_work.py) for a
+script that renders every renderable and reports which ones work:
+
+<p align="center">
+  <img src="docs/img/renderables-that-work.svg" alt="Renderables that work" width="240">
+</p>
+
 ## Background Gradients
 
 Pass `bg_colors` to `Text`, `Gradient`, `Panel`, `Rule`, or `Markdown` to apply
@@ -263,6 +306,7 @@ console.print(
     )
 )
 ```
+
 
 ## CLI
 
