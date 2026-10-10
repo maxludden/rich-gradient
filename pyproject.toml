@@ -78,4 +78,9 @@ disable = [
 disable = [
     "MD033", # Inline HTML
     "MD026", # Trailing punctuation in heading
+    "MD012", # Multiple consecutive blank lines
+    "MD007", # Unordered list style
+    "MD024", # Multiple headings with the same content
+    
+
 ]
