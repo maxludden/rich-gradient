@@ -5,6 +5,7 @@ Covers color computation, style merging, rendering, and quit panel logic.
 
 from __future__ import annotations
 
+import io
 from collections.abc import Iterable
 from typing import Any, TypeGuard
 
@@ -303,11 +304,19 @@ def _plain(gradient: Gradient) -> list[str]:
     return [getattr(r, "plain", "") for r in gradient.renderables]
 
 
+def _render_plain(renderable: object) -> str:
+    """Render ``renderable`` to plain text (no styles) and strip padding."""
+    console = Console(width=20, file=io.StringIO(), color_system=None)
+    console.print(renderable)
+    output = console.file.getvalue()  # type: ignore[attr-defined]
+    return "\n".join(line.rstrip() for line in output.rstrip("\n").splitlines())
+
+
 def test_gradient_accepts_tuple_of_renderables() -> None:
     """A tuple is treated as several renderables."""
     gradient = Gradient((RichText("a"), RichText("b")), colors=["red", "blue"])
     assert _plain(gradient) == ["a", "b"]
-    assert list(gradient.__rich_console__(Console(), Console().options))
+    assert _render_plain(gradient) == "a\nb"
 
 
 def test_gradient_accepts_generator_of_renderables() -> None:
@@ -315,6 +324,19 @@ def test_gradient_accepts_generator_of_renderables() -> None:
     gradient = Gradient((RichText(ch) for ch in "ab"), colors=["red", "blue"])
     assert _plain(gradient) == ["a", "b"]
     assert _plain(gradient) == ["a", "b"]  # still there on a second read
+    assert _render_plain(gradient) == "a\nb"
+
+
+def test_gradient_accepts_reusable_iterable_of_renderables() -> None:
+    """A non-list, non-iterator iterable (a set, a custom container) is expanded."""
+
+    class Box:
+        def __iter__(self):  # type: ignore[no-untyped-def]
+            return iter([RichText("a"), RichText("b")])
+
+    gradient = Gradient(Box(), colors=["red", "blue"])  # type: ignore[arg-type]
+    assert _plain(gradient) == ["a", "b"]
+    assert _render_plain(gradient) == "a\nb"
 
 
 def test_gradient_accepts_list_of_renderables() -> None:
@@ -393,3 +415,17 @@ def test_multiple_empty_renderables_print_one_newline_each() -> None:
 
     expected = _printed(Group(RichText(""), RichText("")))
     assert _printed(Gradient(["", ""], colors=["red", "blue"])) == expected == "\n\n"
+
+
+@pytest.mark.parametrize("end", ["\n", "", "X"])
+def test_gradient_empty_text_matches_rich_output(end: str) -> None:
+    """Empty text prints exactly what Rich prints, whatever its ``end``."""
+
+    def render(renderable: object) -> str:
+        console = Console(width=20, file=io.StringIO(), color_system=None)
+        console.print(renderable)
+        return console.file.getvalue()  # type: ignore[attr-defined]
+
+    assert render(Gradient(RichText("", end=end), colors=["red", "blue"])) == render(
+        RichText("", end=end)
+    )
