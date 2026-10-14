@@ -5,7 +5,7 @@ Test suite for Spectrum class covering color generation, inversion, style matchi
 from typing import Any
 
 import pytest
-from rich.color import Color
+from rich.color import Color, ColorParseError
 from rich.style import Style
 
 from rich_gradient.spectrum import Spectrum
@@ -75,9 +75,22 @@ def test_spectrum_hex_matches_color():
 def test_spectrum_accepts_css_and_short_hex_palette_values(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Palette values the config accepts (CSS names, #abc) must build a Spectrum."""
+    """Palette values the config accepts (CSS names, #abc) must build a Spectrum.
+
+    ``Color.parse`` is swapped for a strict stub (6-digit hex only) so the test
+    fails if Spectrum bypasses the Rich-first fallback parser, even though
+    rich-color-ext normally patches ``Color.parse`` to accept these values.
+    """
     import rich_gradient.spectrum as spectrum_module
 
+    original = Color.parse
+
+    def strict_parse(value: str) -> Color:
+        if len(value) == 7 and value.startswith("#"):
+            return original(value)
+        raise ColorParseError(f"strict stub rejects {value!r}")
+
+    monkeypatch.setattr(Color, "parse", staticmethod(strict_parse))
     palette = {"a": "rebeccapurple", "b": "#0f0", "c": "tomato", "d": "#00f"}
     monkeypatch.setattr(spectrum_module, "COLOR_STOPS", palette)
     spectrum = spectrum_module.Spectrum(hues=2, seed=1)
