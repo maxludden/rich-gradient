@@ -111,6 +111,22 @@ def test_unrecognised_animate_value_keeps_default(
     assert RichGradientConfig.load().animate is True
 
 
+def test_empty_animate_env_keeps_default(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """An empty ``RICH_GRADIENT_ANIMATE`` does not disable animation."""
+    monkeypatch.setenv("RICH_GRADIENT_HOME_DIR", str(tmp_path))
+    monkeypatch.setenv("RICH_GRADIENT_ANIMATE", "")
+    assert RichGradientConfig.load().animate is True
+
+
+def test_home_dir_from_file_is_reported(tmp_path: Path) -> None:
+    """A ``rich-gradient-home-dir`` set in the file is what ``home_dir`` returns."""
+    other = tmp_path / "elsewhere"
+    cfg = RichGradientConfig.load(_write(tmp_path, {"rich-gradient-home-dir": str(other)}))
+    assert cfg.home_dir == other
+
+
 def test_non_boolean_animate_in_file_keeps_default(tmp_path: Path) -> None:
     """A non-boolean ``animate`` in the file is ignored."""
     cfg = RichGradientConfig.load(_write(tmp_path, {"animate": 5}))

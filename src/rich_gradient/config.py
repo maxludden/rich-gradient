@@ -30,7 +30,7 @@ def _deep_update(base: dict[str, Any], override: dict[str, Any]) -> dict[str, An
 
 
 _TRUTHY = ("1", "true", "yes", "on")
-_FALSY = ("0", "false", "no", "off", "")
+_FALSY = ("0", "false", "no", "off")
 
 
 def _parse_bool(value: Any, *, default: bool, source: str) -> bool:
@@ -206,13 +206,13 @@ class RichGradientConfig:
         home_env = os.environ.get("RICH_GRADIENT_HOME_DIR")
         if home_env:
             merged["rich-gradient-home-dir"] = home_env
-        home_dir = Path(str(merged["rich-gradient-home-dir"])).expanduser()
 
         # step 1: read file if present
+        default_home = Path(str(merged["rich-gradient-home-dir"])).expanduser()
         cfg_file = (
             Path(config_path).expanduser()
             if config_path is not None
-            else home_dir / "config.json"
+            else default_home / "config.json"
         )
         file_colors: dict[str, str] = {}
         if cfg_file.exists():
@@ -267,7 +267,7 @@ class RichGradientConfig:
         return cls(
             animate=bool(merged["animate"]),
             colors=colors,
-            home_dir=home_dir,
+            home_dir=Path(str(merged["rich-gradient-home-dir"])).expanduser(),
         )
 
 

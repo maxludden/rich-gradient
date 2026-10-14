@@ -12,7 +12,7 @@ correction, and flexible alignment options.
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Iterator, Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from typing import TypeAlias, cast
 
@@ -268,12 +268,18 @@ class Gradient(JupyterMixin):
     ) -> None:
         """Normalize and store renderables without going through the descriptor.
 
-        Lists, tuples, and iterators are treated as several renderables (an
-        iterator is consumed once). Anything else, including strings, is a
-        single renderable. A blanket ``Iterable`` check is avoided on purpose:
-        ``str`` and ``rich.text.Text`` are iterable but must stay whole.
+        Any iterable (list, tuple, set, generator, custom container, ...) is
+        expanded into several renderables; iterators are consumed once.
+        Strings and objects that render themselves (``rich.text.Text``, panels,
+        ...) are iterable or look iterable but must stay whole, so they are
+        checked first.
         """
-        if isinstance(value, (list, tuple, Iterator)):
+        is_whole = (
+            isinstance(value, str)
+            or hasattr(value, "__rich_console__")
+            or hasattr(value, "__rich__")
+        )
+        if not is_whole and isinstance(value, Iterable):
             render_list: list[str | ConsoleRenderable] = list(value)
         else:
             render_list = [cast(ConsoleRenderable, value)]
