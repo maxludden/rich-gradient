@@ -26,14 +26,18 @@ utilities for building palettes, and animated variants for live terminal output.
 - Generates color stops automatically or from CSS color names, hex codes, RGB tuples, or `rich.color.Color` objects.
 - Supports foreground and background gradients, rainbow palettes, and deterministic color spectrums.
 - Ships with ready-to-use renderables:
-  - [`Text`](text.md)
-  - [`Gradient`](gradient.md)
-  - [`Panel`](panel.md)
-  - [`Rule`](rule.md)
-  - [`Spectrum`](spectrum.md)
-  - [`Markdown`](gradient.md)
-  - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](renderables.md)
-  - And their animated counterparts.
+      - [`Text`](text.md)
+      - [`Gradient`](gradient.md)
+      - [`Panel`](panel.md)
+      - [`Rule`](rule.md)
+      - [`Spectrum`](spectrum.md)
+      - [`Markdown`](gradient.md)
+      - [`Table`](table.md)
+      - [`Tree`](tree.md)
+      - [`Columns`](columns.md)
+      - [`Pretty`](pretty.md)
+      - [`Syntax`](syntax.md)
+      - And their animated counterparts.
 
 ## Installation
 
@@ -85,13 +89,17 @@ The example above is bundled in `examples/text_quickstart.py` and renders:
 
 ## Explore the user guide
 
-- [Text](text.md) – gradient-aware drop-in replacement for `rich.text.Text`.
-- [Gradient](gradient.md) – wrap any renderable with foreground/background gradients.
-- [Panel](panel.md) – gradient panels with highlighted titles and subtitles.
-- [Rule](rule.md) – gradient horizontal rules with adjustable thickness.
-- [Convenience Renderables](renderables.md) – gradient `Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`.
-- [Spectrum](spectrum.md) – generate and preview deterministic palettes.
-- [Animation](animation.md) – create animated gradients with `Live`.
+- [`Text`](text.md) – gradient-aware drop-in replacement for [`rich.text.Text`](https://github.com/Textualize/rich/blob/9d8f9a372cc5916fd4781fec207ced7ddac2f08f/rich/text.py).
+- [`Gradient`](gradient.md) – wrap any renderable with foreground/background gradients.
+- [`Panel`](panel.md) – gradient panels with highlighted titles and subtitles.
+- [`Rule`](rule.md) – gradient horizontal rules with adjustable thickness.
+- [`Table`](table.md) - gradient tables and columns
+- [`Tree`](tree.md) - gradient tree diagrams
+- [`Columns`](columns.md) - gradient rich columns
+- [`Pretty`](pretty.md) - pretty printing in gradient color
+- [`Syntax`](syntax.md) - print syntax in beautiful gradients
+- [`Spectrum`](spectrum.md) – generate and preview deterministic palettes.
+- [`Animation`](animation.md) – create animated gradients with [`Live`](https://github.com/Textualize/rich/blob/9d8f9a372cc5916fd4781fec207ced7ddac2f08f/rich/live.py).
 
 ## Command line usage
 

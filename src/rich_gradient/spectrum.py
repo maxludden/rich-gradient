@@ -40,14 +40,12 @@ from rich.style import Style, StyleType
 from rich.table import Table as RichTable
 from rich.text import Text
 
-from rich_gradient._color_ext import (get_css_map, install, is_installed,
-                                      parse_color)
+from rich_gradient._color_ext import ensure_installed, get_css_map, parse_color
 from rich_gradient._logger import logger
 from rich_gradient.config import config
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
 
-if not is_installed():
-    install()
+ensure_installed()
 
 COLOR_STOPS = {}
 try:
@@ -140,7 +138,7 @@ deterministic color order.
 
         # Generate a random cycle of colors from the spectrum
         colors: list[Color] = [parse_color(color) for color in COLOR_STOPS.values()]
-        color_cycle: cycle[Color] = cycle(colors)
+        color_cycle = cycle(colors)
 
         # Skip a pseudo-random number of colors to add variability, deterministically per seed
         for _ in range(rng.randint(1, 18)):

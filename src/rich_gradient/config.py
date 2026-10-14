@@ -13,10 +13,9 @@ from loguru import logger
 
 from rich.color import ColorParseError
 
-from ._color_ext import install, is_installed, parse_color
+from ._color_ext import ensure_installed, parse_color
 
-if not is_installed():
-    install()
+ensure_installed()
 
 
 def _deep_update(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:

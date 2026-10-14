@@ -37,6 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and Roboto Mono fonts, and an animated rainbow accent (header title, links,
   active navigation, and heading underline). It respects
   `prefers-reduced-motion`.
+- Guide pages for `Table`, `Tree`, `Columns`, `Pretty`, and `Syntax` (`docs/table.md`,
+  `tree.md`, `columns.md`, `pretty.md`, `syntax.md`), each with runnable examples
+  and a link to its reference page. They appear under the User Guide.
 - `examples/renderables_that_work.py` renders every rich-gradient renderable,
   reports which ones work, and saves a compact summary table to
   `docs/img/renderables-that-work.svg`. It replaces `gradient-table.svg` in the
@@ -116,6 +119,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   into `ValueError`, with the message `Invalid color for Rule: ...`. Other
   errors, such as an invalid `hues`, now propagate with their own message
   instead of being reported as "Invalid color provided".
+
+- Now requires `rich-color-ext>=3.0.0`. `_color_ext.py` imports `get_css_map`,
+  `install` and `is_installed` directly and drops the compatibility fallbacks
+  and the `sys.excepthook` snapshot/restore that only older releases needed.
+- The duplicated "install if needed" checks in `__init__`, `config` and
+  `spectrum` are replaced by a single `ensure_installed()` helper.
+- Color parsing is now Rich-first, matching rich-color-ext 3.0: Rich's own
+  parser runs first and CSS names / 3-digit hex are only tried when Rich rejects
+  the input. Names that Rich also defines now resolve to Rich's ANSI palette
+  instead of the CSS value, for gradient colors and `Style` strings alike
+  (`red` is `#800000`, not `#ff0000`). Ten names are affected: `red`, `blue`,
+  `yellow`, `cyan`, `magenta`, `white`, `purple`, `violet`, `orchid` and `tan`;
+  use a hex code (e.g. `#ff0000`) for the exact CSS value. A bare `abc` (no `#`)
+  is no longer accepted as hex.
+
+### Fixed
+
+- Gradient color stops (`Text`, `Gradient`, `Spectrum`) are resolved through
+  `parse_color()`, which tries Rich first and then falls back to CSS names and
+  `#abc` hex itself. CSS names such as `tomato` therefore keep working if the
+  patch was removed with `rich_color_ext.uninstall()`, instead of raising
+  `ColorParseError`.
+
 - `get_logger(enabled=True)` no longer calls `loguru.logger.remove()`, which
   destroyed every handler the host application had configured. It now tracks
   and removes only its own sinks, filters them to `rich_gradient` records so

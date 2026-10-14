@@ -389,3 +389,38 @@ body {
         animation: none;
     }
 }
+
+/* Inline code inside a link: plain text normally, rainbow on hover.
+   The code element paints its own background and inherits the link's
+   transparent text fill, which hid the text. Keep the normal text color, and
+   on hover fade the fill to transparent so a rainbow layer clipped to the text
+   shows through while it animates. */
+.md-typeset a:not(.headerlink):not(.md-button) > code {
+    background-image: var(--rg-rainbow),
+        linear-gradient(var(--md-code-bg-color), var(--md-code-bg-color));
+    background-size: 200% 100%, auto;
+    background-clip: text, border-box;
+    -webkit-background-clip: text, border-box;
+    -webkit-text-fill-color: var(--md-typeset-color);
+    color: var(--md-typeset-color);
+    animation: rg-rainbow-shift-code 4s linear infinite paused;
+    transition: -webkit-text-fill-color 0.35s ease;
+}
+
+.md-typeset a:not(.headerlink):not(.md-button):is(:hover, :focus-visible) > code {
+    -webkit-text-fill-color: transparent;
+    animation-play-state: running;
+}
+
+@keyframes rg-rainbow-shift-code {
+    to {
+        background-position: -200% 0, 0 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .md-typeset a > code {
+        animation: none;
+        transition: none;
+    }
+}

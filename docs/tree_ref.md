@@ -1,5 +1,7 @@
 # Tree Reference
 
+See the [Tree guide](tree.md) for usage examples.
+
 ::: rich_gradient.tree.Tree
     :docstring:
     :members:

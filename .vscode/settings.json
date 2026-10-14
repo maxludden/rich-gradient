@@ -120,5 +120,30 @@
     "python.analysis.autoImportCompletions": true,
     "chat.tools.terminal.autoApprove": {
         "uvx": true
-    }
+    },
+    "files.associations": {
+        "*.md": "markdown",
+        "*.markdown": "markdown",
+        "*.pmd": "markdown",
+        "*.pandoc": "markdown"
+    },
+    "workbench.editorAssociations": {
+        "*.md": "default",
+        "*.markdown": "default"
+    },
+    "[markdown]": {
+        "editor.wordWrap": "on",
+        "editor.quickSuggestions": {
+            "comments": "off",
+            "strings": "off",
+            "other": "off"
+        },
+        "editor.unicodeHighlight.ambiguousCharacters": false
+    },
+    "markdown.preview.scrollEditorWithPreview": true,
+    "markdown.preview.scrollPreviewWithEditor": true,
+    "markdown.preview.openMarkdownLinks": "inPreview",
+    "pandoc.executable": "pandoc",
+    "pandoc.htmlOptString": "--standalone --embed-resources --toc",
+    "pandoc.pdfOptString": "--toc"
 }
