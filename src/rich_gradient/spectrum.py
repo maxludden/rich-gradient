@@ -40,7 +40,8 @@ from rich.style import Style, StyleType
 from rich.table import Table as RichTable
 from rich.text import Text
 
-from rich_gradient._color_ext import get_css_map, install, is_installed
+from rich_gradient._color_ext import (get_css_map, install, is_installed,
+                                      parse_color)
 from rich_gradient._logger import logger
 from rich_gradient.config import config
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME, GradientTheme
@@ -138,7 +139,7 @@ deterministic color order.
         rng = Random(seed)
 
         # Generate a random cycle of colors from the spectrum
-        colors: list[Color] = [Color.parse(color) for color in COLOR_STOPS.values()]
+        colors: list[Color] = [parse_color(color) for color in COLOR_STOPS.values()]
         color_cycle: cycle[Color] = cycle(colors)
 
         # Skip a pseudo-random number of colors to add variability, deterministically per seed
@@ -155,7 +156,7 @@ deterministic color order.
         # Build a reverse map from normalized hex -> name and assign names for the selected colors
 
         hex_to_name = {
-            Color.parse(value).get_truecolor().hex.upper(): name
+            parse_color(value).get_truecolor().hex.upper(): name
             for name, value in COLOR_STOPS.items()
         }
         self.names = [

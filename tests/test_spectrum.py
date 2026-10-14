@@ -70,3 +70,15 @@ def test_spectrum_hex_matches_color():
     assert [h.lower() for h in spectrum.hex] == [
         c.get_truecolor().hex.lower() for c in spectrum.colors
     ]
+
+
+def test_spectrum_accepts_css_and_short_hex_palette_values(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Palette values the config accepts (CSS names, #abc) must build a Spectrum."""
+    import rich_gradient.spectrum as spectrum_module
+
+    palette = {"a": "rebeccapurple", "b": "#0f0", "c": "tomato", "d": "#00f"}
+    monkeypatch.setattr(spectrum_module, "COLOR_STOPS", palette)
+    spectrum = spectrum_module.Spectrum(hues=2, seed=1)
+    assert len(spectrum.colors) == 2
