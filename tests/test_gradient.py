@@ -415,3 +415,17 @@ def test_multiple_empty_renderables_print_one_newline_each() -> None:
 
     expected = _printed(Group(RichText(""), RichText("")))
     assert _printed(Gradient(["", ""], colors=["red", "blue"])) == expected == "\n\n"
+
+
+@pytest.mark.parametrize("end", ["\n", "", "X"])
+def test_gradient_empty_text_matches_rich_output(end: str) -> None:
+    """Empty text prints exactly what Rich prints, whatever its ``end``."""
+
+    def render(renderable: object) -> str:
+        console = Console(width=20, file=io.StringIO(), color_system=None)
+        console.print(renderable)
+        return console.file.getvalue()  # type: ignore[attr-defined]
+
+    assert render(Gradient(RichText("", end=end), colors=["red", "blue"])) == render(
+        RichText("", end=end)
+    )
