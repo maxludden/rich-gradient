@@ -5,8 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 
 from rich.console import Console
+from rich.table import Table as RichTable
 
-from rich_gradient import Columns, Pretty, Syntax, Table, Tree
+from rich_gradient import JSON, Columns, Pretty, ProgressBar, Syntax, Table, Tree
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / "docs" / "img"
@@ -27,6 +28,7 @@ def _save(renderable: object, filename: str, width: int = 88) -> None:
         title="rich-gradient",
         theme=GRADIENT_TERMINAL_THEME,
     )
+    print(f"-> saved {filename}\n")
 
 
 def table_example() -> Table:
@@ -93,6 +95,7 @@ def syntax_example() -> Syntax:
     """Build a gradient syntax example."""
     code = """\
 from rich.console import Console
+from rich.table import Table as RichTable
 from rich_gradient import Syntax
 
 console = Console()
@@ -109,6 +112,23 @@ console.print(Syntax("print('hello')", "python"))
     )
 
 
+def json_example() -> JSON:
+    """Build a gradient JSON example."""
+    return JSON.from_data(
+        {"project": "rich-gradient", "renderables": ["JSON", "ProgressBar"], "stable": True},
+        colors=["#38bdf8", "#a855f7", "#f97316"],
+    )
+
+
+def progress_bar_example() -> RichTable:
+    """Build a stack of gradient progress bars (one per row)."""
+    colors = ["#38bdf8", "#a855f7", "#f97316"]
+    grid = RichTable.grid()
+    for done in (15, 50, 85, 100):
+        grid.add_row(ProgressBar(total=100, completed=done, width=60, colors=colors))
+    return grid
+
+
 def main() -> None:
     """Render all gradient convenience renderable examples."""
     _save(table_example(), "renderables-table.svg")
@@ -116,6 +136,8 @@ def main() -> None:
     _save(columns_example(), "renderables-columns.svg")
     _save(pretty_example(), "renderables-pretty.svg")
     _save(syntax_example(), "renderables-syntax.svg")
+    _save(json_example(), "renderables-json.svg")
+    _save(progress_bar_example(), "renderables-progress-bar.svg")
 
 
 if __name__ == "__main__":

@@ -22,9 +22,11 @@ from rich_gradient.config import config as _config
 from rich_gradient.config import reload_config as _reload_config
 from rich_gradient.default_styles import DEFAULT_STYLES
 from rich_gradient.gradient import ColorType, Gradient
+from rich_gradient.json import JSON
 from rich_gradient.markdown import Markdown
 from rich_gradient.panel import Panel
 from rich_gradient.pretty import Pretty
+from rich_gradient.progress_bar import ProgressBar
 from rich_gradient.rule import Rule
 from rich_gradient.spectrum import Spectrum
 from rich_gradient.syntax import Syntax
@@ -72,9 +74,11 @@ __all__ = [
     "Console",
     "Gradient",
     "GradientTheme",
+    "JSON",
     "Markdown",
     "Panel",
     "Pretty",
+    "ProgressBar",
     "RichGradientConfig",
     "Rule",
     "Spectrum",

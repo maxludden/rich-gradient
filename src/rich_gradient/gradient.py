@@ -131,6 +131,7 @@ class Gradient(JupyterMixin):
         highlight_regex: HighlightRegexType | HighlightRegex | \
             Sequence[HighlightRegex] | None = None,
         animated: bool = False,
+        trailing_newline: bool = True,
     ) -> None:
         """
         Initialize a Gradient instance.
@@ -156,7 +157,11 @@ class Gradient(JupyterMixin):
                 first and last colors are both reached across the span.
             highlight_words: Optional configurations describing word highlights to apply.
             highlight_regex: Optional configurations describing regex highlights to apply.
+            trailing_newline: End the output with a newline, like other Rich
+                renderables (the default). Pass False for the previous
+                behavior, e.g. to print a gradient inline with other text.
         """
+        self.trailing_newline: bool = trailing_newline
         self.console: Console = console or get_console()
         self.hues: int = validate_hues(hues)
         self.rainbow: bool = rainbow
@@ -487,7 +492,12 @@ class Gradient(JupyterMixin):
             pad=self.expand,
         )
 
-        yield from self._render_styled_lines(console, options, content)
+        yield from self._render_styled_lines(
+            console,
+            options,
+            content,
+            trailing_newline=self.trailing_newline and bool(self.renderables),
+        )
 
     def _render_styled_lines(
         self,
