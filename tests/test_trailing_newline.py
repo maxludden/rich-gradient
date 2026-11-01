@@ -28,3 +28,10 @@ def test_wrapper_attribute_disables_newline() -> None:
     pretty = Pretty({"a": 1}, colors=COLORS)
     pretty.trailing_newline = False
     assert not _printed(pretty).endswith("\n")
+
+
+def test_print_adds_exactly_one_newline() -> None:
+    """Console.print adds no extra newline for a renderable, so no blank line."""
+    out = _printed(Gradient("hi", colors=COLORS))
+    assert out.count("\n") == 1
+    assert _printed(Pretty({"a": 1}, colors=COLORS)).count("\n") == 1
