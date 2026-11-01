@@ -1,0 +1,68 @@
+name: Publish
+
+# Publishes to PyPI with trusted publishing (OIDC): no API token is stored.
+# One-time setup on PyPI (project "rich-gradient" -> Publishing -> Add a publisher):
+#   owner: maxludden, repository: rich-gradient,
+#   workflow: publish.yml, environment: pypi
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build and publish (e.g. v0.4.1)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate tag input
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          # Only release tags may be published, never a branch, PR ref or SHA.
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::'$TAG' is not a vX.Y.Z tag"; exit 1; }
+      - uses: actions/checkout@v7
+        with:
+          # Release events build the exact commit the event selected (immune to a
+          # moved tag); manual runs build the named tag and fail if it is not one.
+          ref: ${{ github.event_name == 'release' && github.sha || format('refs/tags/{0}', inputs.tag) }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: uv sync --locked
+      - name: Run tests
+        run: uv run pytest -q
+      - name: Build sdist and wheel
+        run: uv build
+      - name: Upload distributions
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/rich-gradient/
+    permissions:
+      id-token: write # required for trusted publishing
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
