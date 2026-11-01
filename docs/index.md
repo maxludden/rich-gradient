@@ -37,6 +37,8 @@ utilities for building palettes, and animated variants for live terminal output.
       - [`Columns`](columns.md)
       - [`Pretty`](pretty.md)
       - [`Syntax`](syntax.md)
+      - [`JSON`](json.md)
+      - [`ProgressBar`](progress_bar.md)
       - And their animated counterparts.
 
 ## Installation
