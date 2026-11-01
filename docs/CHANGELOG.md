@@ -5,18 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v0.4.1 - 2026-11-01 | <span style="color: rgb(215, 255, 100)">JSON and ProgressBar</span>
 
 ### Added
 
-- `JSON` wrapper for `rich.json.JSON`, including `JSON.from_data`.
-- `ProgressBar`, a gradient-filled variant of Rich's `ProgressBar`.
+- `JSON`, a gradient wrapper for `rich.json.JSON`, including `JSON.from_data` (accepts
+  Rich's `indent`, `skip_keys`, `sort_keys`, ... options).
+- `ProgressBar`, a gradient-filled variant of Rich's `ProgressBar`. Only the filled
+  portion takes the gradient; the track and the fill style's background and
+  attributes are untouched. Pulse and indeterminate bars render as Rich does, and
+  Rich's bar state (`completed`, `total`, `width`, styles) is exposed on the wrapper.
+- Guide and reference pages for both, plus showcase SVGs.
+- `trailing_newline` option on `Gradient` (default `True`); wrappers honor the
+  attribute, including `Rule` and `AnimatedRule`.
 
 ### Fixed
 
 - `Gradient` (and every wrapper built on it) now ends its output with a newline like other
   Rich renderables, so consecutive `console.print` calls no longer run together. Pass
   `trailing_newline=False` to `Gradient` (or set the attribute on a wrapper) for the old behavior.
+- `Gradient` expands any iterable of renderables (sets, generators, custom containers),
+  while strings and self-rendering objects stay whole.
+- `Spectrum` palette colors are parsed with the Rich-first parser and fall back to
+  `rich-color-ext`, so Rich's own color names keep Rich's meaning.
+- `RICH_GRADIENT_HOME_DIR` is honored when locating `config.json`, and an empty
+  boolean environment value is no longer treated as false.
+- An empty `Gradient` prints the same as an empty Rich `Text` for any `end`.
+
+### Changed
+
+- CI and docs workflows use current GitHub Actions (`actions/checkout` v7,
+  `astral-sh/setup-uv` v10.3.3, Pages actions v5/v6), clearing the Node.js 20
+  deprecation warnings.
+- Refreshed locked development dependencies (black, filelock, virtualenv, and others).
+- Updated the security contact email in `SECURITY.md`.
+- Confirmed compatibility with Rich 15.0.0; no code changes were required.
 
 ## v0.4.0 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
 

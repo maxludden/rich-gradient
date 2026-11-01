@@ -46,6 +46,13 @@ animated variants, and utilities for building palettes.
   Invalid settings are ignored with a logged warning rather than raising.
 - Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
 
+### What's new in v0.4.1
+
+- **Added** — `JSON` and `ProgressBar` gradient renderables (the progress bar
+  colors only its filled portion), plus a `trailing_newline` option on `Gradient`.
+- **Fixed** — `Gradient` output now ends with a newline like other Rich
+  renderables. Pass `trailing_newline=False` for the previous behavior.
+
 ### What's new in v0.4.0
 
 - **Breaking** — importing `rich_gradient` no longer installs Rich's pretty
