@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rich.console import Console, Group
+from rich.console import Console
+from rich.table import Table as RichTable
 
 from rich_gradient import JSON, Columns, Pretty, ProgressBar, Syntax, Table, Tree
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
@@ -92,7 +93,8 @@ def pretty_example() -> Pretty:
 def syntax_example() -> Syntax:
     """Build a gradient syntax example."""
     code = """\
-from rich.console import Console, Group
+from rich.console import Console
+from rich.table import Table as RichTable
 from rich_gradient import Syntax
 
 console = Console()
@@ -117,12 +119,13 @@ def json_example() -> JSON:
     )
 
 
-def progress_bar_example() -> Group:
-    """Build a stack of gradient progress bars."""
+def progress_bar_example() -> RichTable:
+    """Build a stack of gradient progress bars (one per row)."""
     colors = ["#38bdf8", "#a855f7", "#f97316"]
-    return Group(
-        *(ProgressBar(total=100, completed=done, width=60, colors=colors) for done in (15, 50, 85, 100))
-    )
+    grid = RichTable.grid()
+    for done in (15, 50, 85, 100):
+        grid.add_row(ProgressBar(total=100, completed=done, width=60, colors=colors))
+    return grid
 
 
 def main() -> None:
