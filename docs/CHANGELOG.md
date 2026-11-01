@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `Gradient` (and every wrapper built on it) now ends its output with a newline like other
-  Rich renderables, so consecutive `console.print` calls no longer run together.
+  Rich renderables, so consecutive `console.print` calls no longer run together. Pass
+  `trailing_newline=False` to `Gradient` (or set the attribute on a wrapper) for the old behavior.
 
 ## v0.4.0 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
 
