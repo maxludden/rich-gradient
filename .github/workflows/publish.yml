@@ -21,10 +21,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate tag input
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          # Only release tags may be published, never a branch, PR ref or SHA.
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::'$TAG' is not a vX.Y.Z tag"; exit 1; }
       - uses: actions/checkout@v7
         with:
-          # On a release the default ref is the release tag.
-          ref: ${{ inputs.tag || github.ref }}
+          # Release events build the exact commit the event selected (immune to a
+          # moved tag); manual runs build the named tag and fail if it is not one.
+          ref: ${{ github.event_name == 'release' && github.sha || format('refs/tags/{0}', inputs.tag) }}
       - name: Install uv
         uses: astral-sh/setup-uv@v10.3.3
         with:
@@ -57,4 +65,4 @@ jobs:
           name: dist
           path: dist/
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
