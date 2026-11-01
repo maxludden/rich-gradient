@@ -3,7 +3,7 @@
 ## Reporting a Vulnerability
 
 If you believe you've found a security vulnerability in **rich-gradient**, please disclose it responsibly:
-- Email `security@ludden.dev` with `rich-gradient SECURITY` in the subject.
+- Email `security@maxludden.com` with `rich-gradient SECURITY` in the subject.
 - Provide:
   1. A detailed description of the issue and possible exploit vectors.
   2. Versions of `rich-gradient`, `rich`, and `rich-color-ext` involved.
