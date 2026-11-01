@@ -487,7 +487,9 @@ class Gradient(JupyterMixin):
             pad=self.expand,
         )
 
-        yield from self._render_styled_lines(console, options, content)
+        yield from self._render_styled_lines(
+            console, options, content, trailing_newline=bool(self.renderables)
+        )
 
     def _render_styled_lines(
         self,

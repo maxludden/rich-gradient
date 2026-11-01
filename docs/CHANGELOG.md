@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `JSON` wrapper for `rich.json.JSON`, including `JSON.from_data`.
 - `ProgressBar`, a gradient-filled variant of Rich's `ProgressBar`.
 
+### Fixed
+
+- `Gradient` (and every wrapper built on it) now ends its output with a newline like other
+  Rich renderables, so consecutive `console.print` calls no longer run together.
+
 ## v0.4.0 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
 
 ### Breaking
