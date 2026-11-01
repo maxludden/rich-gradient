@@ -157,7 +157,10 @@ class AnimatedRule(AnimatedGradient):
     ) -> RenderResult:
         content = self.renderables[0] if self.renderables else RichText("")
         yield from self._render_styled_lines(
-            console, options, content, trailing_newline=True
+            console,
+            options,
+            content,
+            trailing_newline=self.trailing_newline,
         )
 
     # For Rules, let the underlying RichRule handle width/align. Avoid the

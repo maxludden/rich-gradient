@@ -180,7 +180,10 @@ class Rule(Gradient):
         content = self.renderables[0] if self.renderables else RichText("")
 
         yield from self._render_styled_lines(
-            console, options, content, trailing_newline=True
+            console,
+            options,
+            content,
+            trailing_newline=self.trailing_newline,
         )
 
 

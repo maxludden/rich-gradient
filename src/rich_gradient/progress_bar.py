@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from typing import Any
+
 from rich.console import Console, ConsoleOptions, RenderResult
 from rich.progress_bar import ProgressBar as RichProgressBar
 from rich.segment import Segment
@@ -62,7 +64,33 @@ class ProgressBar:
         self.colors = list(colors) if colors is not None else None
         self.rainbow = rainbow
         self.hues = hues
-        self._style = style
+
+    _RICH_ATTRS = frozenset(
+        {
+            "total",
+            "completed",
+            "width",
+            "pulse",
+            "style",
+            "complete_style",
+            "finished_style",
+            "pulse_style",
+            "animation_time",
+        }
+    )
+
+    def __getattr__(self, name: str) -> Any:
+        """Expose Rich's bar state (``completed``, ``total``, styles, ...)."""
+        if name in ProgressBar._RICH_ATTRS and "bar" in self.__dict__:
+            return getattr(self.__dict__["bar"], name)
+        raise AttributeError(name)
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        """Route Rich's bar state attributes to the wrapped bar."""
+        if name in ProgressBar._RICH_ATTRS and "bar" in self.__dict__:
+            setattr(self.__dict__["bar"], name, value)
+        else:
+            super().__setattr__(name, value)
 
     @property
     def percentage_completed(self) -> float | None:
@@ -80,27 +108,35 @@ class ProgressBar:
     def __rich_console__(
         self, console: Console, options: ConsoleOptions
     ) -> RenderResult:
-        """Render the bar, swapping in gradient styles on filled cells."""
+        """Render the bar, adding gradient colors to the filled cells.
+
+        Filled cells are identified by position (mirroring Rich's own width math),
+        not by color, so they are found even when the fill and track share a color.
+        The gradient replaces only the foreground; Rich's fill style keeps its
+        background and attributes.
+        """
         plain = list(console.render(self.bar, options))
-        if self.bar.pulse or self.bar.total is None:
+        bar = self.bar
+        if bar.pulse or bar.total is None:
             yield from plain
             return
-        width = options.max_width if self.bar.width is None else self.bar.width
-        grad_options = options.update(width=width, height=1)
+        width = min(bar.width or options.max_width, options.max_width)
+        completed = min(bar.total, max(0, bar.completed))
+        halves = int(width * 2 * completed / bar.total) if bar.total else width * 2
+        filled = halves // 2 + halves % 2
         gradient = Gradient(
-            RichProgressBar(total=1, completed=1, width=width, style=self._style),
+            RichProgressBar(total=1, completed=1, width=width),
             colors=self.colors,
             rainbow=self.rainbow,
             hues=self.hues,
             console=console,
         )
-        grad_chars = [
-            (ch, seg.style)
-            for seg in console.render(gradient, grad_options)
+        grad_colors = [
+            seg.style.color if seg.style else None
+            for seg in console.render(gradient, options.update(width=width, height=1))
             if isinstance(seg, Segment) and seg.text != "\n"
-            for ch in seg.text
+            for _ in seg.text
         ]
-        back_color = console.get_style(self._style).color
         index = 0
         for seg in plain:
             if seg.control or seg.text == "\n":
@@ -108,10 +144,8 @@ class ProgressBar:
                 continue
             base = seg.style or Style()
             for ch in seg.text:
-                if index < len(grad_chars) and base.color != back_color:
-                    yield Segment(ch, grad_chars[index][1])
-                else:
-                    yield Segment(ch, base)
+                color = grad_colors[index] if index < min(filled, len(grad_colors)) else None
+                yield Segment(ch, base + Style(color=color) if color else base)
                 index += 1
 
 

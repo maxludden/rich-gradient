@@ -107,7 +107,10 @@ class JSON(Gradient):
             if k in kwargs
         }
         indent = kwargs.pop("indent", 2)
-        text = json_module.dumps(data, indent=indent, **serializer)
+        dumps_options = {
+            ('skipkeys' if k == 'skip_keys' else k): v for k, v in serializer.items()
+        }
+        text = json_module.dumps(data, indent=indent, **dumps_options)
         return cls(
             text,
             indent=indent,

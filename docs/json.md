@@ -26,7 +26,7 @@ JSON.from_data({"items": [1, 2, 3]}, indent=4, sort_keys=True, rainbow=True)
 
 The arguments Rich's `JSON` takes are forwarded: `indent`, `highlight`, `skip_keys`, `ensure_ascii`, `check_circular`, `allow_nan`, `default`, and `sort_keys`. The underlying Rich object is available as `json.json`.
 
-`JSON.from_data` serializes with `json.dumps`, so the `highlight` option is only honored by the string constructor.
+`JSON.from_data` serializes with `json.dumps` and forwards `highlight` like the string constructor, so both honor it.
 
 ## Shared gradient options
 
