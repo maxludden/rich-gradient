@@ -28,6 +28,8 @@ def _save(renderable: object, filename: str, width: int = 88) -> None:
         title="rich-gradient",
         theme=GRADIENT_TERMINAL_THEME,
     )
+    # Gradient renderables end without a newline; keep terminal output tidy.
+    print(f"\n-> saved {filename}\n")
 
 
 def table_example() -> Table:
