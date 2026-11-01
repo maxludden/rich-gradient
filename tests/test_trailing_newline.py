@@ -35,3 +35,13 @@ def test_print_adds_exactly_one_newline() -> None:
     out = _printed(Gradient("hi", colors=COLORS))
     assert out.count("\n") == 1
     assert _printed(Pretty({"a": 1}, colors=COLORS)).count("\n") == 1
+
+
+def test_newline_terminated_content_gets_no_extra_blank_line() -> None:
+    """Wrapped Panels and Rules already end in a newline; they must not gain a second."""
+    from rich.panel import Panel as RichPanel
+
+    from rich_gradient import Rule
+
+    assert _printed(Gradient(RichPanel("hi", width=6), colors=COLORS)).count("\n") == 3
+    assert _printed(Rule()).count("\n") == 1
