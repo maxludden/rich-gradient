@@ -6,7 +6,8 @@ from typing import cast
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
-from rich.console import Console, RenderableType
+from rich.console import Console, ConsoleOptions, RenderableType
+from rich.measure import Measurement
 from rich.panel import Panel as RichPanel
 from rich.style import Style, StyleType
 from rich.text import Text as RichText
@@ -179,6 +180,20 @@ class Panel(Gradient):
         bottom_right: str = escape(box.bottom_right)
         subtitle_regex: str = rf"{bottom_left}{bottom}+ (.*?) {bottom}+{bottom_right}"
         return subtitle_regex
+
+    def __rich_measure__(
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
+        """Measure the panel, filling the available width when it expands.
+
+        Rich measures a panel at its content width even when ``expand=True``,
+        which made the enclosing gradient shrink the panel and spread the ramp
+        over empty space. An expanding panel without a fixed width now reports
+        the full available width.
+        """
+        if self.expand and self._panel.width is None:
+            return Measurement(options.max_width, options.max_width)
+        return super().__rich_measure__(console, options)
 
     @property
     def panel(self) -> RichPanel:

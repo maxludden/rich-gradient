@@ -91,3 +91,41 @@ def test_package_exports_custom_renderables() -> None:
     """Package root should export the custom renderable wrappers."""
     exported: Iterable[type[object]] = (Table, Tree, Columns, Pretty, Syntax)
     assert all(wrapper.__module__.startswith("rich_gradient.") for wrapper in exported)
+
+
+def _segment_colors(renderable: object, width: int = 40) -> set[str]:
+    """Render with truecolor and return the foreground colors used."""
+    import io
+
+    from rich.console import Console
+
+    console = Console(width=width, force_terminal=True, color_system="truecolor", file=io.StringIO())
+    return {
+        seg.style.color.name
+        for seg in console.render(renderable)
+        if seg.style and seg.style.color and seg.text.strip()
+    }
+
+
+def test_syntax_keeps_token_colors_by_default() -> None:
+    """Highlighted tokens keep the theme color while plain code gets the gradient."""
+    code = 'x = "a"'
+    kept = _segment_colors(Syntax(code, "python", colors=["#ff0000", "#0000ff"]))
+    flat = _segment_colors(
+        Syntax(code, "python", colors=["#ff0000", "#0000ff"], keep_token_colors=False)
+    )
+    assert "#e6db74" in kept  # monokai string color survives
+    assert "#e6db74" not in flat
+
+
+def test_expanded_panel_fills_width() -> None:
+    """An expanding Panel spans the console so the border shares the ramp."""
+    import io
+
+    from rich.console import Console
+
+    from rich_gradient import Panel
+
+    console = Console(width=30, file=io.StringIO(), record=True)
+    console.print(Panel("hi", colors=["red", "blue"], expand=True))
+    assert all(len(line) == 30 for line in console.export_text().splitlines())

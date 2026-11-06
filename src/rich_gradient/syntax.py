@@ -7,9 +7,12 @@ from typing import Optional
 
 from pygments.lexer import Lexer
 from rich.align import AlignMethod, VerticalAlignMethod
+from rich.color import Color
 from rich.console import Console
 from rich.padding import PaddingDimensions
+from rich.style import Style
 from rich.syntax import Syntax as RichSyntax
+from pygments.token import Token
 
 from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
                                     HighlightWordsType)
@@ -45,6 +48,10 @@ class Syntax(Gradient):
         console: Optional Rich console.
         highlight_words: Word highlight configuration.
         highlight_regex: Regex highlight configuration.
+        keep_token_colors: Keep the theme's colors for highlighted tokens
+            (keywords, strings, comments, ...). Only plain code, line numbers
+            and whitespace take the gradient. Set to ``False`` to recolor
+            everything with the gradient.
     """
 
     def __init__(
@@ -75,8 +82,10 @@ class Syntax(Gradient):
         console: Console | None = None,
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
+        keep_token_colors: bool = True,
     ) -> None:
         """Initialize gradient-enabled Rich syntax highlighting."""
+        self._base_color: Color | None = None
         syntax = RichSyntax(
             code,
             lexer,
@@ -94,6 +103,8 @@ class Syntax(Gradient):
             padding=padding,
         )
         self._syntax = syntax
+        if keep_token_colors:
+            self._base_color = syntax._theme.get_style_for_token(Token).color
         super().__init__(
             syntax,
             colors=list(colors) if colors is not None else None,
@@ -108,6 +119,13 @@ class Syntax(Gradient):
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
         )
+
+    def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
+        """Leave highlighted tokens alone; apply the gradient to everything else."""
+        color = original.color
+        if self._base_color is not None and color is not None and color != self._base_color:
+            return original
+        return super()._merge_styles(original, gradient_style)
 
     @property
     def syntax(self) -> RichSyntax:

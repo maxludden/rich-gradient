@@ -747,8 +747,7 @@ class Gradient(JupyterMixin):
 
         return to_srgb(lr), to_srgb(lg), to_srgb(lb)
 
-    @staticmethod
-    def _merge_styles(original: Style, gradient_style: Style) -> Style:
+    def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
         """
         Merge original Style with gradient Style, preserving original attributes.
 

@@ -41,6 +41,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the security contact email in `SECURITY.md`.
 - Confirmed compatibility with Rich 15.0.0; no code changes were required.
 
+## Unreleased
+
+### Fixed
+
+- `Panel(expand=True)` now fills the available width. Rich measures a panel at its content width, so the enclosing gradient shrank it and spread the ramp over empty space, making the border look styled apart from its content.
+- `Syntax` keeps the theme's colors for highlighted tokens (keywords, strings, comments, ...) instead of recoloring all code with the gradient; plain code, line numbers and the frame still take the gradient. Pass `keep_token_colors=False` for the previous all-gradient look.
+
+### Changed
+
+- `Gradient._merge_styles` is now an instance method (was a static method) so subclasses can customize style merging.
+
 ## v0.4.0 - 2026-10-08 | <span style="color: rgb(215, 255, 100)">Gradients that reach the end</span>
 
 ### Breaking
