@@ -46,6 +46,11 @@ animated variants, and utilities for building palettes.
   Invalid settings are ignored with a logged warning rather than raising.
 - Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
 
+### What's new in v0.4.2
+
+- **Fixed** — `Panel(expand=True)` now fills the available width, so the border and its content share one gradient.
+- **Fixed** — `Syntax` keeps the theme's token colors by default instead of recoloring all code; pass `keep_token_colors=False` for the old look.
+
 ### What's new in v0.4.1
 
 - **Added** — `JSON` and `ProgressBar` gradient renderables (the progress bar
