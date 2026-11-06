@@ -128,4 +128,4 @@ def test_expanded_panel_fills_width() -> None:
 
     console = Console(width=30, file=io.StringIO(), record=True)
     console.print(Panel("hi", colors=["red", "blue"], expand=True))
-    assert all(len(line) == 30 for line in console.export_text().splitlines())
+    assert all(len(line.rstrip()) == 30 for line in console.export_text().splitlines())

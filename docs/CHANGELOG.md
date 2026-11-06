@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.4.3 - 2026-11-06 | <span style="color: rgb(215, 255, 100)">Full-width panels</span>
+
+### Fixed
+
+- `Panel(expand=True)` now really fills the available width. The 0.4.2 fix measured the wrong object, so the enclosing gradient still shrank the panel. The inner Rich panel now reports the full width, so the border and its content share one gradient ramp.
+
 ## v0.4.2 - 2026-11-06 | <span style="color: rgb(215, 255, 100)">Panels and syntax</span>
 
 ### Fixed

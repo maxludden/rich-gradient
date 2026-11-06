@@ -19,6 +19,23 @@ from rich_gradient.text import Text, TextType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
 
+class _ExpandingRichPanel(RichPanel):
+    """Rich ``Panel`` that measures at the full available width when expanding.
+
+    Rich measures a panel at its content width even with ``expand=True``, so the
+    ``Align`` inside ``Gradient`` shrank the panel and left the gradient ramp
+    spread over empty space (the border looked styled apart from its content).
+    """
+
+    def __rich_measure__(
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
+        """Report the full available width when expanding without a fixed width."""
+        if self.expand and self.width is None:
+            return Measurement(options.max_width, options.max_width)
+        return super().__rich_measure__(console, options)
+
+
 class Panel(Gradient):
     """A Rich Panel that supports (animated) gradients as background.
 
@@ -106,7 +123,7 @@ class Panel(Gradient):
         else:
             _style = Style.parse(style) if style else Style.null()
 
-        panel = RichPanel(
+        panel = _ExpandingRichPanel(
             normalized_renderable,
             title=title,
             title_align=title_align,
@@ -180,20 +197,6 @@ class Panel(Gradient):
         bottom_right: str = escape(box.bottom_right)
         subtitle_regex: str = rf"{bottom_left}{bottom}+ (.*?) {bottom}+{bottom_right}"
         return subtitle_regex
-
-    def __rich_measure__(
-        self, console: Console, options: ConsoleOptions
-    ) -> Measurement:
-        """Measure the panel, filling the available width when it expands.
-
-        Rich measures a panel at its content width even when ``expand=True``,
-        which made the enclosing gradient shrink the panel and spread the ramp
-        over empty space. An expanding panel without a fixed width now reports
-        the full available width.
-        """
-        if self.expand and self._panel.width is None:
-            return Measurement(options.max_width, options.max_width)
-        return super().__rich_measure__(console, options)
 
     @property
     def panel(self) -> RichPanel:
