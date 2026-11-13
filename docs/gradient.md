@@ -102,12 +102,12 @@ from rich_gradient import Gradient
 from rich_gradient._highlight import HighlightRegex, HighlightWords
 
 rules_words = [
-    HighlightWords(words=("error", "warning"), style=Style.parse("bold #f00")),
-    HighlightWords(words=("hint",), style=Style.parse("italic cyan"), case_sensitive=False),
+    HighlightWords(words=("error", "warning"), style=Style.parse("bold")),
+    HighlightWords(words=("hint",), style=Style.parse("dim italic"), case_sensitive=False),
 ]
 
 rules_regex = [
-    HighlightRegex(pattern=re.compile(r"\b\d+\b"), style=Style.parse("bold yellow")),
+    HighlightRegex(pattern=re.compile(r"\b\d+\b"), style=Style.parse("b u")),
 ]
 
 Gradient(

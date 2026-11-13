@@ -57,23 +57,25 @@ class AnimatedPanel(AnimatedGradient):
             ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
         highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
             gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
-            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``{"error": "bold", ("warn", "caution"): "italic"}``; a sequence of
             ``(words, style[, case_sensitive])`` tuples, e.g.
-            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``[("error", "bold"), (("warn", "caution"), "italic", False)]``; or
             ``HighlightWords`` instances, e.g.
-            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            ``[HighlightWords(words=("error",), style=Style.parse("b u"))]``.
             Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
             None.
         highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
             matches are restyled on top of the gradient. Accepts a mapping of a pattern
-            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            to a style, e.g. ``{r"[0-9]+": "bold"}``; a sequence of
             ``(pattern, style[, flags])`` tuples, e.g.
-            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            ``[(r"error|fail", "reverse", re.IGNORECASE)]``; or ``HighlightRegex``
             instances, e.g.
-            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("dim italic"))]``.
             Title and subtitle rules are appended to these. Defaults to None.
         border_style (StyleType): Style of the border, under the gradient. A style
-            string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+            string or ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in
+            this style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``""``.
         box (Box): Box characters for the border, any ``rich.box`` constant, e.g.
             ``rich.box.HEAVY`` or ``rich.box.DOUBLE``. Defaults to ``rich.box.ROUNDED``.
         padding (int | tuple[int, int] | tuple[int, int, int, int]): Padding inside the
@@ -84,21 +86,25 @@ class AnimatedPanel(AnimatedGradient):
         height (Optional[int]): Fixed height in lines, or ``None`` to size
             automatically. Defaults to None.
         style (StyleType): Base style of the panel content. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``""``.
         title (Optional[TextType]): Title shown in the top border of the panel: a string
             (parsed as console markup) or a ``Text``. Defaults to None.
         title_align (AlignMethod): Alignment of the title: ``"left"``, ``"center"``, or
             ``"right"``. Defaults to ``"center"``.
         title_style (StyleType): Style layered over the gradient on the title text. A
-            style string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
+            style string or ``rich.style.Style``, e.g. ``"dim italic"``. Unlike
+            ``style``, a color here is shown, drawn on top of the gradient. Defaults to
             ``"bold"``.
         subtitle (Optional[TextType]): Subtitle shown in the bottom border of the panel:
             a string (parsed as console markup) or a ``Text``. Defaults to None.
         subtitle_align (AlignMethod): Alignment of the subtitle: ``"left"``,
             ``"center"``, or ``"right"``. Defaults to ``"right"``.
         subtitle_style (StyleType): Style layered over the gradient on the subtitle
-            text. A style string or ``rich.style.Style``, e.g. ``"bold #ff8800"``.
-            Defaults to ``""``.
+            text. A style string or ``rich.style.Style``, e.g. ``"dim italic"``. Unlike
+            ``style``, a color here is shown, drawn on top of the gradient. Defaults to
+            ``""``.
         safe_box (bool): Use box characters that render on legacy Windows terminals.
             Defaults to False.
         console (Optional[Console]): Console used for rendering and measurement.

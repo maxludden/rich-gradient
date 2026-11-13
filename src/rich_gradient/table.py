@@ -49,21 +49,33 @@ class Table(Gradient):
         show_lines (bool): Draw lines between rows. Defaults to False.
         leading (int): Blank lines between rows. Defaults to 0.
         style (StyleType): Base style of the table. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``"none"``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``"none"``.
         row_styles (Optional[Sequence[StyleType]]): Styles cycled across rows, e.g.
-            ``["", "dim"]`` for zebra striping. Defaults to None.
+            ``["", "dim"]`` for zebra striping. A foreground color in this style is
+            replaced by the gradient; a background color is kept unless ``bg_colors`` is
+            set. Defaults to None.
         header_style (StyleType): Style of the header row. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
-            ``"table.header"``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``"table.header"``.
         footer_style (StyleType): Style of the footer row. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
-            ``"table.footer"``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``"table.footer"``.
         border_style (Optional[StyleType]): Style of the borders. A style string or
-            ``rich.style.Style``, e.g. ``"italic cyan"``. Defaults to None.
+            ``rich.style.Style``, e.g. ``"b u"``. A foreground color in this style is
+            replaced by the gradient; a background color is kept unless ``bg_colors`` is
+            set. Defaults to None.
         title_style (Optional[StyleType]): Style of the title. A style string or
-            ``rich.style.Style``, e.g. ``"italic cyan"``. Defaults to None.
+            ``rich.style.Style``, e.g. ``"b u"``. A foreground color in this style is
+            replaced by the gradient; a background color is kept unless ``bg_colors`` is
+            set. Defaults to None.
         caption_style (Optional[StyleType]): Style of the caption. A style string or
-            ``rich.style.Style``, e.g. ``"italic cyan"``. Defaults to None.
+            ``rich.style.Style``, e.g. ``"b u"``. A foreground color in this style is
+            replaced by the gradient; a background color is kept unless ``bg_colors`` is
+            set. Defaults to None.
         title_justify (AlignMethod): Alignment of the title: ``"left"``, ``"center"``,
             or ``"right"``. Defaults to ``"center"``.
         caption_justify (AlignMethod): Alignment of the caption: ``"left"``,
@@ -98,20 +110,20 @@ class Table(Gradient):
             Defaults to ``rich.get_console()``.
         highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
             gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
-            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``{"error": "bold", ("warn", "caution"): "italic"}``; a sequence of
             ``(words, style[, case_sensitive])`` tuples, e.g.
-            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``[("error", "bold"), (("warn", "caution"), "italic", False)]``; or
             ``HighlightWords`` instances, e.g.
-            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            ``[HighlightWords(words=("error",), style=Style.parse("b u"))]``.
             Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
             None.
         highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
             matches are restyled on top of the gradient. Accepts a mapping of a pattern
-            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            to a style, e.g. ``{r"[0-9]+": "bold"}``; a sequence of
             ``(pattern, style[, flags])`` tuples, e.g.
-            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            ``[(r"error|fail", "reverse", re.IGNORECASE)]``; or ``HighlightRegex``
             instances, e.g.
-            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("dim italic"))]``.
             Defaults to None.
         animate (bool): Mark the content as changing between renders, so highlight
             matches are recomputed every frame instead of cached. Static renderables
@@ -217,7 +229,7 @@ class Table(Gradient):
             *args: Positional arguments for ``rich.table.Table.add_column``,
                 e.g. the header ``"Name"``.
             **kwargs: Keyword arguments for ``rich.table.Table.add_column``,
-                e.g. ``justify="right", style="cyan"``.
+                e.g. ``justify="right", style="bold"``.
         """
         self._table.add_column(*args, **kwargs)
 
@@ -241,7 +253,6 @@ def demo() -> None:
         "Latency",
         title="Gradient Table",
         colors=["#38bdf8", "#a855f7", "#f97316"],
-        border_style="white",
         show_lines=True,
         highlight_words={"ok": "bold #0f0", "degraded": "bold yellow"},
         highlight_regex={r"\d+ ms": "bold #0ff"},

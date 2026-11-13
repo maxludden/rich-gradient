@@ -66,20 +66,20 @@ class AnimatedGradient(Gradient):
             ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"top"``.
         highlight_words (Optional[Mapping | Sequence]): Words to restyle on top of the
             gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
-            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``{"error": "bold", ("warn", "caution"): "italic"}``; a sequence of
             ``(words, style[, case_sensitive])`` tuples, e.g.
-            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``[("error", "bold"), (("warn", "caution"), "italic", False)]``; or
             ``HighlightWords`` instances, e.g.
-            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            ``[HighlightWords(words=("error",), style=Style.parse("b u"))]``.
             Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
             None.
         highlight_regex (Optional[Mapping | Sequence]): Regular expressions whose
             matches are restyled on top of the gradient. Accepts a mapping of a pattern
-            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            to a style, e.g. ``{r"[0-9]+": "bold"}``; a sequence of
             ``(pattern, style[, flags])`` tuples, e.g.
-            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            ``[(r"error|fail", "reverse", re.IGNORECASE)]``; or ``HighlightRegex``
             instances, e.g.
-            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("dim italic"))]``.
             Defaults to None.
         console (Optional[Console]): Console used for rendering and measurement.
             Defaults to ``rich.get_console()``.

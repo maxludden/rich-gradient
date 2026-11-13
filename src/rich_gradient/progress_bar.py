@@ -30,15 +30,19 @@ class ProgressBar:
             width. Defaults to None.
         pulse (bool): Render Rich's pulse animation (no gradient). Defaults to False.
         style (StyleType): Style of the unfilled track. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``"bar.back"``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. The track is not part of the
+            gradient, so a color here is shown. Defaults to ``"bar.back"``.
         complete_style (StyleType): Style of the filled portion, under the gradient. A
-            style string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
-            ``"bar.complete"``.
+            style string or ``rich.style.Style``, e.g. ``"dim italic"``. A foreground
+            color in this style is replaced by the gradient; background and attributes
+            are kept. Defaults to ``"bar.complete"``.
         finished_style (StyleType): Style used once the bar is complete. A style string
-            or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
-            ``"bar.finished"``.
+            or ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; background and attributes are kept.
+            Defaults to ``"bar.finished"``.
         pulse_style (StyleType): Style used in pulse mode. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``"bar.pulse"``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. Pulse mode has no gradient, so
+            a color here is shown. Defaults to ``"bar.pulse"``.
         colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
             a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
             names such as ``"tomato"`` also work), a hex string (``"#f00"``,

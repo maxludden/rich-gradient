@@ -39,7 +39,6 @@ def table_example() -> Table:
         "Latency",
         title="Gradient Table",
         colors=["#38bdf8", "#a855f7", "#f97316"],
-        border_style="white",
         show_lines=True,
         highlight_words={"ok": "bold green", "degraded": "bold yellow"},
     )

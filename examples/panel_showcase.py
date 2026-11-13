@@ -22,7 +22,6 @@ def main() -> None:
             style="bold",
         ),
         title="[b]Features[/b]",
-        border_style="white",
         padding=(1, 2),
     )
 
@@ -32,7 +31,7 @@ def main() -> None:
         bg_colors=["#0f172a", "#2c1067"],
         title="rich_gradient.Panel",
         subtitle="powered by Rich",
-        border_style="bold #22d3ee",
+        border_style="bold",
         highlight_words=[(["Gradient", "title"], "bold white on black", False)],
     )
     console.print(gradient_panel, justify="center")

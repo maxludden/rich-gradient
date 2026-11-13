@@ -28,8 +28,8 @@ class Rule(Gradient):
         title (Optional[str]): Text shown in the middle of the rule, e.g.
             ``"Section 2"``. Defaults to None.
         title_style (StyleType): Style layered over the gradient on the title. A style
-            string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
-            ``"bold"``.
+            string or ``rich.style.Style``, e.g. ``"dim italic"``. Unlike ``style``, a
+            color here is shown, drawn on top of the gradient. Defaults to ``"bold"``.
         colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
             a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
             names such as ``"tomato"`` also work), a hex string (``"#f00"``,
@@ -51,7 +51,9 @@ class Rule(Gradient):
             ``"═"``, ``"█"``, or ``"*"``. ``None`` picks it from ``thickness``.
             Defaults to None.
         style (StyleType): Base style of the line, under the gradient. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``""``.
         end (str): String printed after the rule. Defaults to a newline.
         align (AlignMethod): Alignment of the title within the rule: ``"left"``,
             ``"center"``, or ``"right"``. Defaults to ``"center"``.

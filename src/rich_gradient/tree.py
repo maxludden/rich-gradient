@@ -20,9 +20,13 @@ class Tree(Gradient):
     Args:
         label (RenderableType): Label for the root node, e.g. ``"[bold]project/"``.
         style (StyleType): Style of the tree. A style string or ``rich.style.Style``,
-            e.g. ``"bold #ff8800"``. Defaults to ``"tree"``.
+            e.g. ``"dim italic"``. A foreground color in this style is replaced by the
+            gradient; a background color is kept unless ``bg_colors`` is set. Defaults
+            to ``"tree"``.
         guide_style (StyleType): Style of the guide lines. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``"tree.line"``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``"tree.line"``.
         expanded (bool): Show the children of the root node. Defaults to True.
         highlight (bool): Apply Rich's repr highlighting to labels. Defaults to False.
         hide_root (bool): Hide the root label and show only its children. Defaults to
@@ -56,20 +60,20 @@ class Tree(Gradient):
             Defaults to ``rich.get_console()``.
         highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
             gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
-            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``{"error": "bold", ("warn", "caution"): "italic"}``; a sequence of
             ``(words, style[, case_sensitive])`` tuples, e.g.
-            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``[("error", "bold"), (("warn", "caution"), "italic", False)]``; or
             ``HighlightWords`` instances, e.g.
-            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            ``[HighlightWords(words=("error",), style=Style.parse("b u"))]``.
             Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
             None.
         highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
             matches are restyled on top of the gradient. Accepts a mapping of a pattern
-            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            to a style, e.g. ``{r"[0-9]+": "bold"}``; a sequence of
             ``(pattern, style[, flags])`` tuples, e.g.
-            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            ``[(r"error|fail", "reverse", re.IGNORECASE)]``; or ``HighlightRegex``
             instances, e.g.
-            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("dim italic"))]``.
             Defaults to None.
         animate (bool): Mark the content as changing between renders, so highlight
             matches are recomputed every frame instead of cached. Static renderables
@@ -143,10 +147,14 @@ class Tree(Gradient):
 
         Args:
             label: Label for the child tree node, e.g. ``"src/"``.
-            style: Style for the child, e.g. ``"bold"``. Defaults to None,
-                which inherits the parent's style.
-            guide_style: Style for the child's guide lines. Defaults to None,
-                which inherits the parent's guide style.
+            style: Style for the child, e.g. ``"bold"``. A foreground color in this
+                style is replaced by the gradient; a background color is kept unless
+                ``bg_colors`` is set. Defaults to None, which inherits the parent's
+                style.
+            guide_style: Style for the child's guide lines. A foreground color in this
+                style is replaced by the gradient; a background color is kept unless
+                ``bg_colors`` is set. Defaults to None, which inherits the parent's
+                guide style.
             expanded: Show the child's own children. Defaults to True.
             highlight: Apply Rich's repr highlighting to the label. Defaults
                 to False.

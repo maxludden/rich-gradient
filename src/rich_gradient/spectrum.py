@@ -214,7 +214,7 @@ class Spectrum:
         """Set the styles from strings or ``Style`` instances.
 
         Args:
-            styles: One style per color, e.g. ``["bold red", Style(color="blue")]``.
+            styles: One style per color, e.g. ``["bold", Style(italic=True)]``.
 
         Raises:
             TypeError: If ``styles`` is not a list or holds a non-style value.

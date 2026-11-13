@@ -53,7 +53,8 @@ class Text(RichText):
         rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
             ``hues``. Defaults to False.
         style (StyleType): Base style applied under the gradient. A style string or
-            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+            ``rich.style.Style``, e.g. ``"dim italic"``. Any color in this style is
+            replaced by the gradient. Defaults to ``""``.
         justify (JustifyMethod): Text justification: ``"default"``, ``"left"``,
             ``"center"``, ``"right"``, or ``"full"``. Defaults to ``"default"``.
         overflow (OverflowMethod): How to handle words too long for a line: ``"fold"``,

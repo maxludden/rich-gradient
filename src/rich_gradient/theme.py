@@ -18,7 +18,7 @@ class GradientTheme(Theme):
 
     Args:
         styles (Optional[dict[str, StyleType]]): Mapping of style names to styles, e.g.
-            ``{"warning": "bold #ffaa00"}``. Defaults to None, which uses
+            ``{"warning": "b u"}``. Defaults to None, which uses
             ``DEFAULT_STYLES``.
 
     Notes:
