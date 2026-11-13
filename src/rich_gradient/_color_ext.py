@@ -40,6 +40,13 @@ def parse_color(value: str) -> Color:
     ``rich_color_ext.uninstall()``) without re-patching Rich behind the
     application's back.
 
+    Args:
+        value: The color string to parse (an ANSI/Rich name, CSS name, hex code,
+            or ``rgb(...)`` expression).
+
+    Returns:
+        The parsed ``rich.color.Color``.
+
     Raises:
         ColorParseError: If ``value`` is not a valid color in any supported form.
     """

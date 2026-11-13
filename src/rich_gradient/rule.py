@@ -25,16 +25,38 @@ class Rule(Gradient):
     """A Rich Rule that supports gradients via the Gradient base class.
 
     Args:
-        title: Optional title text placed within the rule.
-        title_style: Style applied to the title text after gradients.
-        colors: Foreground gradient color stops.
-        bg_colors: Background gradient color stops.
-        rainbow: If True, generate a rainbow regardless of colors.
-        hues: Number of hues when generating default spectrum.
-        thickness: 0..3 selects line character style.
-        style: Base style for the rule line (merged with gradients).
-        end: Trailing characters after the rule (default newline).
-        align: Alignment for the rule within the available width.
+        title (Optional[str]): Text shown in the middle of the rule, e.g.
+            ``"Section 2"``. Defaults to None.
+        title_style (StyleType): Style layered over the gradient on the title. A style
+            string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
+            ``"bold"``.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[Sequence[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 17.
+        thickness (int): Line weight: ``0`` (``─``), ``1`` (``━``), ``2`` (``═``), or
+            ``3`` (``█``). Ignored when ``characters`` is given. Defaults to 1.
+        characters (Optional[str]): A single line character, e.g. ``"─"``, ``"━"``,
+            ``"═"``, ``"█"``, or ``"*"``. ``None`` picks it from ``thickness``.
+            Defaults to None.
+        style (StyleType): Base style of the line, under the gradient. A style string or
+            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+        end (str): String printed after the rule. Defaults to a newline.
+        align (AlignMethod): Alignment of the title within the rule: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"center"``.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
     """
 
     def __init__(
@@ -53,6 +75,12 @@ class Rule(Gradient):
         align: AlignMethod = "center",
         console: Console | None = None,
     ) -> None:
+        """Initialize the gradient rule; see the class docstring for arguments.
+
+        Raises:
+            ValueError: If a color is invalid, ``thickness``/``characters`` is not
+                supported, or ``hues`` is out of range.
+        """
         self.title = title or ""
         self.title_style = title_style
         self.thickness = thickness
@@ -92,7 +120,7 @@ class Rule(Gradient):
 
     @property
     def thickness(self) -> int:
-        """Get the thickness of the Rule."""
+        """The line weight, 0-3 (``─``, ``━``, ``═``, ``█``)."""
         if hasattr(self, "_thickness"):
             return self._thickness
         for thickness, char in CHARACTER_MAP.items():
@@ -103,10 +131,13 @@ class Rule(Gradient):
     @thickness.setter
     def thickness(self, value: int) -> None:
         """Set the thickness of the Rule.
+
         Args:
             value: Thickness as an integer between 0 and 3 (inclusive).
+
         Raises:
-            ValueError: If the value is not an integer between 0 and 3."""
+            ValueError: If the value is not an integer between 0 and 3.
+        """
         if isinstance(value, int) and 0 <= value <= 3:
             self._thickness = value
             self._characters = CHARACTER_MAP[value]
@@ -117,7 +148,12 @@ class Rule(Gradient):
 
     @property
     def characters(self) -> str:
-        """Get the character used for the rule line."""
+        """The character used to draw the rule line.
+
+        Raises:
+            ValueError: If no character is set and ``thickness`` is invalid.
+            TypeError: If no character is set and ``thickness`` is not an int.
+        """
         if self._characters:
             return self._characters
 
@@ -133,19 +169,33 @@ class Rule(Gradient):
 
     @characters.setter
     def characters(self, value: str) -> None:
-        """Set the character used for the rule line."""
+        """Set the character used to draw the rule line.
+
+        Args:
+            value: A single character, e.g. ``"─"`` or ``"*"``.
+
+        Raises:
+            ValueError: If ``value`` is not a one-character string.
+        """
         if not isinstance(value, str) or len(value) != 1:
             raise ValueError("characters must be a single character string")
         self._characters = value
 
     @property
     def title(self) -> TextType | None:
-        """Get the title of the Rule."""
+        """The title text of the rule, or ``None``."""
         return self._title or None
 
     @title.setter
     def title(self, value: TextType | None) -> None:
-        """Set the title of the Rule."""
+        """Set the title of the rule.
+
+        Args:
+            value: The new title, or ``None`` to clear it.
+
+        Raises:
+            TypeError: If ``value`` is not a ``str``, Rich ``Text``, or ``Text``.
+        """
         if value is not None and not isinstance(value, (str, RichText, Text)):
             raise TypeError(
                 f"title must be str, RichText, or Text, got {type(value).__name__}"
@@ -154,12 +204,19 @@ class Rule(Gradient):
 
     @property
     def title_style(self) -> StyleType | None:
-        """Get the title style of the Rule's title."""
+        """The style applied to the title, or ``None``."""
         return self._title_style or None
 
     @title_style.setter
     def title_style(self, value: StyleType | None) -> None:
-        """Set the title style of the Rule's title."""
+        """Set the style applied to the title.
+
+        Args:
+            value: A style string such as ``"bold"``, a ``Style``, or ``None``.
+
+        Raises:
+            TypeError: If ``value`` is not a ``str`` or ``Style``.
+        """
         if value is not None and not isinstance(value, (str, Style)):
             raise TypeError(
                 f"title_style must be str or Style, got {type(value).__name__}"
@@ -169,12 +226,18 @@ class Rule(Gradient):
     def __rich_console__(
         self, console: Console, options: ConsoleOptions
     ) -> RenderResult:
-        """Render the rule using the underlying RichRule at full width and
-        apply gradient coloring using Gradient utilities.
+        """Render the rule at full width with gradient coloring.
 
         This overrides the base Gradient alignment wrapper to ensure the
         RichRule expands to the console width (so the line isn't collapsed
         to a single character when aligned/padded externally).
+
+        Args:
+            console: The console being rendered to.
+            options: The console options for the current render.
+
+        Yields:
+            Styled segments for the rule line.
         """
         # Render underlying content directly (no Align wrapper)
         content = self.renderables[0] if self.renderables else RichText("")

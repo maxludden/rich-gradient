@@ -18,27 +18,69 @@ class Columns(Gradient):
     """A Rich columns convenience constructor with gradient rendering.
 
     Args:
-        renderables: Renderables to arrange in columns.
-        width: Optional desired column width.
-        padding: Padding around column cells.
-        columns_expand: Whether Rich columns expand to full width.
-        equal: Whether columns are equal-sized.
-        column_first: Whether to lay out top-to-bottom first.
-        right_to_left: Whether columns start from the right.
-        align: Column content alignment.
-        title: Optional title.
-        colors: Foreground gradient color stops.
-        bg_colors: Background gradient color stops.
-        rainbow: Whether to generate a rainbow palette.
-        hues: Number of auto-generated hues.
-        repeat_scale: Scale factor controlling gradient repeats. Defaults to None,
-            which derives it from the color stops.
-        expand: Whether the gradient frame expands.
-        justify: Horizontal alignment.
-        vertical_justify: Vertical alignment.
-        console: Optional Rich console.
-        highlight_words: Word highlight configuration.
-        highlight_regex: Regex highlight configuration.
+        renderables (Iterable[RenderableType]): Renderables to lay out in columns.
+            Strings are parsed as console markup, e.g.
+            ``["one", "two", Panel("three")]``.
+        width (Optional[int]): Fixed width of each column in cells, or ``None`` to fit
+            the content. Defaults to None.
+        padding (PaddingDimensions): Padding around each cell, CSS-style: ``1``,
+            ``(top_bottom, left_right)``, or ``(top, right, bottom, left)``. Defaults to
+            ``(0, 1)``.
+        columns_expand (bool): Make the columns themselves fill the available width.
+            Defaults to False.
+        equal (bool): Give every column the same width. Defaults to False.
+        column_first (bool): Fill columns top-to-bottom before moving right, instead of
+            row by row. Defaults to False.
+        right_to_left (bool): Start laying out from the right. Defaults to False.
+        align (Optional[AlignMethod]): Alignment of content within each column:
+            ``"left"``, ``"center"``, ``"right"``, or ``None`` for Rich's default.
+            Defaults to None.
+        title (Optional[TextType]): Title rendered above the columns: a string (parsed
+            as console markup) or a ``Text``. Defaults to None.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[Sequence[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        repeat_scale (Optional[float]): Width of one full color cycle as a multiple of
+            the rendered width; larger values give a more gradual gradient, e.g.
+            ``1.5``. ``None`` derives it from the stops so one pass runs from the first
+            color to the last (1.0 for two colors, 2.0 for three or more). Defaults to
+            None.
+        expand (bool): Expand the output to the full console width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the columns: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the columns:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
+        highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
+            None.
+        highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Defaults to None.
     """
 
     def __init__(
@@ -65,7 +107,7 @@ class Columns(Gradient):
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
     ) -> None:
-        """Initialize gradient-enabled Rich columns."""
+        """Initialize gradient-enabled Rich columns; see the class docstring for arguments."""
         columns = RichColumns(
             renderables,
             width=width,
@@ -95,7 +137,7 @@ class Columns(Gradient):
 
     @property
     def columns(self) -> RichColumns:
-        """Return the underlying Rich columns renderable."""
+        """The underlying Rich columns renderable."""
         return self._columns
 
 

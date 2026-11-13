@@ -1,7 +1,6 @@
 # rich_gradient/gradient.py
 
-"""
-Gradient module for rich-gradient.
+"""Gradient module for rich-gradient.
 
 This module defines the Gradient class, which provides the core logic for
 rendering color gradients in the terminal using the Rich library. It supports
@@ -58,56 +57,86 @@ class _HighlightRule:
 
 
 class Gradient(JupyterMixin):
-    """Initialize a Gradient instance.
+    """Apply a smooth color gradient to any Rich renderable.
+
+    The renderable is rendered normally, then each character is recolored by
+    its horizontal position along a gamma-corrected ramp between the color
+    stops. Styles already on the renderable (bold, italic, ...) are kept.
 
     Args:
-        renderables (str|ConsoleRenderable|Iterable[ConsoleRenderable]): A single renderable, or \
-            a list, tuple, or iterator of renderables, to which the gradient will be applied.
-        colors (List[str|ColorTriplet], Optional): list of colors for the gradient foreground. \
-            If omitted and rainbow is False, a spectrum of `hues` colors is used. Accepts \
-            3-digit hex strings ('#0f0'), 6-digit hex strings ('#00ff00'), and CSS color \
-            names (e.g., 'lime')
-        bg_colors(str|ColorTriplet|List[str|ColorTriplet], Optional): the background color \
-            or list of colors for the gradient background. Accepts the same formats as \
-            `colors`. If omitted, no background is applied.
-        console(rich.console.Console, Optional): A rich Console to render to. Defaults to
-            `rich.get_console()`.
-        hues(int, Optional): the number of hues to generate if no explicit colors are given. \
-            defaults to 5. Must be between 2 and the size of the spectrum palette \
-            (17 by default). This parameter is ignored if `colors` is provided.
-        rainbow(bool, Optional): If True, ignore `colors` and use a full spectrum of colors. \
-            defaults to False.
-        expand(bool, Optional): Whether to expand renderables to the full console width. \
-            defaults to True.
-        justify(str|AlignMethod): Horizontal alignment: 'left', 'center', or 'right'. \
-            Defaults to 'left'.
-        vertical_justify(str|VerticalAlignMethod): Vertical alignment: 'top', 'middle', or \
-            'bottom'. Defaults to 'middle'.
-        repeat_scale(float, Optional): Scale factor controlling gradient repeat span. \
-            Defaults to None, which sizes the gradient so a single pass across the \
-            renderable runs from the first color to the last (1.0 for two colors, \
-            2.0 when there are three or more).
-        highlight_words(HighlightWordsType|HighlightWords|Sequence[HighlightWords]\
-            , Optional): Optional configurations describing \
-            word highlights to apply. Accepts either a mapping of words to styles, or a \
-            sequence of tuples describing the highlights.
+        renderables (RenderableType | Iterable[RenderableType]): A renderable, or an
+            iterable of renderables to stack vertically. Strings are parsed as console
+            markup, e.g. ``"[bold]Hi[/bold]"`` or ``[Panel("a"), Panel("b")]``.
+        colors (Optional[list[ColorType]]): Foreground color stops. Each stop may be a
+            color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS names
+            such as ``"tomato"`` also work), a hex string (``"#f00"``, ``"#ff0000"``),
+            an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[list[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        expand (bool): Expand the output to the full console width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the content: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the content:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
+        repeat_scale (Optional[float]): Width of one full color cycle as a multiple of
+            the rendered width; larger values give a more gradual gradient, e.g.
+            ``1.5``. ``None`` derives it from the stops so one pass runs from the first
+            color to the last (1.0 for two colors, 2.0 for three or more). Defaults to
+            None.
+        highlight_words (HighlightWordsType | HighlightWords | Sequence[HighlightWords] | None):
+            Words to restyle on top of the gradient. Accepts a mapping of a word (or a
+            tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
+            None.
+        highlight_regex (HighlightRegexType | HighlightRegex | Sequence[HighlightRegex] | None):
+            Regular expressions whose matches are restyled on top of the gradient.
+            Accepts a mapping of a pattern to a style, e.g.
+            ``{r"[0-9]+": "bold cyan"}``; a sequence of ``(pattern, style[, flags])``
+            tuples, e.g. ``[(r"error|fail", "red", re.IGNORECASE)]``; or
+            ``HighlightRegex`` instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Defaults to None.
+        animated (bool): Record that the caller wants animation. Static gradients do not
+            animate; use ``AnimatedGradient`` for that. Defaults to False.
+        trailing_newline (bool): End the output with a newline, like other Rich
+            renderables. Pass False to print a gradient inline with other text. Defaults
+            to True.
 
-            Examples:
-            - {'error': 'bold italic #f00', 'warning': '#FFFF00', 'lime': '#0f0'}
-            - [('error', 'bold #f00'), (('warning', 'caution'), 'yellow', False)]
-            - [HighlightWords(words=('error',), style=Style(bold=True, color='#f00'))]
+    Raises:
+        ValueError: If ``renderables`` is ``None``, ``hues`` is less than 2 (or more
+            than 17 when colors come from the spectrum), or a justify value is invalid.
+        ColorParseError: If a color cannot be parsed, an RGB tuple is outside
+            0-255, or a color stop has an unsupported type.
 
-        highlight_regex(HighlightRegexType|HighlightRegex|Sequence[HighlightRegex], Optional):
-            Optional configurations describing regex highlights to apply. Accepts either \
-            a mapping of regex patterns to styles, or a sequence of tuples describing \
-            the highlights.
-
-            Examples:
-            - {r'\berror\b': 'bold italic #f00', r'warning|caution': '#FFFF00'}
-            - [(r'\berror\b', 'bold #f00'), (r'warning|caution', 'yellow')]
-            - [HighlightRegex(pattern=r'\berror\b', style=Style(bold=True, color='#f00'))]
-
-        animated(bool, Optional): Whether the gradient is animated. Defaults to False.
+    Examples:
+        >>> from rich.console import Console
+        >>> from rich.panel import Panel
+        >>> console = Console()
+        >>> console.print(Gradient("Hello, gradient!", colors=["#f00", "#00f"]))
+        >>> console.print(Gradient(Panel("Boxed"), rainbow=True, expand=False))
+        >>> console.print(
+        ...     Gradient(
+        ...         "error: disk full",
+        ...         colors=["cyan", "magenta"],
+        ...         highlight_words={"error": "bold red"},
+        ...     )
+        ... )
     """
 
     # Gamma correction exponent for linear interpolation
@@ -133,33 +162,13 @@ class Gradient(JupyterMixin):
         animated: bool = False,
         trailing_newline: bool = True,
     ) -> None:
-        """
-        Initialize a Gradient instance.
+        """Initialize the gradient; see the class docstring for arguments.
 
-        Args:
-            renderables: A single renderable, or a list, tuple, or iterator of
-                renderables, to which the gradient will be applied.
-            colors: Optional list of colors (strings, Color, or
-                ColorTriplet) for the gradient foreground. If omitted and
-                rainbow is False, a spectrum of `hues` colors is used.
-            bg_colors: Optional list of colors for the gradient
-                background. If omitted, no background gradient is applied.
-            console: Optional Rich Console to render to. Defaults to
-                `rich.get_console()`.
-            hues: Number of hues to generate if no explicit colors are given.
-                Must be at least 2.
-            rainbow: If True, ignore `colors` and use a full rainbow.
-            expand: Whether to expand renderables to the full console width.
-            justify: Horizontal alignment: 'left', 'center', or 'right'.
-            vertical_justify: Vertical alignment: 'top', 'middle', or 'bottom'.
-            repeat_scale: Scale factor controlling gradient repeat span. When
-                None (the default) it is derived from the color stops so the
-                first and last colors are both reached across the span.
-            highlight_words: Optional configurations describing word highlights to apply.
-            highlight_regex: Optional configurations describing regex highlights to apply.
-            trailing_newline: End the output with a newline, like other Rich
-                renderables (the default). Pass False for the previous
-                behavior, e.g. to print a gradient inline with other text.
+        Raises:
+            ValueError: If ``renderables`` is ``None``, ``hues`` is out of range, or a
+                justify value is invalid.
+            ColorParseError: If a color cannot be parsed, an RGB tuple is outside
+                0-255, or a color stop has an unsupported type.
         """
         self.trailing_newline: bool = trailing_newline
         self.console: Console = console or get_console()
@@ -228,6 +237,11 @@ class Gradient(JupyterMixin):
 
     @expand.setter
     def expand(self, value: bool) -> None:
+        """Set ``expand`` and propagate it to a wrapped panel, table, or rule.
+
+        Args:
+            value: Whether to expand to the available width.
+        """
         self._expand = bool(value)
         # If we have a tracked underlying Panel-like renderable, try to
         # propagate the expand flag to it so Rich rendering honors the
@@ -265,7 +279,12 @@ class Gradient(JupyterMixin):
     def renderables(
         self, value: RenderableType | Iterable[RenderableType]
     ) -> None:
-        """Set and normalize the list of renderables."""
+        """Set and normalize the list of renderables.
+
+        Args:
+            value: A renderable, or an iterable of renderables. Strings are
+                parsed as console markup, e.g. ``"[bold]Hi[/bold]"``.
+        """
         self._set_renderables(value)
 
     def _set_renderables(
@@ -278,6 +297,9 @@ class Gradient(JupyterMixin):
         Strings and objects that render themselves (``rich.text.Text``, panels,
         ...) are iterable or look iterable but must stay whole, so they are
         checked first.
+
+        Args:
+            value: A renderable, or an iterable of renderables.
         """
         is_whole = (
             isinstance(value, str)
@@ -303,8 +325,7 @@ class Gradient(JupyterMixin):
 
     @colors.setter
     def colors(self, colors: list[ColorType]) -> None:
-        """
-        Parse and set the foreground color stops.
+        """Parse and set the foreground color stops.
 
         Args:
             colors: List of color strings, Color, or ColorTriplet.
@@ -338,8 +359,7 @@ class Gradient(JupyterMixin):
 
     @bg_colors.setter
     def bg_colors(self, colors: list[ColorType] | None) -> None:
-        """
-        Parse and set the background color stops.
+        """Parse and set the background color stops.
 
         Args:
             colors: Optional list of color strings, Color, or ColorTriplet.
@@ -369,8 +389,7 @@ class Gradient(JupyterMixin):
 
     @justify.setter
     def justify(self, method: AlignMethod) -> None:
-        """
-        Validate and set horizontal alignment.
+        """Validate and set horizontal alignment.
 
         Args:
             method: 'left', 'center', or 'right'.
@@ -405,18 +424,18 @@ class Gradient(JupyterMixin):
 
     @staticmethod
     def _to_color_triplets(colors: list[ColorType]) -> list[ColorTriplet]:
-        """
-        Convert a list of color specifications to ColorTriplet instances.
+        """Convert a list of color specifications to ColorTriplet instances.
 
         Args:
-            colors: List of color strings, Color, or ColorTriplet.
+            colors: Color stops as strings, ``Color``, ``ColorTriplet``, or
+                ``(r, g, b)`` tuples, e.g. ``["#f00", (0, 128, 255)]``.
 
         Returns:
-            List of ColorTriplet.
+            One ``ColorTriplet`` per input color, in order.
 
         Raises:
-            TypeError: If unsupported color type encountered.
-            ColorParseError: If a color string fails to parse.
+            ColorParseError: If a string fails to parse, an RGB tuple is outside
+                0-255, or a color has an unsupported type.
         """
         triplets: list[ColorTriplet] = []
         for c in colors:
@@ -442,8 +461,7 @@ class Gradient(JupyterMixin):
     def __rich_measure__(
         self, console: Console, options: ConsoleOptions
     ) -> Measurement:
-        """
-        Measure the minimum and maximum width for the gradient content.
+        """Measure the minimum and maximum width for the gradient content.
 
         Args:
             console(rich.console.Console): Console for measurement.
@@ -465,8 +483,7 @@ class Gradient(JupyterMixin):
     def __rich_console__(
         self, console: Console, options: ConsoleOptions
     ) -> RenderResult:
-        """
-        Render the gradient by applying interpolated colors to each segment.
+        """Render the gradient by applying interpolated colors to each segment.
 
         Args:
             console: Console to render to.
@@ -524,9 +541,19 @@ class Gradient(JupyterMixin):
         """Render content line-by-line and apply gradient styles to cell clusters.
 
         Args:
-            span: Cells the gradient ramp covers. Defaults to the full line width.
+            console: The console being rendered to.
+            options: The console options for the current render.
+            content: The renderable to render and recolor.
+            trailing_newline: Emit a final newline after the last line.
+                Defaults to False.
+            span: Cells the gradient ramp covers. Defaults to None, meaning the
+                full line width (``options.max_width``).
             offset: Column where the ramp starts. Cells outside
                 ``[offset, offset + span)`` take the nearest end color.
+                Defaults to 0.
+
+        Yields:
+            Styled segments, with a line break between rendered lines.
         """
         lines = console.render_lines(content, options, pad=True, new_lines=False)
         ramp_span = options.max_width if span is None else span
@@ -543,7 +570,15 @@ class Gradient(JupyterMixin):
     def _get_highlight_map_for_segments(
         self, segments: Sequence[Segment]
     ) -> list[Style | None] | None:
-        """Return a cached highlight map for a rendered line when possible."""
+        """Return a cached highlight map for a rendered line when possible.
+
+        Args:
+            segments: The segments of one rendered line.
+
+        Returns:
+            Per-character highlight styles for the line, or ``None`` when no
+            highlight rules are configured.
+        """
         if not self._highlight_rules:
             return None
         line_text = "".join(segment.text for segment in segments)
@@ -566,7 +601,16 @@ class Gradient(JupyterMixin):
     ) -> RenderResult:
         """Apply gradient and highlight styles to rendered Rich segments.
 
-        ``offset`` shifts the ramp right so it starts at that column.
+        Args:
+            segments: The segments of one rendered line.
+            span: Cells the gradient ramp covers.
+            highlight_map: Per-character highlight styles for the line, if any.
+            offset: Column where the ramp starts; shifts the ramp right.
+                Defaults to 0.
+
+        Yields:
+            One styled segment per display-cell cluster; control segments
+            pass through unchanged.
         """
         column = -offset
         char_index = 0
@@ -622,7 +666,20 @@ class Gradient(JupyterMixin):
         highlight_map: list[Style | None] | None,
         indices: Sequence[int],
     ) -> Segment:
-        """Build a styled segment for one display-cell cluster."""
+        """Build a styled segment for one display-cell cluster.
+
+        Args:
+            text: The cluster's characters.
+            position: Column of the cluster relative to the ramp start.
+            width: Display width of the cluster in cells.
+            span: Cells the gradient ramp covers.
+            base_style: The segment's original style.
+            highlight_map: Per-character highlight styles for the line, if any.
+            indices: Character indices of the cluster within the line.
+
+        Returns:
+            A segment combining the base, gradient, and highlight styles.
+        """
         # Clamp padding cells outside the ramp (only possible with an offset or
         # a span narrower than the line) to the nearest end of the ramp.
         position = max(0, min(position, span - width))
@@ -667,7 +724,15 @@ class Gradient(JupyterMixin):
         return self._gradient_ramp
 
     def _build_gradient_ramp_key(self, span: int) -> _GradientRampKey:
-        """Build a hashable cache key for the active gradient ramp."""
+        """Build a hashable cache key for the active gradient ramp.
+
+        Args:
+            span: Cells the gradient ramp covers.
+
+        Returns:
+            A tuple of the foreground stops, background stops, span, repeat
+            scale, and gamma.
+        """
         foreground, background, scale = self._ramp_stops()
         return (
             tuple(foreground),
@@ -763,9 +828,25 @@ class Gradient(JupyterMixin):
         r1, g1, b1 = color_stops[min(idx + 1, segment_count)]
 
         def to_linear(c: float) -> float:
+            """Convert an sRGB channel to linear light.
+
+            Args:
+                c: Channel value, 0-255.
+
+            Returns:
+                Linear-light value, 0-1.
+            """
             return (c / 255.0) ** self._GAMMA_CORRECTION
 
         def to_srgb(x: float) -> float:
+            """Convert a linear-light value back to an sRGB channel.
+
+            Args:
+                x: Linear-light value, 0-1.
+
+            Returns:
+                Channel value, 0-255.
+            """
             return (x ** (1.0 / self._GAMMA_CORRECTION)) * 255.0
 
         lr0, lg0, lb0 = to_linear(r0), to_linear(g0), to_linear(b0)
@@ -778,8 +859,7 @@ class Gradient(JupyterMixin):
         return to_srgb(lr), to_srgb(lg), to_srgb(lb)
 
     def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
-        """
-        Merge original Style with gradient Style, preserving original attributes.
+        """Merge original Style with gradient Style, preserving original attributes.
 
         Args:
             original: The existing Rich Style.
@@ -792,6 +872,15 @@ class Gradient(JupyterMixin):
 
     @staticmethod
     def _coerce_highlight_style(style: StyleType) -> Style:
+        """Parse a highlight style.
+
+        Args:
+            style: A ``Style`` (returned unchanged) or a style string such as
+                ``"bold red"``.
+
+        Returns:
+            The parsed ``Style``.
+        """
         if isinstance(style, Style):
             return style
         return Style.parse(str(style))
@@ -803,14 +892,13 @@ class Gradient(JupyterMixin):
         *,
         case_sensitive: bool = True,
     ) -> Gradient:
-        """
-        Highlight occurrences of the provided words with an additional style \
-            after gradients are applied.
+        """Highlight words with an extra style applied after the gradient.
 
         Args:
-            words(Sequence[str]): Iterable of words to highlight.
-            style(StyleType): Style to overlay on matched words.
-            case_sensitive(bool): Whether matching is case-sensitive. Defaults to True.
+            words (Sequence[str]): Words to highlight, e.g. ``["error", "fail"]``.
+                Empty strings are ignored.
+            style (StyleType): Style to overlay on matches, e.g. ``"bold red"``.
+            case_sensitive (bool): Whether matching is case-sensitive. Defaults to True.
 
         Returns:
             The gradient instance (for chaining).
@@ -833,8 +921,7 @@ class Gradient(JupyterMixin):
     def highlight_regex(
         self, pattern: str | re.Pattern[str], style: StyleType, flags: int = 0
     ) -> Gradient:
-        """
-        Highlight matches of a regex pattern with an additional style after gradients are applied.
+        """Highlight matches of a regex pattern with an additional style after gradients are applied.
 
         Args:
             pattern(str|re.Pattern[str]): Regex pattern (string or compiled).
@@ -866,13 +953,22 @@ class Gradient(JupyterMixin):
             self._highlight_map_cache.clear()
 
     def _build_highlight_map(self, text: str) -> list[Style | None]:
-        """Compute per-character highlight styles for a line of text."""
+        """Compute per-character highlight styles for a line of text.
+
+        Args:
+            text: The plain text of one rendered line.
+
+        Returns:
+            One entry per character: the merged highlight style, or ``None``.
+            Empty if there is no text or no highlight rules.
+        """
         if not text or not self._highlight_rules:
             return []
         highlight_map: list[Style | None] = [None] * len(text)
         apply_range = self._apply_highlight_range
 
         def apply_word_rule() -> None:
+            """Mark every occurrence of the current rule's words."""
             haystack = text if rule.case_sensitive else text.lower()
             for word in rule.words:
                 target = word if rule.case_sensitive else word.lower()
@@ -888,6 +984,7 @@ class Gradient(JupyterMixin):
                     start = end
 
         def apply_regex_rule() -> None:
+            """Mark the current rule's regex matches (or their capture groups)."""
             pattern = rule.pattern
             if pattern is None:
                 return
@@ -923,6 +1020,7 @@ class Gradient(JupyterMixin):
         highlight_map: list[Style | None], start: int, end: int, style: Style
     ) -> None:
         """Apply style to a character range in the highlight map.
+
         Args:
             highlight_map(List[Optional[Style]]): List of per-character highlight styles.
             start(int): Starting index (inclusive).
@@ -942,7 +1040,16 @@ class Gradient(JupyterMixin):
         highlight_map: list[Style | None] | None,
         indices: Sequence[int],
     ) -> Style:
-        """Merge highlight styles for character indices into the base style."""
+        """Merge highlight styles for character indices into the base style.
+
+        Args:
+            base_style: The style to merge onto.
+            highlight_map: Per-character highlight styles for the line, if any.
+            indices: Character indices whose highlights apply.
+
+        Returns:
+            ``base_style`` combined with the highlight styles found.
+        """
         if not highlight_map or not indices:
             return base_style
         highlight_style: Style | None = None
@@ -963,6 +1070,10 @@ class Gradient(JupyterMixin):
         """Initialize the active color stops based on mode and provided stops.
 
         If only one stop is provided, duplicate it to create a smooth segment pair.
+
+        Returns:
+            The foreground stops, or the background stops when there are none,
+            with a single stop doubled. Empty if neither is set.
         """
         # Prefer foreground color stops; fall back to background stops if set
         source: list[ColorTriplet] = self.colors if self.colors else self.bg_colors
@@ -971,7 +1082,16 @@ class Gradient(JupyterMixin):
         return [source[0], source[0]] if len(source) == 1 else source
 
     def _color_at(self, pos: int, width: int, span: int) -> str:
-        """Return the hex color at a given position (for tests)."""
+        """Return the hex color at a given position (for tests).
+
+        Args:
+            pos: Column of the cluster.
+            width: Display width of the cluster in cells.
+            span: Cells the gradient covers.
+
+        Returns:
+            A ``#rrggbb`` string, or ``"#000000"`` when there are no stops.
+        """
         stops = self._active_stops
         if not stops:
             return "#000000"
@@ -980,7 +1100,16 @@ class Gradient(JupyterMixin):
         return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
 
     def _styled(self, original: Style, color: str) -> Style:
-        """Return a Style with the given color or bgcolor, preserving original (for tests)."""
+        """Return a Style with the given color or bgcolor, preserving original (for tests).
+
+        Args:
+            original: The style to extend.
+            color: The color to apply, e.g. ``"#ff0000"``.
+
+        Returns:
+            ``original`` plus ``color`` as the background when background stops
+            are set, otherwise as the foreground.
+        """
         return (
             original + Style(bgcolor=color)
             if self.bg_colors
@@ -990,7 +1119,16 @@ class Gradient(JupyterMixin):
     def _interpolated_color(
         self, frac: float, stops: list, _count: int | None = None
     ):
-        """Return the interpolated color at a fraction (for tests)."""
+        """Return the interpolated color at a fraction (for tests).
+
+        Args:
+            frac: Position along the ramp, 0-1.
+            stops: Color stops to interpolate.
+            _count: Ignored; kept for backward compatibility. Defaults to None.
+
+        Returns:
+            The ``(r, g, b)`` color at ``frac``.
+        """
         return self._interpolate_color(frac, stops)
 
 

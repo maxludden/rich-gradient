@@ -1,5 +1,5 @@
-"""
-Logger utility for rich-gradient.
+"""Logger utility for rich-gradient.
+
 Provides a Rich-styled, rotating, compressed log file and console output via loguru.
 
 This module follows loguru's library convention: rich-gradient's log records
@@ -30,7 +30,14 @@ _console_handler_id: int | None = None
 
 
 def _is_rich_gradient_record(record: Any) -> bool:
-    """Return whether a Loguru record originated in this package."""
+    """Return whether a Loguru record originated in this package.
+
+    Args:
+        record: The loguru record dict passed to a sink filter.
+
+    Returns:
+        ``True`` if the record's module name starts with ``rich_gradient``.
+    """
     return str(record.get("name", "")).startswith("rich_gradient")
 
 
@@ -55,8 +62,7 @@ def get_logger(
     log_dir: Path | None = None,
     style: str = "blue",
 ) -> Any:
-    """
-    Enable and configure rich-gradient's loguru logging.
+    """Enable and configure rich-gradient's loguru logging.
 
     When enabled, this activates the ``rich_gradient`` record namespace and
     adds two sinks — a rotating, compressed trace file and a Rich-styled
@@ -70,11 +76,14 @@ def get_logger(
 
     Args:
         enabled (bool): If False, disable rich-gradient logging and remove any
-            sinks this function previously added.
-        log_level (str): Log level for file output.
+            sinks this function previously added. Defaults to True.
+        log_level (str): Minimum level for the file sink: ``"TRACE"``, ``"DEBUG"``,
+            ``"INFO"``, ``"SUCCESS"``, ``"WARNING"``, ``"ERROR"``, or ``"CRITICAL"``.
+            Defaults to ``"TRACE"``.
         log_dir (Path | None): Directory for log files. Defaults to
             ``<config home>/logs`` (``~/.rich-gradient/logs``).
-        style (str): Rich style for console log output.
+        style (str): Color for console log output, e.g. ``"magenta"`` or
+            ``"#5f87ff"`` (always bold). Defaults to ``"blue"``.
 
     Returns:
         Logger: The loguru logger.
@@ -99,6 +108,11 @@ def get_logger(
     trace_log_file = log_dir / "trace.log"
 
     def rich_console_sink(msg: object) -> None:
+        """Write a loguru message to the Rich console, styled with ``style``.
+
+        Args:
+            msg: The formatted loguru message (or a pre-styled Rich ``Text``).
+        """
         try:
             # If msg is already a string, wrap it in Text for styled console output.
             if isinstance(msg, Text):

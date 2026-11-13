@@ -358,7 +358,11 @@ for key, style in DEFAULT_STYLES.items():
 
 
 def get_default_styles() -> dict[str, StyleType]:
-    """Retrieve the defaults styles from GRADIENT_STYLES."""
+    """Retrieve rich-gradient's default console styles.
+
+    Returns:
+        The ``DEFAULT_STYLES`` mapping of style names to styles (not a copy).
+    """
     return DEFAULT_STYLES
 
 
@@ -366,7 +370,7 @@ def formatted_title() -> Text:
     """Create a vibrant title for the styles table.
 
     Returns:
-        Text: the colorful title
+        Text: The colorful title.
     """
     letters = (
         Text("Gr", style="bold #ff0000"),
@@ -382,8 +386,15 @@ def formatted_title() -> Text:
 
 
 def styles_table() -> RichTable:
-    """Generate a table to display all styles, examples of how to call each,
-    and if each style is new, or updated from rich, or unchanged."""
+    """Generate a table listing every default style.
+
+    Each row shows the style name rendered in its own style, the style
+    definition, and whether the style is new, color-corrected from Rich's
+    default, or unchanged.
+
+    Returns:
+        The populated Rich table.
+    """
     table = RichTable(
         title=formatted_title(),
         border_style="bold #888888",
@@ -422,7 +433,12 @@ def styles_table() -> RichTable:
 
 
 def example(record: bool = False) -> None:
-    """Print the styles table to the console."""
+    """Print the styles table to the console.
+
+    Args:
+        record: Create the console with ``record=True`` so the output can be
+            exported (e.g. to SVG) afterwards. Defaults to False.
+    """
     theme = Theme(DEFAULT_STYLES)
     console = Console(theme=theme, record=record)
     tr_install(console=console)

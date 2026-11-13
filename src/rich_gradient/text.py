@@ -1,6 +1,5 @@
-"""
-rich_gradient.text
-~~~~~~~~~~~~~~~~~~
+"""A Rich ``Text`` subclass with per-character gradient colors.
+
 This module provides a Rich-compatible Text subclass that adds per-character
 gradient coloring and optional background-color gradients on top of the
 rich.text.Text functionality. It preserves all of rich.text.Text's features
@@ -14,7 +13,7 @@ from typing import TypeAlias
 
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
-from rich.console import Console, JustifyMethod, OverflowMethod
+from rich.console import Console, ConsoleOptions, JustifyMethod, OverflowMethod
 from rich.control import strip_control_codes
 from rich.panel import Panel
 from rich.segment import Segment
@@ -31,7 +30,49 @@ ColorType: TypeAlias = str | Color | ColorTriplet | tuple[int, int, int]
 
 
 class Text(RichText):
-    """A rich text class that supports gradient colors and styles."""
+    """A drop-in ``rich.text.Text`` with gradient colors baked into its spans.
+
+    Unlike ``Gradient``, which recolors a renderable at render time, ``Text``
+    stores one color span per character, so it can be measured, sliced, and
+    appended like any other Rich ``Text``.
+
+    Args:
+        text (TextType): The text: a string (parsed as console markup when ``markup`` is
+            True) or a Rich ``Text``, e.g. ``"[bold]Hello[/bold], world"``. Defaults to
+            ``""``.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        style (StyleType): Base style applied under the gradient. A style string or
+            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+        justify (JustifyMethod): Text justification: ``"default"``, ``"left"``,
+            ``"center"``, ``"right"``, or ``"full"``. Defaults to ``"default"``.
+        overflow (OverflowMethod): How to handle words too long for a line: ``"fold"``,
+            ``"crop"``, ``"ellipsis"``, or ``"ignore"``. Defaults to ``"fold"``.
+        no_wrap (bool): Disable wrapping. Defaults to False.
+        end (str): String appended after the text when printed. Defaults to a newline.
+        tab_size (int): Spaces per tab character. Defaults to 4.
+        bg_colors (Optional[Sequence[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        markup (bool): Parse Rich console markup in string input. Defaults to True.
+        spans (Optional[Sequence[Span]]): Extra ``rich.text.Span`` objects applied on
+            top of the gradient, e.g. ``[Span(0, 5, "underline")]``. Defaults to None.
+
+    Examples:
+        >>> from rich.console import Console
+        >>> Console().print(Text("Hello, gradient!", colors=["#f00", "#00f"]))
+        >>> Console().print(Text("[bold]Rainbow[/bold]", rainbow=True))
+    """
 
     def __init__(
         self,
@@ -49,25 +90,12 @@ class Text(RichText):
         markup: bool = True,
         spans: Sequence[Span] | None = None,
     ):
-        """Initialize the Text with gradient colors and styles.
-        Args:
-            text (TextType): The text content.
-            colors (Optional[List[ColorType]]): A list of colors as Color instances or strings.
-            rainbow (bool): If True, generate a rainbow spectrum.
-            hues (int): The number of hues to generate if colors are not provided.
-            style (StyleType): The style of the text.
-            justify (JustifyMethod): Justification method for the text. Defaults to `default`.
-            overflow (OverflowMethod): Overflow method for the text. Defaults to `fold`.
-            no_wrap (bool): If True, disable wrapping of the text. Defaults to False.
-            end (str): The string to append at the end of the text. Default is a newline (`\\n`).
-            tab_size (int): The number of spaces for a tab character. Defaults to 4.
-            bg_colors (Optional[List[ColorType]]): A list of background colors as Color \
-instances. Defaults to None.
-            markup (bool): If True, parse Rich markup tags in the input text. Defaults to True.
-            spans (Optional[Sequence[Span]]): A list of spans to apply to the text. \
-            Defaults to None.
-        """
+        """Initialize the gradient text; see the class docstring for arguments.
 
+        Raises:
+            ValueError: If ``hues`` is out of range.
+            ColorParseError: If a color string cannot be parsed.
+        """
         # Parse the input text with or without markup
         if markup:
             parsed_text = RichText.from_markup(
@@ -124,37 +152,49 @@ instances. Defaults to None.
 
     @property
     def colors(self) -> list[Color]:
-        """Return the list of colors in the gradient."""
+        """The foreground color stops of the gradient."""
         return list(self._colors) if self._colors else []
 
     @colors.setter
     def colors(self, value: Sequence[Color] | None) -> None:
-        """Set the list of colors in the gradient."""
+        """Set the foreground color stops.
+
+        Args:
+            value: Parsed ``rich.color.Color`` stops, or ``None`` to clear them.
+        """
         self._colors = list(value) if value else []
 
     @property
     def bg_colors(self) -> list[Color]:
-        """Return the list of background colors in the gradient."""
+        """The background colors, one per character after interpolation."""
         return list(self._bg_colors) if self._bg_colors else []
 
     @bg_colors.setter
     def bg_colors(self, value: Sequence[Color] | None) -> None:
-        """Set the list of background colors in the gradient."""
+        """Set the background colors.
+
+        Args:
+            value: Parsed ``rich.color.Color`` values, or ``None`` to clear them.
+        """
         self._bg_colors = list(value) if value else []
 
     @staticmethod
     def _normalize_color(value: ColorType) -> Color:
         """Normalize a single color-like value to a rich.color.Color.
+
         Accepts: Color, ColorTriplet, 3-tuple of ints, or string parsable
         by Rich's color parser, falling back to rich-color-ext (CSS names and
         3-digit hex) when Rich rejects it.
 
         Args:
             value (ColorType): The color-like value to normalize.
+
         Returns:
             Color: The normalized Color instance.
+
         Raises:
             ColorParseError: If the color value cannot be parsed.
+            TypeError: If ``value`` has an unsupported type.
         """
         try:
             if isinstance(value, Color):
@@ -181,24 +221,31 @@ instances. Defaults to None.
         rainbow: bool = False,
     ) -> list[Color]:
         """Parse and return a list of colors for the gradient.
+
         Supports:
-        - rgb colors (e.g. `'rgb(255, 0, 0)'`)
-        - rgb tuples (e.g., `(255, 0, 0)`)
-        - 3-digit hex colors (e.g., `'#f00'`, `'#F90'`)
-        - 6-digit hex colors (e.g., `'#ff0000'`, `'#00FF00'`)
-        - CSS names (e.g., `'tomato'`, `'aliceblue'`)
-        - rich.color.Color objects (e.g., `Color.parse('#FF0000')`)
+
+        - rgb strings (e.g. ``'rgb(255, 0, 0)'``)
+        - rgb tuples (e.g. ``(255, 0, 0)``)
+        - 3-digit hex colors (e.g. ``'#f00'``, ``'#F90'``)
+        - 6-digit hex colors (e.g. ``'#ff0000'``, ``'#00FF00'``)
+        - color names (e.g. ``'tomato'``, ``'aliceblue'``; Rich/ANSI names keep Rich's meaning)
+        - ``rich.color.Color`` objects (e.g. ``Color.parse('#FF0000')``)
+
         Args:
-            colors (Optional[Sequence[ColorType | Color]]): A list of colors as Color
-                instances, tuples of integers, or strings.
-            hues (int): The number of hues to generate if colors are not provided. Defaults to 5.
-            rainbow (bool): Whether to generate a rainbow spectrum. Note that rainbow overrides
-                any colors or hues provided. Defaults to False
+            colors (Optional[Sequence[ColorType]]): Color stops in any of the formats
+                above, e.g. ``["#f00", "orange", (0, 128, 255)]``. Defaults to None,
+                which takes ``hues`` colors from the spectrum palette.
+            hues (int): Number of spectrum colors to use when ``colors`` is omitted.
+                Valid values are 2 to 17. Defaults to 5.
+            rainbow (bool): Use the full 17-color spectrum, overriding ``colors`` and
+                ``hues``. Defaults to False.
+
+        Returns:
+            list[rich.color.Color]: The parsed color stops.
+
         Raises:
             ColorParseError: If any color value cannot be parsed.
-            ValueError: If hues < 2.
-        Returns:
-            List[rich.color.Color]: A list of Color objects.
+            ValueError: If ``hues`` is out of range.
         """
         # When rainbow is True, we use a full 17-color spectrum
         if rainbow:
@@ -221,15 +268,20 @@ instances. Defaults to None.
         self, bg_colors: Sequence[ColorType] | None = None
     ) -> list[Color]:
         """Parse and return a list of background colors for the gradient.
-        Supports 3-digit hex colors (e.g., '#f00', '#F90'), 6-digit hex, CSS names, \
-        and Color objects.
+
+        Accepts the same color formats as ``parse_colors``.
+
         Args:
-            bg_colors (Optional[Sequence[ColorType | Color]]): A list of background colors as \
-            Color instances or strings. If omitted, the default (transparent) background \
-            is used; a single color is applied as a solid fill; multiple colors are \
-            interpolated across the text.
+            bg_colors (Optional[Sequence[ColorType]]): Background colors, e.g.
+                ``["#000033", "#330033"]``. A single color is applied as a solid
+                fill; multiple colors are interpolated across the text. Defaults to
+                None, which uses the terminal's default background.
+
         Returns:
-            List[Color]: A list of Color objects for background colors.
+            list[Color]: One background color per character.
+
+        Raises:
+            ColorParseError: If a color value cannot be parsed.
         """
         if not bg_colors:
             self._interpolate_bg_colors = False
@@ -261,7 +313,18 @@ instances. Defaults to None.
     def interpolate_colors(
         self, colors: Sequence[Color] | None = None
     ) -> list[Color]:
-        """Interpolate colors across the text using gamma-correct blending."""
+        """Interpolate colors across the text using gamma-correct blending.
+
+        Args:
+            colors: Color stops to blend. Defaults to None, which uses
+                ``self.colors``.
+
+        Returns:
+            One color per character of the plain text (empty for empty text).
+
+        Raises:
+            ValueError: If there are no color stops.
+        """
         colors = list(colors) if colors is not None else self.colors
         if not colors:
             raise ValueError("No colors to interpolate")
@@ -280,9 +343,25 @@ instances. Defaults to None.
         GAMMA = 2.2
 
         def to_linear(v: int) -> float:
+            """Convert an sRGB channel to linear light.
+
+            Args:
+                v: Channel value, 0-255.
+
+            Returns:
+                Linear-light value, 0-1.
+            """
             return (v / 255.0) ** GAMMA
 
         def to_srgb(x: float) -> int:
+            """Convert a linear-light value back to an sRGB channel.
+
+            Args:
+                x: Linear-light value, 0-1.
+
+            Returns:
+                Channel value, 0-255.
+            """
             return int((x ** (1.0 / GAMMA)) * 255.0)
 
         for i in range(length):
@@ -352,15 +431,22 @@ instances. Defaults to None.
 
     @property
     def rich(self) -> RichText:
-        """Return the underlying RichText instance."""
+        """A plain ``rich.text.Text`` copy of this text (same as ``as_rich()``)."""
         return self.as_rich()
 
-    def __rich_console__(self, console: Console, options) -> Iterable[Segment]:
+    def __rich_console__(self, console: Console, options: ConsoleOptions) -> Iterable[Segment]:
         """Render Text while suppressing any output for empty content.
 
         For empty plain text, yield no segments at all (no stray newlines).
         Otherwise, delegate to the parent implementation and filter a final
         trailing `end` segment as required.
+
+        Args:
+            console: The console being rendered to.
+            options: The console options for the current render.
+
+        Yields:
+            The rendered segments; none for empty text.
         """
         if self.plain == "":
             return
@@ -388,7 +474,15 @@ if __name__ == "__main__":
         default_colors = ["#ff0", "#9f0", "rgb(0, 255, 0)", "springgreen", "#00FFFF"]
 
         def example1_text(colors: Sequence[str] | None = None) -> RichText:
-            """Generate example text with a simple two-color gradient."""
+            """Generate example text with a simple two-color gradient.
+
+            Args:
+                colors: Color stops, e.g. ``["#f00", "#00f"]``. Defaults to None,
+                    which uses the example's default colors.
+
+            Returns:
+                The example paragraph as gradient ``Text``.
+            """
             text_colors = colors if colors is not None else default_colors
             example1_text = Text(
                 'rich-gradient makes it easy to create text with smooth multi-color gradients! \
@@ -406,7 +500,15 @@ Overflow handling\n\t- Custom styles and spans',
             return example1_text
 
         def example1_title(colors: Sequence[str] | None = None) -> RichText:
-            """Generate example title text with a gradient."""
+            """Generate example title text with a gradient.
+
+            Args:
+                colors: Color stops, e.g. ``["#f00", "#00f"]``. Defaults to None,
+                    which uses the example's default colors.
+
+            Returns:
+                The example title as gradient ``Text``.
+            """
             title_colors = colors if colors is not None else default_colors
             example1_title = Text(
                 "Built on rich.text.Text",
@@ -491,7 +593,11 @@ This will generate a gradient with the full spectrum of colors.",
 
     # Example 4: Custom color stops with hex codes
     def gradient_text_custom_colors(save: bool = True) -> None:
-        """Print the text in a gradient with custom color stops."""
+        """Print the text in a gradient with custom color stops.
+
+        Args:
+            save: Save the output as an SVG under ``docs/img``. Defaults to True.
+        """
         specified_colors: Text = Text(
             text="""If you like to specify your own \
 colors, you can specify a list of colors. Colors can be specified \

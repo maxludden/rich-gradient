@@ -93,7 +93,7 @@ __all__ = [
     "reload_config",
 ]
 
-__version__ = "0.4.3"
+__version__ = "0.4.4"
 
 
 # Set up logging
@@ -110,12 +110,12 @@ def reload_config(config_path: Path | None = None) -> RichGradientConfig:
     """Reload runtime configuration and update package-level aliases.
 
     Args:
-        config_path: Optional path to a configuration file.
+        config_path: Path to a JSON config file, or ``None`` to use
+            ``config.json`` in the home directory. Defaults to None.
 
     Returns:
         The reloaded runtime configuration.
     """
-
     updated: RichGradientConfig = _reload_config(config_path)
     globals()["config"] = updated
     globals()["CONFIG"] = updated

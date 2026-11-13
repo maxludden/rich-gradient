@@ -7,6 +7,7 @@ from collections.abc import Sequence
 from typing import Any
 
 from rich.console import Console, ConsoleOptions, RenderResult
+from rich.measure import Measurement
 from rich.progress_bar import ProgressBar as RichProgressBar
 from rich.segment import Segment
 from rich.style import Style, StyleType
@@ -22,17 +23,34 @@ class ProgressBar:
     Pulse mode is not gradient-aware and renders as Rich normally would.
 
     Args:
-        total: Number of steps, or ``None`` for an indeterminate bar.
-        completed: Number of completed steps.
-        width: Fixed width in cells, or ``None`` to fill the available width.
-        pulse: Render Rich's pulse animation (no gradient).
-        style: Style of the unfilled track.
-        complete_style: Style of the filled portion before the gradient.
-        finished_style: Style used once the bar is complete.
-        pulse_style: Style used in pulse mode.
-        colors: Gradient color stops.
-        rainbow: Whether to generate a rainbow palette.
-        hues: Number of auto-generated hues.
+        total (Optional[float]): Number of steps, or ``None`` for an indeterminate
+            (pulsing) bar. Defaults to 100.0.
+        completed (float): Number of completed steps. Defaults to 0.
+        width (Optional[int]): Fixed width in cells, or ``None`` to fill the available
+            width. Defaults to None.
+        pulse (bool): Render Rich's pulse animation (no gradient). Defaults to False.
+        style (StyleType): Style of the unfilled track. A style string or
+            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``"bar.back"``.
+        complete_style (StyleType): Style of the filled portion, under the gradient. A
+            style string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
+            ``"bar.complete"``.
+        finished_style (StyleType): Style used once the bar is complete. A style string
+            or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
+            ``"bar.finished"``.
+        pulse_style (StyleType): Style used in pulse mode. A style string or
+            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``"bar.pulse"``.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
     """
 
     def __init__(
@@ -50,7 +68,7 @@ class ProgressBar:
         rainbow: bool = False,
         hues: int = 5,
     ) -> None:
-        """Initialize the gradient progress bar."""
+        """Initialize the gradient progress bar; see the class docstring for arguments."""
         self.bar = RichProgressBar(
             total=total,
             completed=completed,
@@ -80,7 +98,17 @@ class ProgressBar:
     )
 
     def __getattr__(self, name: str) -> Any:
-        """Expose Rich's bar state (``completed``, ``total``, styles, ...)."""
+        """Expose Rich's bar state (``completed``, ``total``, styles, ...).
+
+        Args:
+            name: The attribute being looked up.
+
+        Returns:
+            The attribute's value on the wrapped ``rich.progress_bar.ProgressBar``.
+
+        Raises:
+            AttributeError: If ``name`` is not one of the forwarded attributes.
+        """
         if name in ProgressBar._RICH_ATTRS and "bar" in self.__dict__:
             return getattr(self.__dict__["bar"], name)
         raise AttributeError(name)
@@ -94,15 +122,29 @@ class ProgressBar:
 
     @property
     def percentage_completed(self) -> float | None:
-        """Return the completion percentage, or ``None`` if indeterminate."""
+        """The completion percentage (0-100), or ``None`` if indeterminate."""
         return self.bar.percentage_completed
 
     def update(self, completed: float, total: float | None = None) -> None:
-        """Update progress; ``total`` is left unchanged when omitted."""
+        """Update progress.
+
+        Args:
+            completed: Number of completed steps, e.g. ``42``.
+            total: New total number of steps. Defaults to None, which leaves the
+                total unchanged.
+        """
         self.bar.update(completed, total)
 
-    def __rich_measure__(self, console: Console, options: ConsoleOptions):  # type: ignore[no-untyped-def]
-        """Delegate measurement to Rich's bar."""
+    def __rich_measure__(self, console: Console, options: ConsoleOptions) -> Measurement:
+        """Delegate measurement to Rich's bar.
+
+        Args:
+            console: The console used for measurement.
+            options: The console options for the current render.
+
+        Returns:
+            The wrapped Rich bar's measurement.
+        """
         return self.bar.__rich_measure__(console, options)
 
     def __rich_console__(
@@ -114,6 +156,13 @@ class ProgressBar:
         not by color, so they are found even when the fill and track share a color.
         The gradient replaces only the foreground; Rich's fill style keeps its
         background and attributes.
+
+        Args:
+            console: The console being rendered to.
+            options: The console options for the current render.
+
+        Yields:
+            The bar's segments, with gradient colors on the filled cells.
         """
         plain = list(console.render(self.bar, options))
         bar = self.bar

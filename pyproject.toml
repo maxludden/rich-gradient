@@ -56,12 +56,23 @@ select = [
     "E",
     "F",
     "W",
+    "D", # pydocstyle: every module, class, and function documented
 ]
 ignore = [
     "E501", # Line too long in examples and legacy code
     "F401", # Unused imports
     "E741", # Ambiguous variable name
 ]
+
+[tool.ruff.lint.per-file-ignores]
+# Docstring rules apply to the library; tests, examples, and doc scripts are exempt.
+"tests/**" = ["D"]
+"examples/**" = ["D"]
+"docs/**" = ["D"]
+"tmp_dl/**" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.pylint.MESSAGES_CONTROL]
 disable = [

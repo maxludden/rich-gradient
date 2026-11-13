@@ -31,42 +31,101 @@ class AnimatedPanel(AnimatedGradient):
     """Animated variant of :class:`rich_gradient.panel.Panel`.
 
     Args:
-        renderable: The renderable to display inside the panel.
-        colors: Optional foreground color stops for the gradient.
-        bg_colors: Optional background color stops for the gradient.
-        hues: Number of hues to generate when auto-selecting colors.
-        rainbow: If True, ignore `colors` and use a rainbow gradient.
-        repeat_scale: Stretch factor for gradient color stops. Higher values produce
-            a more gradual gradient.
-        title: Optional panel title renderable.
-        title_align: Alignment for the title text. Defaults to ``"center"``.
-        title_style: Style applied to the highlighted title text.
-        subtitle: Optional panel subtitle renderable.
-        subtitle_align: Alignment for the subtitle text. Defaults to `"right"`.
-        subtitle_style: Style applied to the highlighted subtitle text.
-        border_style: Border style for the Rich panel.
-        justify: Horizontal justification applied to the animated gradient.
-        vertical_justify: Vertical justification applied to the animated gradient.
-        box: Rich box style for the panel border. Defaults to :data:`ROUNDED`.
-        padding: Panel padding. Can be a single integer or a tuple of up to four integers.
-        expand: Whether the panel expands to available width.
-        text_justify: Keyword-only justification for string content. Defaults to
-            ``"left"``.
-        style: Base style for panel content.
-        width: Optional explicit panel width.
-        height: Optional explicit panel height.
-        safe_box: Use "safe" box characters if True.
-        highlight_words: Word highlight configuration forwarded to the gradient.
-        highlight_regex: Regex highlight configuration forwarded to the gradient.
-        auto_refresh: Whether `Live` refreshes automatically.
-        refresh_per_second (optional, float): Target frames per second. Defaults to 20.0
-        console (Optional[Console]): Explicit console to render to. Defaults to None.
-        transient (optional, bool): Leave the screen clear after stopping if True.
-        redirect_stdout: Redirect stdout into the Live console.
-        redirect_stderr: Redirect stderr into the Live console.
-        animate (bool | None): Toggle animation on or off. ``None`` defers to the
-            global configuration.
-        duration: Optional duration in seconds for automatic stop.
+        renderable (RenderableType): Content of the panel. Strings are parsed as console
+            markup, e.g. ``"Hello, [b]panel[/b]!"``.
+        colors (Optional[list[ColorType]]): Foreground color stops. Each stop may be a
+            color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS names
+            such as ``"tomato"`` also work), a hex string (``"#f00"``, ``"#ff0000"``),
+            an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[list[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        repeat_scale (float): Width of one full color cycle as a multiple of the
+            rendered width; larger values give a more gradual gradient. Defaults to 4.0.
+        expand (bool): Expand the output to the full available width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the panel: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the panel:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
+        highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
+            None.
+        highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Title and subtitle rules are appended to these. Defaults to None.
+        border_style (StyleType): Style of the border, under the gradient. A style
+            string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+        box (Box): Box characters for the border, any ``rich.box`` constant, e.g.
+            ``rich.box.HEAVY`` or ``rich.box.DOUBLE``. Defaults to ``rich.box.ROUNDED``.
+        padding (int | tuple[int, int] | tuple[int, int, int, int]): Padding inside the
+            border, CSS-style: ``1`` (all sides), ``(top_bottom, left_right)``, or
+            ``(top, right, bottom, left)``, e.g. ``(1, 2)``. Defaults to ``(0, 1)``.
+        width (Optional[int]): Fixed width in cells, or ``None`` to size automatically.
+            Defaults to None.
+        height (Optional[int]): Fixed height in lines, or ``None`` to size
+            automatically. Defaults to None.
+        style (StyleType): Base style of the panel content. A style string or
+            ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to ``""``.
+        title (Optional[TextType]): Title shown in the top border of the panel: a string
+            (parsed as console markup) or a ``Text``. Defaults to None.
+        title_align (AlignMethod): Alignment of the title: ``"left"``, ``"center"``, or
+            ``"right"``. Defaults to ``"center"``.
+        title_style (StyleType): Style layered over the gradient on the title text. A
+            style string or ``rich.style.Style``, e.g. ``"bold #ff8800"``. Defaults to
+            ``"bold"``.
+        subtitle (Optional[TextType]): Subtitle shown in the bottom border of the panel:
+            a string (parsed as console markup) or a ``Text``. Defaults to None.
+        subtitle_align (AlignMethod): Alignment of the subtitle: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"right"``.
+        subtitle_style (StyleType): Style layered over the gradient on the subtitle
+            text. A style string or ``rich.style.Style``, e.g. ``"bold #ff8800"``.
+            Defaults to ``""``.
+        safe_box (bool): Use box characters that render on legacy Windows terminals.
+            Defaults to False.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
+        redirect_stdout (bool): Redirect ``sys.stdout`` into the Live display so prints
+            appear above it. Defaults to False.
+        redirect_stderr (bool): Redirect ``sys.stderr`` into the Live display so prints
+            appear above it. Defaults to False.
+        auto_refresh (bool): Let ``Live`` refresh the display on its own timer. Defaults
+            to True.
+        refresh_per_second (float): Live refresh and animation frame rate, in frames per
+            second. Must be positive. Defaults to 20.0.
+        transient (bool): Clear the output from the terminal when the animation stops.
+            Defaults to False.
+        animate (Optional[bool]): Whether to animate. ``None`` defers to
+            ``config.animation_enabled`` (the ``RICH_GRADIENT_ANIMATE`` setting);
+            ``False`` renders a single static frame. Defaults to None.
+        duration (Optional[float]): Seconds after which a running animation stops on its
+            own, e.g. ``5.0``. Must be positive. ``None`` runs until stopped. Defaults
+            to None.
+        text_justify (AlignMethod): Alignment of the text inside the panel (string
+            content only, keyword-only): ``"left"``, ``"center"``, or ``"right"``.
+            Defaults to ``"left"``.
+
+    Raises:
+        ValueError: If a ``highlight_regex`` tuple has fewer than two items, ``hues``
+            < 2, or ``refresh_per_second``/``duration`` is not positive.
     """
 
     def __init__(
@@ -108,7 +167,12 @@ class AnimatedPanel(AnimatedGradient):
         *,
         text_justify: AlignMethod = "left",
     ) -> None:
-        """Initialize AnimatedPanel instance. See class docstring for details."""
+        """Initialize the animated panel; see the class docstring for arguments.
+
+        Raises:
+            ValueError: If a ``highlight_regex`` tuple has fewer than two items,
+                ``hues`` < 2, or ``refresh_per_second``/``duration`` is not positive.
+        """
         panel = _ExpandingRichPanel(
             _normalize_panel_renderable(
                 renderable,
@@ -163,12 +227,20 @@ class AnimatedPanel(AnimatedGradient):
     def __rich_measure__(
         self, console: Console, options: ConsoleOptions
     ) -> Measurement:
-        """Measure like a plain Rich ``Panel`` so parent layouts share width fairly."""
+        """Measure like a plain Rich ``Panel`` so parent layouts share width fairly.
+
+        Args:
+            console: The console used for measurement.
+            options: The console options for the current render.
+
+        Returns:
+            The natural (non-expanded) width range of the panel.
+        """
         return self._panel.natural_measure(console, options)
 
     @property
     def panel(self) -> RichPanel:
-        """Access the underlying Rich panel renderable."""
+        """The underlying Rich panel renderable."""
         return self._panel
 
     @staticmethod
@@ -180,9 +252,32 @@ class AnimatedPanel(AnimatedGradient):
         subtitle_style: StyleType,
         box: Box,
     ) -> Sequence[_RegexHighlight]:
-        """Merge user-provided regex highlights with title/subtitle highlights."""
+        """Merge user-provided regex highlights with title/subtitle highlights.
+
+        Args:
+            highlight_regex: User-supplied regex highlight rules, if any.
+            title: The panel title; when truthy, a title-row rule is added.
+            title_style: Style for the title-row rule (falls back to "bold").
+            subtitle: The panel subtitle; when truthy, a subtitle-row rule is added.
+            subtitle_style: Style for the subtitle-row rule.
+            box: The panel's box, used to build the border-row patterns.
+
+        Returns:
+            A list of ``(pattern, style, flags)`` tuples.
+
+        Raises:
+            ValueError: If a sequence entry has fewer than two items.
+        """
 
         def normalize_style(value: object) -> str | Style:
+            """Keep ``Style`` objects as-is and stringify anything else.
+
+            Args:
+                value: A style or style-like value.
+
+            Returns:
+                The ``Style`` unchanged, or ``str(value)``.
+            """
             return value if isinstance(value, Style) else str(value)
 
         if highlight_regex is None:
@@ -218,7 +313,14 @@ class AnimatedPanel(AnimatedGradient):
 
     @staticmethod
     def _get_title_regex(box: Box) -> str:
-        """Generate the regex used to highlight the title row."""
+        """Generate the regex used to highlight the title row.
+
+        Args:
+            box: The panel's box characters.
+
+        Returns:
+            A pattern capturing the title text in the top border.
+        """
         top_left = escape(box.top_left)
         top = escape(box.top)
         top_right = escape(box.top_right)
@@ -226,7 +328,14 @@ class AnimatedPanel(AnimatedGradient):
 
     @staticmethod
     def _get_subtitle_regex(box: Box) -> str:
-        """Generate the regex used to highlight the subtitle row."""
+        """Generate the regex used to highlight the subtitle row.
+
+        Args:
+            box: The panel's box characters.
+
+        Returns:
+            A pattern capturing the subtitle text in the bottom border.
+        """
         bottom_left = escape(box.bottom_left)
         bottom = escape(box.bottom)
         bottom_right = escape(box.bottom_right)

@@ -17,8 +17,9 @@ class GradientTheme(Theme):
     """A container for style information used by ``rich.console.Console``.
 
     Args:
-        styles (Dict[str, StyleType], optional): Mapping of style names to
-            style definitions. Defaults to ``DEFAULT_STYLES``.
+        styles (Optional[dict[str, StyleType]]): Mapping of style names to styles, e.g.
+            ``{"warning": "bold #ffaa00"}``. Defaults to None, which uses
+            ``DEFAULT_STYLES``.
 
     Notes:
         The theme always inherits Rich's default styles (``inherit=True``).
@@ -27,7 +28,7 @@ class GradientTheme(Theme):
     # styles: Dict[str, Style] = {}
 
     def __init__(self, styles: dict[str, StyleType] | None = None) -> None:
-        """Initialize the theme with the given styles."""
+        """Initialize the theme; see the class docstring for arguments."""
         if styles is None:
             styles = dict(DEFAULT_STYLES)
         super().__init__(styles=styles, inherit=True)
@@ -36,28 +37,63 @@ class GradientTheme(Theme):
 
     @property
     def theme(self) -> Theme:
-        """Return the current theme instance used for styling."""
+        """The ``rich.theme.Theme`` built from this instance's styles."""
         return self._theme
 
     @theme.setter
     def theme(self, theme: Theme = Theme(DEFAULT_STYLES)) -> None:
+        """Replace the theme used for styling.
+
+        Args:
+            theme: The new Rich theme. Defaults to a theme of ``DEFAULT_STYLES``.
+        """
         self._theme = theme
 
     def __call__(self) -> Theme:
+        """Return the theme, so the instance can be used as a theme factory.
+
+        Returns:
+            The ``rich.theme.Theme`` for this instance.
+        """
         return self.theme
 
     def __repr__(self) -> str:
+        """Return a developer-friendly representation.
+
+        Returns:
+            ``GradientTheme({...styles...})``.
+        """
         return f"GradientTheme({self._styles!r})"
 
     def __rich__(self) -> RichTable:
+        """Render the theme as a table of its styles.
+
+        Returns:
+            The styles table from ``default_styles.styles_table()``.
+        """
         return styles_table()
 
     def __getitem__(self, name: str) -> Style:
+        """Look up a style by name, e.g. ``theme["warning"]``.
+
+        Args:
+            name: The style name.
+
+        Returns:
+            The parsed ``Style``.
+
+        Raises:
+            KeyError: If no style has that name.
+        """
         return Style.parse(str(self._styles[name]))
 
     @classmethod
     def get_theme_table(cls) -> RichTable:
-        """Get a table of all styles in the theme."""
+        """Get a table of all default styles.
+
+        Returns:
+            The styles table from ``default_styles.styles_table()``.
+        """
         return styles_table()
 
 

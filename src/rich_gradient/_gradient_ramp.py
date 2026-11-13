@@ -36,7 +36,7 @@ class GradientRamp:
 
     @property
     def styles(self) -> tuple[Style, ...]:
-        """Return precomputed styles for this ramp."""
+        """The precomputed styles for this ramp, one per cell of the scaled span."""
         return self._styles
 
     def style_at(self, position: int, width: int, phase: float = 0.0) -> Style:
@@ -45,7 +45,8 @@ class GradientRamp:
         Args:
             position: Starting terminal-cell position of the cluster.
             width: Terminal-cell width of the cluster.
-            phase: Animation phase as a fractional ramp offset.
+            phase: Animation phase as a fractional ramp offset, e.g. ``0.25``
+                shifts the colors a quarter cycle. Defaults to 0.0.
 
         Returns:
             A Rich style for the requested cluster position.
@@ -62,11 +63,19 @@ class GradientRamp:
         return self.styles[index]
 
     def _compute_total_width(self) -> float:
-        """Return the scaled width used for gradient positioning."""
+        """Compute the scaled width used for gradient positioning.
+
+        Returns:
+            The span multiplied by ``repeat_scale``, never negative.
+        """
         return max(0.0, float(self.span or 0) * float(self.repeat_scale or 1.0))
 
     def _build_styles(self) -> tuple[Style, ...]:
-        """Precompute styles for all cells in the ramp."""
+        """Precompute styles for all cells in the ramp.
+
+        Returns:
+            One ``Style`` per cell of the scaled width, sampled at cell centers.
+        """
         total_width: float = self._total_width
         ramp_size: int = max(1, ceil(total_width))
         return tuple(
@@ -79,7 +88,14 @@ class GradientRamp:
         )
 
     def _style_for_fraction(self, fraction: float) -> Style:
-        """Build a Rich style for a fractional position in the ramp."""
+        """Build a Rich style for a fractional position in the ramp.
+
+        Args:
+            fraction: Fractional position between 0.0 and 1.0.
+
+        Returns:
+            A style combining the interpolated foreground and background colors.
+        """
         color: str | None = self._hex_for_stops(fraction, self.foreground_stops)
         bgcolor: str | None = self._hex_for_stops(fraction, self.background_stops)
         return Style(color=color, bgcolor=bgcolor)
@@ -87,7 +103,15 @@ class GradientRamp:
     def _hex_for_stops(
         self, fraction: float, color_stops: tuple[ColorTriplet, ...]
     ) -> str | None:
-        """Return a hex color for color stops at a fractional position."""
+        """Interpolate color stops into a hex color at a fractional position.
+
+        Args:
+            fraction: Fractional position between 0.0 and 1.0.
+            color_stops: Color stops to interpolate.
+
+        Returns:
+            A ``#rrggbb`` hex string, or ``None`` when there are no stops.
+        """
         if not color_stops:
             return None
         red, green, blue = self._interpolate_color(fraction, color_stops)
@@ -119,9 +143,25 @@ class GradientRamp:
         red1, green1, blue1 = color_stops[min(index + 1, segment_count)]
 
         def to_linear(channel: float) -> float:
+            """Convert an sRGB channel to linear light.
+
+            Args:
+                channel: Channel value, 0-255.
+
+            Returns:
+                Linear-light value, 0-1.
+            """
             return (channel / 255.0) ** self.gamma
 
         def to_srgb(channel: float) -> float:
+            """Convert a linear-light value back to an sRGB channel.
+
+            Args:
+                channel: Linear-light value, 0-1.
+
+            Returns:
+                Channel value, 0-255.
+            """
             return (channel ** (1.0 / self.gamma)) * 255.0
 
         linear_red: float = (

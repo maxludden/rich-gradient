@@ -18,26 +18,64 @@ class JSON(Gradient):
     """Render JSON text with a gradient layered over Rich's JSON formatting.
 
     Args:
-        json: A JSON string to format.
-        indent: Indent size, or a string, passed to Rich.
-        highlight: Whether Rich should syntax-highlight the output.
-        skip_keys: Skip non-basic dict keys instead of raising.
-        ensure_ascii: Escape non-ASCII characters.
-        check_circular: Check for circular references.
-        allow_nan: Allow NaN and infinity values.
-        default: Optional serializer for unsupported objects.
-        sort_keys: Whether to sort dictionary keys.
-        colors: Foreground gradient color stops.
-        bg_colors: Background gradient color stops.
-        rainbow: Whether to generate a rainbow palette.
-        hues: Number of auto-generated hues.
-        repeat_scale: Gradient repeat scale; ``None`` derives it from the stops.
-        expand: Whether the gradient frame expands.
-        justify: Horizontal alignment.
-        vertical_justify: Vertical alignment.
-        console: Optional Rich console.
-        highlight_words: Word highlight configuration.
-        highlight_regex: Regex highlight configuration.
+        json (str): The JSON text to format, e.g.
+            ``'{"name": "rich", "tags": [1, 2]}'``.
+        indent (int | str | None): Indentation per level: a number of spaces, an indent
+            string such as ``"  "``, or ``None`` for compact output. Defaults to 2.
+        highlight (bool): Apply Rich's JSON syntax highlighting before the gradient.
+            Defaults to True.
+        skip_keys (bool): Skip dict keys that are not basic types instead of raising
+            ``TypeError``. Defaults to False.
+        ensure_ascii (bool): Escape non-ASCII characters. Defaults to False.
+        check_circular (bool): Check for circular references. Defaults to True.
+        allow_nan (bool): Allow ``NaN`` and ``Infinity`` values. Defaults to True.
+        default (Optional[Callable[[Any], Any]]): Function that converts objects
+            ``json`` cannot serialize, e.g. ``str``. Defaults to None.
+        sort_keys (bool): Sort dictionary keys. Defaults to False.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[Sequence[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        repeat_scale (Optional[float]): Width of one full color cycle as a multiple of
+            the rendered width; larger values give a more gradual gradient, e.g.
+            ``1.5``. ``None`` derives it from the stops so one pass runs from the first
+            color to the last (1.0 for two colors, 2.0 for three or more). Defaults to
+            None.
+        expand (bool): Expand the output to the full console width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the JSON: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the JSON:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
+        highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
+            None.
+        highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Defaults to None.
     """
 
     def __init__(
@@ -64,7 +102,7 @@ class JSON(Gradient):
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
     ) -> None:
-        """Initialize a gradient-enabled Rich JSON renderable."""
+        """Initialize a gradient-enabled Rich JSON renderable; see the class docstring for arguments."""
         rich_json = RichJSON(
             json,
             indent=indent,
@@ -97,9 +135,13 @@ class JSON(Gradient):
         """Build a gradient JSON renderable from a Python object.
 
         Args:
-            data: Object to serialize to JSON.
+            data: Object to serialize to JSON, e.g. ``{"name": "rich", "tags": [1, 2]}``.
             **kwargs: Forwarded to the constructor (and the Rich serializer
-                options ``indent``, ``skip_keys``, ``sort_keys``, etc.).
+                options ``indent``, ``skip_keys``, ``sort_keys``, etc.), e.g.
+                ``sort_keys=True, colors=["cyan", "magenta"]``.
+
+        Returns:
+            A new gradient ``JSON`` renderable.
         """
         serializer = {
             k: kwargs.pop(k)
@@ -120,7 +162,7 @@ class JSON(Gradient):
 
     @property
     def json(self) -> RichJSON:
-        """Return the underlying Rich JSON renderable."""
+        """The underlying Rich JSON renderable."""
         return self._json
 
 
