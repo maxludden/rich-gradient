@@ -11,6 +11,7 @@ correction, and flexible alignment options.
 from __future__ import annotations
 
 import re
+import warnings
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from typing import TypeAlias, cast
@@ -112,8 +113,12 @@ class Gradient(JupyterMixin):
             ``HighlightRegex`` instances, e.g.
             ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
             Defaults to None.
-        animated (bool): Record that the caller wants animation. Static gradients do not
-            animate; use ``AnimatedGradient`` for that. Defaults to False.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. A static ``Gradient``
+            never animates on its own; use ``AnimatedGradient`` for live animation.
+            Defaults to False.
+        animated (Optional[bool]): Deprecated alias for ``animate``; passing it emits a
+            ``DeprecationWarning``. Defaults to None.
         trailing_newline (bool): End the output with a newline, like other Rich
             renderables. Pass False to print a gradient inline with other text. Defaults
             to True.
@@ -159,8 +164,9 @@ class Gradient(JupyterMixin):
             Sequence[HighlightWords] | None = None,
         highlight_regex: HighlightRegexType | HighlightRegex | \
             Sequence[HighlightRegex] | None = None,
-        animated: bool = False,
+        animate: bool = False,
         trailing_newline: bool = True,
+        animated: bool | None = None,
     ) -> None:
         """Initialize the gradient; see the class docstring for arguments.
 
@@ -178,10 +184,16 @@ class Gradient(JupyterMixin):
         self.phase: float = 0.0
         self._gradient_ramp: GradientRamp | None = None
         self._gradient_ramp_key: _GradientRampKey | None = None
-        # Keep a flag if the user requested animated behavior; static
-        # Gradient objects ignore animation but tests may construct with
-        # animated=True, so store the attribute for parity.
-        self.animated: bool = bool(animated)
+        # ``animated`` is the pre-0.4.4 spelling of ``animate``; honor it with a
+        # warning so existing callers keep working.
+        if animated is not None:
+            warnings.warn(
+                "Gradient(animated=...) is deprecated; use animate=... instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            animate = animated
+        self.animate: bool = bool(animate)
         # Backing attribute for expand; use property setter to allow
         # propagation to wrapped renderables (e.g., Rich Panel instances).
         self._expand: bool = bool(expand)
@@ -224,6 +236,11 @@ class Gradient(JupyterMixin):
                 )
 
         self._invalidate_highlight_cache()
+
+    @property
+    def animated(self) -> bool:
+        """Deprecated read-only alias for ``animate``."""
+        return self.animate
 
     @property
     def expand(self) -> bool:
@@ -582,7 +599,7 @@ class Gradient(JupyterMixin):
         if not self._highlight_rules:
             return None
         line_text = "".join(segment.text for segment in segments)
-        if self.animated:
+        if self.animate:
             return self._build_highlight_map(line_text)
 
         cached = self._highlight_map_cache.get(line_text)

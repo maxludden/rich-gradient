@@ -67,6 +67,7 @@ def test_refresh_per_second_must_be_positive() -> None:
         )
 
 
+@pytest.mark.usefixtures("animation_enabled")
 def test_animated_gradient_can_restart_after_stop() -> None:
     """Stopping an animation should not leave the stop event latched forever."""
     console = Console(record=True, width=40)
@@ -96,6 +97,7 @@ def test_animated_gradient_can_restart_after_stop() -> None:
         gradient.stop()
 
 
+@pytest.mark.usefixtures("animation_enabled")
 def test_animated_gradient_can_restart_after_duration_expires() -> None:
     """A duration-limited animation should clean up enough to restart."""
     console = Console(record=True, width=40)

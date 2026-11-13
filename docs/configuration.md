@@ -27,9 +27,13 @@ override those defaults with this shape:
 }
 ```
 
-- `animate` acts as the global kill-switch for animation. Setting the
-  flag to `false` forces every animated helper (`AnimatedGradient`, `AnimatedPanel`,
-  etc.) to start in static mode unless you explicitly pass `animate=True`.
+- `animate` acts as the global kill switch for animation. The animated helpers
+  (`AnimatedGradient`, `AnimatedPanel`, etc.) default to `animate=True`, but
+  setting this flag to `false` (or `RICH_GRADIENT_ANIMATE=0`) makes every one
+  of them render a single static frame, even when code passes `animate=True`.
+  Use it to switch animation off for a whole program, for example in CI logs.
+  The setting is read each time an animated helper is created, so
+  `rich_gradient.reload_config()` takes effect for helpers created afterwards.
 - `colors` customises the named spectrum palette. Missing default colours are
   merged back in, so you can override only the entries you care about.
 

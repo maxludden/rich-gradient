@@ -100,9 +100,9 @@ def test_gradient_background_true():
 
 def test_gradient_animated_static():
     """
-    Test that Gradient with animated=True can be constructed and produces output (static test).
+    Test that Gradient with animate=True can be constructed and produces output (static test).
     """
-    grad = Gradient("Animated", colors=["#f00", "#0f0"], animated=True)
+    grad = Gradient("Animated", colors=["#f00", "#0f0"], animate=True)
     out = render_to_text(grad)
     assert "Animated" in out
 

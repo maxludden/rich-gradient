@@ -57,6 +57,10 @@ class Rule(Gradient):
             ``"center"``, or ``"right"``. Defaults to ``"center"``.
         console (Optional[Console]): Console used for rendering and measurement.
             Defaults to ``rich.get_console()``.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
     """
 
     def __init__(
@@ -74,6 +78,7 @@ class Rule(Gradient):
         end: str = "\n",
         align: AlignMethod = "center",
         console: Console | None = None,
+        animate: bool = False,
     ) -> None:
         """Initialize the gradient rule; see the class docstring for arguments.
 
@@ -110,6 +115,7 @@ class Rule(Gradient):
                 rainbow=rainbow,
                 vertical_justify="middle",
                 highlight_words=highlight_words,
+                animate=animate,
             )
         except (ColorParseError, TypeError) as err:
             # Bad color inputs raise ColorParseError (unparseable strings) or

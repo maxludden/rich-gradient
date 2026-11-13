@@ -94,6 +94,10 @@ class Syntax(Gradient):
             (keywords, strings, comments, ...), so only plain code, line numbers and
             whitespace take the gradient. Set to False to recolor everything with the
             gradient. Defaults to True.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
     """
 
     def __init__(
@@ -125,6 +129,7 @@ class Syntax(Gradient):
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
         keep_token_colors: bool = True,
+        animate: bool = False,
     ) -> None:
         """Initialize gradient-enabled Rich syntax highlighting; see the class docstring for arguments."""
         self._base_color: Color | None = None
@@ -160,6 +165,7 @@ class Syntax(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
+            animate=animate,
         )
 
     def _merge_styles(self, original: Style, gradient_style: Style) -> Style:

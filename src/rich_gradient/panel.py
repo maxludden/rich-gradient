@@ -182,6 +182,10 @@ class Panel(Gradient):
             instances, e.g.
             ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
             Defaults to None.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
     """
 
     def __init__(
@@ -210,6 +214,8 @@ class Panel(Gradient):
         safe_box: bool = False,
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
+        *,
+        animate: bool = False,
     ) -> None:
         """Initialize the gradient panel; see the class docstring for arguments."""
         normalized_renderable = _normalize_panel_renderable(
@@ -275,6 +281,7 @@ class Panel(Gradient):
             vertical_justify=vertical_justify,
             highlight_words=highlight_words,
             highlight_regex=highlight_list,
+            animate=animate,
         )
 
     @staticmethod

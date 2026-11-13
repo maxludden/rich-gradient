@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - With `expand=False`, `Gradient` (and every wrapper built on it) spreads the ramp over the content instead of the whole line, so narrow renderables reach the last color. Center and right alignment still place the block as before.
 - `Gradient` and `AnimatedGradient` type hints accept any Rich `RenderableType`, including objects that only define `__rich__`.
+- **`animate` defaults.** The animated classes (`AnimatedGradient`, `AnimatedPanel`, `AnimatedRule`, `AnimatedText`, `AnimatedMarkdown`) now default to `animate=True` instead of `None`. Passing `None` still works and means the same as `True`.
+- **The global `animate` setting is now a kill switch.** With `"animate": false` in the config file or `RICH_GRADIENT_ANIMATE=0`, animated classes render a single static frame even when code passes `animate=True`; previously an explicit `animate=True` overrode the setting. The setting is read when each instance is created, so `reload_config()` no longer requires reloading `rich_gradient.animated_gradient`.
+- The Gradient-based static classes (`Columns`, `JSON`, `Markdown`, `Panel`, `Pretty`, `Rule`, `Syntax`, `Table`, `Tree`) accept a keyword-only `animate: bool = False` and pass it to `Gradient`.
+
+### Deprecated
+
+- `Gradient(animated=...)` is renamed to `animate=...` to match the animated classes. The old keyword still works but emits a `DeprecationWarning`, and the read-only `Gradient.animated` property mirrors `Gradient.animate`.
 
 ### Docs
 

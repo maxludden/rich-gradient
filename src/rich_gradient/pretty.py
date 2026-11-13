@@ -86,6 +86,10 @@ class Pretty(Gradient):
             instances, e.g.
             ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
             Defaults to None.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
     """
 
     def __init__(
@@ -115,6 +119,7 @@ class Pretty(Gradient):
         console: Console | None = None,
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
+        animate: bool = False,
     ) -> None:
         """Initialize a gradient-enabled Rich pretty-printer; see the class docstring for arguments."""
         pretty = RichPretty(
@@ -146,6 +151,7 @@ class Pretty(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
+            animate=animate,
         )
 
     @property

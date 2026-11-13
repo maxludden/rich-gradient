@@ -4,6 +4,7 @@ import signal
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import suppress
+from importlib import import_module
 from threading import Event, RLock, Thread
 from typing import Any, Literal
 
@@ -16,8 +17,13 @@ from rich.panel import Panel
 from rich.table import Table as RichTable
 from rich.text import Text as RichText
 
-from rich_gradient.config import config
 from rich_gradient.gradient import ColorType, Gradient
+
+# Look the config module up by name so the config is read at call time and
+# honors reload_config(). (``import rich_gradient.config as ...`` would bind the
+# package attribute, which ``rich_gradient/__init__.py`` rebinds to the config
+# instance.)
+_config_module = import_module("rich_gradient.config")
 
 __all__ = [
     "FPS",
@@ -87,9 +93,11 @@ class AnimatedGradient(Gradient):
             second. Must be positive. Defaults to 30.0.
         transient (bool): Clear the output from the terminal when the animation stops.
             Defaults to False.
-        animate (Optional[bool]): Whether to animate. ``None`` defers to
-            ``config.animation_enabled`` (the ``RICH_GRADIENT_ANIMATE`` setting);
-            ``False`` renders a single static frame. Defaults to None.
+        animate (Optional[bool]): Whether to animate. The global config is a kill
+            switch: when ``config.animation_enabled`` is False (``"animate": false`` in
+            the config file, or ``RICH_GRADIENT_ANIMATE=0``), nothing animates, even if
+            this is True. ``False`` renders a single static frame. ``None`` is treated
+            as True. Defaults to True.
         duration (Optional[float]): Seconds after which a running animation stops on its
             own, e.g. ``5.0``. Must be positive. ``None`` runs until stopped. Defaults
             to None.
@@ -128,7 +136,7 @@ class AnimatedGradient(Gradient):
         auto_refresh: bool = True,
         refresh_per_second: float = 30.0,
         transient: bool = False,
-        animate: bool | None = None,
+        animate: bool | None = True,
         duration: float | None = None,
     ) -> None:
         """Initialize the animated gradient; see the class docstring for arguments.
@@ -185,7 +193,7 @@ class AnimatedGradient(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
-            animated=self.animate,
+            animate=self.animate,
         )
         self._cycle = 0.0
 
@@ -380,19 +388,23 @@ class AnimatedGradient(Gradient):
         finally:
             self._mark_stopped()
 
-    def get_animated(self, animate: bool | None = None) -> bool:
+    def get_animated(self, animate: bool | None = True) -> bool:
         """Resolve whether animation is enabled.
 
+        The global config is a kill switch: when ``config.animation_enabled``
+        is False (``"animate": false`` in the config file, or
+        ``RICH_GRADIENT_ANIMATE=0``), nothing animates, even if ``animate`` is
+        True.
+
         Args:
-            animate: An explicit choice, or ``None`` to defer to
-                ``config.animation_enabled``. Defaults to None.
+            animate: Whether this instance should animate. ``None`` is treated
+                as ``True`` for backward compatibility. Defaults to True.
 
         Returns:
             ``True`` if the gradient should animate.
         """
-        if animate is None:
-            return config.animation_enabled
-        return bool(animate)
+        requested = True if animate is None else bool(animate)
+        return requested and _config_module.config.animation_enabled
 
 
 # MARK: Example

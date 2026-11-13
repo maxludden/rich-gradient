@@ -138,6 +138,10 @@ class Markdown(Gradient):
             ``rich.markdown.Markdown`` when ``markdown`` is a string, e.g.
             ``{"code_theme": "dracula", "hyperlinks": False}``. Must be omitted for a
             Rich ``Markdown`` instance. Defaults to None.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
     """
 
     def __init__(
@@ -156,6 +160,7 @@ class Markdown(Gradient):
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
         markdown_kwargs: Mapping[str, Any] | None = None,
+        animate: bool = False,
     ) -> None:
         """Initialize the gradient Markdown; see the class docstring for arguments.
 
@@ -177,6 +182,7 @@ class Markdown(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
+            animate=animate,
         )
         self._markdown_kwargs: dict[str, Any] = (
             dict(markdown_kwargs or {}) if isinstance(markdown, str) else {}

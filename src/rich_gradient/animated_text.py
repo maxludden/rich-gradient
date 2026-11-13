@@ -114,9 +114,11 @@ class AnimatedText(AnimatedGradient):
             appear above it. Defaults to False.
         redirect_stderr (bool): Redirect ``sys.stderr`` into the Live display so prints
             appear above it. Defaults to False.
-        animate (Optional[bool]): Whether to animate. ``None`` defers to
-            ``config.animation_enabled`` (the ``RICH_GRADIENT_ANIMATE`` setting);
-            ``False`` renders a single static frame. Defaults to None.
+        animate (Optional[bool]): Whether to animate. The global config is a kill
+            switch: when ``config.animation_enabled`` is False (``"animate": false`` in
+            the config file, or ``RICH_GRADIENT_ANIMATE=0``), nothing animates, even if
+            this is True. ``False`` renders a single static frame. ``None`` is treated
+            as True. Defaults to True.
         duration (Optional[float]): Seconds after which a running animation stops on its
             own, e.g. ``5.0``. Must be positive. ``None`` runs until stopped. Defaults
             to None.
@@ -148,7 +150,7 @@ class AnimatedText(AnimatedGradient):
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
-        animate: bool | None = None,
+        animate: bool | None = True,
         duration: float | None = None,
     ) -> None:
         """Initialize the animated text; see the class docstring for arguments.
