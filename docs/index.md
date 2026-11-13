@@ -38,7 +38,8 @@ utilities for building palettes, and animated variants for live terminal output.
       - [`Pretty`](pretty.md)
       - [`Syntax`](syntax.md)
       - [`JSON`](json.md)
-      - [`ProgressBar`](progress_bar.md)
+      - [`ProgressBar`](progress_bar.md) and `GradientBarColumn` for `rich.progress`
+      - [`inspect`](inspect.md), a gradient `rich.inspect`
       - And their animated counterparts.
 
 ## Installation

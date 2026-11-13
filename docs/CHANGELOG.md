@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v0.4.4 - 2026-11-13 | <span style="color: rgb(215, 255, 100)">Layouts and docstrings</span>
 
+### Added
+
+- **`inspect` / `Inspect`** — a gradient version of `rich.inspect`. The report matches Rich's, framed in a gradient panel; attribute names, values, and signatures keep Rich's colors so it stays readable (`keep_value_colors=False` paints everything). `Inspect` is the renderable and accepts panel options such as `box` and `title_style`.
+- **Gradient progress states.** `ProgressBar` paints a gradient while in progress, once complete, and while pulsing. New `finished_colors` and `pulse_colors` set per-state palettes (both fall back to `colors`), and `animation_time` drives the pulse. The pulse keeps Rich's sliding wave, with the bright part colored by the gradient.
+- **`GradientBarColumn`** — a drop-in for `rich.progress.BarColumn` that draws these gradient bars in a `rich.progress.Progress` display.
+
 ### Fixed
+
+- A `ProgressBar` without `colors` no longer picks a new random palette on every render, so its colors don't flicker in a live display.
 
 - Expanding `Panel`s inside `Columns` or a `Table` no longer claim the whole width. The gradient panel now reports Rich's natural panel width to parent layouts; only the inner `Align` sees the full width.
 - `AnimatedPanel(expand=True)` now draws its border across the full width, matching `Panel`.

@@ -13,15 +13,23 @@ from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / "docs" / "img"
 
 
-def _save(renderable: object, filename: str, width: int = 88) -> None:
+def _save(
+    renderable: object,
+    filename: str,
+    width: int = 88,
+    color_system: str | None = "auto",
+) -> None:
     """Render a gradient object and save it as an SVG.
 
     Args:
         renderable: Rich-compatible object to render.
         filename: Output SVG filename under ``docs/img``.
         width: Console width in terminal cells.
+        color_system: Rich color system to record with. Defaults to ``"auto"``.
+            Pass ``"truecolor"`` for renderables that draw differently without
+            color (progress bars skip the track and the blended pulse).
     """
-    console = Console(record=True, width=width)
+    console = Console(record=True, width=width, color_system=color_system)  # type: ignore[arg-type]
     console.print(renderable)
     console.save_svg(
         str(OUTPUT_DIR / filename),
@@ -120,11 +128,22 @@ def json_example() -> JSON:
 
 
 def progress_bar_example() -> RichTable:
-    """Build a stack of gradient progress bars (one per row)."""
+    """Build gradient progress bars in progress, complete, and pulsing (one per row)."""
     colors = ["#38bdf8", "#a855f7", "#f97316"]
-    grid = RichTable.grid()
-    for done in (15, 50, 85, 100):
-        grid.add_row(ProgressBar(total=100, completed=done, width=60, colors=colors))
+    grid = RichTable.grid(padding=(0, 1))
+    for done in (15, 50, 85):
+        grid.add_row(
+            "running ", ProgressBar(total=100, completed=done, width=60, colors=colors)
+        )
+    grid.add_row(
+        "complete",
+        ProgressBar(total=100, completed=100, width=60, finished_colors=["#22c55e", "#a3e635"]),
+    )
+    # A fixed animation_time freezes the pulse so the screenshot is reproducible.
+    grid.add_row(
+        "pulsing ",
+        ProgressBar(total=None, width=60, animation_time=0.0, pulse_colors=colors),
+    )
     return grid
 
 
@@ -136,7 +155,7 @@ def main() -> None:
     _save(pretty_example(), "renderables-pretty.svg")
     _save(syntax_example(), "renderables-syntax.svg")
     _save(json_example(), "renderables-json.svg")
-    _save(progress_bar_example(), "renderables-progress-bar.svg")
+    _save(progress_bar_example(), "renderables-progress-bar.svg", color_system="truecolor")
 
 
 if __name__ == "__main__":
