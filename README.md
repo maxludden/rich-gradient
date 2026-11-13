@@ -51,6 +51,7 @@ animated variants, and utilities for building palettes.
 ### What's new in v0.4.4
 
 - **Added** — `inspect()` / `Inspect`, a gradient version of `rich.inspect` that keeps values readable.
+- **Added** — `border_only=True` on `Panel` and `AnimatedPanel` for a gradient border around normally styled content.
 - **Added** — `ProgressBar` gradients for in-progress, complete (`finished_colors`), and pulsing (`pulse_colors`) bars, plus `GradientBarColumn` for `rich.progress.Progress`.
 - **Fixed** — expanding `Panel`s inside `Columns` or a `Table` no longer take the whole width, `AnimatedPanel(expand=True)` draws a full-width border, and `AnimatedPanel` accepts `text_justify`.
 - **Changed** — with `expand=False`, the gradient spans the content instead of the whole line, so narrow renderables reach the last color.

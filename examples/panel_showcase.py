@@ -10,7 +10,9 @@ from rich.panel import Panel as RichPanel
 from rich_gradient import Panel, Text
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
 
-OUTPUT = Path(__file__).resolve().parents[1] / "docs" / "img" / "panel-overview.svg"
+IMG_DIR = Path(__file__).resolve().parents[1] / "docs" / "img"
+OUTPUT = IMG_DIR / "panel-overview.svg"
+BORDER_ONLY_OUTPUT = IMG_DIR / "panel-border-only.svg"
 
 
 def main() -> None:
@@ -36,6 +38,25 @@ def main() -> None:
     )
     console.print(gradient_panel, justify="center")
     console.save_svg(str(OUTPUT), title="rich-gradient", theme=GRADIENT_TERMINAL_THEME)
+    border_only_example()
+
+
+def border_only_example() -> None:
+    """Show `border_only=True`: a gradient border around content Rich styles normally."""
+    console = Console(record=True, width=64)
+    console.print(
+        Panel(
+            "[bold cyan]Deploy finished[/] in [green]42s[/]\n"
+            "[dim]3 services updated, 0 errors[/]",
+            colors=["#38bdf8", "#a855f7", "#f97316"],
+            title="border_only=True",
+            border_only=True,
+            expand=False,
+        )
+    )
+    console.save_svg(
+        str(BORDER_ONLY_OUTPUT), title="rich-gradient", theme=GRADIENT_TERMINAL_THEME
+    )
 
 
 if __name__ == "__main__":

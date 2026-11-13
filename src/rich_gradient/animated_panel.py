@@ -18,7 +18,7 @@ from rich_gradient._logger import logger
 from rich_gradient.animated_gradient import AnimatedGradient
 from rich_gradient.gradient import (ColorType, HighlightRegexType,
                                     HighlightWordsType)
-from rich_gradient.panel import (_ExpandingRichPanel,
+from rich_gradient.panel import (_ExpandingRichPanel, _merge_border_only,
                                  _normalize_panel_renderable)
 from rich_gradient.text import Text, TextType
 
@@ -89,8 +89,9 @@ class AnimatedPanel(AnimatedGradient):
             automatically. Defaults to None.
         style (StyleType): Base style of the panel content. A style string or
             ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
-            style is replaced by the gradient; a background color is kept unless
-            ``bg_colors`` is set. Defaults to ``""``.
+            style is replaced by the gradient (a background color is kept unless
+            ``bg_colors`` is set); with ``border_only``, colors here are shown as in a
+            plain Rich panel. Defaults to ``""``.
         title (Optional[TextType]): Title shown in the top border of the panel: a string
             (parsed as console markup) or a ``Text``. Defaults to None.
         title_align (AlignMethod): Alignment of the title: ``"left"``, ``"center"``, or
@@ -132,6 +133,10 @@ class AnimatedPanel(AnimatedGradient):
         text_justify (AlignMethod): Alignment of the text inside the panel (string
             content only, keyword-only): ``"left"``, ``"center"``, or ``"right"``.
             Defaults to ``"left"``.
+        border_only (bool): Paint only the border with the gradient (its title and
+            subtitle too, as Rich draws them in the border style) and draw the content
+            exactly as a plain ``rich.panel.Panel`` would, keeping its own colors and
+            background. Defaults to False.
 
     Raises:
         ValueError: If a ``highlight_regex`` tuple has fewer than two items, ``hues``
@@ -176,6 +181,7 @@ class AnimatedPanel(AnimatedGradient):
         duration: float | None = None,
         *,
         text_justify: AlignMethod = "left",
+        border_only: bool = False,
     ) -> None:
         """Initialize the animated panel; see the class docstring for arguments.
 
@@ -207,6 +213,7 @@ class AnimatedPanel(AnimatedGradient):
         # Track underlying panel so expand setter on Gradient can propagate
         # changes to the Rich Panel instance.
         self._panel: _ExpandingRichPanel = panel
+        self.border_only = border_only
 
         highlight_list = self._combine_highlight_regex(
             highlight_regex, title, title_style, subtitle, subtitle_style, box
@@ -252,6 +259,34 @@ class AnimatedPanel(AnimatedGradient):
     def panel(self) -> RichPanel:
         """The underlying Rich panel renderable."""
         return self._panel
+
+    @property
+    def border_only(self) -> bool:
+        """Whether only the border (with its title and subtitle) takes the gradient."""
+        return self._panel.mark_border
+
+    @border_only.setter
+    def border_only(self, value: bool) -> None:
+        """Paint only the border with the gradient, or the whole panel.
+
+        Args:
+            value: ``True`` to leave the content as a plain Rich panel draws it.
+        """
+        self._panel.mark_border = bool(value)
+
+    def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
+        """Merge the gradient into every cell, or only the border when ``border_only``.
+
+        Args:
+            original: The segment's style as Rich rendered it.
+            gradient_style: The gradient color for the segment's position.
+
+        Returns:
+            The merged style; with ``border_only``, content cells keep ``original``.
+        """
+        if self.border_only:
+            return _merge_border_only(original, gradient_style, super()._merge_styles)
+        return super()._merge_styles(original, gradient_style)
 
     @staticmethod
     def _combine_highlight_regex(

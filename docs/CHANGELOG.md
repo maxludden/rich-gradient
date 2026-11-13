@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`inspect` / `Inspect`** — a gradient version of `rich.inspect`. The report matches Rich's, framed in a gradient panel; attribute names, values, and signatures keep Rich's colors so it stays readable (`keep_value_colors=False` paints everything). `Inspect` is the renderable and accepts panel options such as `box` and `title_style`.
 - **Gradient progress states.** `ProgressBar` paints a gradient while in progress, once complete, and while pulsing. New `finished_colors` and `pulse_colors` set per-state palettes (both fall back to `colors`), and `animation_time` drives the pulse. The pulse keeps Rich's sliding wave, with the bright part colored by the gradient.
+- **`border_only`** on `Panel` and `AnimatedPanel` paints only the border (with its title and subtitle) with the gradient; the content renders exactly as a plain `rich.panel.Panel` would. It can also be toggled later through the `border_only` property.
 - **`GradientBarColumn`** — a drop-in for `rich.progress.BarColumn` that draws these gradient bars in a `rich.progress.Progress` display.
 
 ### Fixed
