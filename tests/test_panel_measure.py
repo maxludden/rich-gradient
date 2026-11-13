@@ -79,3 +79,33 @@ def test_animated_panel_accepts_text_justify() -> None:
     assert body.strip("│ ") == "hi"
     left, right = body.index("hi"), len(body) - body.index("hi") - 2
     assert abs(left - right) <= 1
+
+
+def test_animated_panel_keeps_positional_console() -> None:
+    """``text_justify`` is keyword-only, so ``console`` keeps its positional slot."""
+    import inspect
+
+    params = inspect.signature(AnimatedPanel.__init__).parameters
+    assert params["text_justify"].kind is inspect.Parameter.KEYWORD_ONLY
+    names = [n for n, p in params.items() if p.kind is p.POSITIONAL_OR_KEYWORD]
+    assert names[names.index("safe_box") + 1] == "console"
+
+
+def test_animated_panel_resolves_rich_cast_each_render() -> None:
+    """A ``__rich__`` object is resolved per render, so animation frames update."""
+
+    class Counter:
+        def __init__(self) -> None:
+            self.value = 0
+
+        def __rich__(self) -> str:
+            return f"count {self.value}"
+
+    counter = Counter()
+    console = _console(30)
+    panel = AnimatedPanel(counter, console=console, animate=False)
+    console.print(panel)
+    counter.value = 7
+    console.print(panel)
+    text = console.export_text()
+    assert "count 0" in text and "count 7" in text

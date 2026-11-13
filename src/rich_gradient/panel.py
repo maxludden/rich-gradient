@@ -48,14 +48,20 @@ class _ExpandingRichPanel(RichPanel):
 
 
 def _normalize_panel_renderable(
-    obj: RenderableType, *, style: StyleType, text_justify: AlignMethod
+    obj: RenderableType,
+    *,
+    style: StyleType,
+    text_justify: AlignMethod,
+    resolve_rich: bool = True,
 ) -> RenderableType:
-    """Resolve ``__rich__`` once and parse markup strings into justified Rich text.
+    """Parse markup strings into justified Rich text, optionally resolving ``__rich__``.
 
     Shared by :class:`Panel` and :class:`~rich_gradient.animated_panel.AnimatedPanel`
     so both treat string content (markup, ``style``, ``text_justify``) the same way.
+    ``AnimatedPanel`` passes ``resolve_rich=False`` so a ``__rich__`` object is
+    resolved by Rich on every frame instead of being frozen at construction.
     """
-    rich_obj = getattr(obj, "__rich__", None)
+    rich_obj = getattr(obj, "__rich__", None) if resolve_rich else None
     if callable(rich_obj):
         try:
             obj = cast(RenderableType, rich_obj())

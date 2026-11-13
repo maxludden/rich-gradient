@@ -50,7 +50,8 @@ class AnimatedPanel(AnimatedGradient):
         box: Rich box style for the panel border. Defaults to :data:`ROUNDED`.
         padding: Panel padding. Can be a single integer or a tuple of up to four integers.
         expand: Whether the panel expands to available width.
-        text_justify: Justification for string content. Defaults to ``"left"``.
+        text_justify: Keyword-only justification for string content. Defaults to
+            ``"left"``.
         style: Base style for panel content.
         width: Optional explicit panel width.
         height: Optional explicit panel height.
@@ -95,7 +96,6 @@ class AnimatedPanel(AnimatedGradient):
         subtitle_align: AlignMethod = "right",
         subtitle_style: StyleType = "",
         safe_box: bool = False,
-        text_justify: AlignMethod = "left",
         # live args
         console: Console | None = None,
         redirect_stdout: bool = False,
@@ -105,11 +105,16 @@ class AnimatedPanel(AnimatedGradient):
         transient: bool = False,
         animate: bool | None = None,
         duration: float | None = None,
+        *,
+        text_justify: AlignMethod = "left",
     ) -> None:
         """Initialize AnimatedPanel instance. See class docstring for details."""
         panel = _ExpandingRichPanel(
             _normalize_panel_renderable(
-                renderable, style=style, text_justify=text_justify
+                renderable,
+                style=style,
+                text_justify=text_justify,
+                resolve_rich=False,
             ),
             title=title,
             title_align=title_align,

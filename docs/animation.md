@@ -89,6 +89,21 @@ finally:
     animated.stop()
 ```
 
+Pass a string instead of a Rich panel and `AnimatedPanel` builds the panel for
+you. Use the keyword-only `text_justify` to align that string inside the border:
+
+```python
+from rich_gradient.animated_panel import AnimatedPanel
+
+AnimatedPanel(
+    "Centered [b]AnimatedPanel[/b] text",
+    title="Centered",
+    text_justify="center",
+    rainbow=True,
+    duration=3,
+).run()
+```
+
 Animated renderables forward `console`, `expand`, `justify`, and color configuration
 to their static counterparts, making it easy to switch between live demos and static
 output.

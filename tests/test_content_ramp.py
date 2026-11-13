@@ -9,24 +9,29 @@ from rich_gradient import Gradient, Panel
 RED, BLUE = (255, 0, 0), (0, 0, 255)
 
 
-def _glyph_colors(renderable: object, width: int = 80) -> list[tuple[int, int, int]]:
-    """Return the foreground RGB of every non-space cell, left to right."""
+def _glyph_colors(
+    renderable: object, width: int = 80
+) -> list[tuple[int, int, int] | None]:
+    """Return the foreground RGB of every non-space cell, left to right.
+
+    Unstyled cells are kept as ``None`` so a missing endpoint color fails the
+    assertions instead of being skipped.
+    """
     console = Console(width=width, force_terminal=True, color_system="truecolor")
-    colors = []
+    colors: list[tuple[int, int, int] | None] = []
     for segment in console.render(renderable, console.options):  # type: ignore[arg-type]
-        if not segment.text.strip() or segment.style is None or segment.style.color is None:
-            continue
-        triplet = segment.style.color.get_truecolor()
-        colors.extend([tuple(triplet)] * len(segment.text.strip()))
+        color = segment.style.color if segment.style else None
+        rgb = tuple(color.get_truecolor()) if color is not None else None
+        colors.extend(rgb for ch in segment.text if not ch.isspace())  # type: ignore[misc]
     return colors
 
 
-def _is_reddish(rgb: tuple[int, int, int]) -> bool:
-    return rgb[0] > 200 and rgb[2] < 80
+def _is_reddish(rgb: tuple[int, int, int] | None) -> bool:
+    return rgb is not None and rgb[0] > 200 and rgb[2] < 80
 
 
-def _is_bluish(rgb: tuple[int, int, int]) -> bool:
-    return rgb[2] > 200 and rgb[0] < 80
+def _is_bluish(rgb: tuple[int, int, int] | None) -> bool:
+    return rgb is not None and rgb[2] > 200 and rgb[0] < 80
 
 
 @pytest.mark.parametrize("justify", ["left", "center", "right"])
@@ -41,13 +46,21 @@ def test_non_expanding_gradient_reaches_last_color(justify: str) -> None:
 
 
 def test_non_expanding_panel_border_spans_full_ramp() -> None:
-    """The border of a content-width panel shows both end colors."""
+    """The border of a content-width panel shows both end colors on its corners."""
     panel = Panel("hello world", colors=["#ff0000", "#0000ff"], expand=False)
     console = Console(width=80, force_terminal=True, color_system="truecolor")
     first_line = next(iter(console.render_lines(panel, console.options)))
-    border = [s for s in first_line if s.text.strip() and s.style and s.style.color]
-    assert _is_reddish(tuple(border[0].style.color.get_truecolor()))  # type: ignore[union-attr]
-    assert _is_bluish(tuple(border[-1].style.color.get_truecolor()))  # type: ignore[union-attr]
+    cells = [
+        (ch, segment.style.color if segment.style else None)
+        for segment in first_line
+        for ch in segment.text
+        if not ch.isspace()
+    ]
+    assert cells[0][0] == "╭" and cells[-1][0] == "╮"
+    first, last = cells[0][1], cells[-1][1]
+    assert first is not None and last is not None
+    assert _is_reddish(tuple(first.get_truecolor()))  # type: ignore[arg-type]
+    assert _is_bluish(tuple(last.get_truecolor()))  # type: ignore[arg-type]
 
 
 def test_centered_block_stays_centered() -> None:
@@ -59,10 +72,20 @@ def test_centered_block_stays_centered() -> None:
 
 
 def test_expanding_gradient_is_unchanged() -> None:
-    """With ``expand=True`` the ramp still spans the whole line (short text stays red)."""
-    gradient = Gradient(RichText("hello world"), colors=["#ff0000", "#0000ff"], expand=True)
-    colors = _glyph_colors(gradient)
+    """With ``expand=True`` the ramp spans the whole 80-cell line.
+
+    "hello world" covers only the first 11 cells, so it moves from red a short
+    way toward blue: each glyph is bluer than the last but none reaches blue.
+    """
+    colors = _glyph_colors(
+        Gradient(RichText("hello world"), colors=["#ff0000", "#0000ff"], expand=True)
+    )
+    assert all(c is not None for c in colors)
+    blues = [c[2] for c in colors if c is not None]
+    assert _is_reddish(colors[0])
+    assert blues == sorted(blues) and blues[-1] > blues[0]
     assert not _is_bluish(colors[-1])
+    assert blues[-1] < 128
 
 
 def test_gradient_accepts_rich_cast() -> None:
