@@ -57,21 +57,23 @@ class AnimatedPanel(AnimatedGradient):
             ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
         highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
             gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
-            ``{"error": "bold", ("warn", "caution"): "italic"}``; a sequence of
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
             ``(words, style[, case_sensitive])`` tuples, e.g.
-            ``[("error", "bold"), (("warn", "caution"), "italic", False)]``; or
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
             ``HighlightWords`` instances, e.g.
-            ``[HighlightWords(words=("error",), style=Style.parse("b u"))]``.
-            Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
-            None.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Colors in
+            these styles are shown: they replace the gradient on the matched text.
+            Defaults to None.
         highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
             matches are restyled on top of the gradient. Accepts a mapping of a pattern
-            to a style, e.g. ``{r"[0-9]+": "bold"}``; a sequence of
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
             ``(pattern, style[, flags])`` tuples, e.g.
-            ``[(r"error|fail", "reverse", re.IGNORECASE)]``; or ``HighlightRegex``
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
             instances, e.g.
-            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("dim italic"))]``.
-            Title and subtitle rules are appended to these. Defaults to None.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Title and subtitle rules are appended to these. Colors in these styles are
+            shown: they replace the gradient on the matched text. Defaults to None.
         border_style (StyleType): Style of the border, under the gradient. A style
             string or ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in
             this style is replaced by the gradient; a background color is kept unless

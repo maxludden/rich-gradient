@@ -98,21 +98,23 @@ class Gradient(JupyterMixin):
         highlight_words (HighlightWordsType | HighlightWords | Sequence[HighlightWords] | None):
             Words to restyle on top of the gradient. Accepts a mapping of a word (or a
             tuple of words) to a style, e.g.
-            ``{"error": "bold", ("warn", "caution"): "italic"}``; a sequence of
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
             ``(words, style[, case_sensitive])`` tuples, e.g.
-            ``[("error", "bold"), (("warn", "caution"), "italic", False)]``; or
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
             ``HighlightWords`` instances, e.g.
-            ``[HighlightWords(words=("error",), style=Style.parse("b u"))]``.
-            Matching is case-sensitive unless ``case_sensitive`` is False. Defaults to
-            None.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Colors in
+            these styles are shown: they replace the gradient on the matched text.
+            Defaults to None.
         highlight_regex (HighlightRegexType | HighlightRegex | Sequence[HighlightRegex] | None):
             Regular expressions whose matches are restyled on top of the gradient.
             Accepts a mapping of a pattern to a style, e.g.
-            ``{r"[0-9]+": "bold"}``; a sequence of ``(pattern, style[, flags])``
-            tuples, e.g. ``[(r"error|fail", "reverse", re.IGNORECASE)]``; or
+            ``{r"[0-9]+": "bold cyan"}``; a sequence of ``(pattern, style[, flags])``
+            tuples, e.g. ``[(r"error|fail", "red", re.IGNORECASE)]``; or
             ``HighlightRegex`` instances, e.g.
-            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("dim italic"))]``.
-            Defaults to None.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Colors in these styles are shown: they replace the gradient on the matched
+            text. Defaults to None.
         animate (bool): Mark the content as changing between renders, so highlight
             matches are recomputed every frame instead of cached. A static ``Gradient``
             never animates on its own; use ``AnimatedGradient`` for live animation.
@@ -139,7 +141,7 @@ class Gradient(JupyterMixin):
         ...     Gradient(
         ...         "error: disk full",
         ...         colors=["cyan", "magenta"],
-        ...         highlight_words={"error": "bold"},
+        ...         highlight_words={"error": "bold red"},
         ...     )
         ... )
     """
@@ -893,7 +895,7 @@ class Gradient(JupyterMixin):
 
         Args:
             style: A ``Style`` (returned unchanged) or a style string such as
-                ``"b u"``.
+                ``"bold red"``.
 
         Returns:
             The parsed ``Style``.
@@ -914,7 +916,8 @@ class Gradient(JupyterMixin):
         Args:
             words (Sequence[str]): Words to highlight, e.g. ``["error", "fail"]``.
                 Empty strings are ignored.
-            style (StyleType): Style to overlay on matches, e.g. ``"b u"``.
+            style (StyleType): Style to overlay on matches, e.g. ``"bold red"``. Colors
+                are shown: they replace the gradient on the matched text.
             case_sensitive (bool): Whether matching is case-sensitive. Defaults to True.
 
         Returns:
@@ -938,12 +941,17 @@ class Gradient(JupyterMixin):
     def highlight_regex(
         self, pattern: str | re.Pattern[str], style: StyleType, flags: int = 0
     ) -> Gradient:
-        """Highlight matches of a regex pattern with an additional style after gradients are applied.
+        """Highlight regex matches with an extra style applied after the gradient.
+
+        If the pattern has capture groups, only the groups are highlighted.
 
         Args:
-            pattern(str|re.Pattern[str]): Regex pattern (string or compiled).
-            style(StyleType): Style to overlay on matches.
-            flags(int): Optional regex flags when pattern is a string. Defaults to 0.
+            pattern (str | re.Pattern[str]): Regex pattern, as a string or compiled,
+                e.g. ``r"[0-9]+ ms"``.
+            style (StyleType): Style to overlay on matches, e.g. ``"bold cyan"``.
+                Colors are shown: they replace the gradient on the matched text.
+            flags (int): ``re`` flags used when ``pattern`` is a string, e.g.
+                ``re.IGNORECASE``. Defaults to 0.
 
         Returns:
             The gradient instance (for chaining).

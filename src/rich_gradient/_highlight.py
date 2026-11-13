@@ -34,7 +34,8 @@ class HighlightWords:
 
     Args:
         words (tuple[str, ...]): Tuple of words to highlight.
-        style (Style): Style to apply to matched words.
+        style (Style): Style to apply to matched words, e.g. ``Style.parse("bold red")``.
+            Colors are shown: they replace the gradient on the matched text.
         case_sensitive (bool): Whether matching is case-sensitive. Defaults to True.
     """
 
@@ -217,7 +218,8 @@ class HighlightRegex:
 
     Args:
         pattern (re.Pattern[str]): Compiled regex pattern to match.
-        style (Style): Style to apply to matched text.
+        style (Style): Style to apply to matched text, e.g. ``Style.parse("cyan")``.
+            Colors are shown: they replace the gradient on the matched text.
     """
 
     pattern: re.Pattern[str]
