@@ -22,7 +22,7 @@ from rich.cells import get_character_cell_size
 from rich.color import Color, ColorParseError
 from rich.color_triplet import ColorTriplet
 from rich.console import (Console, ConsoleOptions, ConsoleRenderable, Group,
-                          RenderResult)
+                          RenderableType, RenderResult)
 from rich.jupyter import JupyterMixin
 from rich.measure import Measurement
 from rich.panel import Panel
@@ -115,7 +115,7 @@ class Gradient(JupyterMixin):
 
     def __init__(
         self,
-        renderables: str | ConsoleRenderable | Iterable[ConsoleRenderable],
+        renderables: RenderableType | Iterable[RenderableType],
         colors: list[ColorType] | None = None,
         bg_colors: list[ColorType] | None = None,
         *,
@@ -263,13 +263,13 @@ class Gradient(JupyterMixin):
 
     @renderables.setter
     def renderables(
-        self, value: str | ConsoleRenderable | Iterable[ConsoleRenderable]
+        self, value: RenderableType | Iterable[RenderableType]
     ) -> None:
         """Set and normalize the list of renderables."""
         self._set_renderables(value)
 
     def _set_renderables(
-        self, value: str | ConsoleRenderable | Iterable[ConsoleRenderable]
+        self, value: RenderableType | Iterable[RenderableType]
     ) -> None:
         """Normalize and store renderables without going through the descriptor.
 
@@ -285,7 +285,7 @@ class Gradient(JupyterMixin):
             or hasattr(value, "__rich__")
         )
         if not is_whole and isinstance(value, Iterable):
-            render_list: list[str | ConsoleRenderable] = list(value)
+            render_list: list[RenderableType] = list(value)
         else:
             render_list = [cast(ConsoleRenderable, value)]
         normalized: list[ConsoleRenderable] = []
@@ -293,7 +293,7 @@ class Gradient(JupyterMixin):
             if isinstance(item, str):
                 normalized.append(cast(ConsoleRenderable, RichText.from_markup(item)))
             else:
-                normalized.append(item)
+                normalized.append(cast(ConsoleRenderable, item))  # RichCast renders via Group
         self._renderables = normalized
 
     @property
@@ -484,19 +484,31 @@ class Gradient(JupyterMixin):
             for _ in self.renderables:
                 yield Segment.line()
             return
+        group = Group(*self.renderables)
         content = Align(
-            Group(*self.renderables),
+            group,
             align=self.justify,
             vertical=self.vertical_justify,
             width=width,
             pad=self.expand,
         )
 
+        span, offset = width, 0
+        if not self.expand:
+            # Spread the ramp over the content, not the whole line, so a narrow
+            # block still runs from the first color to the last. The offset
+            # mirrors where ``Align`` places the block for center/right.
+            span = max(1, min(Measurement.get(console, options, group).maximum, width))
+            excess = width - span
+            offset = {"center": excess // 2, "right": excess}.get(self.justify, 0)
+
         yield from self._render_styled_lines(
             console,
             options,
             content,
             trailing_newline=self.trailing_newline and bool(self.renderables),
+            span=span,
+            offset=offset,
         )
 
     def _render_styled_lines(
@@ -506,13 +518,23 @@ class Gradient(JupyterMixin):
         content: ConsoleRenderable,
         *,
         trailing_newline: bool = False,
+        span: int | None = None,
+        offset: int = 0,
     ) -> RenderResult:
-        """Render content line-by-line and apply gradient styles to cell clusters."""
+        """Render content line-by-line and apply gradient styles to cell clusters.
+
+        Args:
+            span: Cells the gradient ramp covers. Defaults to the full line width.
+            offset: Column where the ramp starts. Cells outside
+                ``[offset, offset + span)`` take the nearest end color.
+        """
         lines = console.render_lines(content, options, pad=True, new_lines=False)
-        width = options.max_width
+        ramp_span = options.max_width if span is None else span
         for line_index, segments in enumerate(lines):
             highlight_map = self._get_highlight_map_for_segments(segments)
-            yield from self._render_styled_segments(segments, width, highlight_map)
+            yield from self._render_styled_segments(
+                segments, ramp_span, highlight_map, offset=offset
+            )
             if line_index < len(lines) - 1:
                 yield Segment.line()
         if trailing_newline:
@@ -539,9 +561,14 @@ class Gradient(JupyterMixin):
         segments: Sequence[Segment],
         span: int,
         highlight_map: list[Style | None] | None,
+        *,
+        offset: int = 0,
     ) -> RenderResult:
-        """Apply gradient and highlight styles to rendered Rich segments."""
-        column = 0
+        """Apply gradient and highlight styles to rendered Rich segments.
+
+        ``offset`` shifts the ramp right so it starts at that column.
+        """
+        column = -offset
         char_index = 0
         for seg in segments:
             text = seg.text
@@ -596,6 +623,9 @@ class Gradient(JupyterMixin):
         indices: Sequence[int],
     ) -> Segment:
         """Build a styled segment for one display-cell cluster."""
+        # Clamp padding cells outside the ramp (only possible with an offset or
+        # a span narrower than the line) to the nearest end of the ramp.
+        position = max(0, min(position, span - width))
         gradient_style = self._get_style_at_position(position, width, span)
         merged_style = self._merge_styles(base_style, gradient_style)
         merged_style = self._apply_highlight_style(merged_style, highlight_map, indices)

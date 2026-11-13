@@ -208,7 +208,7 @@ console.print(
 
 #### Specific Color Gradient Result
 
-![multi-color specific colors](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/v0.3.4/gradient_text_custom_colors.svg)
+![multi-color specific colors](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/text-four-colors.svg)
 
 ---
 
@@ -227,7 +227,7 @@ console.print(
 )
 ```
 
-![Rainbow Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/refs/heads/main/docs/img/v0.3.4/text_rainbow_gradient_with_code.svg)
+![Rainbow Gradient](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/text-rainbow.svg)
 
 Use `Spectrum(hues=..., seed=...)` when you need reproducible color stops.
 
@@ -258,7 +258,7 @@ console.print(
 console.line()
 ```
 
-![Still Text](https://github.com/maxludden/rich-gradient/raw/refs/heads/main/docs/img/v0.3.4/built_on_rich_text.svg)
+![Still Text](https://raw.githubusercontent.com/maxludden/rich-gradient/main/docs/img/text-still-rich-text.svg)
 
 ## Wrap Any Rich Renderable
 

@@ -34,19 +34,19 @@
 
     .text_example_4-r1 { fill: #ffffff }
 .text_example_4-r2 { fill: #ffffff;font-weight: bold }
-.text_example_4-r3 { fill: #ff5500;font-weight: bold }
-.text_example_4-r4 { fill: #ff7100;font-weight: bold }
-.text_example_4-r5 { fill: #ff8600;font-weight: bold }
-.text_example_4-r6 { fill: #ff9900;font-weight: bold }
-.text_example_4-r7 { fill: #ffac00;font-weight: bold }
-.text_example_4-r8 { fill: #ffbc00;font-weight: bold }
-.text_example_4-r9 { fill: #ffcc00;font-weight: bold }
-.text_example_4-r10 { fill: #ffde00;font-weight: bold }
-.text_example_4-r11 { fill: #ffef00;font-weight: bold }
-.text_example_4-r12 { fill: #ffff00;font-weight: bold }
-.text_example_4-r13 { fill: #e6ff00;font-weight: bold }
-.text_example_4-r14 { fill: #cbff00;font-weight: bold }
-.text_example_4-r15 { fill: #a9ff00;font-weight: bold }
+.text_example_4-r3 { fill: #ff9900;font-weight: bold }
+.text_example_4-r4 { fill: #ffac00;font-weight: bold }
+.text_example_4-r5 { fill: #ffbc00;font-weight: bold }
+.text_example_4-r6 { fill: #ffcc00;font-weight: bold }
+.text_example_4-r7 { fill: #ffde00;font-weight: bold }
+.text_example_4-r8 { fill: #ffef00;font-weight: bold }
+.text_example_4-r9 { fill: #ffff00;font-weight: bold }
+.text_example_4-r10 { fill: #e6ff00;font-weight: bold }
+.text_example_4-r11 { fill: #cbff00;font-weight: bold }
+.text_example_4-r12 { fill: #aaff00;font-weight: bold }
+.text_example_4-r13 { fill: #8dff00;font-weight: bold }
+.text_example_4-r14 { fill: #67ff00;font-weight: bold }
+.text_example_4-r15 { fill: #00ff00;font-weight: bold }
 .text_example_4-r16 { fill: #800080 }
 .text_example_4-r17 { fill: #80107f }
 .text_example_4-r18 { fill: #81167f }

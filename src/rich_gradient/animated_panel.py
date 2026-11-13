@@ -8,7 +8,8 @@ from typing import Any
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
-from rich.console import Console, RenderableType
+from rich.console import Console, ConsoleOptions, RenderableType
+from rich.measure import Measurement
 from rich.panel import Panel as RichPanel
 from rich.style import Style, StyleType
 from rich.text import Text as RichText
@@ -17,6 +18,8 @@ from rich_gradient._logger import logger
 from rich_gradient.animated_gradient import AnimatedGradient
 from rich_gradient.gradient import (ColorType, HighlightRegexType,
                                     HighlightWordsType)
+from rich_gradient.panel import (_ExpandingRichPanel,
+                                 _normalize_panel_renderable)
 from rich_gradient.text import Text, TextType
 
 __all__ = ["AnimatedPanel"]
@@ -47,6 +50,7 @@ class AnimatedPanel(AnimatedGradient):
         box: Rich box style for the panel border. Defaults to :data:`ROUNDED`.
         padding: Panel padding. Can be a single integer or a tuple of up to four integers.
         expand: Whether the panel expands to available width.
+        text_justify: Justification for string content. Defaults to ``"left"``.
         style: Base style for panel content.
         width: Optional explicit panel width.
         height: Optional explicit panel height.
@@ -91,6 +95,7 @@ class AnimatedPanel(AnimatedGradient):
         subtitle_align: AlignMethod = "right",
         subtitle_style: StyleType = "",
         safe_box: bool = False,
+        text_justify: AlignMethod = "left",
         # live args
         console: Console | None = None,
         redirect_stdout: bool = False,
@@ -102,8 +107,10 @@ class AnimatedPanel(AnimatedGradient):
         duration: float | None = None,
     ) -> None:
         """Initialize AnimatedPanel instance. See class docstring for details."""
-        panel = RichPanel(
-            renderable,
+        panel = _ExpandingRichPanel(
+            _normalize_panel_renderable(
+                renderable, style=style, text_justify=text_justify
+            ),
             title=title,
             title_align=title_align,
             subtitle=subtitle,
@@ -120,7 +127,7 @@ class AnimatedPanel(AnimatedGradient):
 
         # Track underlying panel so expand setter on Gradient can propagate
         # changes to the Rich Panel instance.
-        self._panel = panel
+        self._panel: _ExpandingRichPanel = panel
 
         highlight_list = self._combine_highlight_regex(
             highlight_regex, title, title_style, subtitle, subtitle_style, box
@@ -147,6 +154,12 @@ class AnimatedPanel(AnimatedGradient):
             animate=animate,
             duration=duration,
         )
+
+    def __rich_measure__(
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
+        """Measure like a plain Rich ``Panel`` so parent layouts share width fairly."""
+        return self._panel.natural_measure(console, options)
 
     @property
     def panel(self) -> RichPanel:
