@@ -4,8 +4,9 @@ import signal
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from contextlib import suppress
+from importlib import import_module
 from threading import Event, RLock, Thread
-from typing import Any
+from typing import Any, Literal
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
@@ -16,8 +17,13 @@ from rich.panel import Panel
 from rich.table import Table as RichTable
 from rich.text import Text as RichText
 
-from rich_gradient.config import config
 from rich_gradient.gradient import ColorType, Gradient
+
+# Look the config module up by name so the config is read at call time and
+# honors reload_config(). (``import rich_gradient.config as ...`` would bind the
+# package attribute, which ``rich_gradient/__init__.py`` rebinds to the config
+# instance.)
+_config_module = import_module("rich_gradient.config")
 
 __all__ = [
     "FPS",
@@ -33,25 +39,73 @@ class AnimatedGradient(Gradient):
     """A gradient that animates over time using `rich.live.Live`.
 
     Args:
-        renderables (Optional[list[ConsoleRenderable]]): Renderables to apply the gradient to.
-        colors (Optional[list[ColorType]]): Foreground color stops for the gradient.
-        bg_colors (Optional[list[ColorType]]): Background color stops for the gradient.
-        hues (int): Number of hues when auto-generating colors. Defaults to 5.
-        rainbow (bool): Generate a rainbow gradient instead of using ``colors``. Defaults to False.
-        repeat_scale (float): Stretch color stops across a wider span. Defaults to 4.0.
-        expand (bool): Expand to fill console width/height. Defaults to True.
-        justify (AlignMethod): Horizontal justification. Defaults to "left".
-        vertical_justify (VerticalAlignMethod): Vertical justification. Defaults to "top".
-        console (Optional[Console]): Console to use for rendering. Defaults to the global console.
-        highlight_words: Optional configurations for word highlighting.
-        highlight_regex: Optional configurations for regex highlighting.
-        redirect_stdout (bool): Redirect stdout to Live. Defaults to False.
-        redirect_stderr (bool): Redirect stderr to Live. Defaults to False.
-        auto_refresh (bool): Automatically refresh the Live context. Defaults to True.
-        refresh_per_second (float): Refresh rate for the Live context. Defaults to 30.0.
-        animate (bool | None): Whether to animate. When ``None`` (default), the global
-            configuration is used. Set to ``False`` to disable live updates explicitly.
-        duration (Optional[float]): Optional duration for automatic stop when running animations.
+        renderables (RenderableType | Iterable[RenderableType] | None): A renderable or
+            an iterable of renderables to animate. Strings are parsed as console markup,
+            e.g. ``"Loading..."``. Defaults to None (nothing until renderables are set).
+        colors (Optional[list[ColorType]]): Foreground color stops. Each stop may be a
+            color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS names
+            such as ``"tomato"`` also work), a hex string (``"#f00"``, ``"#ff0000"``),
+            an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[list[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        repeat_scale (float): Width of one full color cycle as a multiple of the
+            rendered width; larger values give a more gradual gradient. Defaults to 4.0.
+        expand (bool): Expand the output to the full console width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the content: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the content:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"top"``.
+        highlight_words (Optional[Mapping | Sequence]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Colors in
+            these styles are shown: they replace the gradient on the matched text.
+            Defaults to None.
+        highlight_regex (Optional[Mapping | Sequence]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Colors in these styles are shown: they replace the gradient on the matched
+            text. Defaults to None.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
+        redirect_stdout (bool): Redirect ``sys.stdout`` into the Live display so prints
+            appear above it. Defaults to False.
+        redirect_stderr (bool): Redirect ``sys.stderr`` into the Live display so prints
+            appear above it. Defaults to False.
+        auto_refresh (bool): Let ``Live`` refresh the display on its own timer. Defaults
+            to True.
+        refresh_per_second (float): Live refresh and animation frame rate, in frames per
+            second. Must be positive. Defaults to 30.0.
+        transient (bool): Clear the output from the terminal when the animation stops.
+            Defaults to False.
+        animate (Optional[bool]): Whether to animate. The global config is a kill
+            switch: when ``config.animation_enabled`` is False (``"animate": false`` in
+            the config file, or ``RICH_GRADIENT_ANIMATE=0``), nothing animates, even if
+            this is True. ``False`` renders a single static frame. ``None`` is treated
+            as True. Defaults to True.
+        duration (Optional[float]): Seconds after which a running animation stops on its
+            own, e.g. ``5.0``. Must be positive. ``None`` runs until stopped. Defaults
+            to None.
+
+    Raises:
+        ValueError: If ``refresh_per_second`` or ``duration`` is not positive.
 
     Examples:
         >>> ag = AnimatedGradient(renderables=["Hello"], rainbow=True)
@@ -84,9 +138,14 @@ class AnimatedGradient(Gradient):
         auto_refresh: bool = True,
         refresh_per_second: float = 30.0,
         transient: bool = False,
-        animate: bool | None = None,
+        animate: bool | None = True,
         duration: float | None = None,
     ) -> None:
+        """Initialize the animated gradient; see the class docstring for arguments.
+
+        Raises:
+            ValueError: If ``refresh_per_second`` or ``duration`` is not positive.
+        """
         self.animate = self.get_animated(animate)
         if refresh_per_second <= 0:
             raise ValueError("refresh_per_second must be greater than 0")
@@ -136,7 +195,7 @@ class AnimatedGradient(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
-            animated=self.animate,
+            animate=self.animate,
         )
         self._cycle = 0.0
 
@@ -149,12 +208,16 @@ class AnimatedGradient(Gradient):
     # -----------------
     @property
     def live_console(self) -> Console:
-        """Get the console used by the Live instance."""
+        """The console used by the Live instance."""
         return self.live.console
 
     @live_console.setter
     def live_console(self, value: Console) -> None:
-        """Set the console used by the Live instance."""
+        """Set the console used by the Live instance.
+
+        Args:
+            value: The console Live should render to.
+        """
         self.live.console = value
 
     # -----------------
@@ -211,7 +274,13 @@ class AnimatedGradient(Gradient):
         # attempt to stop the animation and close the Live console cleanly.
         previous_handler = signal.getsignal(signal.SIGINT)
 
-        def _sigint_handler(_signum, _frame):
+        def _sigint_handler(_signum: int, _frame: object) -> None:
+            """Stop the animation when Ctrl+C is pressed.
+
+            Args:
+                _signum: The received signal number (unused).
+                _frame: The interrupted stack frame (unused).
+            """
             # Stop animation and ensure Live is closed. Keep handler small
             # and defensive to avoid raising from signal context.
             try:
@@ -240,11 +309,26 @@ class AnimatedGradient(Gradient):
                 pass
             self.stop()
 
-    def __enter__(self):
+    def __enter__(self) -> "AnimatedGradient":
+        """Start the animation when entering a ``with`` block.
+
+        Returns:
+            This ``AnimatedGradient`` instance.
+        """
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(self, exc_type: object, exc: object, tb: object) -> Literal[False]:
+        """Stop the animation when leaving a ``with`` block.
+
+        Args:
+            exc_type: The exception type raised in the block, if any.
+            exc: The exception instance raised in the block, if any.
+            tb: The traceback of the exception, if any.
+
+        Returns:
+            ``False``, so exceptions raised in the block propagate.
+        """
         self.stop()
         return False
 
@@ -252,7 +336,15 @@ class AnimatedGradient(Gradient):
     # MARK: Live Renderable
     # -----------------
     def get_renderable(self) -> ConsoleRenderable:
-        """Return the renderable the Live instance should display each frame."""
+        """Build the renderable the Live instance should display each frame.
+
+        Returns:
+            This gradient wrapped in an ``Align`` sized to the console when
+            ``expand`` is true.
+
+        Raises:
+            AssertionError: If no renderables have been set.
+        """
         with self._lock:
             if not self.renderables:
                 raise AssertionError("No renderables set for the gradient")
@@ -298,11 +390,23 @@ class AnimatedGradient(Gradient):
         finally:
             self._mark_stopped()
 
-    def get_animated(self, animate: bool | None = None) -> bool:
-        """Return whether animation is enabled."""
-        if animate is None:
-            return config.animation_enabled
-        return bool(animate)
+    def get_animated(self, animate: bool | None = True) -> bool:
+        """Resolve whether animation is enabled.
+
+        The global config is a kill switch: when ``config.animation_enabled``
+        is False (``"animate": false`` in the config file, or
+        ``RICH_GRADIENT_ANIMATE=0``), nothing animates, even if ``animate`` is
+        True.
+
+        Args:
+            animate: Whether this instance should animate. ``None`` is treated
+                as ``True`` for backward compatibility. Defaults to True.
+
+        Returns:
+            ``True`` if the gradient should animate.
+        """
+        requested = True if animate is None else bool(animate)
+        return requested and _config_module.config.animation_enabled
 
 
 # MARK: Example
@@ -331,7 +435,14 @@ def animated_gradient_example() -> None:
         return table
 
     def _generate_group(table: RichTable) -> Group:
-        """Generate a group containing a panel and the provided table."""
+        """Generate a group containing a panel and the provided table.
+
+        Args:
+            table: The table to show inside the panel.
+
+        Returns:
+            A group of the panel followed by a blank line.
+        """
         return Group(
             Panel(
                 Group(

@@ -1,12 +1,12 @@
 """Enables rendering of gradients in Rich Panels."""
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from re import escape
 from typing import cast
 
 from rich.align import AlignMethod, VerticalAlignMethod
 from rich.box import ROUNDED, Box
-from rich.console import Console, ConsoleOptions, RenderableType
+from rich.console import Console, ConsoleOptions, RenderableType, RenderResult
 from rich.measure import Measurement
 from rich.panel import Panel as RichPanel
 from rich.style import Style, StyleType
@@ -17,6 +17,43 @@ from rich_gradient.gradient import (ColorType, Gradient, HighlightRegexType,
                                     HighlightWordsType)
 from rich_gradient.text import Text, TextType
 from rich_gradient.theme import GRADIENT_TERMINAL_THEME
+
+# Meta key that tags the border's style while a ``border_only`` panel renders,
+# so the gradient can tell border cells (including the title and subtitle,
+# which Rich draws with the border style) from content cells.
+_BORDER_META_KEY = "rich_gradient.panel_border"
+_BORDER_MARK = Style(meta={_BORDER_META_KEY: True})
+
+
+def _is_panel_border(style: Style) -> bool:
+    """Return whether a rendered style belongs to a marked panel border.
+
+    Args:
+        style: The style of a rendered segment.
+
+    Returns:
+        ``True`` if the style carries the border marker.
+    """
+    return bool(style._meta) and bool(style.meta.get(_BORDER_META_KEY))
+
+
+def _merge_border_only(
+    original: Style, gradient_style: Style, merge: "Callable[[Style, Style], Style]"
+) -> Style:
+    """Merge the gradient into border cells only.
+
+    Args:
+        original: The segment's style as Rich rendered it.
+        gradient_style: The gradient color for the segment's position.
+        merge: The normal merge (``Gradient._merge_styles``) to use on border cells.
+
+    Returns:
+        ``original`` unchanged for content cells; for border cells, the merged
+        style with the border marker removed.
+    """
+    if not _is_panel_border(original):
+        return original
+    return merge(original.clear_meta_and_links(), gradient_style)
 
 
 class _ExpandingRichPanel(RichPanel):
@@ -30,12 +67,48 @@ class _ExpandingRichPanel(RichPanel):
     that measure the *outer* gradient panel (``Columns``, ``Table`` cells) must
     see Rich's natural measurement via :meth:`natural_measure`, or every
     expanding panel would demand the whole width and crowd out its siblings.
+
+    With ``mark_border`` set, the border style is tagged while rendering so a
+    ``border_only`` gradient can find the border cells.
     """
+
+    mark_border: bool = False
+
+    def __rich_console__(
+        self, console: Console, options: ConsoleOptions
+    ) -> RenderResult:
+        """Render like Rich's ``Panel``, tagging the border style when ``mark_border`` is set.
+
+        Args:
+            console: The console being rendered to.
+            options: The console options for the current render.
+
+        Yields:
+            The panel's segments.
+        """
+        if not self.mark_border:
+            yield from super().__rich_console__(console, options)
+            return
+        original = self.border_style
+        self.border_style = console.get_style(original) + _BORDER_MARK
+        try:
+            yield from super().__rich_console__(console, options)
+        finally:
+            self.border_style = original
 
     def __rich_measure__(
         self, console: Console, options: ConsoleOptions
     ) -> Measurement:
-        """Report the full available width when expanding without a fixed width."""
+        """Report the full available width when expanding without a fixed width.
+
+        Args:
+            console: The console used for measurement.
+            options: The console options for the current render.
+
+        Returns:
+            ``options.max_width`` for both bounds when expanding without a
+            fixed width; otherwise Rich's natural measurement.
+        """
         if self.expand and self.width is None:
             return Measurement(options.max_width, options.max_width)
         return super().__rich_measure__(console, options)
@@ -43,7 +116,15 @@ class _ExpandingRichPanel(RichPanel):
     def natural_measure(
         self, console: Console, options: ConsoleOptions
     ) -> Measurement:
-        """Return Rich's own panel measurement (content width plus chrome)."""
+        """Return Rich's own panel measurement (content width plus chrome).
+
+        Args:
+            console: The console used for measurement.
+            options: The console options for the current render.
+
+        Returns:
+            The measurement a plain Rich ``Panel`` would report.
+        """
         return super().__rich_measure__(console, options)
 
 
@@ -60,6 +141,18 @@ def _normalize_panel_renderable(
     so both treat string content (markup, ``style``, ``text_justify``) the same way.
     ``AnimatedPanel`` passes ``resolve_rich=False`` so a ``__rich__`` object is
     resolved by Rich on every frame instead of being frozen at construction.
+
+    Args:
+        obj: The panel content. Strings are parsed as console markup.
+        style: Base style for string content.
+        text_justify: Justification for string content: ``"left"``,
+            ``"center"``, or ``"right"``.
+        resolve_rich: Call ``obj.__rich__()`` once up front, if present.
+            Defaults to True.
+
+    Returns:
+        A justified Rich ``Text`` for strings; otherwise the (possibly
+        resolved) renderable.
     """
     rich_obj = getattr(obj, "__rich__", None) if resolve_rich else None
     if callable(rich_obj):
@@ -78,34 +171,98 @@ def _normalize_panel_renderable(
 
 
 class Panel(Gradient):
-    """A Rich Panel that supports (animated) gradients as background.
+    """A Rich ``Panel`` whose border, title, and content share one gradient.
 
     Args:
-        renderable (RenderableType): The renderable to display inside the panel.
-        colors (Optional[List[ColorType]]): Foreground color stops for the gradient.
-        bg_colors (Optional[List[ColorType]]): Background color stops for the gradient.
-        title (Optional[RenderableType]): The title of the panel.
-        title_align (AlignMethod): The alignment of the title. Defaults to "center".
-        title_style (StyleType): The style of the title. If none, the title will use \
-            the bolded gradient colors.
-        subtitle (Optional[RenderableType]): The subtitle of the panel.
-        subtitle_align (AlignMethod): The alignment of the subtitle. Defaults to "right".
-        subtitle_style (StyleType): The style of the subtitle. If none, the subtitle will use \
-            the dimmed gradient colors.
-        border_style (Union[str, Color]): The style of the panel border.
-        box (Optional[Box]): The box style to use for the panel border.
-        padding (int | tuple[int, int] | tuple[int, int, int, int]): Padding inside the \
-            panel. Defaults to (0, 1, 0, 1).
-        expand (bool): Whether to expand the panel to fill available width. Defaults to True.
-        text_justify (AlignMethod): The justification of the panel content text. \
-            Defaults to "left".
-        style (Union[str, Color]): The style of the panel content. If a color is provided, \
-            it will override the gradient style.
-        width (Optional[int]): The width of the panel.
-        height (Optional[int]): The height of the panel.
-        safe_box (bool): Whether to use safe box drawing characters. Defaults to False.
-        highlight_words (Optional[HighlightWordsType]): Words to highlight with styles.
-        highlight_regex (Optional[HighlightRegexType]): Regex patterns to highlight with styles.
+        renderable (RenderableType): Content of the panel. Strings are parsed as console
+            markup, e.g. ``"Hello, [b]panel[/b]!"``.
+        colors (Optional[list[ColorType]]): Foreground color stops. Each stop may be a
+            color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS names
+            such as ``"tomato"`` also work), a hex string (``"#f00"``, ``"#ff0000"``),
+            an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[list[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        title (Optional[TextType]): Title shown in the top border of the panel: a string
+            (parsed as console markup) or a ``Text``. Defaults to None.
+        title_align (AlignMethod): Alignment of the title: ``"left"``, ``"center"``, or
+            ``"right"``. Defaults to ``"center"``.
+        title_style (StyleType): Style layered over the gradient on the title text. A
+            style string or ``rich.style.Style``, e.g. ``"dim italic"``. Unlike
+            ``style``, a color here is shown, drawn on top of the gradient. Defaults to
+            ``"bold"``.
+        subtitle (Optional[TextType]): Subtitle shown in the bottom border of the panel:
+            a string (parsed as console markup) or a ``Text``. Defaults to None.
+        subtitle_align (AlignMethod): Alignment of the subtitle: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"right"``.
+        subtitle_style (StyleType): Style layered over the gradient on the subtitle
+            text. A style string or ``rich.style.Style``, e.g. ``"dim italic"``. Unlike
+            ``style``, a color here is shown, drawn on top of the gradient. Defaults to
+            ``""``.
+        border_style (StyleType): Style of the border, under the gradient. A style
+            string or ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in
+            this style is replaced by the gradient; a background color is kept unless
+            ``bg_colors`` is set. Defaults to ``""``.
+        justify (AlignMethod): Horizontal alignment of the panel: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the panel:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
+        box (Box): Box characters for the border, any ``rich.box`` constant, e.g.
+            ``rich.box.HEAVY`` or ``rich.box.DOUBLE``. Defaults to ``rich.box.ROUNDED``.
+        padding (int | tuple[int, int] | tuple[int, int, int, int]): Padding inside the
+            border, CSS-style: ``1`` (all sides), ``(top_bottom, left_right)``, or
+            ``(top, right, bottom, left)``, e.g. ``(1, 2)``. Defaults to
+            ``(0, 1, 0, 1)``.
+        expand (bool): Expand the output to the full available width. Defaults to True.
+        text_justify (AlignMethod): Alignment of the text inside the panel (string
+            content only): ``"left"``, ``"center"``, or ``"right"``. Defaults to
+            ``"left"``.
+        style (StyleType): Base style of the panel content. A style string or
+            ``rich.style.Style``, e.g. ``"dim italic"``. A foreground color in this
+            style is replaced by the gradient (a background color is kept unless
+            ``bg_colors`` is set); with ``border_only``, colors here are shown as in a
+            plain Rich panel. Defaults to ``""``.
+        width (Optional[int]): Fixed width in cells, or ``None`` to size automatically.
+            Defaults to None.
+        height (Optional[int]): Fixed height in lines, or ``None`` to size
+            automatically. Defaults to None.
+        safe_box (bool): Use box characters that render on legacy Windows terminals.
+            Defaults to False.
+        highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Colors in
+            these styles are shown: they replace the gradient on the matched text.
+            Defaults to None.
+        highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Colors in these styles are shown: they replace the gradient on the matched
+            text. Defaults to None.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
+        border_only (bool): Paint only the border with the gradient (its title and
+            subtitle too, as Rich draws them in the border style) and draw the content
+            exactly as a plain ``rich.panel.Panel`` would, keeping its own colors and
+            background. Defaults to False.
     """
 
     def __init__(
@@ -134,8 +291,11 @@ class Panel(Gradient):
         safe_box: bool = False,
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
+        *,
+        animate: bool = False,
+        border_only: bool = False,
     ) -> None:
-        """Initialize the Panel with gradient support."""
+        """Initialize the gradient panel; see the class docstring for arguments."""
         normalized_renderable = _normalize_panel_renderable(
             renderable, style=style, text_justify=text_justify
         )
@@ -163,6 +323,7 @@ class Panel(Gradient):
         # Track the underlying Rich Panel so expand setter can propagate to it
         # (Gradient.expand property will attempt to update ``self._panel``).
         self._panel: _ExpandingRichPanel = panel
+        self.border_only = border_only
 
         # Highlight title and subtitle if they are provided
         ## Normalize highlight_regex into a mutable sequence of tuples (pattern, style, priority)
@@ -199,11 +360,19 @@ class Panel(Gradient):
             vertical_justify=vertical_justify,
             highlight_words=highlight_words,
             highlight_regex=highlight_list,
+            animate=animate,
         )
 
     @staticmethod
     def _get_title_regex(box: Box) -> str:
-        """Generate regex patterns for title highlighting."""
+        """Generate the regex used to highlight the title row.
+
+        Args:
+            box: The panel's box characters.
+
+        Returns:
+            A pattern capturing the title text in the top border.
+        """
         top_left: str = escape(box.top_left)
         top: str = escape(box.top)
         top_right: str = escape(box.top_right)
@@ -212,7 +381,14 @@ class Panel(Gradient):
 
     @staticmethod
     def _get_subtitle_regex(box: Box) -> str:
-        """Generate regex patterns for subtitle highlighting."""
+        """Generate the regex used to highlight the subtitle row.
+
+        Args:
+            box: The panel's box characters.
+
+        Returns:
+            A pattern capturing the subtitle text in the bottom border.
+        """
         bottom_left: str = escape(box.bottom_left)
         bottom: str = escape(box.bottom)
         bottom_right: str = escape(box.bottom_right)
@@ -222,13 +398,49 @@ class Panel(Gradient):
     def __rich_measure__(
         self, console: Console, options: ConsoleOptions
     ) -> Measurement:
-        """Measure like a plain Rich ``Panel`` so parent layouts share width fairly."""
+        """Measure like a plain Rich ``Panel`` so parent layouts share width fairly.
+
+        Args:
+            console: The console used for measurement.
+            options: The console options for the current render.
+
+        Returns:
+            The natural (non-expanded) width range of the panel.
+        """
         return self._panel.natural_measure(console, options)
 
     @property
     def panel(self) -> RichPanel:
-        """Access the underlying Rich Panel renderable."""
+        """The underlying Rich Panel renderable."""
         return self._panel
+
+    @property
+    def border_only(self) -> bool:
+        """Whether only the border (with its title and subtitle) takes the gradient."""
+        return self._panel.mark_border
+
+    @border_only.setter
+    def border_only(self, value: bool) -> None:
+        """Paint only the border with the gradient, or the whole panel.
+
+        Args:
+            value: ``True`` to leave the content as a plain Rich panel draws it.
+        """
+        self._panel.mark_border = bool(value)
+
+    def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
+        """Merge the gradient into every cell, or only the border when ``border_only``.
+
+        Args:
+            original: The segment's style as Rich rendered it.
+            gradient_style: The gradient color for the segment's position.
+
+        Returns:
+            The merged style; with ``border_only``, content cells keep ``original``.
+        """
+        if self.border_only:
+            return _merge_border_only(original, gradient_style, super()._merge_styles)
+        return super()._merge_styles(original, gradient_style)
 
 
 if __name__ == "__main__":

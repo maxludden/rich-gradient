@@ -19,7 +19,18 @@ ensure_installed()
 
 
 def _deep_update(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
-    """Recursively update base dict with override and return base (mutates base)."""
+    """Recursively merge ``override`` into ``base`` in place.
+
+    Nested dicts are merged key by key; any other value in ``override``
+    replaces the one in ``base``.
+
+    Args:
+        base: The dict to update. It is mutated.
+        override: The values to merge on top of ``base``.
+
+    Returns:
+        ``base``, after the merge.
+    """
     for k, v in override.items():
         if isinstance(v, dict) and isinstance(base.get(k), dict):
             _deep_update(base[k], v)
@@ -39,6 +50,14 @@ def _parse_bool(value: Any, *, default: bool, source: str) -> bool:
     ``RICH_GRADIENT_ANIMATE`` environment variable. Anything unrecognised
     falls back to ``default`` with a warning instead of silently becoming
     ``False``.
+
+    Args:
+        value: The raw value from a config file or environment variable.
+        default: The value to fall back to when ``value`` is not recognised.
+        source: Where the value came from, used in the warning message.
+
+    Returns:
+        The interpreted boolean, or ``default``.
     """
     if isinstance(value, bool):
         return value
@@ -59,6 +78,13 @@ def _clean_colors(candidate: Any, *, source: str) -> dict[str, str]:
     parser understands, are dropped with a warning. Without this a single bad
     entry in a config file would surface later as a confusing error the first
     time a ``Spectrum`` is built.
+
+    Args:
+        candidate: The parsed JSON value expected to be a ``{name: color}`` object.
+        source: Where the colors came from, used in warning messages.
+
+    Returns:
+        The valid entries, or an empty dict if ``candidate`` is not a dict.
     """
     if not isinstance(candidate, dict):
         logger.warning(f"Ignoring colors from {source}: expected a JSON object")
@@ -79,7 +105,12 @@ def _clean_colors(candidate: Any, *, source: str) -> dict[str, str]:
 
 @dataclass
 class Color:
-    """Represents a color with a name and hex value."""
+    """A named color in the default spectrum.
+
+    Attributes:
+        name: The color's name (e.g. ``"tomato"``).
+        hex: The color's ``#RRGGBB`` hex value.
+    """
 
     name: str
     hex: str
@@ -87,7 +118,11 @@ class Color:
 
 @dataclass
 class Colors:
-    """Represents a collection of colors."""
+    """The ordered default color spectrum used by rich-gradient.
+
+    Attributes:
+        __root__: The colors, in spectrum order from red through rose.
+    """
 
     __root__: list[Color] = field(
         default_factory=lambda: [
@@ -113,21 +148,25 @@ class Colors:
 
     @property
     def names(self) -> list[str]:
-        """Return a list of color names."""
+        """The color names, in spectrum order."""
         return [color.name for color in self.__root__]
 
     @property
     def hex(self) -> list[str]:
-        """Return a list of color hex values."""
+        """The color hex values, in spectrum order."""
         return [color.hex for color in self.__root__]
 
     def as_dict(self) -> builtins.dict[str, str]:
-        """Return a dictionary mapping color names to hex values."""
+        """Build a mapping of color names to hex values.
+
+        Returns:
+            A ``{name: hex}`` dict in spectrum order.
+        """
         return {color.name: color.hex for color in self.__root__}
 
     @property
     def dict(self) -> builtins.dict[str, str]:
-        """Return a dictionary mapping color names to hex values."""
+        """A ``{name: hex}`` mapping of the colors (same as ``as_dict()``)."""
         return self.as_dict()
 
 
@@ -135,15 +174,16 @@ class Colors:
 class RichGradientConfig:
     """Runtime configuration for rich-gradient.
 
-    Use RichGradientConfig.load(...) to create an instance. The loader will:
-    - start from DEFAULT_CONFIG
-    - merge a JSON config file if present (by default: ~/.rich-gradient/config.json)
+    Use ``RichGradientConfig.load(...)`` to create an instance. The loader will:
+
+    - start from ``DEFAULT_CONFIG``
+    - merge a JSON config file if present (by default: ``~/.rich-gradient/config.json``)
     - apply environment variable overrides
 
-    Attributes (public API):
+    Attributes:
         home_dir: Directory rich-gradient reads its config file from.
-        animate: whether animations are enabled.
-        colors: mapping of color-name -> hex value.
+        animate: Whether animations are enabled.
+        colors: Mapping of color name to color value.
     """
 
     DEFAULT_CONFIG: ClassVar[dict] = {
@@ -158,7 +198,7 @@ class RichGradientConfig:
 
     @property
     def spectrum_colors(self) -> list[str]:
-        """Return the spectrum colors as an ordered list of hex strings.
+        """The spectrum colors as an ordered list of color strings.
 
         Order follows the keys in the merged colors mapping. This is typically
         the default ordering unless overridden by a config file.
@@ -182,22 +222,25 @@ class RichGradientConfig:
         environment variables.
 
         Args:
-            config_path: optional explicit Path to a JSON config file. If None,
-                the loader will look for ``config.json`` in the home directory
+            config_path: Explicit path to a JSON config file. Defaults to None,
+                which looks for ``config.json`` in the home directory
                 (``~/.rich-gradient`` unless ``RICH_GRADIENT_HOME_DIR`` is set).
 
         Environment variable overrides supported:
             RICH_GRADIENT_HOME_DIR -> directory containing ``config.json``
             RICH_GRADIENT_ANIMATE -> '1', 'true', 'yes', 'on' enable animation;
                 '0', 'false', 'no', 'off' disable it
-            RICH_GRADIENT_COLORS -> JSON object mapping name->color (merged)
+            RICH_GRADIENT_COLORS -> JSON object mapping name->color (merged),
+                e.g. ``'{"brand": "#ff0088"}'``
             RICH_GRADIENT_EXE -> kept for external wrappers; unused by the core
 
         Invalid values (a malformed file, a non-boolean ``animate``, colors no
         parser understands) are ignored with a logged warning and the previous
         layer's value is kept.
-        """
 
+        Returns:
+            A new, frozen ``RichGradientConfig``.
+        """
         merged: dict[str, Any] = json.loads(json.dumps(cls.DEFAULT_CONFIG))
 
         # The home directory decides where the config file lives, so the
@@ -274,8 +317,18 @@ config = RichGradientConfig.load()
 
 
 def reload_config(config_path: Path | None = None) -> RichGradientConfig:
-    """Reload the runtime configuration and return the new instance."""
+    """Reload the runtime configuration and return the new instance.
 
+    This rebinds this module's ``config``. Use ``rich_gradient.reload_config``
+    to also refresh the package-level ``config``/``CONFIG`` aliases.
+
+    Args:
+        config_path: Explicit path to a JSON config file. Defaults to None,
+            which uses ``config.json`` in the home directory.
+
+    Returns:
+        The freshly loaded configuration.
+    """
     global config
     config = RichGradientConfig.load(config_path)
     return config

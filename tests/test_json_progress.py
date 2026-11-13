@@ -85,10 +85,12 @@ def test_progress_bar_keeps_fill_attributes() -> None:
         assert style.bold and style.bgcolor is not None
 
 
-def test_progress_bar_indeterminate_matches_rich() -> None:
-    assert _chars(ProgressBar(total=None, width=10, colors=COLORS)) == _chars(
-        RichProgressBar(total=None, width=10)
-    )
+def test_progress_bar_indeterminate_pulses_with_gradient() -> None:
+    """Indeterminate bars keep Rich's pulse characters but color the wave from the gradient."""
+    ours = _chars(ProgressBar(total=None, width=10, colors=COLORS, animation_time=0.0))
+    rich = _chars(RichProgressBar(total=None, width=10, animation_time=0.0))
+    assert [c for c, _ in ours] == [c for c, _ in rich]
+    assert [s for _, s in ours] != [s for _, s in rich]
 
 
 def test_progress_bar_exposes_rich_state() -> None:

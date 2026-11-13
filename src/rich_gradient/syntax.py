@@ -22,36 +22,84 @@ class Syntax(Gradient):
     """A Rich syntax-highlighting convenience constructor with gradient rendering.
 
     Args:
-        code: Source code to highlight.
-        lexer: Lexer name or Pygments lexer instance.
-        theme: Pygments style theme.
-        dedent: Whether to strip initial indentation.
-        line_numbers: Whether to render line numbers.
-        start_line: Starting line number.
-        line_range: Optional start/end line range.
-        highlight_lines: Optional line numbers to highlight.
-        code_width: Optional code width.
-        tab_size: Spaces per tab.
-        word_wrap: Whether to wrap long lines.
-        background_color: Optional background color.
-        indent_guides: Whether to show indentation guides.
-        padding: Padding around syntax output.
-        colors: Foreground gradient color stops.
-        bg_colors: Background gradient color stops.
-        rainbow: Whether to generate a rainbow palette.
-        hues: Number of auto-generated hues.
-        repeat_scale: Scale factor controlling gradient repeats. Defaults to None,
-            which derives it from the color stops.
-        expand: Whether the gradient frame expands.
-        justify: Horizontal alignment.
-        vertical_justify: Vertical alignment.
-        console: Optional Rich console.
-        highlight_words: Word highlight configuration.
-        highlight_regex: Regex highlight configuration.
-        keep_token_colors: Keep the theme's colors for highlighted tokens
-            (keywords, strings, comments, ...). Only plain code, line numbers
-            and whitespace take the gradient. Set to ``False`` to recolor
-            everything with the gradient.
+        code (str): The source code to highlight.
+        lexer (str | Lexer): Pygments lexer name or instance, e.g. ``"python"`` or
+            ``"json"``.
+        theme (str): Pygments style name, e.g. ``"monokai"``, ``"dracula"``, or
+            ``"ansi_dark"``. Defaults to ``"monokai"``.
+        dedent (bool): Strip common leading indentation from the code. Defaults to
+            False.
+        line_numbers (bool): Show line numbers. Defaults to False.
+        start_line (int): Number shown for the first line. Defaults to 1.
+        line_range (Optional[tuple[int | None, int | None]]): Inclusive ``(start, end)``
+            range of lines to show, either end may be ``None``, e.g. ``(10, 20)``.
+            Defaults to None (all lines).
+        highlight_lines (Optional[set[int]]): Line numbers to highlight, e.g.
+            ``{3, 4}``. Defaults to None.
+        code_width (Optional[int]): Fixed width of the code area, or ``None`` to fit.
+            Defaults to None.
+        tab_size (int): Spaces per tab. Defaults to 4.
+        word_wrap (bool): Wrap long lines. Defaults to False.
+        background_color (Optional[str]): Override the theme's background color, e.g.
+            ``"#1e1e1e"`` or ``"default"``. Defaults to None.
+        indent_guides (bool): Draw indentation guide lines. Defaults to False.
+        padding (PaddingDimensions): Padding around the code, CSS-style: ``1``,
+            ``(top_bottom, left_right)``, or ``(top, right, bottom, left)``. Defaults to
+            0.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[Sequence[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        repeat_scale (Optional[float]): Width of one full color cycle as a multiple of
+            the rendered width; larger values give a more gradual gradient, e.g.
+            ``1.5``. ``None`` derives it from the stops so one pass runs from the first
+            color to the last (1.0 for two colors, 2.0 for three or more). Defaults to
+            None.
+        expand (bool): Expand the output to the full console width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the code: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the code:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"middle"``.
+        console (Optional[Console]): Console used for rendering and measurement.
+            Defaults to ``rich.get_console()``.
+        highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Colors in
+            these styles are shown: they replace the gradient on the matched text.
+            Defaults to None.
+        highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Colors in these styles are shown: they replace the gradient on the matched
+            text. Defaults to None.
+        keep_token_colors (bool): Keep the theme's colors for highlighted tokens
+            (keywords, strings, comments, ...), so only plain code, line numbers and
+            whitespace take the gradient. Set to False to recolor everything with the
+            gradient. Defaults to True.
+        animate (bool): Mark the content as changing between renders, so highlight
+            matches are recomputed every frame instead of cached. Static renderables
+            never animate on their own; use the ``Animated*`` classes for live
+            animation. Defaults to False.
     """
 
     def __init__(
@@ -83,8 +131,9 @@ class Syntax(Gradient):
         highlight_words: HighlightWordsType | None = None,
         highlight_regex: HighlightRegexType | None = None,
         keep_token_colors: bool = True,
+        animate: bool = False,
     ) -> None:
-        """Initialize gradient-enabled Rich syntax highlighting."""
+        """Initialize gradient-enabled Rich syntax highlighting; see the class docstring for arguments."""
         self._base_color: Color | None = None
         syntax = RichSyntax(
             code,
@@ -118,10 +167,20 @@ class Syntax(Gradient):
             repeat_scale=repeat_scale,
             highlight_words=highlight_words,
             highlight_regex=highlight_regex,
+            animate=animate,
         )
 
     def _merge_styles(self, original: Style, gradient_style: Style) -> Style:
-        """Leave highlighted tokens alone; apply the gradient to everything else."""
+        """Leave highlighted tokens alone; apply the gradient to everything else.
+
+        Args:
+            original: The segment's style from the Pygments theme.
+            gradient_style: The gradient color for the segment's position.
+
+        Returns:
+            ``original`` unchanged for highlighted tokens (when
+            ``keep_token_colors`` is on); otherwise the merged style.
+        """
         color = original.color
         if self._base_color is not None and color is not None and color != self._base_color:
             return original
@@ -129,7 +188,7 @@ class Syntax(Gradient):
 
     @property
     def syntax(self) -> RichSyntax:
-        """Return the underlying Rich Syntax renderable."""
+        """The underlying Rich Syntax renderable."""
         return self._syntax
 
 

@@ -2,6 +2,17 @@
 
 `rich-gradient` provides animated variants of its core renderables for live terminal demos. They build on [`rich.live.Live`](https://rich.readthedocs.io/en/stable/live.html) to refresh the console at a steady frame rate while shifting the gradient phase.
 
+Every animated class takes an `animate` argument that defaults to `True`. Pass
+`animate=False` to render a single static frame instead. To switch animation
+off for a whole program, set `"animate": false` in the
+[configuration file](configuration.md) or `RICH_GRADIENT_ANIMATE=0`. That global
+setting is a kill switch: it wins even over an explicit `animate=True`.
+
+The static renderables (`Gradient`, `Panel`, `Rule`, `Markdown`, `Table`, ...)
+also accept `animate`, defaulting to `False`. They never animate on their own;
+`animate=True` only tells them the content changes between renders, so
+highlight matches are recomputed instead of cached.
+
 ## `AnimatedGradient`
 
 ![Animated gradient](img/animated_gradient.gif)

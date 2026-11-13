@@ -147,8 +147,9 @@ def test_rule_thickness_error_message() -> None:
         Rule(title="x", thickness=9)
 
 
+@pytest.mark.usefixtures("animation_enabled")
 def test_animated_rule_config_driven_phase_speed() -> None:
-    """animate=None + config animation enabled must use the faster phase."""
+    """An animating AnimatedRule (the default, config permitting) uses the faster phase."""
     from rich_gradient.animated_rule import AnimatedRule
 
     rule = AnimatedRule(title="t", animate=True)

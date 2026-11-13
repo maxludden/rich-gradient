@@ -1,14 +1,13 @@
-"""rich_gradient.spectrum
-
-Module providing a small color palette helper built on Rich.
+"""A small, seedable color palette helper built on Rich.
 
 This module exposes:
 
-- SPECTRUM_COLORS: a mapping of hex color strings to human-friendly names.
-- Spectrum: a convenience class that builds lists of Rich Color, Style,
-    and ColorTriplet objects drawn from the spectrum. It is iterable and
-    implements __rich__ to render a preview table suitable for
-    `rich.console.Console.print`.py
+- ``COLOR_STOPS``: a mapping of human-friendly color names to hex strings.
+- ``Spectrum``: a convenience class that builds lists of Rich ``Color``,
+    ``Style``, and ``ColorTriplet`` objects drawn from the palette. It is
+    iterable and implements ``__rich__`` to render a preview table suitable
+    for ``rich.console.Console.print``.
+- ``validate_hues``: the shared ``hues >= 2`` check used across the package.
 
 Notes on determinism and `seed`:
 - The `Spectrum` constructor accepts an optional `seed` argument. When
@@ -31,6 +30,7 @@ __all__ = ["COLOR_STOPS", "GradientTheme", "Spectrum"]
 
 from itertools import cycle
 from random import Random
+from collections.abc import Iterator
 from typing import Dict, List, Optional
 
 from rich.color import Color
@@ -93,36 +93,43 @@ def validate_hues(hues: int) -> int:
 
 
 class Spectrum:
-    """Create a list of concurrent Color and/or Style instances.
-    Args:
-        hues (int): Number of colors to generate. Defaults to 17.
-        invert (bool, optional): If True, reverse the generated list.
-            Defaults to False.
-        seed (Optional[int], optional): If provided, sets the random \
-seed for deterministic color order.
-    Raises:
-        ValueError: If hues < 2.
-        ValueError: If seed is not None and not an integer.
-    Properties:
-        colors (List[Color]): List of Color instances.
-        names (List[str]): List of color names.
+    """A run of consecutive colors from the 17-color spectrum palette.
 
+    The palette is treated as a color wheel: ``Spectrum`` picks a starting hue
+    (random, or fixed by ``seed``) and takes ``hues`` neighboring colors from
+    there, exposing them as ``Color``, ``ColorTriplet``, ``Style``, hex, and
+    name lists.
+
+    Examples:
+        >>> Spectrum(hues=4, seed=42).hex  # same four colors every run
+        >>> from rich.console import Console
+        >>> Console().print(Spectrum())  # preview table of the palette
+
+    Args:
+        hues (int): Number of colors to take from the 17-color palette, as a run of
+            consecutive hues. Valid values are 2 to 17. Defaults to 17.
+        invert (bool): Reverse the order of the generated colors. Defaults to False.
+        seed (Optional[int]): Seed that fixes the starting hue, e.g. ``42``, so the same
+            colors come back every run. ``None`` picks a random start. Defaults to None.
+
+    Raises:
+        ValueError: If ``hues`` is outside 2-17 or ``seed`` is not an integer.
+
+    Attributes:
+        colors (list[Color]): The generated colors.
+        triplets (list[ColorTriplet]): The colors as truecolor triplets.
+        styles (list[Style]): One foreground ``Style`` per color.
+        hex (list[str]): The colors as uppercase ``#RRGGBB`` strings.
+        names (list[str]): Palette names of the colors (hex for unnamed ones).
     """
 
     def __init__(
         self, hues: int = 17, invert: bool = False, seed: int | None = None
     ) -> None:
-        """Initialize the Spectrum with a specified number of hues and optional \
-inversion and seed.
-        Args:
-            hues (int): Number of colors to generate. Defaults to 17.
-            invert (bool, optional): If True, reverse the generated list.
-                Defaults to False.
-            seed (Optional[int], optional): If provided, sets the random seed for \
-deterministic color order.
+        """Initialize the spectrum; see the class docstring for arguments.
+
         Raises:
-            ValueError: If hues < 2.
-            ValueError: If seed is not None and not an integer.
+            ValueError: If ``hues`` is outside 2-17 or ``seed`` is not an integer.
         """
         validate_hues(hues)
         if hues > len(COLOR_STOPS):
@@ -172,12 +179,20 @@ deterministic color order.
 
     @property
     def colors(self) -> list[Color]:
-        """Return the list of Color instances."""
+        """The generated ``Color`` instances."""
         return self._colors
 
     @colors.setter
     def colors(self, value: list[Color]) -> None:
-        """Set the list of Color instances."""
+        """Set the colors.
+
+        Args:
+            value: At least two ``rich.color.Color`` instances.
+
+        Raises:
+            ValueError: If ``value`` is not a list of ``Color`` or has fewer
+                than two entries.
+        """
         if not isinstance(value, list) or not all(isinstance(c, Color) for c in value):
             raise ValueError("colors must be a list of Color instances")
         if len(value) < 2:
@@ -186,17 +201,25 @@ deterministic color order.
 
     @property
     def triplets(self) -> list[ColorTriplet]:
-        """Return the list of ColorTriplet instances."""
+        """The colors as truecolor ``ColorTriplet`` instances."""
         return [color.get_truecolor() for color in self._colors]
 
     @property
     def styles(self) -> list[Style]:
-        """Return the list of Style instances."""
+        """One foreground ``Style`` per color."""
         return self._styles
 
     @styles.setter
     def styles(self, styles: list[StyleType]) -> None:
-        """Set styles from strings or Style instances."""
+        """Set the styles from strings or ``Style`` instances.
+
+        Args:
+            styles: One style per color, e.g. ``["bold", Style(italic=True)]``.
+
+        Raises:
+            TypeError: If ``styles`` is not a list or holds a non-style value.
+            ValueError: If the number of styles differs from the number of colors.
+        """
         if not isinstance(styles, list):
             raise TypeError("styles must be a list")
         if len(styles) != len(self.colors):
@@ -213,12 +236,20 @@ deterministic color order.
 
     @property
     def names(self) -> list[str]:
-        """Return the list of color names."""
+        """Palette names of the colors (hex for colors without a name)."""
         return self._names
 
     @names.setter
     def names(self, value: list[str]) -> None:
-        """Set the list of color names."""
+        """Set the color names.
+
+        Args:
+            value: One name per color, e.g. ``["red", "orange"]``.
+
+        Raises:
+            ValueError: If ``value`` is not a list of strings or its length
+                differs from the number of colors.
+        """
         if not isinstance(value, list) or not all(isinstance(n, str) for n in value):
             raise ValueError("names must be a list of strings")
         if len(value) != len(self._colors):
@@ -236,21 +267,48 @@ deterministic color order.
         return len(self.colors)
 
     def __getitem__(self, index: int) -> Color:
-        """Return the Color at the specified index."""
+        """Return the color at an index, e.g. ``spectrum[0]``.
+
+        Args:
+            index: Position in the spectrum, from 0 to ``len(colors) - 1``.
+
+        Returns:
+            The ``Color`` at that position.
+
+        Raises:
+            TypeError: If ``index`` is not an integer.
+            IndexError: If ``index`` is negative or out of range.
+        """
         if not isinstance(index, int):
             raise TypeError("Index must be an integer")
         if index < 0 or index >= len(self.colors):
             raise IndexError("Index out of range")
         return self.colors[index]
 
-    def __iter__(self):
-        """Return an iterator over the colors in the Spectrum."""
+    def __iter__(self) -> Iterator[Color]:
+        """Iterate over the colors in the spectrum.
+
+        Returns:
+            An iterator of ``Color`` instances.
+        """
         return iter(self.colors)
 
     def __rich__(self) -> RichTable:
-        """Return a rich Table representation of the Spectrum."""
+        """Render the spectrum as a preview table.
+
+        Returns:
+            A table with a sample swatch, name, hex, and RGB value per color.
+        """
 
         def rainbow_title(text: str) -> Text:
+            """Color ``text`` two characters at a time with the spectrum colors.
+
+            Args:
+                text: The heading text.
+
+            Returns:
+                Bold, underlined ``Text`` cycling through the colors.
+            """
             chunks = [text[i : i + 2] for i in range(0, len(text), 2)]
             pieces: list[Text] = []
             for idx, chunk in enumerate(chunks):
@@ -301,12 +359,17 @@ deterministic color order.
 
     @property
     def rich(self) -> RichTable:
-        """Return the rich Table representation of the Spectrum."""
+        """The spectrum's preview table (same as ``__rich__()``)."""
         return self.__rich__()
 
 
 def example(save: bool = False) -> None:
-    """Generate a rich table with all of the colors in the Spectrum."""
+    """Print a preview table of a seeded spectrum.
+
+    Args:
+        save: Record the output and save it to ``docs/img/v0.3.4/spectrum_example.svg``.
+            Defaults to False.
+    """
     console = Console(record=True, width=64) if save else Console(width=80)
     console.line(2)
     spectrum = Spectrum(seed=5)

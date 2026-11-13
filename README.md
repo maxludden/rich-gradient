@@ -38,6 +38,8 @@ animated variants, and utilities for building palettes.
   - [`Spectrum`](docs/spectrum.md)
   - [`Markdown`](docs/gradient.md)
   - [`Table`, `Tree`, `Columns`, `Pretty`, and `Syntax`](docs/renderables.md)
+  - [`ProgressBar`](docs/progress_bar.md), plus `GradientBarColumn` for `rich.progress`
+  - [`inspect`](docs/inspect.md), a gradient version of `rich.inspect`
   - Animated variants for `Gradient`, `Markdown`, `Panel`, `Rule`, and `Text`.
 - `AnimatedText`, `AnimatedGradient`, `AnimatedPanel`, `AnimatedRule`, and
   `AnimatedMarkdown` for live gradient updates.
@@ -45,6 +47,17 @@ animated variants, and utilities for building palettes.
   you can toggle animation globally and customize the default spectrum palette.
   Invalid settings are ignored with a logged warning rather than raising.
 - Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
+
+### What's new in v0.4.4
+
+- **Added** — `inspect()` / `Inspect`, a gradient version of `rich.inspect` that keeps values readable.
+- **Added** — `border_only=True` on `Panel` and `AnimatedPanel` for a gradient border around normally styled content.
+- **Added** — `ProgressBar` gradients for in-progress, complete (`finished_colors`), and pulsing (`pulse_colors`) bars, plus `GradientBarColumn` for `rich.progress.Progress`.
+- **Fixed** — expanding `Panel`s inside `Columns` or a `Table` no longer take the whole width, `AnimatedPanel(expand=True)` draws a full-width border, and `AnimatedPanel` accepts `text_justify`.
+- **Changed** — with `expand=False`, the gradient spans the content instead of the whole line, so narrow renderables reach the last color.
+- **Changed** — animated classes default to `animate=True`, static ones to `animate=False`. Setting `"animate": false` in the config (or `RICH_GRADIENT_ANIMATE=0`) is now a kill switch that wins over an explicit `animate=True`.
+- **Deprecated** — `Gradient(animated=...)`; use `animate=...`.
+- **Docs** — complete docstrings across the API: every default is stated, and complex arguments (colors, highlight rules, alignment, styles) show valid values and an example.
 
 ### What's new in v0.4.3
 

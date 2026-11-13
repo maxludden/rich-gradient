@@ -29,7 +29,19 @@ def create_text_renderable(
     markup: bool = True,
     text_kwargs: Mapping[str, Any] | None = None,
 ) -> RichText:
-    """Create a Rich Text renderable from a string or Text instance."""
+    """Create a Rich Text renderable from a string or Text instance.
+
+    Args:
+        text: A string, Rich ``Text``, or rich-gradient ``Text``.
+        markup: Parse Rich console markup in string input. Defaults to True.
+        text_kwargs: Keyword arguments forwarded to ``rich.text.Text`` (or
+            ``Text.from_markup``) for string input, e.g. ``{"justify": "center"}``.
+            Ignored for ``Text`` input. Defaults to None.
+
+    Returns:
+        A plain Rich ``Text``. Rich ``Text`` input is returned unchanged and
+        rich-gradient ``Text`` is converted with ``as_rich()``.
+    """
     if isinstance(text, GradientText):
         return text.as_rich()
     if isinstance(text, RichText):
@@ -42,7 +54,81 @@ def create_text_renderable(
 
 
 class AnimatedText(AnimatedGradient):
-    """Animated gradient variant for text content."""
+    """Animated gradient variant for text content.
+
+    Args:
+        text (TextType): The text: a string, Rich ``Text``, or rich-gradient ``Text``,
+            e.g. ``"[bold]Loading[/bold]..."``.
+        colors (Optional[Sequence[ColorType]]): Foreground color stops. Each stop may be
+            a color name (Rich/ANSI names such as ``"red"`` keep Rich's meaning; CSS
+            names such as ``"tomato"`` also work), a hex string (``"#f00"``,
+            ``"#ff0000"``), an ``"rgb(255, 0, 0)"`` string, an ``(r, g, b)`` tuple, or a
+            ``rich.color.Color``, e.g. ``["#f00", "orange", (0, 128, 255)]``. If omitted
+            and ``rainbow`` is False, ``hues`` colors are taken from the spectrum
+            palette. Defaults to None.
+        bg_colors (Optional[Sequence[ColorType]]): Background color stops, in the same
+            formats as ``colors``, e.g. ``["#000033", "#330033"]``. If omitted, no
+            background gradient is applied. Defaults to None.
+        rainbow (bool): Use the full 17-color spectrum palette, ignoring ``colors`` and
+            ``hues``. Defaults to False.
+        hues (int): Number of colors to take from the spectrum palette when ``colors``
+            is omitted (a run of consecutive hues with a random starting point). Valid
+            values are 2 to 17. Defaults to 5.
+        expand (bool): Expand the output to the full console width. Defaults to True.
+        justify (AlignMethod): Horizontal alignment of the content: ``"left"``,
+            ``"center"``, or ``"right"``. Defaults to ``"left"``.
+        vertical_justify (VerticalAlignMethod): Vertical alignment of the content:
+            ``"top"``, ``"middle"``, or ``"bottom"``. Defaults to ``"top"``.
+        repeat_scale (float): Width of one full color cycle as a multiple of the
+            rendered width; larger values give a more gradual gradient. Defaults to 4.0.
+        highlight_words (Optional[HighlightWordsType]): Words to restyle on top of the
+            gradient. Accepts a mapping of a word (or a tuple of words) to a style, e.g.
+            ``{"error": "bold red", ("warn", "caution"): "yellow"}``; a sequence of
+            ``(words, style[, case_sensitive])`` tuples, e.g.
+            ``[("error", "bold red"), (("warn", "caution"), "yellow", False)]``; or
+            ``HighlightWords`` instances, e.g.
+            ``[HighlightWords(words=("error",), style=Style.parse("bold red"))]``.
+            Matching is case-sensitive unless ``case_sensitive`` is False. Colors in
+            these styles are shown: they replace the gradient on the matched text.
+            Defaults to None.
+        highlight_regex (Optional[HighlightRegexType]): Regular expressions whose
+            matches are restyled on top of the gradient. Accepts a mapping of a pattern
+            to a style, e.g. ``{r"[0-9]+": "bold cyan"}``; a sequence of
+            ``(pattern, style[, flags])`` tuples, e.g.
+            ``[(r"error|fail", "red", re.IGNORECASE)]``; or ``HighlightRegex``
+            instances, e.g.
+            ``[HighlightRegex(pattern=re.compile(r"[0-9]+"), style=Style.parse("cyan"))]``.
+            Colors in these styles are shown: they replace the gradient on the matched
+            text. Defaults to None.
+        text_kwargs (Optional[Mapping[str, Any]]): Keyword arguments for
+            ``rich.text.Text`` when ``text`` is a string, e.g.
+            ``{"justify": "center"}``. Defaults to None.
+        markup (bool): Parse Rich console markup in string input. Defaults to True.
+        auto_refresh (bool): Let ``Live`` refresh the display on its own timer. Defaults
+            to True.
+        refresh_per_second (float): Live refresh and animation frame rate, in frames per
+            second. Must be positive. Defaults to 30.0.
+        console (Console): Console to render to. Defaults to a module-level
+            ``Console()`` shared by all ``AnimatedText`` instances.
+        transient (bool): Clear the output from the terminal when the animation stops.
+            Defaults to False.
+        redirect_stdout (bool): Redirect ``sys.stdout`` into the Live display so prints
+            appear above it. Defaults to False.
+        redirect_stderr (bool): Redirect ``sys.stderr`` into the Live display so prints
+            appear above it. Defaults to False.
+        animate (Optional[bool]): Whether to animate. The global config is a kill
+            switch: when ``config.animation_enabled`` is False (``"animate": false`` in
+            the config file, or ``RICH_GRADIENT_ANIMATE=0``), nothing animates, even if
+            this is True. ``False`` renders a single static frame. ``None`` is treated
+            as True. Defaults to True.
+        duration (Optional[float]): Seconds after which a running animation stops on its
+            own, e.g. ``5.0``. Must be positive. ``None`` runs until stopped. Defaults
+            to None.
+
+    Raises:
+        ValueError: If ``hues`` < 2, or ``refresh_per_second``/``duration`` is not
+            positive.
+    """
 
     def __init__(
         self,
@@ -66,9 +152,15 @@ class AnimatedText(AnimatedGradient):
         transient: bool = False,
         redirect_stdout: bool = False,
         redirect_stderr: bool = False,
-        animate: bool | None = None,
+        animate: bool | None = True,
         duration: float | None = None,
     ) -> None:
+        """Initialize the animated text; see the class docstring for arguments.
+
+        Raises:
+            ValueError: If ``hues`` < 2, or ``refresh_per_second``/``duration`` is
+                not positive.
+        """
         renderable = create_text_renderable(
             text,
             markup=markup,
@@ -100,7 +192,12 @@ class AnimatedText(AnimatedGradient):
 
     @property
     def rich_text(self) -> RichText:
-        """Return the underlying Rich Text renderable."""
+        """The underlying Rich Text renderable.
+
+        Raises:
+            RuntimeError: If no renderable has been stored yet.
+            TypeError: If the stored renderable is not a Rich ``Text``.
+        """
         if not self.renderables:
             raise RuntimeError("Text renderables have not been initialized.")
         renderable = self.renderables[0]
@@ -115,7 +212,16 @@ class AnimatedText(AnimatedGradient):
         text_kwargs: Mapping[str, Any] | None = None,
         markup: bool | None = None,
     ) -> None:
-        """Replace the Text content safely during animation."""
+        """Replace the Text content safely during animation.
+
+        Args:
+            text: New content: a string, Rich ``Text``, or rich-gradient ``Text``.
+            text_kwargs: Keyword arguments for ``rich.text.Text`` for string input,
+                e.g. ``{"justify": "center"}``. Defaults to None, which reuses the
+                previous kwargs.
+            markup: Parse console markup in string input. Defaults to None,
+                which reuses the previous setting.
+        """
         with self._lock:
             if isinstance(text, GradientText):
                 self._set_renderables([text.as_rich()])
