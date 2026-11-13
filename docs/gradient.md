@@ -63,6 +63,9 @@ Key options:
 
 - `colors` / `bg_colors`: list of color stops (same rules as [`Text`](text.md)).
 - `rainbow` and `hues`: auto-generate palettes.
+- `expand`: with `True` (the default) the gradient spans the full width. With
+  `False` the renderable keeps its natural width and the gradient spans just the
+  content, so a short line or narrow table still runs from the first color to the last.
 - `justify` / `vertical_justify`: align the renderable inside the gradient frame.
 - `repeat_scale`: stretch or compress the gradient repeats. By default it is derived
   from the colors so one pass across the renderable runs from the first color to

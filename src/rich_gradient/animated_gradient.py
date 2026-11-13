@@ -9,7 +9,8 @@ from typing import Any
 
 from rich import get_console
 from rich.align import Align, AlignMethod, VerticalAlignMethod
-from rich.console import Console, ConsoleRenderable, Group, NewLine
+from rich.console import (Console, ConsoleRenderable, Group, NewLine,
+                          RenderableType)
 from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table as RichTable
@@ -63,7 +64,7 @@ class AnimatedGradient(Gradient):
 
     def __init__(
         self,
-        renderables: Iterable[ConsoleRenderable] | ConsoleRenderable | str | None = None,
+        renderables: RenderableType | Iterable[RenderableType] | None = None,
         # color args
         colors: list[ColorType] | None = None,
         bg_colors: list[ColorType] | None = None,

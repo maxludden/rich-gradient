@@ -25,6 +25,11 @@ class _ExpandingRichPanel(RichPanel):
     Rich measures a panel at its content width even with ``expand=True``, so the
     ``Align`` inside ``Gradient`` shrank the panel and left the gradient ramp
     spread over empty space (the border looked styled apart from its content).
+
+    The full-width measurement is only meant for that inner ``Align``. Layouts
+    that measure the *outer* gradient panel (``Columns``, ``Table`` cells) must
+    see Rich's natural measurement via :meth:`natural_measure`, or every
+    expanding panel would demand the whole width and crowd out its siblings.
     """
 
     def __rich_measure__(
@@ -34,6 +39,42 @@ class _ExpandingRichPanel(RichPanel):
         if self.expand and self.width is None:
             return Measurement(options.max_width, options.max_width)
         return super().__rich_measure__(console, options)
+
+    def natural_measure(
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
+        """Return Rich's own panel measurement (content width plus chrome)."""
+        return super().__rich_measure__(console, options)
+
+
+def _normalize_panel_renderable(
+    obj: RenderableType,
+    *,
+    style: StyleType,
+    text_justify: AlignMethod,
+    resolve_rich: bool = True,
+) -> RenderableType:
+    """Parse markup strings into justified Rich text, optionally resolving ``__rich__``.
+
+    Shared by :class:`Panel` and :class:`~rich_gradient.animated_panel.AnimatedPanel`
+    so both treat string content (markup, ``style``, ``text_justify``) the same way.
+    ``AnimatedPanel`` passes ``resolve_rich=False`` so a ``__rich__`` object is
+    resolved by Rich on every frame instead of being frozen at construction.
+    """
+    rich_obj = getattr(obj, "__rich__", None) if resolve_rich else None
+    if callable(rich_obj):
+        try:
+            obj = cast(RenderableType, rich_obj())
+        except (
+            AttributeError,
+            TypeError,
+            ValueError,
+            RuntimeError,
+        ) as err:  # pragma: no cover - defensive
+            logger.debug(f"Error calling __rich__: {err}")
+    if isinstance(obj, str):
+        return RichText.from_markup(obj, style=style, justify=text_justify)
+    return obj
 
 
 class Panel(Gradient):
@@ -95,29 +136,9 @@ class Panel(Gradient):
         highlight_regex: HighlightRegexType | None = None,
     ) -> None:
         """Initialize the Panel with gradient support."""
-        def _normalize_renderable(obj: RenderableType) -> RenderableType:
-            # Resolve simple RichCast once (avoid deep recursion)
-            rich_obj = getattr(obj, "__rich__", None)
-            if callable(rich_obj):
-                try:
-                    obj = cast(RenderableType, rich_obj())
-                except (
-                    AttributeError,
-                    TypeError,
-                    ValueError,
-                    RuntimeError,
-                ) as err:  # pragma: no cover - defensive
-                    logger.debug(f"Error calling __rich__: {err}")
-            # Parse markup strings into RichText
-            if isinstance(obj, str):
-                return RichText.from_markup(
-                    obj,
-                    style=style,
-                    justify=text_justify,
-                )
-            return obj
-
-        normalized_renderable = _normalize_renderable(renderable)
+        normalized_renderable = _normalize_panel_renderable(
+            renderable, style=style, text_justify=text_justify
+        )
         if isinstance(style, Style):
             _style = style
         else:
@@ -141,7 +162,7 @@ class Panel(Gradient):
 
         # Track the underlying Rich Panel so expand setter can propagate to it
         # (Gradient.expand property will attempt to update ``self._panel``).
-        self._panel = panel
+        self._panel: _ExpandingRichPanel = panel
 
         # Highlight title and subtitle if they are provided
         ## Normalize highlight_regex into a mutable sequence of tuples (pattern, style, priority)
@@ -197,6 +218,12 @@ class Panel(Gradient):
         bottom_right: str = escape(box.bottom_right)
         subtitle_regex: str = rf"{bottom_left}{bottom}+ (.*?) {bottom}+{bottom_right}"
         return subtitle_regex
+
+    def __rich_measure__(
+        self, console: Console, options: ConsoleOptions
+    ) -> Measurement:
+        """Measure like a plain Rich ``Panel`` so parent layouts share width fairly."""
+        return self._panel.natural_measure(console, options)
 
     @property
     def panel(self) -> RichPanel:
