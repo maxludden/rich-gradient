@@ -38,6 +38,7 @@ docs = [
     "mkdocstrings[python]>=1.0.0",
     "mkdocstrings-python>=2.0.1",
     "zensical>=0.1.3",
+    "zensical-gradient-theme>=0.1.1",
 ]
 toml = ["tomlkit>=0.13.3"]
 
@@ -46,6 +47,8 @@ default-groups = "all"
 # Ignore releases newer than 3 days (supply-chain safety). Set here, not only in
 # a user-level uv.toml, so CI resolves with the same option and `--locked` passes.
 exclude-newer = "3 days"
+# Our own docs theme is exempt so new releases of it can be picked up immediately.
+exclude-newer-package = { zensical-gradient-theme = false }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rich_gradient"]

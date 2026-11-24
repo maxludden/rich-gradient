@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.4.5 - 2026-11-24 | <span style="color: rgb(215, 255, 100)">Gradient docs theme</span>
+
+No changes to the library itself; this release updates the docs and build setup.
+
+### Changed
+
+- The docs site now uses the installable [zensical-gradient-theme](https://pypi.org/project/zensical-gradient-theme/) (`name = "gradient"` in `zensical.toml`). It replaces the hand-maintained `docs/stylesheets/` and `docs/scripts/copy.js` and supplies the color schemes, fonts, features, and copy-link toast.
+- The animated gradient GIFs in the docs were regenerated, and an unused duplicate (`animated_gradient_loop.gif`) was removed.
+
+### Build
+
+- `uv sync` installs the `docs` dependency group by default, so `zensical build` works without extra flags.
+- `exclude-newer = "3 days"` is set in `pyproject.toml`, so CI's `uv sync --locked` resolves the same way as `uv.lock`. `zensical-gradient-theme` is exempt so its new releases can be picked up immediately.
+
 ## v0.4.4 - 2026-11-13 | <span style="color: rgb(215, 255, 100)">Layouts and docstrings</span>
 
 ### Added

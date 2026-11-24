@@ -48,6 +48,10 @@ animated variants, and utilities for building palettes.
   Invalid settings are ignored with a logged warning rather than raising.
 - Optional Rich traceback formatting via `rich_gradient.install_tracebacks()`.
 
+### What's new in v0.4.5
+
+- **Docs** — the documentation site now uses the [zensical-gradient-theme](https://pypi.org/project/zensical-gradient-theme/). No library changes.
+
 ### What's new in v0.4.4
 
 - **Added** — `inspect()` / `Inspect`, a gradient version of `rich.inspect` that keeps values readable.

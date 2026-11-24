@@ -7,9 +7,6 @@ repo_name = "rich-gradient"
 repo_url = "https://github.com/maxludden/rich-gradient"
 edit_uri = "root/docs"
 
-extra_css = ["stylesheets/extra.css", "stylesheets/style.css"]
-extra_javascript = ["scripts/copy.js"]
-
 nav = [
     { "Getting Started" = "index.md" },
     { "User Guide" = [
@@ -52,54 +49,12 @@ nav = [
     { "Changelog" = "CHANGELOG.md" },
 ]
 
+# Variant, fonts, the gradient-dark/light palette and the feature list all come
+# from the theme (zensical-gradient-theme); set them here only to replace them.
 [project.theme]
-variant = "classic"
+name = "gradient"
 logo = "img/rich-gradient-icon.svg"
 favicon = "img/rich-gradient-icon.svg"
-features = [
-    "navigation.instant",
-    "navigation.instant.prefetch",
-    "navigation.instant.progress",
-    "navigation.tracking",
-    "navigation.sections",
-    "navigation.path",
-    "navigation.top",
-    "navigation.footer",
-    "toc.follow",
-    "search.suggest",
-    "search.highlight",
-    "content.code.annotate",
-    "content.code.copy",
-    "content.tabs.link",
-]
-
-[project.theme.font]
-text = "Inter"
-code = "Roboto Mono"
-
-[[project.theme.palette]]
-media = "(prefers-color-scheme)"
-scheme = "astral-dark"
-primary = "custom"
-accent = "custom"
-toggle.icon = "lucide/sun-moon"
-toggle.name = "Switch to light mode"
-
-[[project.theme.palette]]
-media = "(prefers-color-scheme: light)"
-scheme = "astral-light"
-primary = "custom"
-accent = "custom"
-toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
-
-[[project.theme.palette]]
-media = "(prefers-color-scheme: dark)"
-scheme = "astral-dark"
-primary = "custom"
-accent = "custom"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to system preference"
 
 [project.plugins.mkdocstrings]
 

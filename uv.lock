@@ -10,6 +10,9 @@ resolution-markers = [
 exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
 exclude-newer-span = "P3D"
 
+[options.exclude-newer-package]
+zensical-gradient-theme = false
+
 [[package]]
 name = "annotated-types"
 version = "0.7.0"
@@ -987,6 +990,7 @@ docs = [
     { name = "mkdocstrings", extra = ["python"] },
     { name = "mkdocstrings-python" },
     { name = "zensical" },
+    { name = "zensical-gradient-theme" },
 ]
 toml = [
     { name = "tomlkit" },
@@ -1014,6 +1018,7 @@ docs = [
     { name = "mkdocstrings", extras = ["python"], specifier = ">=1.0.0" },
     { name = "mkdocstrings-python", specifier = ">=2.0.1" },
     { name = "zensical", specifier = ">=0.1.3" },
+    { name = "zensical-gradient-theme", specifier = ">=0.1.1" },
 ]
 toml = [{ name = "tomlkit", specifier = ">=0.13.3" }]
 
@@ -1230,6 +1235,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/90/33/9e72aade59dd6bfe08c4c35c5f0f848f196af0794cc53344f118856ceb43/zensical-0.1.3-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:5a27828e8831c4ef08e1d54e050bef81030b8ac20ea60bb972e6fac56e47b9c6", size = 9635601, upload-time = "2026-11-20T15:18:48.474Z" },
     { url = "https://files.pythonhosted.org/packages/e8/e3/6fa3ad09d055fa37533c2408f7aec462e2dbad1a48431b4579e69d70349f/zensical-0.1.3-cp311-abi3-win_amd64.whl", hash = "sha256:d93dc520a91340c44d5ff0b78d5e69858ec97dcbab6448e42d17b919da3e0ab3", size = 9576349, upload-time = "2026-11-20T15:18:50.522Z" },
     { url = "https://files.pythonhosted.org/packages/70/5f/396c941b1832044fc602d8978cd17d01aec7328ae48043b17bbdb419246f/zensical-0.1.3-cp311-abi3-win_arm64.whl", hash = "sha256:a878c768d03d983946ef31d1fe2bd43bb03b8c8ef373a32113136c3d2f733aa5", size = 8955286, upload-time = "2026-11-20T15:18:52.227Z" },
+]
+
+[[package]]
+name = "zensical-gradient-theme"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "zensical" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/99/b9/79f1bd5063eae9f5e945c3608ddc9797a651de65945095c3b941cfcb6ce9/zensical_gradient_theme-0.1.1.tar.gz", hash = "sha256:4d0a5e854f1bef2881bce77ded838f425dfcd1f892bd10a9e7317c3e682a9615", size = 13917, upload-time = "2026-11-24T22:09:51.628Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/79/45da9c8d00871afcbd2a6558f4731a1acee828f558b81a83367d3df85fb6/zensical_gradient_theme-0.1.1-py3-none-any.whl", hash = "sha256:d3c2b9d45722121370bf40ad33c6d2bd015df1e570a08da3d3355077974f8a67", size = 16542, upload-time = "2026-11-24T22:09:50.811Z" },
 ]
 
 [[package]]
