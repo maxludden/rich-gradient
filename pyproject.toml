@@ -26,17 +26,23 @@ build-backend = "hatchling.build"
 [dependency-groups]
 config = ["pydantic-settings>=2.11.0"]
 dev = [
-    "mkdocstrings>=0.29.0",
-    "mkdocstrings-python>=1.16.5",
     "mypy>=2.1.0",
+    "ruff>=0.14.0",
     "pytest>=8.3.5",
     "pytest-benchmark>=5.1.0",
     "black>=24.3.0",
     "isort>=5.12.0",
     "pre-commit>=3.4.0",
-    "zensical>=0.0.68",
+]
+docs = [
+    "mkdocstrings[python]>=1.0.0",
+    "mkdocstrings-python>=2.0.1",
+    "zensical>=0.1.3",
 ]
 toml = ["tomlkit>=0.13.3"]
+
+[tool.uv]
+default-groups = "all"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rich_gradient"]
