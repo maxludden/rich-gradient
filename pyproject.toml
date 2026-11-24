@@ -43,6 +43,9 @@ toml = ["tomlkit>=0.13.3"]
 
 [tool.uv]
 default-groups = "all"
+# Ignore releases newer than 3 days (supply-chain safety). Set here, not only in
+# a user-level uv.toml, so CI resolves with the same option and `--locked` passes.
+exclude-newer = "3 days"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rich_gradient"]
